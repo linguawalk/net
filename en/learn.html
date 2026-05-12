@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LinguaWalk — Learn English</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --navy: #1C2B45; --teal: #2A7F6F; --teal-light: #E1F5EE; --teal-mid: #1D9E75;
+    --bg: #F8F7F4; --white: #fff; --text: #1C2B45; --text-muted: #5a6a82; --text-light: #94a3b8;
+    --border: rgba(28,43,69,0.1); --border-md: rgba(28,43,69,0.18);
+  }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  /* NAV */
+  nav { background: rgba(28,43,69,0.97); height: 56px; display: flex; align-items: center; padding: 0 5%; border-bottom: 0.5px solid rgba(255,255,255,0.08); position: sticky; top: 0; z-index: 100; }
+  .nav-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; }
+  .nav-lm { width: 28px; height: 28px; background: var(--teal); border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: #fff; }
+  .nav-lt { font-size: 16px; font-weight: 600; color: #fff; }
+  .nav-sep { width: 1px; height: 18px; background: rgba(255,255,255,0.15); margin: 0 12px; }
+  .nav-page { font-size: 13px; color: rgba(255,255,255,0.6); }
+  .nav-space { flex: 1; }
+  .lang-sw { display: flex; background: rgba(255,255,255,0.08); border-radius: 7px; padding: 2px; gap: 2px; }
+  .lbtn { padding: 4px 10px; border-radius: 5px; font-size: 11px; font-weight: 500; border: none; background: transparent; color: rgba(255,255,255,0.5); cursor: pointer; font-family: inherit; transition: all 0.2s; }
+  .lbtn.act { background: var(--teal); color: #fff; }
+  .nav-link { font-size: 13px; color: rgba(255,255,255,0.6); text-decoration: none; padding: 6px 10px; border-radius: 7px; margin-right: 4px; }
+  .nav-link:hover { background: rgba(255,255,255,0.08); color: #fff; }
+
+  /* HERO STRIP */
+  .hero-strip { background: var(--navy); padding: 36px 5% 32px; position: relative; overflow: hidden; }
+  .hero-strip::before { content: ''; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse 70% 80% at 50% 120%, rgba(42,127,111,0.2) 0%, transparent 70%); }
+  .hs-back { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: rgba(255,255,255,0.45); text-decoration: none; margin-bottom: 16px; transition: color 0.2s; }
+  .hs-back:hover { color: rgba(255,255,255,0.75); }
+  .hs-title { font-family: 'DM Serif Display', serif; font-size: clamp(24px, 4vw, 36px); color: #fff; margin-bottom: 8px; }
+  .hs-title em { font-style: italic; color: #6ee7c7; }
+  .hs-sub { font-size: 14px; color: rgba(255,255,255,0.5); font-weight: 300; line-height: 1.6; }
+
+  /* SKILL TABS */
+  .skill-tabs { background: var(--white); border-bottom: 0.5px solid var(--border); padding: 0 5%; display: flex; gap: 0; overflow-x: auto; }
+  .skill-tab { padding: 14px 18px; font-size: 13px; font-weight: 500; cursor: pointer; border: none; background: transparent; color: var(--text-light); border-bottom: 2px solid transparent; margin-bottom: -0.5px; white-space: nowrap; font-family: inherit; display: flex; align-items: center; gap: 6px; transition: color 0.2s; }
+  .skill-tab:hover { color: var(--text-muted); }
+  .skill-tab.act { color: var(--teal); border-bottom-color: var(--teal); }
+  .skill-tab .tab-icon { font-size: 15px; }
+
+  /* MAIN */
+  .main { max-width: 900px; margin: 0 auto; padding: 28px 5% 80px; }
+
+  /* AI TUTOR BANNER */
+  .tutor-banner { background: var(--teal-light); border: 0.5px solid rgba(42,127,111,0.25); border-radius: 12px; padding: 14px 18px; margin-bottom: 24px; display: flex; align-items: flex-start; gap: 12px; }
+  .tb-av { width: 34px; height: 34px; border-radius: 50%; background: var(--teal); display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
+  .tb-info { flex: 1; }
+  .tb-name { font-size: 11px; font-weight: 600; color: var(--teal); letter-spacing: .5px; text-transform: uppercase; margin-bottom: 3px; }
+  .tb-msg { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+  .tb-msg strong { color: var(--teal); font-weight: 600; }
+
+  /* SECTION LABEL */
+  .sec-label { font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--text-light); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+  .sec-badge { font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 5px; letter-spacing: .3px; }
+  .badge-free { background: var(--teal-light); color: var(--teal); }
+  .badge-pro { background: #faeeda; color: #854f0b; }
+
+  /* LEVEL FILTER */
+  .level-filter { display: flex; gap: 6px; margin-bottom: 20px; flex-wrap: wrap; }
+  .lf-btn { padding: 5px 14px; border-radius: 20px; font-size: 12px; font-weight: 500; cursor: pointer; border: 0.5px solid var(--border-md); background: transparent; color: var(--text-muted); font-family: inherit; transition: all 0.2s; }
+  .lf-btn:hover { border-color: var(--teal); color: var(--teal); }
+  .lf-btn.act { background: var(--navy); color: #fff; border-color: var(--navy); }
+  .lf-btn.pro { border-color: #faeeda; color: #854f0b; background: #faeeda; }
+
+  /* TOPIC GRID */
+  .topic-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; margin-bottom: 32px; }
+  .topic-card { background: var(--white); border: 0.5px solid var(--border); border-radius: 12px; padding: 18px; cursor: pointer; text-decoration: none; color: inherit; transition: all 0.2s; display: block; position: relative; }
+  .topic-card:hover { border-color: var(--tc-color, var(--teal)); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(28,43,69,0.07); }
+  .topic-card.locked { opacity: 0.65; cursor: not-allowed; }
+  .topic-card.locked:hover { transform: none; box-shadow: none; border-color: var(--border); }
+  .topic-card.completed { border-color: rgba(29,158,117,0.3); }
+  .topic-card.in-progress { border-color: rgba(42,127,111,0.4); }
+
+  .tc-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+  .tc-level { font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 5px; background: var(--bg); color: var(--text-muted); }
+  .tc-status { font-size: 10px; font-weight: 500; padding: 2px 8px; border-radius: 5px; }
+  .st-done { background: #eaf3de; color: #3b6d11; }
+  .st-progress { background: var(--teal-light); color: var(--teal); }
+  .st-new { background: var(--bg); color: var(--text-light); }
+  .st-locked { background: #faeeda; color: #854f0b; }
+
+  .tc-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 4px; line-height: 1.3; }
+  .tc-desc { font-size: 12px; color: var(--text-muted); line-height: 1.5; margin-bottom: 10px; }
+  .tc-footer { display: flex; align-items: center; justify-content: space-between; }
+  .tc-meta { display: flex; align-items: center; gap: 10px; }
+  .tc-stat { font-size: 11px; color: var(--text-light); display: flex; align-items: center; gap: 3px; }
+  .tc-prog-wrap { display: flex; align-items: center; gap: 6px; }
+  .tc-prog-track { width: 60px; height: 3px; background: var(--bg); border-radius: 3px; overflow: hidden; }
+  .tc-prog-fill { height: 100%; border-radius: 3px; }
+  .tc-prog-txt { font-size: 10px; color: var(--text-light); }
+  .lock-icon { position: absolute; top: 14px; right: 14px; font-size: 13px; color: var(--text-light); }
+
+  /* PRO UPGRADE BANNER */
+  .upgrade-banner { background: linear-gradient(135deg, var(--navy) 0%, #1a3d5c 100%); border-radius: 12px; padding: 20px 24px; display: flex; align-items: center; gap: 16px; margin-top: 8px; }
+  .ub-icon { font-size: 32px; flex-shrink: 0; }
+  .ub-info { flex: 1; }
+  .ub-title { font-size: 15px; font-weight: 600; color: #fff; margin-bottom: 4px; }
+  .ub-desc { font-size: 13px; color: rgba(255,255,255,0.55); line-height: 1.5; }
+  .ub-btn { padding: 9px 20px; border-radius: 8px; font-size: 13px; font-weight: 500; background: var(--teal); color: #fff; border: none; cursor: pointer; font-family: inherit; white-space: nowrap; transition: background 0.2s; }
+  .ub-btn:hover { background: var(--teal-mid); }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+  .fade-in { animation: fadeUp 0.4s ease forwards; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="/" class="nav-logo">
+    <div class="nav-lm">LW</div>
+    <span class="nav-lt">LinguaWalk</span>
+  </a>
+  <div class="nav-sep"></div>
+  <span class="nav-page">🇺🇸 <span data-en="Learn English" data-ko="영어 학습">Learn English</span></span>
+  <div class="nav-space"></div>
+  <a href="index.html" class="nav-link" data-en="← Home" data-ko="← 홈">← Home</a>
+  <div class="lang-sw">
+    <button class="lbtn act" onclick="setLang('en')" id="btn-en">EN</button>
+    <button class="lbtn" onclick="setLang('ko')" id="btn-ko">한국어</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero-strip">
+  <a href="index.html" class="hs-back">← <span data-en="English home" data-ko="영어 홈">English home</span></a>
+  <h1 class="hs-title" data-en="<em>Learn</em> English" data-ko="영어 <em>학습하기</em>"><em>Learn</em> English</h1>
+  <p class="hs-sub" data-en="Choose a skill and topic. Your AI tutor will guide you every step of the way." data-ko="영역과 토픽을 선택하세요. AI 튜터가 매 단계를 함께 안내합니다.">Choose a skill and topic. Your AI tutor will guide you every step of the way.</p>
+</div>
+
+<!-- SKILL TABS -->
+<div class="skill-tabs">
+  <button class="skill-tab act" onclick="switchSkill('grammar', this)">
+    <span class="tab-icon">📝</span>Grammar
+  </button>
+  <button class="skill-tab" onclick="switchSkill('vocabulary', this)">
+    <span class="tab-icon">📖</span>Vocabulary
+  </button>
+  <button class="skill-tab" onclick="switchSkill('listening', this)" id="tab-listening">
+    <span class="tab-icon">🎧</span>Listening <span style="font-size:10px;background:#faeeda;color:#854f0b;padding:1px 5px;border-radius:4px;margin-left:3px;">PRO</span>
+  </button>
+  <button class="skill-tab" onclick="switchSkill('reading', this)">
+    <span class="tab-icon">📰</span>Reading <span style="font-size:10px;background:#faeeda;color:#854f0b;padding:1px 5px;border-radius:4px;margin-left:3px;">PRO</span>
+  </button>
+  <button class="skill-tab" onclick="switchSkill('speaking', this)">
+    <span class="tab-icon">🗣️</span>Speaking <span style="font-size:10px;background:#faeeda;color:#854f0b;padding:1px 5px;border-radius:4px;margin-left:3px;">PRO</span>
+  </button>
+  <button class="skill-tab" onclick="switchSkill('writing', this)">
+    <span class="tab-icon">✍️</span>Writing <span style="font-size:10px;background:#faeeda;color:#854f0b;padding:1px 5px;border-radius:4px;margin-left:3px;">PRO</span>
+  </button>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- AI Tutor Banner -->
+  <div class="tutor-banner fade-in">
+    <div class="tb-av">🤖</div>
+    <div class="tb-info">
+      <div class="tb-name">AI Tutor</div>
+      <div class="tb-msg" id="tutor-msg" data-en="Welcome! I recommend starting with <strong>Present Simple & Continuous</strong> — it's the foundation of English grammar. Complete it to unlock the next topic!" data-ko="환영합니다! <strong>Present Simple & Continuous</strong>부터 시작하는 것을 추천드립니다. 영어 문법의 기초입니다. 완료하면 다음 토픽이 열립니다!">Welcome! I recommend starting with <strong>Present Simple & Continuous</strong> — it's the foundation of English grammar. Complete it to unlock the next topic!</div>
+    </div>
+  </div>
+
+  <!-- Level Filter -->
+  <div class="level-filter" id="level-filter">
+    <button class="lf-btn act" onclick="filterLevel('all', this)" data-en="All Levels" data-ko="전체 레벨">All Levels</button>
+    <button class="lf-btn" onclick="filterLevel('A1', this)">A1</button>
+    <button class="lf-btn" onclick="filterLevel('A2', this)">A2</button>
+    <button class="lf-btn" onclick="filterLevel('B1', this)">B1</button>
+    <button class="lf-btn" onclick="filterLevel('B2', this)">B2</button>
+    <button class="lf-btn pro" onclick="filterLevel('C1', this)">C1 PRO</button>
+    <button class="lf-btn pro" onclick="filterLevel('C2', this)">C2 PRO</button>
+  </div>
+
+  <!-- Section label -->
+  <div class="sec-label fade-in" id="sec-label">
+    <span id="sec-label-text" data-en="Grammar Topics" data-ko="Grammar 토픽">Grammar Topics</span>
+    <span class="sec-badge badge-free" id="sec-badge" data-en="A1–B2 Free" data-ko="A1~B2 무료">A1–B2 Free</span>
+  </div>
+
+  <!-- Topic Grid -->
+  <div class="topic-grid fade-in" id="topic-grid"></div>
+
+  <!-- Upgrade Banner -->
+  <div class="upgrade-banner fade-in" id="upgrade-banner">
+    <div class="ub-icon">🔓</div>
+    <div class="ub-info">
+      <div class="ub-title" data-en="Unlock C1 & C2 with Pro" data-ko="Pro로 C1 & C2 잠금 해제">Unlock C1 & C2 with Pro</div>
+      <div class="ub-desc" data-en="Get access to advanced Grammar, Vocabulary, and all Pro skills: Listening, Reading, Speaking, Writing, and Exam Prep." data-ko="고급 Grammar, Vocabulary와 모든 Pro 영역(Listening, Reading, Speaking, Writing, Exam Prep)을 이용하세요.">Get access to advanced Grammar, Vocabulary, and all Pro skills: Listening, Reading, Speaking, Writing, and Exam Prep.</div>
+    </div>
+    <button class="ub-btn" data-en="Upgrade to Pro →" data-ko="Pro 업그레이드 →">Upgrade to Pro →</button>
+  </div>
+
+</div>
+
+<script>
+// ── Language ──
+let lang = 'en';
+function setLang(l) {
+  lang = l;
+  document.documentElement.lang = l === 'ko' ? 'ko' : 'en';
+  document.querySelectorAll('[data-en][data-ko]').forEach(el => {
+    const t = l === 'ko' ? el.getAttribute('data-ko') : el.getAttribute('data-en');
+    if (t) el.innerHTML = t;
+  });
+  document.getElementById('btn-en').classList.toggle('act', l === 'en');
+  document.getElementById('btn-ko').classList.toggle('act', l === 'ko');
+  renderTopics();
+  try { localStorage.setItem('lw-lang', l); } catch(e) {}
+}
+(function() {
+  let saved; try { saved = localStorage.getItem('lw-lang'); } catch(e) {}
+  setLang(saved || ((navigator.language||'').startsWith('ko') ? 'ko' : 'en'));
+})();
+
+// ── Data ──
+const SKILLS = {
+  grammar: {
+    color: '#185fa5',
+    tutor_en: 'I recommend starting with <strong>Present Simple & Continuous</strong> — it\'s the foundation of English grammar!',
+    tutor_ko: '<strong>Present Simple & Continuous</strong>부터 시작하는 것을 추천드립니다. 영어 문법의 기초입니다!',
+    label_en: 'Grammar Topics', label_ko: 'Grammar 토픽',
+    badge_en: 'A1–B2 Free', badge_ko: 'A1~B2 무료',
+    topics: [
+      { id:'g1', level:'A1', free:true, status:'done',
+        en:{ title:'Present Simple & Continuous', desc:'Learn when to use "I work" vs "I am working". The most essential tenses.' },
+        ko:{ title:'현재 단순 & 진행 시제', desc:'"I work"와 "I am working"의 차이를 학습합니다. 가장 필수적인 시제.' } },
+      { id:'g2', level:'A1', free:true, status:'progress',
+        en:{ title:'Articles: a, an, the', desc:'Master when to use "a", "an", and "the" — or no article at all.' },
+        ko:{ title:'관사: a, an, the', desc:'"a", "an", "the" 또는 관사 없이 사용하는 경우를 마스터합니다.' } },
+      { id:'g3', level:'A2', free:true, status:'new',
+        en:{ title:'Past Simple & Continuous', desc:'Talk about completed actions and ongoing situations in the past.' },
+        ko:{ title:'과거 단순 & 진행 시제', desc:'과거의 완료된 동작과 진행 중인 상황을 표현합니다.' } },
+      { id:'g4', level:'A2', free:true, status:'new',
+        en:{ title:'Future Forms', desc:'will, going to, and present continuous for future plans and predictions.' },
+        ko:{ title:'미래 시제', desc:'will, going to, 현재 진행형으로 미래 계획과 예측을 표현합니다.' } },
+      { id:'g5', level:'B1', free:true, status:'new',
+        en:{ title:'Present Perfect', desc:'Connect the past to the present: "I have lived here for 5 years."' },
+        ko:{ title:'현재 완료 시제', desc:'과거와 현재를 연결합니다: "I have lived here for 5 years."' } },
+      { id:'g6', level:'B1', free:true, status:'new',
+        en:{ title:'Conditionals (0, 1st, 2nd)', desc:'If sentences for real and hypothetical situations.' },
+        ko:{ title:'가정법 (0, 1, 2형식)', desc:'실제와 가상의 상황을 위한 if 문장.' } },
+      { id:'g7', level:'B1', free:true, status:'new',
+        en:{ title:'Passive Voice', desc:'Shift focus from the doer to the action: "The letter was written by her."' },
+        ko:{ title:'수동태', desc:'행위자에서 행위로 초점을 이동합니다: "The letter was written by her."' } },
+      { id:'g8', level:'B1', free:true, status:'new',
+        en:{ title:'Modal Verbs', desc:'can, could, may, might, must, should — meanings and usage.' },
+        ko:{ title:'조동사', desc:'can, could, may, might, must, should의 의미와 사용법.' } },
+      { id:'g9', level:'B2', free:true, status:'new',
+        en:{ title:'Past Perfect', desc:'Actions completed before another past event: "She had left before he arrived."' },
+        ko:{ title:'과거 완료 시제', desc:'다른 과거 사건 이전에 완료된 동작: "She had left before he arrived."' } },
+      { id:'g10', level:'B2', free:true, status:'new',
+        en:{ title:'Reported Speech', desc:'Report what others said: direct to indirect speech transformations.' },
+        ko:{ title:'간접 화법', desc:'다른 사람이 말한 내용을 전달합니다: 직접 화법에서 간접 화법으로 변환.' } },
+      { id:'g11', level:'B2', free:true, status:'new',
+        en:{ title:'Relative Clauses', desc:'who, which, that, where — defining and non-defining clauses.' },
+        ko:{ title:'관계절', desc:'who, which, that, where — 한정적 및 비한정적 관계절.' } },
+      { id:'g12', level:'B2', free:true, status:'new',
+        en:{ title:'Gerunds & Infinitives', desc:'When to use -ing forms vs to + verb after common verbs.' },
+        ko:{ title:'동명사 & 부정사', desc:'일반 동사 뒤에 -ing 형태와 to + 동사원형을 사용하는 경우.' } },
+      { id:'g13', level:'C1', free:false, status:'locked',
+        en:{ title:'Advanced Conditionals', desc:'3rd conditional, mixed conditionals, and inverted forms.' },
+        ko:{ title:'고급 가정법', desc:'3형식 가정법, 혼합 가정법, 도치 형태.' } },
+      { id:'g14', level:'C1', free:false, status:'locked',
+        en:{ title:'Subjunctive & Inversion', desc:'Formal structures: "Were he to arrive..." and negative inversions.' },
+        ko:{ title:'가정법 & 도치', desc:'격식체 구조: "Were he to arrive..."와 부정 도치.' } },
+      { id:'g15', level:'C2', free:false, status:'locked',
+        en:{ title:'Cleft Sentences & Emphasis', desc:'It is... that / What I need is... for sophisticated emphasis.' },
+        ko:{ title:'분열문 & 강조', desc:'It is... that / What I need is... 고급 강조 표현.' } },
+      { id:'g16', level:'C2', free:false, status:'locked',
+        en:{ title:'Advanced Passive Structures', desc:'Complex passive forms, causative have/get, and passive infinitives.' },
+        ko:{ title:'고급 수동태 구조', desc:'복잡한 수동태, 사역 have/get, 수동 부정사.' } },
+    ]
+  },
+  vocabulary: {
+    color: '#2A7F6F',
+    tutor_en: 'Start with <strong>Daily Routines & Habits</strong> — these words appear in almost every conversation!',
+    tutor_ko: '<strong>Daily Routines & Habits</strong>부터 시작하세요. 거의 모든 대화에서 등장하는 단어들입니다!',
+    label_en: 'Vocabulary Topics', label_ko: 'Vocabulary 토픽',
+    badge_en: 'A1–B2 Free', badge_ko: 'A1~B2 무료',
+    topics: [
+      { id:'v1', level:'A1', free:true, status:'new',
+        en:{ title:'Daily Routines & Habits', desc:'Wake up, have breakfast, go to work — essential daily life vocabulary.' },
+        ko:{ title:'일상 루틴 & 습관', desc:'기상, 아침 식사, 출근 등 필수 일상 생활 어휘.' } },
+      { id:'v2', level:'A1', free:true, status:'new',
+        en:{ title:'Numbers, Dates & Time', desc:'Count, tell the time, and talk about dates and schedules.' },
+        ko:{ title:'숫자, 날짜 & 시간', desc:'숫자 세기, 시간 말하기, 날짜와 일정 표현.' } },
+      { id:'v3', level:'A1', free:true, status:'new',
+        en:{ title:'Family & Relationships', desc:'Parents, siblings, friends, and describing relationships.' },
+        ko:{ title:'가족 & 관계', desc:'부모, 형제자매, 친구 및 관계 묘사.' } },
+      { id:'v4', level:'A2', free:true, status:'new',
+        en:{ title:'Food & Dining', desc:'Menu items, cooking methods, restaurant phrases, and expressing taste.' },
+        ko:{ title:'음식 & 식사', desc:'메뉴 항목, 조리법, 레스토랑 표현, 맛 표현.' } },
+      { id:'v5', level:'A2', free:true, status:'new',
+        en:{ title:'Travel & Transport', desc:'Airports, hotels, directions, and getting around a new city.' },
+        ko:{ title:'여행 & 교통', desc:'공항, 호텔, 길 안내, 새로운 도시에서 이동하기.' } },
+      { id:'v6', level:'A2', free:true, status:'new',
+        en:{ title:'Shopping & Money', desc:'Prices, sizes, colors, and common shopping expressions.' },
+        ko:{ title:'쇼핑 & 돈', desc:'가격, 사이즈, 색상, 일반적인 쇼핑 표현.' } },
+      { id:'v7', level:'B1', free:true, status:'new',
+        en:{ title:'Work & Career', desc:'Job titles, workplace phrases, interviews, and professional communication.' },
+        ko:{ title:'직업 & 경력', desc:'직책, 직장 표현, 면접, 전문적 의사소통.' } },
+      { id:'v8', level:'B1', free:true, status:'new',
+        en:{ title:'Health & Body', desc:'Symptoms, medical vocabulary, and talking to a doctor.' },
+        ko:{ title:'건강 & 신체', desc:'증상, 의학 어휘, 의사와 대화하기.' } },
+      { id:'v9', level:'B1', free:true, status:'new',
+        en:{ title:'Technology & Media', desc:'Digital life, social media, gadgets, and online communication.' },
+        ko:{ title:'기술 & 미디어', desc:'디지털 생활, 소셜 미디어, 기기, 온라인 커뮤니케이션.' } },
+      { id:'v10', level:'B1', free:true, status:'new',
+        en:{ title:'Environment & Nature', desc:'Weather, climate, environmental issues, and natural phenomena.' },
+        ko:{ title:'환경 & 자연', desc:'날씨, 기후, 환경 문제, 자연 현상.' } },
+      { id:'v11', level:'B2', free:true, status:'new',
+        en:{ title:'Education & Learning', desc:'Academic vocabulary, study skills, and educational systems.' },
+        ko:{ title:'교육 & 학습', desc:'학문적 어휘, 학습 기술, 교육 시스템.' } },
+      { id:'v12', level:'B2', free:true, status:'new',
+        en:{ title:'Society & Culture', desc:'Social issues, customs, traditions, and cultural differences.' },
+        ko:{ title:'사회 & 문화', desc:'사회 문제, 관습, 전통, 문화적 차이.' } },
+      { id:'v13', level:'B2', free:true, status:'new',
+        en:{ title:'Business & Economics', desc:'Markets, trade, finance, and professional business language.' },
+        ko:{ title:'비즈니스 & 경제', desc:'시장, 무역, 금융, 전문 비즈니스 언어.' } },
+      { id:'v14', level:'B2', free:true, status:'new',
+        en:{ title:'Phrasal Verbs (Essential)', desc:'The most common phrasal verbs: give up, look after, turn down...' },
+        ko:{ title:'구동사 (필수)', desc:'가장 일반적인 구동사: give up, look after, turn down...' } },
+      { id:'v15', level:'C1', free:false, status:'locked',
+        en:{ title:'Idioms & Fixed Expressions', desc:'Sound like a native: "break a leg", "hit the nail on the head"...' },
+        ko:{ title:'관용어 & 고정 표현', desc:'원어민처럼: "break a leg", "hit the nail on the head"...' } },
+      { id:'v16', level:'C1', free:false, status:'locked',
+        en:{ title:'Academic & Professional Vocabulary', desc:'Sophisticated vocabulary for essays, reports, and formal contexts.' },
+        ko:{ title:'학술 & 전문 어휘', desc:'에세이, 보고서, 공식적인 맥락을 위한 고급 어휘.' } },
+      { id:'v17', level:'C2', free:false, status:'locked',
+        en:{ title:'Nuance & Register', desc:'Formal vs informal, connotation, subtle differences between synonyms.' },
+        ko:{ title:'뉘앙스 & 어감', desc:'격식체 vs 비격식체, 함축 의미, 동의어 간의 미묘한 차이.' } },
+      { id:'v18', level:'C2', free:false, status:'locked',
+        en:{ title:'Literary & Rhetorical Devices', desc:'Metaphor, irony, hyperbole — language for sophisticated expression.' },
+        ko:{ title:'문학적 & 수사적 장치', desc:'은유, 아이러니, 과장 — 정교한 표현을 위한 언어.' } },
+    ]
+  },
+  listening: { color:'#ba7517', pro:true,
+    tutor_en:'Listening is a Pro feature. Upgrade to access 8 listening types from A1 to C2 with AI tutor guidance.',
+    tutor_ko:'Listening은 Pro 기능입니다. Pro로 업그레이드하면 AI 튜터와 함께 A1~C2의 8가지 듣기 유형을 이용할 수 있습니다.',
+    label_en:'Listening Topics', label_ko:'Listening 토픽',
+    badge_en:'PRO Only', badge_ko:'PRO 전용', topics:[] },
+  reading: { color:'#3b6d11', pro:true,
+    tutor_en:'Reading is a Pro feature. Upgrade to access 9 reading types from A1 to C2 with AI tutor guidance.',
+    tutor_ko:'Reading은 Pro 기능입니다. Pro로 업그레이드하면 AI 튜터와 함께 A1~C2의 9가지 읽기 유형을 이용할 수 있습니다.',
+    label_en:'Reading Topics', label_ko:'Reading 토픽',
+    badge_en:'PRO Only', badge_ko:'PRO 전용', topics:[] },
+  speaking: { color:'#993556', pro:true,
+    tutor_en:'Speaking is a Pro feature. Upgrade to practice speaking A1 to C2 with your personal AI tutor.',
+    tutor_ko:'Speaking은 Pro 기능입니다. Pro로 업그레이드하면 AI 튜터와 A1~C2 말하기를 연습할 수 있습니다.',
+    label_en:'Speaking Topics', label_ko:'Speaking 토픽',
+    badge_en:'PRO Only', badge_ko:'PRO 전용', topics:[] },
+  writing: { color:'#534ab7', pro:true,
+    tutor_en:'Writing is a Pro feature. Upgrade to improve your writing from A1 to C2 with AI tutor corrections.',
+    tutor_ko:'Writing은 Pro 기능입니다. Pro로 업그레이드하면 AI 튜터의 교정으로 A1~C2 작문 실력을 향상시킬 수 있습니다.',
+    label_en:'Writing Topics', label_ko:'Writing 토픽',
+    badge_en:'PRO Only', badge_ko:'PRO 전용', topics:[] },
+};
+
+let currentSkill = 'grammar';
+let currentLevel = 'all';
+
+function switchSkill(skill, btn) {
+  currentSkill = skill;
+  currentLevel = 'all';
+  document.querySelectorAll('.skill-tab').forEach(t => t.classList.remove('act'));
+  btn.classList.add('act');
+  document.querySelectorAll('.lf-btn').forEach(b => b.classList.remove('act'));
+  document.querySelector('.lf-btn').classList.add('act');
+
+  const d = SKILLS[skill];
+  document.getElementById('tutor-msg').innerHTML = lang === 'ko' ? d.tutor_ko : d.tutor_en;
+  document.getElementById('sec-label-text').setAttribute('data-en', d.label_en);
+  document.getElementById('sec-label-text').setAttribute('data-ko', d.label_ko);
+  document.getElementById('sec-label-text').textContent = lang === 'ko' ? d.label_ko : d.label_en;
+  document.getElementById('sec-badge').setAttribute('data-en', d.badge_en);
+  document.getElementById('sec-badge').setAttribute('data-ko', d.badge_ko);
+  document.getElementById('sec-badge').textContent = lang === 'ko' ? d.badge_ko : d.badge_en;
+  document.getElementById('sec-badge').className = 'sec-badge ' + (d.pro ? 'badge-pro' : 'badge-free');
+  document.getElementById('upgrade-banner').style.display = d.pro ? 'flex' : 'flex';
+  renderTopics();
+}
+
+function filterLevel(lv, btn) {
+  currentLevel = lv;
+  document.querySelectorAll('.lf-btn').forEach(b => b.classList.remove('act'));
+  btn.classList.add('act');
+  renderTopics();
+}
+
+function renderTopics() {
+  const grid = document.getElementById('topic-grid');
+  const skill = SKILLS[currentSkill];
+
+  if (skill.pro) {
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px 20px;">
+      <div style="font-size:40px;margin-bottom:12px;">🔒</div>
+      <div style="font-size:16px;font-weight:600;color:var(--text);margin-bottom:8px;">${lang==='ko'?'Pro 전용 기능':'Pro Feature'}</div>
+      <div style="font-size:13px;color:var(--text-muted);">${lang==='ko'?'이 영역은 Pro 회원에게만 제공됩니다.':'This skill is available to Pro members only.'}</div>
+    </div>`;
+    document.getElementById('upgrade-banner').style.display = 'flex';
+    return;
+  }
+
+  const filtered = skill.topics.filter(t => currentLevel === 'all' || t.level === currentLevel);
+  const statusLabel = { done: lang==='ko'?'완료':'Done', progress: lang==='ko'?'진행 중':'In progress', new: lang==='ko'?'새 토픽':'New', locked: lang==='ko'?'잠금':'Locked' };
+  const statusClass = { done:'st-done', progress:'st-progress', new:'st-new', locked:'st-locked' };
+
+  grid.innerHTML = filtered.map(t => {
+    const d = lang === 'ko' ? t.ko : t.en;
+    const isLocked = !t.free;
+    const pct = t.status === 'done' ? 100 : t.status === 'progress' ? 40 : 0;
+    return `<a href="${isLocked ? '#' : 'grammar.html?topic='+t.id}"
+      class="topic-card ${isLocked ? 'locked' : ''} ${t.status}"
+      style="--tc-color:${skill.color};"
+      onclick="${isLocked ? 'return false;' : ''}">
+      ${isLocked ? '<span class="lock-icon">🔒</span>' : ''}
+      <div class="tc-top">
+        <span class="tc-level">${t.level}</span>
+        <span class="tc-status ${statusClass[t.status]}">${statusLabel[t.status]}</span>
+      </div>
+      <div class="tc-title">${d.title}</div>
+      <div class="tc-desc">${d.desc}</div>
+      <div class="tc-footer">
+        <div class="tc-meta">
+          <span class="tc-stat">📖 <span>${lang==='ko'?'10분':'10 min'}</span></span>
+        </div>
+        ${pct > 0 ? `<div class="tc-prog-wrap">
+          <div class="tc-prog-track"><div class="tc-prog-fill" style="width:${pct}%;background:${skill.color};"></div></div>
+          <span class="tc-prog-txt">${pct}%</span>
+        </div>` : ''}
+      </div>
+    </a>`;
+  }).join('');
+
+  document.getElementById('upgrade-banner').style.display = (currentSkill === 'grammar' || currentSkill === 'vocabulary') ? 'flex' : 'none';
+}
+
+// Init
+renderTopics();
+</script>
+</body>
+</html>
