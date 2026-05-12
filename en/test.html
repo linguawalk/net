@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LinguaWalk — English Level Test</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --navy: #1C2B45; --teal: #2A7F6F; --teal-light: #E1F5EE; --teal-mid: #1D9E75;
+    --bg: #F8F7F4; --white: #fff; --text: #1C2B45; --text-muted: #5a6a82; --text-light: #94a3b8;
+    --border: rgba(28,43,69,0.1); --border-md: rgba(28,43,69,0.18);
+  }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  /* NAV */
+  nav { background: rgba(28,43,69,0.97); height: 56px; display: flex; align-items: center; padding: 0 5%; border-bottom: 0.5px solid rgba(255,255,255,0.08); position: sticky; top: 0; z-index: 100; }
+  .nav-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; }
+  .nav-lm { width: 28px; height: 28px; background: var(--teal); border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: #fff; }
+  .nav-lt { font-size: 16px; font-weight: 600; color: #fff; }
+  .nav-sep { width: 1px; height: 18px; background: rgba(255,255,255,0.15); margin: 0 12px; }
+  .nav-page { font-size: 13px; color: rgba(255,255,255,0.6); }
+  .nav-space { flex: 1; }
+  .lang-sw { display: flex; background: rgba(255,255,255,0.08); border-radius: 7px; padding: 2px; gap: 2px; }
+  .lbtn { padding: 4px 10px; border-radius: 5px; font-size: 11px; font-weight: 500; border: none; background: transparent; color: rgba(255,255,255,0.5); cursor: pointer; font-family: inherit; transition: all 0.2s; }
+  .lbtn.act { background: var(--teal); color: #fff; }
+
+  /* PROGRESS BAR */
+  .progress-wrap { background: var(--white); border-bottom: 0.5px solid var(--border); padding: 12px 5%; }
+  .progress-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .progress-label { font-size: 12px; color: var(--text-muted); }
+  .progress-count { font-size: 12px; font-weight: 600; color: var(--text); }
+  .progress-track { height: 6px; background: var(--bg); border-radius: 6px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--teal); border-radius: 6px; transition: width 0.4s ease; }
+
+  /* MAIN */
+  .main { max-width: 680px; margin: 0 auto; padding: 40px 5% 80px; }
+
+  /* INTRO SCREEN */
+  .intro { text-align: center; padding: 20px 0; }
+  .intro-icon { font-size: 56px; margin-bottom: 20px; }
+  .intro-title { font-family: 'DM Serif Display', serif; font-size: clamp(28px, 5vw, 40px); color: var(--navy); margin-bottom: 12px; }
+  .intro-title em { font-style: italic; color: var(--teal); }
+  .intro-sub { font-size: 16px; color: var(--text-muted); line-height: 1.7; font-weight: 300; max-width: 480px; margin: 0 auto 32px; }
+  .intro-info { display: flex; justify-content: center; gap: 28px; margin-bottom: 36px; flex-wrap: wrap; }
+  .info-item { display: flex; align-items: center; gap: 7px; font-size: 13px; color: var(--text-muted); }
+  .info-icon { font-size: 18px; }
+  .btn-start { padding: 14px 40px; border-radius: 10px; font-size: 16px; font-weight: 500; background: var(--teal); color: #fff; border: none; cursor: pointer; font-family: inherit; transition: all 0.2s; }
+  .btn-start:hover { background: var(--teal-mid); transform: translateY(-1px); }
+
+  /* QUESTION SCREEN */
+  .question-screen { display: none; }
+  .q-section-tag { font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--teal); margin-bottom: 8px; }
+  .q-text { font-size: clamp(17px, 3vw, 22px); font-weight: 500; color: var(--navy); line-height: 1.5; margin-bottom: 8px; }
+  .q-sub { font-size: 14px; color: var(--text-muted); margin-bottom: 28px; line-height: 1.6; }
+
+  /* fill-in-blank */
+  .q-blank { display: inline-block; min-width: 120px; border-bottom: 2px solid var(--teal); color: var(--teal); font-weight: 600; text-align: center; }
+
+  /* OPTIONS */
+  .options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
+  .option {
+    padding: 14px 18px; border-radius: 10px; border: 1.5px solid var(--border-md);
+    background: var(--white); cursor: pointer; font-size: 15px; color: var(--text);
+    transition: all 0.2s; text-align: left; font-family: inherit; display: flex; align-items: center; gap: 12px;
+  }
+  .option:hover { border-color: var(--teal); background: var(--teal-light); }
+  .option.selected { border-color: var(--teal); background: var(--teal-light); color: var(--teal); font-weight: 500; }
+  .option.correct { border-color: var(--teal-mid); background: #eaf3de; color: #3b6d11; font-weight: 500; }
+  .option.wrong { border-color: #e24b4a; background: #fcebeb; color: #a32d2d; font-weight: 500; }
+  .option-letter { width: 28px; height: 28px; border-radius: 50%; background: var(--bg); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; color: var(--text-muted); flex-shrink: 0; transition: all 0.2s; }
+  .option.selected .option-letter { background: var(--teal); color: #fff; }
+  .option.correct .option-letter { background: var(--teal-mid); color: #fff; }
+  .option.wrong .option-letter { background: #e24b4a; color: #fff; }
+
+  /* FEEDBACK */
+  .feedback { display: none; padding: 14px 18px; border-radius: 10px; margin-bottom: 20px; font-size: 14px; line-height: 1.6; }
+  .feedback.correct { background: #eaf3de; border: 0.5px solid #b6dca0; color: #2d5a1b; }
+  .feedback.wrong { background: #fcebeb; border: 0.5px solid #f0b0ae; color: #a32d2d; }
+  .feedback-title { font-weight: 600; margin-bottom: 4px; font-size: 15px; }
+
+  /* AI TUTOR HINT */
+  .tutor-hint { background: var(--teal-light); border: 0.5px solid rgba(42,127,111,0.25); border-radius: 10px; padding: 12px 16px; margin-bottom: 20px; display: flex; gap: 10px; align-items: flex-start; }
+  .th-avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--teal); display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; margin-top: 1px; }
+  .th-text { font-size: 13px; color: var(--teal); line-height: 1.5; }
+  .th-text strong { font-weight: 600; }
+
+  /* NEXT BTN */
+  .btn-next { width: 100%; padding: 13px; border-radius: 10px; font-size: 15px; font-weight: 500; background: var(--navy); color: #fff; border: none; cursor: pointer; font-family: inherit; transition: all 0.2s; display: none; }
+  .btn-next:hover { background: #243455; }
+  .btn-next.show { display: block; }
+
+  /* RESULT SCREEN */
+  .result-screen { display: none; text-align: center; }
+  .result-badge { width: 100px; height: 100px; border-radius: 50%; background: var(--teal); display: flex; align-items: center; justify-content: center; font-family: 'DM Serif Display', serif; font-size: 32px; font-weight: 400; color: #fff; margin: 0 auto 24px; }
+  .result-title { font-family: 'DM Serif Display', serif; font-size: 32px; color: var(--navy); margin-bottom: 8px; }
+  .result-sub { font-size: 16px; color: var(--text-muted); font-weight: 300; margin-bottom: 32px; line-height: 1.6; }
+  .result-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 32px; }
+  .rc { background: var(--white); border: 0.5px solid var(--border); border-radius: 12px; padding: 16px 12px; }
+  .rc-val { font-size: 22px; font-weight: 600; color: var(--navy); }
+  .rc-lbl { font-size: 11px; color: var(--text-light); margin-top: 3px; }
+  .result-desc { background: var(--teal-light); border-radius: 12px; padding: 20px; margin-bottom: 28px; text-align: left; }
+  .rd-title { font-size: 14px; font-weight: 600; color: var(--teal); margin-bottom: 8px; }
+  .rd-text { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+  .result-btns { display: flex; gap: 10px; flex-direction: column; }
+  .btn-primary { padding: 13px; border-radius: 10px; font-size: 15px; font-weight: 500; background: var(--teal); color: #fff; border: none; cursor: pointer; font-family: inherit; transition: all 0.2s; text-decoration: none; display: block; text-align: center; }
+  .btn-primary:hover { background: var(--teal-mid); }
+  .btn-secondary { padding: 13px; border-radius: 10px; font-size: 15px; font-weight: 500; background: var(--white); color: var(--text); border: 0.5px solid var(--border-md); cursor: pointer; font-family: inherit; transition: all 0.2s; text-decoration: none; display: block; text-align: center; }
+  .btn-secondary:hover { background: var(--bg); }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+  .fade-in { animation: fadeUp 0.4s ease forwards; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="/" class="nav-logo">
+    <div class="nav-lm">LW</div>
+    <span class="nav-lt">LinguaWalk</span>
+  </a>
+  <div class="nav-sep"></div>
+  <span class="nav-page" data-en="🇺🇸 English Level Test" data-ko="🇺🇸 영어 레벨 테스트">🇺🇸 English Level Test</span>
+  <div class="nav-space"></div>
+  <div class="lang-sw">
+    <button class="lbtn act" onclick="setLang('en')" id="btn-en">EN</button>
+    <button class="lbtn" onclick="setLang('ko')" id="btn-ko">한국어</button>
+  </div>
+</nav>
+
+<!-- PROGRESS -->
+<div class="progress-wrap" id="progress-wrap" style="display:none;">
+  <div class="progress-info">
+    <span class="progress-label" data-en="Question" data-ko="문제">Question</span>
+    <span class="progress-count"><span id="q-current">1</span> / <span id="q-total">20</span></span>
+  </div>
+  <div class="progress-track">
+    <div class="progress-fill" id="progress-fill" style="width:5%;"></div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- INTRO -->
+  <div class="intro fade-in" id="screen-intro">
+    <div class="intro-icon">🎯</div>
+    <h1 class="intro-title" data-en="Find your <em>English level</em>" data-ko="나의 <em>영어 레벨</em> 찾기">Find your <em>English level</em></h1>
+    <p class="intro-sub" data-en="Answer 20 questions across Grammar, Vocabulary, and Reading. Our AI will diagnose your level from A1 to C2." data-ko="Grammar, Vocabulary, Reading 20문제를 풀면 AI가 A1~C2 중 정확한 레벨을 진단해 드립니다.">Answer 20 questions across Grammar, Vocabulary, and Reading. Our AI will diagnose your level from A1 to C2.</p>
+    <div class="intro-info">
+      <div class="info-item"><span class="info-icon">⏱️</span><span data-en="About 10 minutes" data-ko="약 10분 소요">About 10 minutes</span></div>
+      <div class="info-item"><span class="info-icon">📝</span><span data-en="20 questions" data-ko="20문제">20 questions</span></div>
+      <div class="info-item"><span class="info-icon">🤖</span><span data-en="AI-powered scoring" data-ko="AI 자동 채점">AI-powered scoring</span></div>
+      <div class="info-item"><span class="info-icon">💾</span><span data-en="Results saved (sign-in)" data-ko="결과 저장 (로그인 시)">Results saved (sign-in)</span></div>
+    </div>
+    <button class="btn-start" onclick="startTest()" data-en="Start Level Test →" data-ko="레벨 테스트 시작 →">Start Level Test →</button>
+  </div>
+
+  <!-- QUESTION -->
+  <div class="question-screen fade-in" id="screen-question">
+    <div class="q-section-tag" id="q-tag">Grammar · A2</div>
+    <div class="q-text" id="q-text"></div>
+    <div class="q-sub" id="q-sub"></div>
+    <div class="tutor-hint" id="tutor-hint">
+      <div class="th-avatar">🤖</div>
+      <div class="th-text" id="tutor-text"></div>
+    </div>
+    <div class="options" id="options"></div>
+    <div class="feedback" id="feedback">
+      <div class="feedback-title" id="feedback-title"></div>
+      <div id="feedback-text"></div>
+    </div>
+    <button class="btn-next" id="btn-next" onclick="nextQuestion()" data-en="Next question →" data-ko="다음 문제 →">Next question →</button>
+  </div>
+
+  <!-- RESULT -->
+  <div class="result-screen fade-in" id="screen-result">
+    <div class="result-badge" id="result-badge">B1</div>
+    <h2 class="result-title" id="result-title"></h2>
+    <p class="result-sub" id="result-sub"></p>
+    <div class="result-cards">
+      <div class="rc"><div class="rc-val" id="r-correct">0</div><div class="rc-lbl" data-en="Correct" data-ko="정답">Correct</div></div>
+      <div class="rc"><div class="rc-val" id="r-total">20</div><div class="rc-lbl" data-en="Total" data-ko="총 문제">Total</div></div>
+      <div class="rc"><div class="rc-val" id="r-pct">0%</div><div class="rc-lbl" data-en="Score" data-ko="점수">Score</div></div>
+    </div>
+    <div class="result-desc">
+      <div class="rd-title" data-en="🤖 AI Tutor Recommendation" data-ko="🤖 AI 튜터 추천">🤖 AI Tutor Recommendation</div>
+      <div class="rd-text" id="result-recommendation"></div>
+    </div>
+    <div class="result-btns">
+      <a href="index.html" class="btn-primary" data-en="Start learning at my level →" data-ko="내 레벨에서 학습 시작 →">Start learning at my level →</a>
+      <a href="index.html" class="btn-secondary" data-en="← Back to English home" data-ko="← 영어 홈으로">← Back to English home</a>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ── Language ──
+let lang = 'en';
+function setLang(l) {
+  lang = l;
+  document.documentElement.lang = l === 'ko' ? 'ko' : 'en';
+  document.querySelectorAll('[data-en][data-ko]').forEach(el => {
+    const t = l === 'ko' ? el.getAttribute('data-ko') : el.getAttribute('data-en');
+    if (t) el.innerHTML = t;
+  });
+  document.getElementById('btn-en').classList.toggle('act', l === 'en');
+  document.getElementById('btn-ko').classList.toggle('act', l === 'ko');
+  try { localStorage.setItem('lw-lang', l); } catch(e) {}
+}
+(function() {
+  let saved; try { saved = localStorage.getItem('lw-lang'); } catch(e) {}
+  setLang(saved || ((navigator.language||'').startsWith('ko') ? 'ko' : 'en'));
+})();
+
+// ── Questions ──
+const QUESTIONS = [
+  { tag:'Grammar · A1', level:'A1',
+    en:{ text:'Choose the correct sentence.', sub:'', options:['I am happy.','I is happy.','I are happy.','Me am happy.'], answer:0,
+         feedback:'✓ "I am" is correct. With "I", we always use "am".' ,
+         hint:'Think about the verb "to be": I ___, You are, He/She is.' },
+    ko:{ text:'올바른 문장을 고르세요.', sub:'', options:['I am happy.','I is happy.','I are happy.','Me am happy.'], answer:0,
+         feedback:'✓ "I am"이 정답입니다. "I"와 함께는 항상 "am"을 사용합니다.',
+         hint:'"to be" 동사를 생각해 보세요: I ___, You are, He/She is.' }
+  },
+  { tag:'Vocabulary · A1', level:'A1',
+    en:{ text:'What is the opposite of "hot"?', sub:'', options:['warm','cold','big','fast'], answer:1,
+         feedback:'✓ "Cold" is the opposite of "hot". Hot = high temperature, Cold = low temperature.',
+         hint:'Think about temperature — what is the opposite of high temperature?' },
+    ko:{ text:'"hot"의 반대말은 무엇인가요?', sub:'', options:['warm','cold','big','fast'], answer:1,
+         feedback:'✓ "cold"가 정답입니다. hot = 높은 온도, cold = 낮은 온도.',
+         hint:'온도를 생각해 보세요. 높은 온도의 반대는?' }
+  },
+  { tag:'Grammar · A2', level:'A2',
+    en:{ text:'She ___ to school every day.', sub:'Choose the correct verb form.', options:['go','goes','going','gone'], answer:1,
+         feedback:'✓ "Goes" is correct. With he/she/it in present simple, add -s or -es.',
+         hint:'Present simple with he/she/it: add -s or -es to the verb.' },
+    ko:{ text:'She ___ to school every day.', sub:'올바른 동사 형태를 고르세요.', options:['go','goes','going','gone'], answer:1,
+         feedback:'✓ "goes"가 정답입니다. 현재 단순 시제에서 he/she/it 주어에는 동사에 -s/-es를 붙입니다.',
+         hint:'현재 단순 시제에서 he/she/it 주어: 동사에 -s 또는 -es를 붙입니다.' }
+  },
+  { tag:'Vocabulary · A2', level:'A2',
+    en:{ text:'Which word means "to move very quickly on foot"?', sub:'', options:['walk','sit','run','sleep'], answer:2,
+         feedback:'✓ "Run" means to move quickly on foot. Walk is slower.',
+         hint:'Think about sports — what do people do in a 100-meter race?' },
+    ko:{ text:'"발로 매우 빠르게 이동하다"를 의미하는 단어는?', sub:'', options:['walk','sit','run','sleep'], answer:2,
+         feedback:'✓ "run"이 정답입니다. walk는 더 천천히 이동하는 것입니다.',
+         hint:'운동을 생각해 보세요. 100미터 달리기에서 사람들이 하는 것은?' }
+  },
+  { tag:'Grammar · B1', level:'B1',
+    en:{ text:'I wish I ___ more time to study.', sub:'Choose the correct form for this wish.', options:['have','had','will have','am having'], answer:1,
+         feedback:'✓ "Had" is correct. After "I wish", we use past tense to talk about present wishes.',
+         hint:'"I wish" expresses an unreal or impossible desire. What tense follows?' },
+    ko:{ text:'I wish I ___ more time to study.', sub:'소원을 나타내는 올바른 형태를 고르세요.', options:['have','had','will have','am having'], answer:1,
+         feedback:'✓ "had"가 정답입니다. "I wish" 다음에는 현재 소원을 나타내기 위해 과거 시제를 사용합니다.',
+         hint:'"I wish"는 실제로 일어나지 않은 일에 대한 소망을 나타냅니다. 어떤 시제가 오나요?' }
+  },
+  { tag:'Vocabulary · B1', level:'B1',
+    en:{ text:'The meeting was ___ because many important issues were discussed.', sub:'Choose the best word.', options:['boring','productive','quiet','short'], answer:1,
+         feedback:'✓ "Productive" means achieving good results. If important issues were discussed, the meeting was productive.',
+         hint:'If important things were accomplished, how would you describe the meeting?' },
+    ko:{ text:'The meeting was ___ because many important issues were discussed.', sub:'가장 알맞은 단어를 고르세요.', options:['boring','productive','quiet','short'], answer:1,
+         feedback:'✓ "productive"가 정답입니다. 중요한 사안들이 논의되었다면 그 회의는 생산적이었다고 할 수 있습니다.',
+         hint:'중요한 것들이 이루어졌다면 그 회의를 어떻게 표현할까요?' }
+  },
+  { tag:'Grammar · B1', level:'B1',
+    en:{ text:'If I ___ the lottery, I would travel the world.', sub:'', options:['win','won','had won','will win'], answer:1,
+         feedback:'✓ "Won" is correct. This is the 2nd conditional: If + past simple, would + verb.',
+         hint:'This is a hypothetical situation (unlikely but possible). Which conditional is it?' },
+    ko:{ text:'If I ___ the lottery, I would travel the world.', sub:'', options:['win','won','had won','will win'], answer:1,
+         feedback:'✓ "won"이 정답입니다. 2형식 가정법: If + 과거 단순, would + 동사원형.',
+         hint:'이것은 가능성이 낮은 가정 상황입니다. 몇 형식 가정법인가요?' }
+  },
+  { tag:'Reading · B1', level:'B1',
+    en:{ text:'Read and answer: "Despite the heavy rain, the outdoor concert continued. The audience, though soaked, seemed to enjoy every moment."',
+         sub:'What can we conclude about the audience?',
+         options:['They were unhappy about the rain.','They enjoyed the concert despite the rain.','They left because of the rain.','They complained about the weather.'],
+         answer:1, feedback:'✓ "Seemed to enjoy every moment" tells us the audience was happy despite being wet.',
+         hint:'Focus on the phrase "seemed to enjoy every moment" — what does this tell us?' },
+    ko:{ text:'읽고 답하세요: "Despite the heavy rain, the outdoor concert continued. The audience, though soaked, seemed to enjoy every moment."',
+         sub:'청중에 대해 무엇을 알 수 있나요?',
+         options:['비 때문에 불행했다.','비에도 불구하고 콘서트를 즐겼다.','비 때문에 자리를 떠났다.','날씨에 대해 불평했다.'],
+         answer:1, feedback:'✓ "seemed to enjoy every moment"는 청중이 비에 젖었음에도 즐거워했다는 것을 알려줍니다.',
+         hint:'"seemed to enjoy every moment" 구절에 집중하세요.' }
+  },
+  { tag:'Grammar · B2', level:'B2',
+    en:{ text:'The report ___ by the time the manager arrives.', sub:'Choose the correct tense.', options:['will finish','will be finishing','will have been finished','is finished'], answer:2,
+         feedback:'✓ "Will have been finished" (future perfect passive) is correct. The action completes before a future point.',
+         hint:'Future perfect passive: will + have + been + past participle. The action will be completed before the manager arrives.' },
+    ko:{ text:'The report ___ by the time the manager arrives.', sub:'올바른 시제를 고르세요.', options:['will finish','will be finishing','will have been finished','is finished'], answer:2,
+         feedback:'✓ "will have been finished" (미래완료 수동태)가 정답입니다. 매니저가 도착하기 전에 완료될 것입니다.',
+         hint:'미래완료 수동태: will + have + been + 과거분사.' }
+  },
+  { tag:'Vocabulary · B2', level:'B2',
+    en:{ text:'Her speech was so ___ that the entire audience was moved to tears.', sub:'', options:['boring','eloquent','quiet','brief'], answer:1,
+         feedback:'✓ "Eloquent" means expressing ideas clearly and powerfully. An eloquent speech can move people emotionally.',
+         hint:'Which word describes speaking in a powerful and moving way?' },
+    ko:{ text:'Her speech was so ___ that the entire audience was moved to tears.', sub:'', options:['boring','eloquent','quiet','brief'], answer:1,
+         feedback:'✓ "eloquent"이 정답입니다. 명료하고 힘있게 의사를 표현하는 것을 의미합니다.',
+         hint:'감동적이고 힘있게 말하는 것을 어떤 단어로 표현하나요?' }
+  },
+  { tag:'Grammar · B2', level:'B2',
+    en:{ text:'___ harder, he would have passed the exam.', sub:'Choose the correct form.', options:['If he studied','Had he studied','If he studies','Should he study'], answer:1,
+         feedback:'✓ "Had he studied" is the inverted 3rd conditional. This form is more formal: Had + subject + past participle.',
+         hint:'This is a 3rd conditional in inverted form (more formal). No "if" is used — instead the auxiliary comes first.' },
+    ko:{ text:'"___ harder, he would have passed the exam." 올바른 형태를 고르세요.', sub:'',
+         options:['If he studied','Had he studied','If he studies','Should he study'], answer:1,
+         feedback:'✓ "Had he studied"는 3형식 가정법의 도치 형태입니다. Had + 주어 + 과거분사.',
+         hint:'이것은 if가 없는 도치된 3형식 가정법입니다. 조동사가 먼저 옵니다.' }
+  },
+  { tag:'Reading · B2', level:'B2',
+    en:{ text:'Read: "The proliferation of social media has fundamentally altered the way individuals perceive and construct their identities, often blurring the boundary between authentic self-expression and performative behavior."',
+         sub:'What is the main argument of this passage?',
+         options:['Social media is harmful to teenagers.','Social media has changed how people form and present their identity.','People spend too much time on social media.','Social media makes people more creative.'],
+         answer:1, feedback:'✓ The passage argues that social media has "fundamentally altered" identity formation and expression.',
+         hint:'Focus on "fundamentally altered the way individuals perceive and construct their identities".' },
+    ko:{ text:'읽기: "The proliferation of social media has fundamentally altered the way individuals perceive and construct their identities..."',
+         sub:'이 글의 주요 주장은 무엇인가요?',
+         options:['소셜 미디어는 십대에게 해롭다.','소셜 미디어는 사람들이 정체성을 형성하고 표현하는 방식을 바꿨다.','사람들이 소셜 미디어에 너무 많은 시간을 쓴다.','소셜 미디어는 사람들을 더 창의적으로 만든다.'],
+         answer:1, feedback:'✓ 이 글은 소셜 미디어가 정체성 형성 방식을 "근본적으로 변화시켰다"고 주장합니다.',
+         hint:'"fundamentally altered the way individuals perceive and construct their identities"에 집중하세요.' }
+  },
+  { tag:'Grammar · C1', level:'C1',
+    en:{ text:'Not only ___ the project on time, but they also exceeded all expectations.', sub:'',
+         options:['they completed','did they complete','they did complete','have they completed'], answer:1,
+         feedback:'✓ "Did they complete" — after negative adverbials like "not only", subject-auxiliary inversion is required.',
+         hint:'When a sentence starts with a negative adverbial ("not only", "never", "hardly"), inversion occurs: auxiliary + subject.' },
+    ko:{ text:'"Not only ___ the project on time, but they also exceeded all expectations." 올바른 형태는?', sub:'',
+         options:['they completed','did they complete','they did complete','have they completed'], answer:1,
+         feedback:'✓ "did they complete" — "not only"와 같은 부정 부사어 뒤에는 주어-조동사 도치가 필요합니다.',
+         hint:'"not only", "never", "hardly" 등 부정 부사어로 시작하면 도치가 일어납니다: 조동사 + 주어.' }
+  },
+  { tag:'Vocabulary · C1', level:'C1',
+    en:{ text:'The politician\'s ___ remarks during the debate helped him win over undecided voters.', sub:'',
+         options:['ambiguous','conciliatory','belligerent','verbose'], answer:1,
+         feedback:'✓ "Conciliatory" means intended to make peace or reduce conflict — ideal for winning over undecided voters.',
+         hint:'Which word means "trying to reduce conflict and create goodwill"?' },
+    ko:{ text:'The politician\'s ___ remarks during the debate helped him win over undecided voters.', sub:'',
+         options:['ambiguous','conciliatory','belligerent','verbose'], answer:1,
+         feedback:'✓ "conciliatory"는 화해를 도모하거나 갈등을 줄이려는 것을 의미합니다. 부동층을 설득하는 데 이상적입니다.',
+         hint:'"갈등을 줄이고 호의를 만들려는"을 의미하는 단어는?' }
+  },
+  { tag:'Grammar · C1', level:'C1',
+    en:{ text:'I would rather you ___ to the meeting without informing me first.', sub:'',
+         options:['don\'t go','didn\'t go','won\'t go','haven\'t gone'], answer:1,
+         feedback:'✓ "Didn\'t go" — after "would rather + subject", we use the subjunctive (past tense form) to express preference.',
+         hint:'"Would rather + subject" is followed by the subjunctive mood, which looks like the past tense.' },
+    ko:{ text:'"I would rather you ___ to the meeting without informing me first." 올바른 형태는?', sub:'',
+         options:['don\'t go','didn\'t go','won\'t go','haven\'t gone'], answer:1,
+         feedback:'✓ "didn\'t go" — "would rather + 주어" 다음에는 가정법(과거형)을 사용합니다.',
+         hint:'"would rather + 주어" 다음에는 가정법이 오며, 형태는 과거 시제와 같습니다.' }
+  },
+  { tag:'Reading · C1', level:'C1',
+    en:{ text:'Read: "While proponents argue that artificial intelligence will augment human capabilities, critics contend that its unchecked proliferation poses existential risks that outweigh its potential benefits."',
+         sub:'Which best describes the structure of this argument?',
+         options:['A single viewpoint is presented','Two opposing views are contrasted','A problem and solution are described','A historical event is analyzed'],
+         answer:1, feedback:'✓ "While proponents argue... critics contend..." clearly presents two contrasting positions.',
+         hint:'Notice "while proponents argue... critics contend" — this signals a contrast between two viewpoints.' },
+    ko:{ text:'읽기: "While proponents argue that artificial intelligence will augment human capabilities, critics contend that its unchecked proliferation poses existential risks..."',
+         sub:'이 논증의 구조를 가장 잘 설명하는 것은?',
+         options:['하나의 관점만 제시된다','두 가지 상반된 견해가 대조된다','문제와 해결책이 설명된다','역사적 사건이 분석된다'],
+         answer:1, feedback:'✓ "While proponents argue... critics contend..."는 두 가지 상반된 입장을 명확히 제시합니다.',
+         hint:'"while proponents argue... critics contend" — 이것은 두 관점의 대조를 나타냅니다.' }
+  },
+  { tag:'Grammar · C2', level:'C2',
+    en:{ text:'Scarcely ___ the building when the fire alarm went off.', sub:'Choose the correct inverted form.',
+         options:['they had entered','had they entered','they entered','did they enter'], answer:1,
+         feedback:'✓ "Had they entered" — "scarcely" is a negative adverb requiring inversion. Scarcely + had + subject + past participle.',
+         hint:'"Scarcely" is a negative adverb. Like "no sooner", it triggers inversion with past perfect.' },
+    ko:{ text:'"Scarcely ___ the building when the fire alarm went off." 올바른 도치 형태는?', sub:'',
+         options:['they had entered','had they entered','they entered','did they enter'], answer:1,
+         feedback:'✓ "had they entered" — "scarcely"는 부정 부사로 도치가 필요합니다: Scarcely + had + 주어 + 과거분사.',
+         hint:'"Scarcely"는 부정 부사입니다. "no sooner"처럼 과거완료 도치를 유발합니다.' }
+  },
+  { tag:'Vocabulary · C2', level:'C2',
+    en:{ text:'His ___ attitude toward criticism made it impossible for colleagues to offer constructive feedback.', sub:'',
+         options:['receptive','sycophantic','obdurate','malleable'], answer:2,
+         feedback:'✓ "Obdurate" means stubbornly refusing to change. An obdurate person rejects all criticism.',
+         hint:'Which word means "stubbornly resistant to change or persuasion"?' },
+    ko:{ text:'His ___ attitude toward criticism made it impossible for colleagues to offer constructive feedback.', sub:'',
+         options:['receptive','sycophantic','obdurate','malleable'], answer:2,
+         feedback:'✓ "obdurate"는 완고하게 변화를 거부하는 것을 의미합니다.',
+         hint:'"변화나 설득에 완고하게 저항하는"을 의미하는 단어는?' }
+  },
+  { tag:'Reading · C2', level:'C2',
+    en:{ text:'Read: "The ontological argument for the existence of God, most famously articulated by Anselm, posits that the very concept of a supremely perfect being necessarily entails its existence, since existence is itself a perfection."',
+         sub:'What is the core claim of the ontological argument as described?',
+         options:['God exists because the universe is complex.','The idea of a perfect being logically requires that it must exist.','Religious experience proves God\'s existence.','God\'s existence can be proven through scientific observation.'],
+         answer:1, feedback:'✓ Anselm\'s argument states that a perfect being must exist in reality, not just in concept, because existence is a perfection.',
+         hint:'The key phrase is "the very concept... necessarily entails its existence". What does "entails" mean here?' },
+    ko:{ text:'읽기: "The ontological argument for the existence of God, most famously articulated by Anselm, posits that the very concept of a supremely perfect being necessarily entails its existence..."',
+         sub:'존재론적 논증의 핵심 주장은?',
+         options:['신은 우주가 복잡하기 때문에 존재한다.','완전한 존재의 개념은 논리적으로 그 존재를 필요로 한다.','종교적 경험이 신의 존재를 증명한다.','신의 존재는 과학적 관찰로 증명될 수 있다.'],
+         answer:1, feedback:'✓ 안셀무스의 논증은 완전한 존재는 개념상으로만이 아니라 현실에도 존재해야 한다고 말합니다.',
+         hint:'"the very concept... necessarily entails its existence"에 집중하세요.' }
+  },
+  { tag:'Vocabulary · C2', level:'C2',
+    en:{ text:'The author\'s use of ___ — attributing human emotions to inanimate objects — creates a haunting atmosphere throughout the novel.', sub:'',
+         options:['hyperbole','personification','soliloquy','euphemism'], answer:1,
+         feedback:'✓ "Personification" is attributing human qualities to non-human things. This is exactly what the definition describes.',
+         hint:'The definition "attributing human emotions to inanimate objects" directly defines which literary device?' },
+    ko:{ text:'The author\'s use of ___ — attributing human emotions to inanimate objects — creates a haunting atmosphere throughout the novel.', sub:'',
+         options:['hyperbole','personification','soliloquy','euphemism'], answer:1,
+         feedback:'✓ "personification"은 무생물에 인간적 특성을 부여하는 것입니다.',
+         hint:'"무생물에 인간의 감정을 부여하는 것"을 직접적으로 정의하는 문학적 기법은?' }
+  }
+];
+
+// ── State ──
+let currentQ = 0;
+let score = 0;
+let answered = false;
+const TOTAL = QUESTIONS.length;
+
+function startTest() {
+  document.getElementById('screen-intro').style.display = 'none';
+  document.getElementById('screen-question').style.display = 'block';
+  document.getElementById('progress-wrap').style.display = 'block';
+  document.getElementById('q-total').textContent = TOTAL;
+  showQuestion(0);
+}
+
+function showQuestion(idx) {
+  answered = false;
+  const q = QUESTIONS[idx];
+  const d = lang === 'ko' ? q.ko : q.en;
+
+  document.getElementById('q-tag').textContent = q.tag;
+  document.getElementById('q-text').textContent = d.text;
+  document.getElementById('q-sub').textContent = d.sub || '';
+  document.getElementById('q-current').textContent = idx + 1;
+  document.getElementById('progress-fill').style.width = ((idx + 1) / TOTAL * 100) + '%';
+
+  // Tutor hint
+  document.getElementById('tutor-text').innerHTML = '<strong>AI Tutor:</strong> ' + d.hint;
+  document.getElementById('tutor-hint').style.display = 'flex';
+
+  // Options
+  const optWrap = document.getElementById('options');
+  optWrap.innerHTML = '';
+  const letters = ['A','B','C','D'];
+  d.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option';
+    btn.innerHTML = `<span class="option-letter">${letters[i]}</span>${opt}`;
+    btn.onclick = () => selectAnswer(i, d.answer, d.feedback);
+    optWrap.appendChild(btn);
+  });
+
+  // Reset feedback & next btn
+  const fb = document.getElementById('feedback');
+  fb.style.display = 'none';
+  fb.className = 'feedback';
+  document.getElementById('btn-next').classList.remove('show');
+
+  // Update next button text
+  const nextBtn = document.getElementById('btn-next');
+  if (idx === TOTAL - 1) {
+    nextBtn.setAttribute('data-en', 'See my results →');
+    nextBtn.setAttribute('data-ko', '결과 보기 →');
+    nextBtn.textContent = lang === 'ko' ? '결과 보기 →' : 'See my results →';
+  } else {
+    nextBtn.setAttribute('data-en', 'Next question →');
+    nextBtn.setAttribute('data-ko', '다음 문제 →');
+    nextBtn.textContent = lang === 'ko' ? '다음 문제 →' : 'Next question →';
+  }
+}
+
+function selectAnswer(selected, correct, feedbackText) {
+  if (answered) return;
+  answered = true;
+
+  const opts = document.querySelectorAll('.option');
+  opts[selected].classList.add(selected === correct ? 'correct' : 'wrong');
+  if (selected !== correct) opts[correct].classList.add('correct');
+
+  if (selected === correct) score++;
+
+  // Feedback
+  const fb = document.getElementById('feedback');
+  fb.className = 'feedback ' + (selected === correct ? 'correct' : 'wrong');
+  document.getElementById('feedback-title').textContent = selected === correct
+    ? (lang === 'ko' ? '✓ 정답입니다!' : '✓ Correct!')
+    : (lang === 'ko' ? '✗ 틀렸습니다.' : '✗ Incorrect.');
+  document.getElementById('feedback-text').textContent = feedbackText;
+  fb.style.display = 'block';
+
+  document.getElementById('tutor-hint').style.display = 'none';
+  document.getElementById('btn-next').classList.add('show');
+}
+
+function nextQuestion() {
+  currentQ++;
+  if (currentQ >= TOTAL) {
+    showResult();
+  } else {
+    document.getElementById('screen-question').classList.remove('fade-in');
+    void document.getElementById('screen-question').offsetWidth;
+    document.getElementById('screen-question').classList.add('fade-in');
+    showQuestion(currentQ);
+  }
+}
+
+function showResult() {
+  document.getElementById('screen-question').style.display = 'none';
+  document.getElementById('progress-wrap').style.display = 'none';
+  const result = document.getElementById('screen-result');
+  result.style.display = 'block';
+
+  const pct = Math.round(score / TOTAL * 100);
+  let level, desc_en, desc_ko;
+
+  if (pct <= 30)      { level='A1'; desc_en='You\'re at the beginner stage. Start with basic Grammar and Vocabulary to build a solid foundation.'; desc_ko='초급 단계입니다. 기초 Grammar와 Vocabulary부터 시작해 탄탄한 기반을 쌓아보세요.'; }
+  else if (pct <= 50) { level='A2'; desc_en='You have basic English skills. Focus on expanding your vocabulary and practicing simple conversations.'; desc_ko='기초 영어 실력을 갖추고 있습니다. 어휘를 늘리고 간단한 대화 연습에 집중하세요.'; }
+  else if (pct <= 65) { level='B1'; desc_en='You\'re at intermediate level. You can handle everyday situations. Focus on Listening and Reading to improve.'; desc_ko='중급 수준입니다. 일상적인 상황을 처리할 수 있습니다. Listening과 Reading으로 실력을 키우세요.'; }
+  else if (pct <= 78) { level='B2'; desc_en='You have upper-intermediate English. You can discuss complex topics. Work on Writing and advanced Grammar.'; desc_ko='중상급 영어 실력입니다. 복잡한 주제를 논의할 수 있습니다. Writing과 고급 Grammar를 연습하세요.'; }
+  else if (pct <= 90) { level='C1'; desc_en='You\'re at advanced level. Near-fluent in most contexts. Polish your skills with C1 content and Exam Prep.'; desc_ko='고급 수준입니다. 대부분의 상황에서 유창합니다. C1 콘텐츠와 Exam Prep으로 실력을 다듬으세요.'; }
+  else               { level='C2'; desc_en='Exceptional! You\'re at mastery level. Focus on nuance, style, and advanced academic or professional content.'; desc_ko='탁월합니다! 숙달 수준입니다. 뉘앙스, 문체, 고급 학문·전문 콘텐츠에 집중하세요.'; }
+
+  document.getElementById('result-badge').textContent = level;
+  document.getElementById('result-title').textContent = lang === 'ko' ? `당신의 레벨: ${level}` : `Your level: ${level}`;
+  document.getElementById('result-sub').textContent = lang === 'ko'
+    ? `${score}문제 정답 (${pct}점)으로 ${level} 레벨로 진단되었습니다.`
+    : `You answered ${score} out of ${TOTAL} correctly (${pct}%) — placing you at ${level}.`;
+  document.getElementById('r-correct').textContent = score;
+  document.getElementById('r-total').textContent = TOTAL;
+  document.getElementById('r-pct').textContent = pct + '%';
+  document.getElementById('result-recommendation').textContent = lang === 'ko' ? desc_ko : desc_en;
+}
+</script>
+</body>
+</html>
