@@ -214,13 +214,11 @@ function setLang(l) {
   });
   document.getElementById('btn-en').classList.toggle('act', l === 'en');
   document.getElementById('btn-ko').classList.toggle('act', l === 'ko');
-  renderTopics();
+  if (typeof SKILLS !== 'undefined') renderTopics();
   try { localStorage.setItem('lw-lang', l); } catch(e) {}
 }
-(function() {
-  let saved; try { saved = localStorage.getItem('lw-lang'); } catch(e) {}
-  setLang(saved || ((navigator.language||'').startsWith('ko') ? 'ko' : 'en'));
-})();
+// Auto-detect runs AFTER SKILLS is defined (see bottom of script)
+
 
 // ── Data ──
 const SKILLS = {
@@ -445,8 +443,20 @@ function renderTopics() {
   document.getElementById('upgrade-banner').style.display = (currentSkill === 'grammar' || currentSkill === 'vocabulary') ? 'flex' : 'none';
 }
 
-// Init
-renderTopics();
+// Init — runs after all data is defined
+(function() {
+  let saved; try { saved = localStorage.getItem('lw-lang'); } catch(e) {}
+  const detected = saved || ((navigator.language||'').startsWith('ko') ? 'ko' : 'en');
+  lang = detected;
+  document.documentElement.lang = detected === 'ko' ? 'ko' : 'en';
+  document.querySelectorAll('[data-en][data-ko]').forEach(el => {
+    const t = detected === 'ko' ? el.getAttribute('data-ko') : el.getAttribute('data-en');
+    if (t) el.innerHTML = t;
+  });
+  document.getElementById('btn-en').classList.toggle('act', detected === 'en');
+  document.getElementById('btn-ko').classList.toggle('act', detected === 'ko');
+  renderTopics();
+})();
 </script>
 </body>
 </html>
