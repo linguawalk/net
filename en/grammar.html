@@ -479,20 +479,27 @@ function renderExamples(examples) {
 }
 
 // ── Practice ──
+// Store questions globally so checkAnswer can access feedback safely
+let currentPracticeData = [];
+
 function renderPractice(questions) {
+  currentPracticeData = questions;
   document.getElementById('practice-questions').innerHTML = questions.map((q, i) => `
-    <div class="practice-q" id="pq-${i}">
+    <div class="practice-q" id="pq-${i}" data-ans="${q.ans}">
       <div class="pq-text">${i+1}. ${q.q}</div>
       <div class="pq-options">
-        ${q.opts.map((o, j) => `<button class="pq-opt" onclick="checkAnswer(${i},${j},${q.ans},'${q.fb.replace(/'/g,"\\'")}',this)">${o}</button>`).join('')}
+        ${q.opts.map((o, j) => `<button class="pq-opt" onclick="checkAnswer(${i},${j})">${o}</button>`).join('')}
       </div>
       <div class="pq-feedback" id="fb-${i}"></div>
     </div>`).join('');
 }
 
-function checkAnswer(qi, selected, correct, feedback, btn) {
+function checkAnswer(qi, selected) {
   const container = document.getElementById(`pq-${qi}`);
   if (container.querySelector('.correct')) return;
+  const q = currentPracticeData[qi];
+  const correct = q.ans;
+  const feedback = q.fb;
   const opts = container.querySelectorAll('.pq-opt');
   opts[selected].classList.add(selected === correct ? 'correct' : 'wrong');
   if (selected !== correct) opts[correct].classList.add('correct');
