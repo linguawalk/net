@@ -443,13 +443,18 @@ const EXAM_TYPES={
 
 let apiKey='',currentExam='toeic',currentTopicId='tw1';
 let messages=[],isLoading=false,currentTask=null;
+let unsplashKey='';
 let timerInterval=null,timerSeconds=0,timerRunning=false;
 
 function saveApiKey(){
   const key=document.getElementById('api-key-input').value.trim();
-  if(!key.startsWith('sk-ant-')){alert('API key must start with sk-ant-');return;}
-  try{sessionStorage.setItem('lw-api-key',key);}catch(e){}
-  apiKey=key;
+  if(!key.startsWith('sk-ant-')){alert('Anthropic API key must start with sk-ant-');return;}
+  const uKey=document.getElementById('unsplash-key-input').value.trim();
+  try{
+    sessionStorage.setItem('lw-api-key',key);
+    if(uKey) sessionStorage.setItem('lw-unsplash-key',uKey);
+  }catch(e){}
+  apiKey=key; unsplashKey=uKey;
   document.getElementById('api-setup').style.display='none';
   document.getElementById('main-content').style.display='block';
   renderTopics();updateFormatInfo();
@@ -643,7 +648,8 @@ function renderTask(topic,task){
           <div class="task-badges"><span class="t-badge tb-type">1 Sentence</span><span class="t-badge tb-time">8 min</span></div>
         </div>
         <div class="task-body">
-          <img src="https://source.unsplash.com/800x350/?${encodeURIComponent(task.imageKeyword)}" style="width:100%;max-height:220px;object-fit:cover;border-radius:10px;margin-bottom:14px;" onerror="this.style.display='none'" alt="Writing prompt">
+          <img id="writing-scene-img" style="width:100%;max-height:220px;object-fit:cover;border-radius:10px;margin-bottom:14px;display:none;" alt="Writing prompt">
+  <script>fetchUnsplashImage(currentTask?.imageKeyword||'office workplace').then(url=>{const el=document.getElementById('writing-scene-img');if(el&&url){el.src=url;el.style.display='block';}});<\/script>
           <div class="prompt-box">
             <div class="pb-label write">${lang==='ko'?'상황':'SITUATION'}</div>
             <div class="pb-text">${task.situation||''}</div>
@@ -1038,10 +1044,26 @@ function showTyping(){
 }
 function removeTyping(id){const e=document.getElementById(id);if(e)e.remove();}
 
+// -- Unsplash --
+async function fetchUnsplashImage(keyword){
+  if(!unsplashKey) return null;
+  try{
+    const resp=await fetch('https://api.unsplash.com/search/photos?query='+encodeURIComponent(keyword)+'&per_page=1&orientation=landscape',{
+      headers:{'Authorization':'Client-ID '+unsplashKey}
+    });
+    const data=await resp.json();
+    if(data.results&&data.results.length>0) return data.results[0].urls.regular;
+    return null;
+  }catch(e){return null;}
+}
+
 (function(){
   let saved; try{saved=localStorage.getItem('lw-lang');}catch(e){}
   setLang(saved||((navigator.language||'').startsWith('ko')?'ko':'en'));
-  try{apiKey=sessionStorage.getItem('lw-api-key')||'';}catch(e){}
+  try{
+    apiKey=sessionStorage.getItem('lw-api-key')||'';
+    unsplashKey=sessionStorage.getItem('lw-unsplash-key')||'';
+  }catch(e){}
   if(apiKey){
     document.getElementById('api-setup').style.display='none';
     document.getElementById('main-content').style.display='block';
