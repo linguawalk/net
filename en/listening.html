@@ -849,70 +849,89 @@ function cycleSpeed(){
 
 // ── TOEIC Part 1 Photo ──
 function renderPart1Photo(p1){
-  const pa=document.getElementById('practice-area');
-  pa.style.display='block';
-  document.getElementById('pa-title').textContent='TOEIC — '+(lang==='ko'?'Part 1 사진 묘사':'Part 1 Photographs');
-  document.getElementById('pa-badge').textContent=lang==='ko'?'사진 1장 · 4지선다':'1 Photo · 4 Options';
+  // Use existing elements in listening.html structure
+  // Show scene-image area for photo
+  const sceneImg=document.getElementById('scene-image');
+  if(sceneImg){
+    sceneImg.classList.remove('show');
+    sceneImg.src='';
+  }
 
-  // Shuffle options keeping track of correct index
+  // Shuffle options
   const opts=[...p1.options];
   const shuffled=opts.map((o,i)=>({...o,origIdx:i})).sort(()=>Math.random()-0.5);
-  const correctShuffled=shuffled.findIndex(o=>o.correct);
+  const correctIdx=shuffled.findIndex(o=>o.correct);
 
   // Store for checkAnswer
-  currentPracticeData=[{ans:correctShuffled,fb:lang==='ko'?`정답: "${shuffled[correctShuffled].text}"<br>💡 ${p1.tip}`:`Correct: "${shuffled[correctShuffled].text}"<br>💡 ${p1.tip}`}];
+  currentPracticeData=[{
+    ans:correctIdx,
+    fb:lang==='ko'
+      ?`✓ 정답: "${shuffled[correctIdx].text}"\n\n💡 ${p1.tip||''}`
+      :`✓ Correct: "${shuffled[correctIdx].text}"\n\n💡 ${p1.tip||''}`
+  }];
   totalCorrect=0; answeredCount=0;
 
   const letters=['A','B','C','D'];
-  document.getElementById('questions-wrap').innerHTML=`
+
+  // Build content in questions-section / questions-wrap
+  const qsSection=document.getElementById('questions-section');
+  const qsWrap=document.getElementById('questions-wrap');
+  if(!qsSection||!qsWrap) return;
+
+  // Update header
+  const qsNote=qsSection.querySelector('.qs-note');
+  if(qsNote) qsNote.textContent=lang==='ko'?'사진을 보고 가장 잘 묘사한 문장을 선택하세요':'Look at the photo and choose the best description';
+  const qsTitle=qsSection.querySelector('.qs-title');
+  if(qsTitle) qsTitle.innerHTML=`📸 TOEIC Part 1 — ${lang==='ko'?'사진 묘사':'Photographs'}`;
+
+  qsWrap.innerHTML=`
     <div style="margin-bottom:16px;">
-      <img id="p1-photo" style="width:100%;max-height:280px;object-fit:cover;border-radius:12px;display:none;background:var(--bg);" alt="Describe this photo">
-      <div id="p1-photo-placeholder" style="width:100%;height:200px;background:var(--bg);border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;border:0.5px solid var(--border);">
+      <div id="p1-placeholder" style="width:100%;height:220px;background:var(--bg);border-radius:12px;display:flex;align-items:center;justify-content:center;border:0.5px solid var(--border);margin-bottom:4px;">
         <div style="text-align:center;color:var(--text-light);">
-          <div style="font-size:32px;margin-bottom:8px;">🖼</div>
+          <div style="font-size:36px;margin-bottom:8px;">🖼</div>
           <div style="font-size:13px;">${lang==='ko'?'사진 로딩 중...':'Loading photo...'}</div>
         </div>
       </div>
+      <img id="p1-photo" style="width:100%;max-height:280px;object-fit:cover;border-radius:12px;display:none;" alt="Describe this photo">
     </div>
-    <div style="padding:12px 14px;background:var(--listen-light);border-radius:10px;margin-bottom:14px;font-size:12px;color:var(--listen);">
-      🎧 ${lang==='ko'?'실제 시험에서는 4개 보기를 음성으로 들려줍니다. 여기서는 텍스트로 제공됩니다.':'In the real exam, the 4 options are read aloud. Here they are shown as text.'}
+    <div style="padding:10px 14px;background:var(--listen-light);border-radius:10px;margin-bottom:14px;font-size:12px;color:var(--listen);">
+      🔊 ${lang==='ko'?'실제 시험에서는 4개 보기를 음성으로 들려줍니다. 아래에서 선택하세요.':'In the real exam, 4 options are read aloud. Select your answer below.'}
     </div>
-    <div id="qi-0" style="background:var(--bg);border-radius:10px;padding:14px;">
-      <div style="font-size:10px;font-weight:600;color:var(--listen);letter-spacing:.5px;text-transform:uppercase;margin-bottom:10px;">${lang==='ko'?'사진을 가장 잘 묘사한 문장을 고르세요':'Choose the statement that best describes the photo'}</div>
-      <div style="display:flex;flex-direction:column;gap:8px;">
+    <div class="q-item" id="qi-0" style="background:var(--bg);border-radius:10px;padding:14px;">
+      <div class="q-num">${lang==='ko'?'다음 중 사진을 가장 잘 묘사한 문장은?':'Which statement best describes the photograph?'}</div>
+      <div class="q-opts" style="margin-top:10px;">
         ${shuffled.map((o,j)=>`
-          <button class="q-opt" onclick="checkAnswer(0,${j})" style="font-size:13px;line-height:1.5;">
+          <button class="q-opt" onclick="checkAnswer(0,${j})">
             <span class="q-opt-ltr">${letters[j]}</span>
-            <span style="font-style:italic;">${o.text}</span>
+            <span style="font-style:italic;line-height:1.5;">${o.text}</span>
           </button>`).join('')}
       </div>
       <div class="q-feedback" id="qf-0"></div>
     </div>`;
 
-  // Play TTS for options
-  document.getElementById('questions-section').style.display='block';
+  qsSection.style.display='block';
 
-  // Load image
+  // Load photo via Unsplash
   if(unsplashKey){
-    fetchUnsplashImage(p1.imageKeyword||'office workplace').then(url=>{
+    fetchUnsplashImage(p1.imageKeyword||'office workplace people').then(url=>{
       const img=document.getElementById('p1-photo');
-      const placeholder=document.getElementById('p1-photo-placeholder');
+      const ph=document.getElementById('p1-placeholder');
       if(img&&url){
         img.src=url;
         img.style.display='block';
-        img.style.marginBottom='14px';
-        if(placeholder) placeholder.style.display='none';
+        if(ph) ph.style.display='none';
       }
     });
   }
 
-  // TTS: read options aloud
-  const ttsText=shuffled.map((o,j)=>`${letters[j]}. ${o.text}`).join('. ');
+  // TTS: read options aloud after 1 second
   setTimeout(()=>{
     if('speechSynthesis' in window){
+      const ttsText=shuffled.map((o,j)=>`${letters[j]}. ${o.text}`).join('. ');
       const utt=new SpeechSynthesisUtterance(ttsText);
-      utt.lang='en-US'; utt.rate=0.9;
-      const v=speechSynthesis.getVoices().find(v=>v.lang.startsWith('en-US'));
+      utt.lang='en-US'; utt.rate=0.85;
+      const voices=speechSynthesis.getVoices();
+      const v=voices.find(v=>v.lang.startsWith('en-US'))||voices.find(v=>v.lang.startsWith('en'));
       if(v) utt.voice=v;
       speechSynthesis.speak(utt);
     }
