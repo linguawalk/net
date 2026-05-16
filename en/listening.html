@@ -560,6 +560,58 @@ async function generateContent(){
     :`🤖 Generating <strong>${examLabel} — ${topicName}</strong> content...`;
   document.getElementById('gen-btn').disabled=true;
 
+  // ── TOEIC Part 1: Photo description (special format) ──
+  if(currentExam==='toeic' && currentTopicId==='t1'){
+    const p1prompt = lang==='ko'
+      ?`TOEIC 듣기 Part 1 사진 묘사 문제를 생성해주세요. 레벨: ${level}.
+실제 TOEIC Part 1 형식: 사진 1장 + 4개 보기 중 사진을 가장 잘 묘사한 문장 선택.
+JSON:
+{
+  "imageKeyword": "Unsplash 이미지 검색 키워드 (영어 2단어, 사무실/식당/거리 등 장소)",
+  "situation": "사진 상황 설명 (한국어, 1문장)",
+  "options": [
+    {"text": "사진을 정확히 묘사한 영어 문장 (정답)", "correct": true},
+    {"text": "사진과 관련 있지만 틀린 묘사 (오답)", "correct": false},
+    {"text": "사진과 다른 묘사 (오답)", "correct": false},
+    {"text": "사진과 다른 묘사 (오답)", "correct": false}
+  ],
+  "tip": "Part 1 공략 팁 (한국어)"
+}
+JSON만 반환하세요.`
+      :`Generate a TOEIC Listening Part 1 Photographs question. Level: ${level}.
+Exactly like real TOEIC Part 1: 1 photo + 4 statements, choose the one that best describes the photo.
+JSON only:
+{
+  "imageKeyword": "2-word Unsplash search keyword (office/restaurant/street/park etc)",
+  "situation": "brief photo situation in English",
+  "options": [
+    {"text": "accurate description of the photo (CORRECT)", "correct": true},
+    {"text": "related but inaccurate description (WRONG)", "correct": false},
+    {"text": "different description (WRONG)", "correct": false},
+    {"text": "different description (WRONG)", "correct": false}
+  ],
+  "tip": "Part 1 strategy tip"
+}`;
+    try{
+      const resp=await fetch('https://api.anthropic.com/v1/messages',{
+        method:'POST',
+        headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+        body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:1000,messages:[{role:'user',content:p1prompt}]})
+      });
+      const data=await resp.json();
+      const p1=JSON.parse(data.content[0].text.replace(/```json|```/g,'').trim());
+      document.getElementById('loading-overlay').style.display='none';
+      renderPart1Photo(p1);
+      initTutorSimple(topic,'TOEIC Part 1');
+    }catch(e){
+      document.getElementById('loading-overlay').style.display='none';
+      alert(lang==='ko'?'생성 오류입니다.':'Error generating.');
+    }
+    isLoading=false;
+    document.getElementById('gen-btn').disabled=false;
+    return;
+  }
+
   // Build speaker names based on voice count
   const speakerNames = voiceCount===1
     ? ['Narrator']
@@ -789,6 +841,92 @@ function cycleSpeed(){
   const rate=speeds[speedIdx];
   document.getElementById('speed-btn').textContent=rate.toFixed(2)+'x';
   if(isPlaying){stopAudio();setTimeout(playAudio,300);}
+}
+
+// ── TOEIC Part 1 Photo ──
+function renderPart1Photo(p1){
+  const pa=document.getElementById('practice-area');
+  pa.style.display='block';
+  document.getElementById('pa-title').textContent='TOEIC — '+(lang==='ko'?'Part 1 사진 묘사':'Part 1 Photographs');
+  document.getElementById('pa-badge').textContent=lang==='ko'?'사진 1장 · 4지선다':'1 Photo · 4 Options';
+
+  // Shuffle options keeping track of correct index
+  const opts=[...p1.options];
+  const shuffled=opts.map((o,i)=>({...o,origIdx:i})).sort(()=>Math.random()-0.5);
+  const correctShuffled=shuffled.findIndex(o=>o.correct);
+
+  // Store for checkAnswer
+  currentPracticeData=[{ans:correctShuffled,fb:lang==='ko'?`정답: "${shuffled[correctShuffled].text}"<br>💡 ${p1.tip}`:`Correct: "${shuffled[correctShuffled].text}"<br>💡 ${p1.tip}`}];
+  totalCorrect=0; answeredCount=0;
+
+  const letters=['A','B','C','D'];
+  document.getElementById('questions-wrap').innerHTML=`
+    <div style="margin-bottom:16px;">
+      <img id="p1-photo" style="width:100%;max-height:280px;object-fit:cover;border-radius:12px;display:none;background:var(--bg);" alt="Describe this photo">
+      <div id="p1-photo-placeholder" style="width:100%;height:200px;background:var(--bg);border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;border:0.5px solid var(--border);">
+        <div style="text-align:center;color:var(--text-light);">
+          <div style="font-size:32px;margin-bottom:8px;">🖼</div>
+          <div style="font-size:13px;">${lang==='ko'?'사진 로딩 중...':'Loading photo...'}</div>
+        </div>
+      </div>
+    </div>
+    <div style="padding:12px 14px;background:var(--listen-light);border-radius:10px;margin-bottom:14px;font-size:12px;color:var(--listen);">
+      🎧 ${lang==='ko'?'실제 시험에서는 4개 보기를 음성으로 들려줍니다. 여기서는 텍스트로 제공됩니다.':'In the real exam, the 4 options are read aloud. Here they are shown as text.'}
+    </div>
+    <div id="qi-0" style="background:var(--bg);border-radius:10px;padding:14px;">
+      <div style="font-size:10px;font-weight:600;color:var(--listen);letter-spacing:.5px;text-transform:uppercase;margin-bottom:10px;">${lang==='ko'?'사진을 가장 잘 묘사한 문장을 고르세요':'Choose the statement that best describes the photo'}</div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        ${shuffled.map((o,j)=>`
+          <button class="q-opt" onclick="checkAnswer(0,${j})" style="font-size:13px;line-height:1.5;">
+            <span class="q-opt-ltr">${letters[j]}</span>
+            <span style="font-style:italic;">${o.text}</span>
+          </button>`).join('')}
+      </div>
+      <div class="q-feedback" id="qf-0"></div>
+    </div>`;
+
+  // Play TTS for options
+  document.getElementById('questions-section').style.display='block';
+
+  // Load image
+  if(unsplashKey){
+    fetchUnsplashImage(p1.imageKeyword||'office workplace').then(url=>{
+      const img=document.getElementById('p1-photo');
+      const placeholder=document.getElementById('p1-photo-placeholder');
+      if(img&&url){
+        img.src=url;
+        img.style.display='block';
+        img.style.marginBottom='14px';
+        if(placeholder) placeholder.style.display='none';
+      }
+    });
+  }
+
+  // TTS: read options aloud
+  const ttsText=shuffled.map((o,j)=>`${letters[j]}. ${o.text}`).join('. ');
+  setTimeout(()=>{
+    if('speechSynthesis' in window){
+      const utt=new SpeechSynthesisUtterance(ttsText);
+      utt.lang='en-US'; utt.rate=0.9;
+      const v=speechSynthesis.getVoices().find(v=>v.lang.startsWith('en-US'));
+      if(v) utt.voice=v;
+      speechSynthesis.speak(utt);
+    }
+  },1000);
+}
+
+function initTutorSimple(topic, label){
+  messages=[];
+  document.getElementById('tutor-messages').innerHTML='';
+  const intro=lang==='ko'
+    ?`안녕하세요! 👋 **${label}** 연습입니다.\n\n사진을 보고 4개 보기 중 사진을 가장 잘 묘사한 문장을 선택하세요. 보기는 자동으로 읽어드립니다!\n\n💡 **Part 1 전략:** 사진의 주어(사람/사물), 동작, 위치를 파악하세요.`
+    :`Hi! 👋 **${label}** practice.\n\nLook at the photo and choose the statement that best describes it. Options are read aloud automatically!\n\n💡 **Part 1 tip:** Focus on the subject (person/object), action, and location in the photo.`;
+  addMsg('ai',intro);
+  const qs=lang==='ko'
+    ?['Part 1 오답 패턴','사진 묘사 핵심 표현','수동태 표현 알려줘','자주 나오는 장소 유형']
+    :['Common wrong answer patterns','Key describing expressions','Passive voice tips','Common photo types'];
+  document.getElementById('quick-questions').innerHTML=qs.map(q=>`<button class="quick-btn" onclick="askQ(this)">${q}</button>`).join('');
+  document.getElementById('tutor-section').style.display='block';
 }
 
 // ── Questions ──
