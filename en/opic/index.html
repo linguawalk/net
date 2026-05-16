@@ -1,1 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LinguaWalk — OPIc Preparation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  :root{
+    --navy:#1C2B45;--teal:#2A7F6F;--teal-light:#E1F5EE;--teal-mid:#1D9E75;
+    --bg:#F8F7F4;--white:#fff;--text:#1C2B45;--text-muted:#5a6a82;--text-light:#94a3b8;
+    --border:rgba(28,43,69,0.1);--border-md:rgba(28,43,69,0.18);
+    --accent:#6d3fa0;--accent-light:#f3effe;
+  }
+  body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
 
+  nav{background:rgba(28,43,69,0.97);height:56px;display:flex;align-items:center;padding:0 6%;border-bottom:0.5px solid rgba(255,255,255,0.08);position:sticky;top:0;z-index:100;}
+  .nav-logo{display:flex;align-items:center;gap:8px;text-decoration:none;}
+  .nav-lm{width:28px;height:28px;background:var(--teal);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;}
+  .nav-lt{font-size:16px;font-weight:600;color:#fff;}
+  .nav-sep{width:1px;height:18px;background:rgba(255,255,255,0.15);margin:0 12px;}
+  .nav-page{font-size:13px;color:rgba(255,255,255,0.6);}
+  .nav-space{flex:1;}
+  .nav-back{font-size:13px;color:rgba(255,255,255,0.6);text-decoration:none;padding:6px 12px;border-radius:7px;}
+  .nav-back:hover{background:rgba(255,255,255,0.08);color:#fff;}
+  .lang-sw{display:flex;background:rgba(255,255,255,0.08);border-radius:7px;padding:2px;gap:2px;margin-left:8px;}
+  .lbtn{padding:4px 10px;border-radius:5px;font-size:11px;font-weight:500;border:none;background:transparent;color:rgba(255,255,255,0.5);cursor:pointer;font-family:inherit;transition:all 0.2s;}
+  .lbtn.act{background:var(--teal);color:#fff;}
+
+  /* HERO */
+  .hero{background:linear-gradient(135deg,#2d1260 0%,#6d3fa0 100%);padding:48px 6% 44px;position:relative;overflow:hidden;}
+  .hero::before{content:'';position:absolute;right:-40px;top:-40px;width:240px;height:240px;border-radius:50%;background:rgba(255,255,255,0.07);pointer-events:none;}
+  .hero::after{content:'';position:absolute;left:-30px;bottom:-30px;width:150px;height:150px;border-radius:50%;background:rgba(255,255,255,0.04);pointer-events:none;}
+  .hero-inner{max-width:760px;margin:0 auto;position:relative;}
+  .hero-tag{font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.6);margin-bottom:10px;}
+  .hero-title{font-family:'DM Serif Display',serif;font-size:clamp(28px,4vw,42px);color:#fff;margin-bottom:10px;}
+  .hero-desc{font-size:14px;color:rgba(255,255,255,0.62);line-height:1.7;max-width:500px;margin-bottom:20px;}
+  .hero-badges{display:flex;gap:8px;flex-wrap:wrap;}
+  .h-badge{font-size:11px;padding:4px 12px;border-radius:20px;background:rgba(255,255,255,0.14);color:rgba(255,255,255,0.85);border:0.5px solid rgba(255,255,255,0.2);}
+
+  /* WRAP */
+  .wrap{max-width:760px;margin:0 auto;padding:40px 6% 80px;}
+
+  /* SECTION HEADER */
+  .sh{display:flex;align-items:center;gap:10px;margin-bottom:16px;}
+  .sh-label{font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--text-light);}
+  .sh-line{flex:1;height:0.5px;background:var(--border);}
+
+  /* INFO BOX */
+  .info-box{background:var(--white);border:0.5px solid var(--border);border-radius:14px;padding:22px 24px;margin-bottom:28px;}
+  .ib-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+  .ib-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;}
+  .ib-item{background:var(--bg);border-radius:10px;padding:14px;}
+  .ib-val{font-size:20px;font-weight:600;color:var(--accent);margin-bottom:3px;}
+  .ib-label{font-size:11px;color:var(--text-muted);}
+
+  /* SPEAKING CARD (large single card) */
+  .speak-card{background:var(--white);border:0.5px solid var(--border);border-radius:16px;overflow:hidden;text-decoration:none;display:block;transition:all 0.25s;margin-bottom:24px;}
+  .speak-card:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(0,0,0,0.09);}
+  .sc-top{background:linear-gradient(135deg,#2d1260,#6d3fa0);padding:28px 28px 22px;position:relative;overflow:hidden;}
+  .sc-top::before{content:'';position:absolute;right:-20px;top:-20px;width:140px;height:140px;border-radius:50%;background:rgba(255,255,255,0.07);}
+  .sc-icon{font-size:44px;margin-bottom:12px;}
+  .sc-name{font-size:22px;font-weight:600;color:#fff;margin-bottom:6px;}
+  .sc-desc{font-size:13px;color:rgba(255,255,255,0.65);line-height:1.7;max-width:440px;}
+  .sc-body{padding:24px 28px;}
+  .sc-types{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:20px;}
+  .sct-item{padding:14px 16px;background:var(--bg);border-radius:10px;border:0.5px solid var(--border);}
+  .sct-icon{font-size:20px;margin-bottom:6px;}
+  .sct-name{font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px;}
+  .sct-desc{font-size:11px;color:var(--text-muted);line-height:1.5;}
+  .sc-cta{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:var(--accent);border-radius:12px;text-decoration:none;transition:all 0.2s;}
+  .sc-cta:hover{background:#5a2e8a;}
+  .sc-cta-text{font-size:15px;font-weight:600;color:#fff;}
+  .sc-cta-arrow{font-size:20px;color:rgba(255,255,255,0.8);}
+
+  /* LEVEL INFO */
+  .level-box{background:var(--accent-light);border:0.5px solid rgba(109,63,160,0.2);border-radius:14px;padding:20px 24px;margin-bottom:24px;}
+  .lb-title{font-size:13px;font-weight:600;color:var(--accent);margin-bottom:12px;display:flex;align-items:center;gap:7px;}
+  .lb-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;}
+  .lb-item{background:var(--white);border-radius:10px;padding:12px 14px;border:0.5px solid rgba(109,63,160,0.15);}
+  .lb-lv{font-size:14px;font-weight:700;color:var(--accent);margin-bottom:3px;}
+  .lb-name{font-size:11px;color:var(--text-muted);}
+
+  /* TIPS */
+  .tips-box{background:var(--white);border:0.5px solid var(--border);border-radius:14px;padding:20px 24px;}
+  .tb-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:7px;}
+  .tip-item{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px;font-size:13px;color:var(--text-muted);line-height:1.6;}
+  .tip-item:last-child{margin-bottom:0;}
+  .tip-num{width:22px;height:22px;border-radius:50%;background:var(--accent);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+
+  @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+  .fade{opacity:0;animation:fadeUp 0.45s ease forwards;}
+  .fade:nth-child(1){animation-delay:.05s}
+  .fade:nth-child(2){animation-delay:.10s}
+  .fade:nth-child(3){animation-delay:.15s}
+  .fade:nth-child(4){animation-delay:.20s}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">
+    <div class="nav-lm">LW</div>
+    <span class="nav-lt">LinguaWalk</span>
+  </a>
+  <div class="nav-sep"></div>
+  <span class="nav-page">🎤 OPIc</span>
+  <div class="nav-space"></div>
+  <a href="../index.html" class="nav-back" data-en="← English Home" data-ko="← 영어 홈">← English Home</a>
+  <div class="lang-sw">
+    <button class="lbtn act" onclick="setLang('en')" id="btn-en">EN</button>
+    <button class="lbtn" onclick="setLang('ko')" id="btn-ko">한국어</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-tag">EXAM PREPARATION</div>
+    <h1 class="hero-title">🎤 OPIc</h1>
+    <p class="hero-desc"
+      data-en="Oral Proficiency Interview — computer. Practice all OPIc question types with voice recording and detailed AI feedback. Build confidence for your actual test."
+      data-ko="Oral Proficiency Interview — computer. 음성 녹음과 AI 상세 피드백으로 모든 OPIc 유형을 연습하세요. 실전 시험에 자신감을 키우세요.">
+      Speaking only · Voice record · AI feedback
+    </p>
+    <div class="hero-badges">
+      <span class="h-badge" data-en="🎤 Speaking Only" data-ko="🎤 말하기 전용">🎤 Speaking Only</span>
+      <span class="h-badge" data-en="5 Question Types" data-ko="5가지 질문 유형">5 Question Types</span>
+      <span class="h-badge" data-en="🤖 AI Score" data-ko="🤖 AI 채점">🤖 AI Score</span>
+      <span class="h-badge" data-en="IL ~ AL Level" data-ko="IL ~ AL 레벨">IL ~ AL Level</span>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- Exam Info -->
+  <div class="sh fade">
+    <span class="sh-label" data-en="EXAM OVERVIEW" data-ko="시험 개요">EXAM OVERVIEW</span>
+    <div class="sh-line"></div>
+  </div>
+  <div class="info-box fade">
+    <div class="ib-title">📋 <span data-en="OPIc Test Information" data-ko="OPIc 시험 정보">OPIc Test Information</span></div>
+    <div class="ib-grid">
+      <div class="ib-item">
+        <div class="ib-val">40 min</div>
+        <div class="ib-label" data-en="Test Duration" data-ko="시험 시간">Test Duration</div>
+      </div>
+      <div class="ib-item">
+        <div class="ib-val">12–15</div>
+        <div class="ib-label" data-en="Questions" data-ko="문항 수">Questions</div>
+      </div>
+      <div class="ib-item">
+        <div class="ib-val">8</div>
+        <div class="ib-label" data-en="Grade Levels" data-ko="등급 수">Grade Levels</div>
+      </div>
+      <div class="ib-item">
+        <div class="ib-val">Speaking</div>
+        <div class="ib-label" data-en="Only Skill Tested" data-ko="평가 영역">Only Skill Tested</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OPIc Level Guide -->
+  <div class="sh fade">
+    <span class="sh-label" data-en="OPIC GRADE LEVELS" data-ko="OPIc 등급">OPIC GRADE LEVELS</span>
+    <div class="sh-line"></div>
+  </div>
+  <div class="level-box fade">
+    <div class="lb-title">🏅 <span data-en="OPIc English Grade Scale" data-ko="OPIc 영어 등급 체계">OPIc English Grade Scale</span></div>
+    <div class="lb-grid">
+      <div class="lb-item"><div class="lb-lv">NL / NM / NH</div><div class="lb-name" data-en="Novice Low/Mid/High" data-ko="초급">Novice</div></div>
+      <div class="lb-item"><div class="lb-lv" style="color:#ba7517;">IL / IM / IH</div><div class="lb-name" data-en="Intermediate Low/Mid/High" data-ko="중급">Intermediate</div></div>
+      <div class="lb-item"><div class="lb-lv" style="color:#3b6d11;">AL</div><div class="lb-name" data-en="Advanced Low (Highest)" data-ko="고급 (최고)">Advanced Low</div></div>
+    </div>
+    <div style="margin-top:12px;font-size:12px;color:var(--accent);background:rgba(109,63,160,0.08);padding:10px 12px;border-radius:8px;">
+      💡 <span data-en="Most Korean companies require IM2 or IH. LinguaWalk helps you reach your target grade." data-ko="대부분의 국내 기업에서 IM2 또는 IH를 요구합니다. LinguaWalk가 목표 등급 달성을 도와드립니다.">Most companies require IM2 or IH.</span>
+    </div>
+  </div>
+
+  <!-- Main Speaking Card -->
+  <div class="sh fade">
+    <span class="sh-label" data-en="START PRACTICING" data-ko="연습 시작">START PRACTICING</span>
+    <div class="sh-line"></div>
+  </div>
+
+  <div class="speak-card fade">
+    <div class="sc-top">
+      <div class="sc-icon">🗣️</div>
+      <div class="sc-name" data-en="OPIc Speaking Practice" data-ko="OPIc 말하기 연습">OPIc Speaking Practice</div>
+      <div class="sc-desc"
+        data-en="AI generates authentic OPIc-style questions based on your background survey topics. Record your answer and receive detailed AI feedback on content, fluency, vocabulary, and grammar."
+        data-ko="AI가 배경 설문 주제를 기반으로 실제 OPIc 형식의 질문을 생성합니다. 답변을 녹음하면 내용, 유창성, 어휘, 문법에 대한 상세 AI 피드백을 받습니다.">
+        Record your answer · Get AI scored on 4 criteria
+      </div>
+    </div>
+    <div class="sc-body">
+      <div class="sc-types">
+        <div class="sct-item">
+          <div class="sct-icon">👤</div>
+          <div class="sct-name" data-en="Self Introduction" data-ko="자기소개">Self Introduction</div>
+          <div class="sct-desc" data-en="Introduce yourself based on background survey." data-ko="설문 기반 자기소개 연습.">Survey-based intro</div>
+        </div>
+        <div class="sct-item">
+          <div class="sct-icon">🏠</div>
+          <div class="sct-name" data-en="Describe a Place / Person" data-ko="장소/사람 묘사">Describe a Place</div>
+          <div class="sct-desc" data-en="Describe places, people, or objects in detail." data-ko="장소, 사람, 사물을 자세히 묘사.">Detailed description</div>
+        </div>
+        <div class="sct-item">
+          <div class="sct-icon">📖</div>
+          <div class="sct-name" data-en="Past Experience" data-ko="과거 경험">Past Experience</div>
+          <div class="sct-desc" data-en="Narrate a memorable past event in detail." data-ko="기억에 남는 과거 경험 서술.">Story narration</div>
+        </div>
+        <div class="sct-item">
+          <div class="sct-icon">💬</div>
+          <div class="sct-name" data-en="Role Play" data-ko="롤플레이">Role Play</div>
+          <div class="sct-desc" data-en="Act out a real-life situation. Ask or respond." data-ko="실제 상황 역할극. 질문하거나 답변.">Situational dialogue</div>
+        </div>
+        <div class="sct-item">
+          <div class="sct-icon">🔄</div>
+          <div class="sct-name" data-en="Compare Past & Present" data-ko="과거/현재 비교">Compare Changes</div>
+          <div class="sct-desc" data-en="Compare how things have changed over time." data-ko="시간에 따른 변화 비교 설명.">Change comparison</div>
+        </div>
+      </div>
+      <a href="speaking.html" class="sc-cta">
+        <span class="sc-cta-text" data-en="▶ Start OPIc Speaking Practice" data-ko="▶ OPIc 말하기 연습 시작">▶ Start OPIc Speaking Practice</span>
+        <span class="sc-cta-arrow">→</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Tips -->
+  <div class="sh fade">
+    <span class="sh-label" data-en="OPIC STRATEGY TIPS" data-ko="OPIc 전략 팁">OPIC STRATEGY TIPS</span>
+    <div class="sh-line"></div>
+  </div>
+  <div class="tips-box fade">
+    <div class="tb-title">💡 <span data-en="How to Score High on OPIc" data-ko="OPIc 고득점 전략">How to Score High on OPIc</span></div>
+    <div class="tip-item">
+      <div class="tip-num">1</div>
+      <span data-en="Speak in full sentences. OPIc rewards complete, well-structured responses over short answers." data-ko="완전한 문장으로 말하세요. OPIc은 짧은 답변보다 완전하고 잘 구성된 답변을 높이 평가합니다.">Speak in full sentences. Structured responses score higher.</span>
+    </div>
+    <div class="tip-item">
+      <div class="tip-num">2</div>
+      <span data-en="Use time connectors: 'First...', 'Then...', 'Finally...' to organize your story clearly." data-ko="시간 연결어를 사용하세요: 'First...', 'Then...', 'Finally...'로 이야기를 명확하게 구성하세요.">Use connectors: First · Then · Finally · As a result</span>
+    </div>
+    <div class="tip-item">
+      <div class="tip-num">3</div>
+      <span data-en="Add specific details and examples. Vague answers score lower than detailed, vivid descriptions." data-ko="구체적인 세부 사항과 예시를 추가하세요. 막연한 답변보다 상세하고 생생한 묘사가 더 높은 점수를 받습니다.">Add specific details and examples. Be vivid and concrete.</span>
+    </div>
+    <div class="tip-item">
+      <div class="tip-num">4</div>
+      <span data-en="Practice every day. OPIc tests spontaneous speaking ability — daily practice is the best preparation." data-ko="매일 연습하세요. OPIc은 즉흥적인 말하기 능력을 평가합니다. 매일 연습이 최고의 준비입니다.">Practice daily. OPIc tests spontaneous speaking ability.</span>
+    </div>
+    <div class="tip-item">
+      <div class="tip-num">5</div>
+      <span data-en="Don't memorize scripts. Use natural expressions. Memorized answers sound unnatural and score lower." data-ko="대본을 암기하지 마세요. 자연스러운 표현을 사용하세요. 암기한 답변은 부자연스럽게 들리고 점수가 낮습니다.">Don't memorize scripts. Use natural, spontaneous language.</span>
+    </div>
+  </div>
+
+</div>
+
+<script>
+let lang='en';
+function setLang(l){
+  lang=l;
+  document.documentElement.lang=l==='ko'?'ko':'en';
+  document.querySelectorAll('[data-en][data-ko]').forEach(el=>{
+    const t=l==='ko'?el.getAttribute('data-ko'):el.getAttribute('data-en');
+    if(t) el.innerHTML=t;
+  });
+  document.getElementById('btn-en').classList.toggle('act',l==='en');
+  document.getElementById('btn-ko').classList.toggle('act',l==='ko');
+  try{localStorage.setItem('lw-lang',l);}catch(e){}
+}
+(function(){
+  let saved; try{saved=localStorage.getItem('lw-lang');}catch(e){}
+  setLang(saved||((navigator.language||'').startsWith('ko')?'ko':'en'));
+})();
+</script>
+</body>
+</html>
