@@ -552,10 +552,11 @@ JSON only: {"question":"essay question in English","keyPoints":["key points to a
   else if(fmt==='ielts_task1_graph'){
     prompt=lang==='ko'
       ?`IELTS Writing Task 1 그래프 묘사 과제를 생성해주세요. 레벨: ${level}.
-JSON: {"chartType":"Bar chart / Line graph / Pie chart / Table 중 하나","title":"차트 제목","description":"차트 데이터 설명 (한국어, 학습자가 상상하고 묘사할 수 있도록)","keyData":["핵심 데이터 포인트 (한국어)"],"outline":{"overview":"전체 추세 설명","detail1":"세부 사항 1","detail2":"세부 사항 2"},"modelAnswer":"모범 답안 (영어, 160~180단어)","tip":"그래프 묘사 전략 (한국어)"}
-JSON만 반환하세요.`
-      :`Generate an IELTS Writing Task 1 graph/chart description task. Level: ${level}.
-JSON only: {"chartType":"Bar chart or Line graph or Pie chart or Table","title":"chart title","description":"data description for student to imagine and describe","keyData":["key data points to mention"],"outline":{"overview":"overall trend","detail1":"specific detail 1","detail2":"specific detail 2"},"modelAnswer":"model answer (160-180 words)","tip":"graph description strategy"}`;
+JSON: {"chartType":"Bar chart / Line graph / Pie chart 중 하나","title":"차트 제목","description":"차트 데이터 설명 (한국어)","chartData":{"labels":["항목1","항목2","항목3","항목4"],"series":[{"name":"계열명","values":[숫자,숫자,숫자,숫자]}]},"keyData":["핵심 데이터 포인트 (한국어)"],"outline":{"overview":"전체 추세","detail1":"세부 1","detail2":"세부 2"},"modelAnswer":"모범 답안 (영어, 160~180단어)","tip":"전략 (한국어)"}
+chartData의 values는 실제 숫자(예: 45, 32, 28)로 넣어주세요. JSON만 반환하세요.`
+      :`Generate an IELTS Writing Task 1 graph description task. Level: ${level}.
+JSON only: {"chartType":"Bar chart or Line graph or Pie chart","title":"chart title","description":"data description","chartData":{"labels":["Category1","Category2","Category3","Category4"],"series":[{"name":"Series name","values":[number,number,number,number]}]},"keyData":["key data point to mention"],"outline":{"overview":"overall trend","detail1":"detail 1","detail2":"detail 2"},"modelAnswer":"model answer (160-180 words)","tip":"strategy tip"}
+chartData values must be actual numbers (e.g. 45, 32, 28). JSON only.`;
   }
   else if(fmt==='ielts_task1_process'){
     prompt=lang==='ko'
@@ -627,13 +628,6 @@ JSON only: {"question":"essay question in English","outline":{"intro":"intro tip
         fetchUnsplashImage(currentTask.imageKeyword||'office workplace').then(url=>{
           const el=document.getElementById('writing-scene-img');
           const ph=document.getElementById('writing-scene-placeholder');
-          if(el&&url){el.src=url;el.style.display='block';}
-          if(ph) ph.style.display='none';
-        });
-      } else if(fmt==='ielts_task1_graph'){
-        fetchUnsplashImage(currentTask.chartType?.toLowerCase().replace(' ','_')||'data chart graph').then(url=>{
-          const el=document.getElementById('ielts-chart-img');
-          const ph=document.getElementById('ielts-chart-placeholder');
           if(el&&url){el.src=url;el.style.display='block';}
           if(ph) ph.style.display='none';
         });
@@ -726,14 +720,7 @@ function renderTask(topic,task){
           <div class="task-badges"><span class="t-badge tb-type">${task.chartType||'Chart'}</span><span class="t-badge tb-time">20 min</span><span class="t-badge tb-words">150w+</span></div>
         </div>
         <div class="task-body">
-          <div id="ielts-chart-placeholder" style="width:100%;height:180px;background:var(--bg);border-radius:10px;margin-bottom:14px;display:flex;align-items:center;justify-content:center;border:0.5px dashed var(--border-md);">
-            <div style="text-align:center;color:var(--text-light);">
-              <div style="font-size:36px;margin-bottom:8px;">📊</div>
-              <div style="font-size:13px;font-weight:500;color:var(--text-muted);">${task.chartType||'Chart'} — ${task.title||''}</div>
-              <div style="font-size:11px;margin-top:4px;">${lang==='ko'?'아래 데이터를 참고하여 묘사하세요':'Use the data below to write your description'}</div>
-            </div>
-          </div>
-          <img id="ielts-chart-img" style="width:100%;max-height:220px;object-fit:cover;border-radius:10px;margin-bottom:14px;display:none;" alt="Chart reference">
+          <div id="svg-chart-wrap" style="margin-bottom:14px;">${renderSVGChart(task)}</div>
           <div class="prompt-box">
             <div class="pb-label write">📊 ${lang==='ko'?'차트 정보':'CHART INFORMATION'} — ${task.title||''}</div>
             <div class="pb-text">${task.description||''}</div>
@@ -1069,6 +1056,127 @@ function showTyping(){
   wrap.appendChild(d); wrap.scrollTop=wrap.scrollHeight; return id;
 }
 function removeTyping(id){const e=document.getElementById(id);if(e)e.remove();}
+
+// -- SVG Chart Renderer --
+function renderSVGChart(task){
+  const chartType=(task.chartType||'Bar chart').toLowerCase();
+  const cd=task.chartData;
+  if(!cd||!cd.labels||!cd.series||!cd.series.length){
+    return `<div style="width:100%;height:200px;background:var(--bg);border-radius:10px;display:flex;align-items:center;justify-content:center;border:0.5px dashed var(--border-md);">
+      <div style="text-align:center;color:var(--text-muted);"><div style="font-size:36px;">📊</div><div style="font-size:13px;margin-top:6px;">${task.chartType||'Chart'} — ${task.title||''}</div></div>
+    </div>`;
+  }
+  const W=560,H=260,pad={top:30,right:20,bottom:60,left:50};
+  const chartW=W-pad.left-pad.right, chartH=H-pad.top-pad.bottom;
+  const labels=cd.labels;
+  const series=cd.series;
+  const colors=['#534ab7','#2A7F6F','#ba7517','#993556','#185fa5'];
+
+  // All values flat
+  const allVals=series.flatMap(s=>s.values||[]);
+  const maxVal=Math.max(...allVals,1);
+  const minVal=Math.min(...allVals,0);
+  const range=maxVal-minVal||1;
+
+  const title=task.title||'';
+  let svgContent='';
+
+  if(chartType.includes('bar')){
+    const groupW=chartW/labels.length;
+    const barW=Math.min(groupW/(series.length+1),40);
+    // Y axis gridlines
+    for(let i=0;i<=4;i++){
+      const y=pad.top+chartH*(1-i/4);
+      const val=Math.round(minVal+range*(i/4));
+      svgContent+=`<line x1="${pad.left}" y1="${y}" x2="${pad.left+chartW}" y2="${y}" stroke="#e2e8f0" stroke-width="1"/>
+        <text x="${pad.left-5}" y="${y+4}" text-anchor="end" font-size="10" fill="#94a3b8">${val}</text>`;
+    }
+    // Bars
+    series.forEach((s,si)=>{
+      labels.forEach((lbl,li)=>{
+        const val=(s.values||[])[li]||0;
+        const barH=((val-minVal)/range)*chartH;
+        const x=pad.left+li*groupW+(si*(barW+2))+(groupW-series.length*(barW+2))/2;
+        const y=pad.top+chartH-barH;
+        svgContent+=`<rect x="${x}" y="${y}" width="${barW}" height="${barH}" fill="${colors[si%colors.length]}" rx="2" opacity="0.85"/>
+          <text x="${x+barW/2}" y="${y-4}" text-anchor="middle" font-size="9" fill="${colors[si%colors.length]}" font-weight="600">${val}</text>`;
+      });
+    });
+    // X labels
+    labels.forEach((lbl,li)=>{
+      const x=pad.left+li*groupW+groupW/2;
+      svgContent+=`<text x="${x}" y="${pad.top+chartH+16}" text-anchor="middle" font-size="10" fill="#5a6a82">${lbl}</text>`;
+    });
+  } else if(chartType.includes('line')){
+    // Gridlines
+    for(let i=0;i<=4;i++){
+      const y=pad.top+chartH*(1-i/4);
+      const val=Math.round(minVal+range*(i/4));
+      svgContent+=`<line x1="${pad.left}" y1="${y}" x2="${pad.left+chartW}" y2="${y}" stroke="#e2e8f0" stroke-width="1"/>
+        <text x="${pad.left-5}" y="${y+4}" text-anchor="end" font-size="10" fill="#94a3b8">${val}</text>`;
+    }
+    series.forEach((s,si)=>{
+      const pts=(s.values||[]).map((v,li)=>{
+        const x=pad.left+(li/(labels.length-1||1))*chartW;
+        const y=pad.top+chartH-((v-minVal)/range)*chartH;
+        return [x,y];
+      });
+      const pathD=pts.map((p,i)=>`${i===0?'M':'L'}${p[0].toFixed(1)},${p[1].toFixed(1)}`).join(' ');
+      svgContent+=`<path d="${pathD}" fill="none" stroke="${colors[si%colors.length]}" stroke-width="2.5" stroke-linejoin="round"/>`;
+      pts.forEach(([x,y],li)=>{
+        svgContent+=`<circle cx="${x}" cy="${y}" r="4" fill="${colors[si%colors.length]}"/>
+          <text x="${x}" y="${y-8}" text-anchor="middle" font-size="9" fill="${colors[si%colors.length]}" font-weight="600">${(s.values||[])[li]}</text>`;
+      });
+    });
+    labels.forEach((lbl,li)=>{
+      const x=pad.left+(li/(labels.length-1||1))*chartW;
+      svgContent+=`<text x="${x}" y="${pad.top+chartH+16}" text-anchor="middle" font-size="10" fill="#5a6a82">${lbl}</text>`;
+    });
+  } else if(chartType.includes('pie')){
+    // Pie chart
+    const cx=W/2, cy=H/2-10, r=90;
+    const vals=(series[0]?.values||[]);
+    const total=vals.reduce((a,b)=>a+b,0)||1;
+    let startAngle=-Math.PI/2;
+    vals.forEach((v,i)=>{
+      const angle=(v/total)*2*Math.PI;
+      const x1=cx+r*Math.cos(startAngle), y1=cy+r*Math.sin(startAngle);
+      const x2=cx+r*Math.cos(startAngle+angle), y2=cy+r*Math.sin(startAngle+angle);
+      const large=angle>Math.PI?1:0;
+      const midA=startAngle+angle/2;
+      const lx=cx+(r+20)*Math.cos(midA), ly=cy+(r+20)*Math.sin(midA);
+      svgContent+=`<path d="M${cx},${cy} L${x1.toFixed(1)},${y1.toFixed(1)} A${r},${r} 0 ${large},1 ${x2.toFixed(1)},${y2.toFixed(1)} Z" fill="${colors[i%colors.length]}" stroke="white" stroke-width="2" opacity="0.85"/>
+        <text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" text-anchor="middle" font-size="10" fill="${colors[i%colors.length]}" font-weight="600">${Math.round(v/total*100)}%</text>`;
+      startAngle+=angle;
+    });
+    // Legend
+    labels.forEach((lbl,i)=>{
+      const lx=20, ly=20+i*18;
+      svgContent+=`<rect x="${lx}" y="${ly-10}" width="12" height="12" fill="${colors[i%colors.length]}" rx="2"/>
+        <text x="${lx+16}" y="${ly}" font-size="10" fill="#5a6a82">${lbl}: ${(series[0]?.values||[])[i]||0}</text>`;
+    });
+  }
+
+  // Legend for bar/line
+  if(!chartType.includes('pie')&&series.length>1){
+    series.forEach((s,si)=>{
+      const lx=pad.left+si*100, ly=H-8;
+      svgContent+=`<rect x="${lx}" y="${ly-10}" width="12" height="10" fill="${colors[si%colors.length]}" rx="2"/>
+        <text x="${lx+16}" y="${ly}" font-size="10" fill="#5a6a82">${s.name||''}</text>`;
+    });
+  }
+
+  // Axes
+  svgContent+=`<line x1="${pad.left}" y1="${pad.top}" x2="${pad.left}" y2="${pad.top+chartH}" stroke="#cbd5e1" stroke-width="1.5"/>
+    <line x1="${pad.left}" y1="${pad.top+chartH}" x2="${pad.left+chartW}" y2="${pad.top+chartH}" stroke="#cbd5e1" stroke-width="1.5"/>`;
+
+  return `<div style="background:white;border-radius:10px;border:0.5px solid var(--border);padding:16px;overflow:hidden;">
+    <div style="font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:10px;text-align:center;">${title}</div>
+    <svg viewBox="0 0 ${W} ${H}" style="width:100%;max-height:260px;" xmlns="http://www.w3.org/2000/svg">
+      ${svgContent}
+    </svg>
+  </div>`;
+}
 
 // -- Unsplash --
 async function fetchUnsplashImage(keyword){
