@@ -643,6 +643,15 @@ JSON only: {"question":"OPIc English question","situation":"situation descriptio
     currentTask=JSON.parse(data.content[0].text.replace(/```json|```/g,'').trim());
     document.getElementById('loading-overlay').style.display='none';
     renderTask(topic, currentTask);
+    // Load image after render (describe_picture)
+    if(topic.format==='describe_picture' && unsplashKey){
+      fetchUnsplashImage(currentTask.imageKeyword||'office people').then(url=>{
+        const el=document.getElementById('scene-img');
+        if(el&&url){el.src=url;el.classList.add('show');}
+        const ph=document.getElementById('scene-img-placeholder');
+        if(ph) ph.style.display='none';
+      });
+    }
     initTutor(topic);
   }catch(e){
     document.getElementById('loading-overlay').style.display='none';
@@ -691,8 +700,8 @@ function renderTask(topic, task){
           <div class="task-badges"><span class="t-badge tb-type">🖼 Describe</span><span class="t-badge tb-time">${ansSec} sec</span></div>
         </div>
         <div class="task-body">
+          <div id="scene-img-placeholder" style="width:100%;height:200px;background:var(--bg);border-radius:10px;margin-bottom:16px;display:flex;align-items:center;justify-content:center;border:0.5px solid var(--border);"><div style="text-align:center;color:var(--text-light);"><div style="font-size:32px;margin-bottom:8px;">🖼</div><div style="font-size:13px;">${lang==='ko'?'사진 로딩 중...':'Loading photo...'}</div></div></div>
           <img class="scene-img" id="scene-img" alt="Describe this photo">
-          <script>fetchUnsplashImage(currentTask?.imageKeyword||'office people').then(url=>{const el=document.getElementById('scene-img');if(el&&url){el.src=url;el.classList.add('show');}});<\/script>
           <div class="task-prompt">
             <div class="tp-label" data-en="KEY POINTS TO COVER" data-ko="묘사해야 할 핵심 포인트">KEY POINTS</div>
             <div class="tp-tips">${(task.keyPoints||[]).map(p=>`<div class="tp-tip-item">• ${p}</div>`).join('')}</div>
