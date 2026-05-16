@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LinguaWalk — Vocabulary</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --navy: #1C2B45; --teal: #2A7F6F; --teal-light: #E1F5EE; --teal-mid: #1D9E75;
+    --bg: #F8F7F4; --white: #fff; --text: #1C2B45; --text-muted: #5a6a82; --text-light: #94a3b8;
+    --border: rgba(28,43,69,0.1); --border-md: rgba(28,43,69,0.18);
+    --vocab: #2A7F6F; --vocab-light: #E1F5EE;
+  }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+  nav { background: rgba(28,43,69,0.97); height: 56px; display: flex; align-items: center; padding: 0 5%; border-bottom: 0.5px solid rgba(255,255,255,0.08); position: sticky; top: 0; z-index: 100; }
+  .nav-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; }
+  .nav-lm { width: 28px; height: 28px; background: var(--teal); border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: #fff; }
+  .nav-lt { font-size: 16px; font-weight: 600; color: #fff; }
+  .nav-sep { width: 1px; height: 18px; background: rgba(255,255,255,0.15); margin: 0 12px; }
+  .nav-page { font-size: 13px; color: rgba(255,255,255,0.6); }
+  .nav-space { flex: 1; }
+  .lang-sw { display: flex; background: rgba(255,255,255,0.08); border-radius: 7px; padding: 2px; gap: 2px; }
+  .lbtn { padding: 4px 10px; border-radius: 5px; font-size: 11px; font-weight: 500; border: none; background: transparent; color: rgba(255,255,255,0.5); cursor: pointer; font-family: inherit; transition: all 0.2s; }
+  .lbtn.act { background: var(--teal); color: #fff; }
+  .nav-back { font-size: 13px; color: rgba(255,255,255,0.6); text-decoration: none; padding: 6px 10px; border-radius: 7px; margin-right: 6px; }
+  .nav-back:hover { background: rgba(255,255,255,0.08); color: #fff; }
+  .api-setup { max-width: 520px; margin: 60px auto; padding: 32px; background: var(--white); border-radius: 16px; border: 0.5px solid var(--border-md); text-align: center; }
+  .api-icon { font-size: 48px; margin-bottom: 16px; }
+  .api-title { font-family: 'DM Serif Display', serif; font-size: 24px; color: var(--navy); margin-bottom: 8px; }
+  .api-desc { font-size: 14px; color: var(--text-muted); line-height: 1.6; margin-bottom: 24px; }
+  .api-input-wrap { display: flex; gap: 8px; margin-bottom: 12px; }
+  .api-input { flex: 1; padding: 10px 14px; border: 0.5px solid var(--border-md); border-radius: 8px; font-size: 13px; font-family: monospace; color: var(--text); background: var(--bg); outline: none; }
+  .api-input:focus { border-color: var(--teal); }
+  .api-btn { padding: 10px 18px; border-radius: 8px; font-size: 13px; font-weight: 500; background: var(--teal); color: #fff; border: none; cursor: pointer; font-family: inherit; }
+  .api-note { font-size: 11px; color: var(--text-light); }
+  .main { max-width: 820px; margin: 0 auto; padding: 28px 5% 80px; display: none; }
+  .topic-header { background: linear-gradient(135deg, #1a3d2e 0%, #2A7F6F 100%); border-radius: 14px; padding: 24px 28px; margin-bottom: 20px; position: relative; overflow: hidden; }
+  .topic-header::before { content: ''; position: absolute; right: -20px; top: -20px; width: 140px; height: 140px; border-radius: 50%; background: rgba(255,255,255,0.08); pointer-events: none; }
+  .th-tag { font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: #a7f3d0; margin-bottom: 6px; }
+  .th-title { font-family: 'DM Serif Display', serif; font-size: clamp(20px, 3vw, 28px); color: #fff; margin-bottom: 6px; }
+  .th-desc { font-size: 13px; color: rgba(255,255,255,0.65); line-height: 1.5; }
+  .th-meta { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+  .th-badge { font-size: 11px; padding: 3px 10px; border-radius: 6px; background: rgba(255,255,255,0.15); color: rgba(255,255,255,0.8); }
+  .topic-selector { background: var(--white); border: 0.5px solid var(--border); border-radius: 14px; padding: 16px 18px; margin-bottom: 20px; }
+  .ts-label { font-size: 11px; font-weight: 600; letter-spacing: .8px; text-transform: uppercase; color: var(--text-light); margin-bottom: 10px; }
+  .ts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 7px; }
+  .ts-btn { padding: 8px 12px; border-radius: 8px; font-size: 12px; font-weight: 500; border: 0.5px solid var(--border-md); background: transparent; color: var(--text-muted); cursor: pointer; font-family: inherit; transition: all 0.2s; text-align: left; display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+  .ts-btn:hover:not(.locked) { border-color: var(--vocab); color: var(--vocab); background: var(--vocab-light); }
+  .ts-btn.act { background: var(--vocab); color: #fff; border-color: var(--vocab); }
+  .ts-btn.locked { opacity: 0.5; cursor: not-allowed; }
+  .ts-lv { font-size: 9px; padding: 1px 5px; border-radius: 3px; background: rgba(0,0,0,0.08); flex-shrink: 0; }
+  .ts-btn.act .ts-lv { background: rgba(255,255,255,0.2); }
+  .loading-overlay { padding: 48px; text-align: center; background: var(--white); border: 0.5px solid var(--border); border-radius: 14px; margin-bottom: 20px; }
+  .loading-spinner { width: 44px; height: 44px; border: 3px solid var(--border); border-top-color: var(--vocab); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 16px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-text { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
+  .wordcard-section { background: var(--white); border: 0.5px solid var(--border); border-radius: 14px; margin-bottom: 20px; overflow: hidden; }
+  .wc-header { padding: 14px 18px; border-bottom: 0.5px solid var(--border); display: flex; align-items: center; justify-content: space-between; background: var(--vocab-light); }
+  .wc-title { font-size: 13px; font-weight: 600; color: var(--vocab); }
+  .wc-count { font-size: 12px; color: var(--text-muted); }
+  .word-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 10px; padding: 16px 18px; }
+  .word-card { background: var(--bg); border-radius: 10px; padding: 14px; border: 0.5px solid var(--border); cursor: pointer; transition: all 0.2s; }
+  .word-card:hover { border-color: var(--vocab); background: var(--vocab-light); }
+  .wc-word { font-size: 15px; font-weight: 600; color: var(--navy); margin-bottom: 3px; }
+  .wc-type { font-size: 10px; color: var(--text-light); font-style: italic; margin-bottom: 5px; }
+  .wc-meaning { font-size: 12px; color: var(--text-muted); line-height: 1.4; margin-bottom: 5px; }
+  .wc-example { font-size: 11px; color: var(--vocab); font-style: italic; line-height: 1.4; }
+  .tutor-section { background: var(--white); border: 0.5px solid var(--border); border-radius: 14px; margin-bottom: 20px; overflow: hidden; }
+  .tutor-header { display: flex; align-items: center; gap: 10px; padding: 14px 18px; border-bottom: 0.5px solid var(--border); background: var(--vocab-light); }
+  .tutor-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--vocab); display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
+  .tutor-name { font-size: 13px; font-weight: 600; color: var(--vocab); }
+  .tutor-status { font-size: 11px; color: var(--text-muted); }
+  .tutor-messages { padding: 16px 18px; min-height: 100px; max-height: 300px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
+  .msg { display: flex; gap: 10px; align-items: flex-start; }
+  .msg.user { flex-direction: row-reverse; }
+  .msg-avatar { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; flex-shrink: 0; margin-top: 2px; }
+  .msg-avatar.ai { background: var(--vocab); color: #fff; }
+  .msg-avatar.user { background: var(--navy); color: #fff; }
+  .msg-bubble { max-width: 78%; padding: 10px 14px; border-radius: 12px; font-size: 13px; line-height: 1.6; }
+  .msg.ai .msg-bubble { background: var(--bg); color: var(--text); border-radius: 4px 12px 12px 12px; }
+  .msg.user .msg-bubble { background: var(--navy); color: #fff; border-radius: 12px 4px 12px 12px; }
+  .typing { display: flex; gap: 4px; align-items: center; padding: 10px 14px; background: var(--bg); border-radius: 4px 12px 12px 12px; width: fit-content; }
+  .typing span { width: 6px; height: 6px; border-radius: 50%; background: var(--text-light); animation: bounce 1.2s infinite; }
+  .typing span:nth-child(2) { animation-delay: 0.2s; }
+  .typing span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes bounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-6px)} }
+  .quick-wrap { padding: 0 18px 12px; display: flex; gap: 6px; flex-wrap: wrap; }
+  .quick-btn { padding: 5px 12px; border-radius: 16px; font-size: 12px; border: 0.5px solid var(--border-md); background: transparent; color: var(--text-muted); cursor: pointer; font-family: inherit; transition: all 0.2s; }
+  .quick-btn:hover { border-color: var(--vocab); color: var(--vocab); background: var(--vocab-light); }
+  .tutor-input-wrap { display: flex; gap: 8px; padding: 12px 18px; border-top: 0.5px solid var(--border); }
+  .tutor-input { flex: 1; padding: 9px 14px; border: 0.5px solid var(--border-md); border-radius: 8px; font-size: 13px; font-family: inherit; color: var(--text); background: var(--bg); outline: none; }
+  .tutor-input:focus { border-color: var(--vocab); }
+  .send-btn { width: 36px; height: 36px; border-radius: 8px; background: var(--vocab); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 16px; flex-shrink: 0; }
+  .send-btn:hover { background: var(--teal-mid); }
+  .send-btn:disabled { background: var(--border-md); cursor: not-allowed; }
+  .practice-section { background: var(--white); border: 0.5px solid var(--border); border-radius: 14px; padding: 18px; margin-bottom: 20px; }
+  .ps-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 14px; }
+  .practice-q { margin-bottom: 14px; padding: 14px; background: var(--bg); border-radius: 10px; }
+  .pq-text { font-size: 14px; color: var(--text); margin-bottom: 10px; font-weight: 500; line-height: 1.5; }
+  .pq-options { display: flex; flex-direction: column; gap: 7px; }
+  .pq-opt { padding: 9px 14px; border-radius: 8px; border: 1.5px solid var(--border-md); background: var(--white); cursor: pointer; font-size: 13px; color: var(--text); transition: all 0.2s; text-align: left; font-family: inherit; }
+  .pq-opt:hover { border-color: var(--vocab); background: var(--vocab-light); }
+  .pq-opt.correct { border-color: var(--teal-mid); background: #eaf3de; color: #3b6d11; font-weight: 500; }
+  .pq-opt.wrong { border-color: #e24b4a; background: #fcebeb; color: #a32d2d; }
+  .pq-feedback { margin-top: 8px; font-size: 12px; padding: 8px 12px; border-radius: 7px; display: none; line-height: 1.5; }
+  .pq-feedback.show { display: block; }
+  .pq-feedback.correct { background: #eaf3de; color: #3b6d11; }
+  .pq-feedback.wrong { background: #fcebeb; color: #a32d2d; }
+  .gen-btn { width: 100%; padding: 12px; border-radius: 10px; font-size: 14px; font-weight: 500; background: var(--navy); color: #fff; border: none; cursor: pointer; font-family: inherit; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 4px; }
+  .gen-btn:hover { background: #243455; }
+  .gen-btn:disabled { background: var(--border-md); cursor: not-allowed; }
+  .topic-nav { display: flex; gap: 10px; }
+  .tn-btn { flex: 1; padding: 11px; border-radius: 10px; font-size: 13px; font-weight: 500; cursor: pointer; font-family: inherit; border: 0.5px solid var(--border-md); background: var(--white); color: var(--text); transition: all 0.2s; text-decoration: none; display: block; text-align: center; }
+  .tn-btn.primary { background: var(--vocab); color: #fff; border-color: var(--vocab); }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+  .fade-in { animation: fadeUp 0.4s ease forwards; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo"><div class="nav-lm">LW</div><span class="nav-lt">LinguaWalk</span></a>
+  <div class="nav-sep"></div>
+  <span class="nav-page">📖 Vocabulary</span>
+  <div class="nav-space"></div>
+  <a href="../general/index.html" class="nav-back" data-en="← General" data-ko="← 일반 영어">← General</a>
+  <div class="lang-sw">
+    <button class="lbtn act" onclick="setLang('en')" id="btn-en">EN</button>
+    <button class="lbtn" onclick="setLang('ko')" id="btn-ko">한국어</button>
+  </div>
+</nav>
+
+<div class="api-setup fade-in" id="api-setup">
+  <div class="api-icon">🔑</div>
+  <div class="api-title" data-en="Connect AI Tutor" data-ko="AI 튜터 연결">Connect AI Tutor</div>
+  <div class="api-desc" data-en="Enter your Anthropic API key. All 18 vocabulary topics will be generated by AI instantly." data-ko="Anthropic API 키를 입력하세요. 18개 어휘 토픽의 내용이 AI로 즉시 생성됩니다.">Enter your Anthropic API key.</div>
+  <div class="api-input-wrap">
+    <input type="password" class="api-input" id="api-key-input" placeholder="sk-ant-api03-...">
+    <button class="api-btn" onclick="saveApiKey()" data-en="Connect" data-ko="연결">Connect</button>
+  </div>
+  <div class="api-note" data-en="🔒 Stored in your browser only." data-ko="🔒 브라우저에만 저장됩니다.">🔒 Stored in your browser only.</div>
+</div>
+
+<div class="main fade-in" id="main-content">
+  <div class="topic-header">
+    <div class="th-tag">📖 VOCABULARY</div>
+    <div class="th-title" id="topic-title" data-en="Choose a topic to start" data-ko="토픽을 선택하여 시작하세요">Choose a topic to start</div>
+    <div class="th-desc" id="topic-desc" data-en="Click any topic below — AI generates vocabulary content instantly." data-ko="아래 토픽을 클릭하세요. AI가 즉시 어휘 내용을 생성합니다.">Click any topic below — AI generates vocabulary content instantly.</div>
+    <div class="th-meta">
+      <span class="th-badge" id="topic-level">—</span>
+      <span class="th-badge">🤖 AI Generated</span>
+    </div>
+  </div>
+
+  <div class="topic-selector">
+    <div class="ts-label" data-en="All Topics — click to load with AI" data-ko="전체 토픽 — 클릭하면 AI가 내용 생성">All Topics — click to load with AI</div>
+    <div class="ts-grid" id="ts-grid"></div>
+  </div>
+
+  <div class="loading-overlay" id="loading-overlay" style="display:none;">
+    <div class="loading-spinner"></div>
+    <div class="loading-text" id="loading-text">AI is generating content...</div>
+  </div>
+
+  <div class="wordcard-section" id="wordcard-section" style="display:none;">
+    <div class="wc-header">
+      <div class="wc-title">📚 <span data-en="Key Vocabulary" data-ko="핵심 어휘">Key Vocabulary</span></div>
+      <div class="wc-count" id="wc-count"></div>
+    </div>
+    <div class="word-grid" id="word-grid"></div>
+  </div>
+
+  <div class="tutor-section" id="tutor-section" style="display:none;">
+    <div class="tutor-header">
+      <div class="tutor-avatar">🤖</div>
+      <div>
+        <div class="tutor-name">AI Tutor</div>
+        <div class="tutor-status" id="tutor-status" data-en="Ready to help" data-ko="도움 준비 완료">Ready to help</div>
+      </div>
+    </div>
+    <div class="tutor-messages" id="tutor-messages"></div>
+    <div class="quick-wrap" id="quick-questions"></div>
+    <div class="tutor-input-wrap">
+      <input type="text" class="tutor-input" id="user-input"
+        data-en-ph="Ask about any word..." data-ko-ph="단어에 대해 질문하세요..."
+        placeholder="Ask about any word..."
+        onkeydown="if(event.key==='Enter') sendMessage();">
+      <button class="send-btn" id="send-btn" onclick="sendMessage()">➤</button>
+    </div>
+  </div>
+
+  <div class="practice-section" id="practice-section" style="display:none;">
+    <div class="ps-title">✏️ <span data-en="Practice Questions" data-ko="연습 문제">Practice Questions</span></div>
+    <div id="practice-questions"></div>
+    <button class="gen-btn" id="gen-btn" onclick="generateMorePractice()">
+      🤖 <span data-en="Generate new questions with AI" data-ko="AI로 새 문제 생성">Generate new questions with AI</span>
+    </button>
+  </div>
+
+  <div class="topic-nav" id="topic-nav" style="display:none;">
+    <a href="../general/index.html" class="tn-btn" data-en="← General" data-ko="← 일반 영어">← General</a>
+    <a href="grammar.html" class="tn-btn primary" data-en="Go to Grammar →" data-ko="Grammar으로 →">Go to Grammar →</a>
+  </div>
+</div>
+
+<script>
+let lang = 'en';
+function setLang(l) {
+  lang = l;
+  document.documentElement.lang = l === 'ko' ? 'ko' : 'en';
+  document.querySelectorAll('[data-en][data-ko]').forEach(el => {
+    const t = l === 'ko' ? el.getAttribute('data-ko') : el.getAttribute('data-en');
+    if (t) el.innerHTML = t;
+  });
+  const inp = document.getElementById('user-input');
+  if (inp) inp.placeholder = l === 'ko' ? '단어에 대해 질문하세요...' : 'Ask about any word...';
+  document.getElementById('btn-en').classList.toggle('act', l === 'en');
+  document.getElementById('btn-ko').classList.toggle('act', l === 'ko');
+  if (typeof ALL_TOPICS !== 'undefined') renderTopicSelector(currentTopic?.id);
+  try { localStorage.setItem('lw-lang', l); } catch(e) {}
+}
+
+const ALL_TOPICS = [
+  {id:'v1',  level:'A1', free:true,  en:'Daily Routines & Habits',           ko:'일상 루틴 & 습관'},
+  {id:'v2',  level:'A1', free:true,  en:'Numbers, Dates & Time',              ko:'숫자, 날짜 & 시간'},
+  {id:'v3',  level:'A1', free:true,  en:'Family & Relationships',             ko:'가족 & 관계'},
+  {id:'v4',  level:'A2', free:true,  en:'Food & Dining',                      ko:'음식 & 식사'},
+  {id:'v5',  level:'A2', free:true,  en:'Travel & Transport',                 ko:'여행 & 교통'},
+  {id:'v6',  level:'A2', free:true,  en:'Shopping & Money',                   ko:'쇼핑 & 돈'},
+  {id:'v7',  level:'B1', free:true,  en:'Work & Career',                      ko:'직업 & 경력'},
+  {id:'v8',  level:'B1', free:true,  en:'Health & Body',                      ko:'건강 & 신체'},
+  {id:'v9',  level:'B1', free:true,  en:'Technology & Media',                 ko:'기술 & 미디어'},
+  {id:'v10', level:'B1', free:false,  en:'Environment & Nature',               ko:'환경 & 자연'},
+  {id:'v11', level:'B2', free:false,  en:'Education & Learning',               ko:'교육 & 학습'},
+  {id:'v12', level:'B2', free:false,  en:'Society & Culture',                  ko:'사회 & 문화'},
+  {id:'v13', level:'B2', free:false,  en:'Business & Economics',               ko:'비즈니스 & 경제'},
+  {id:'v14', level:'B2', free:false,  en:'Phrasal Verbs (Essential)',          ko:'구동사 (필수)'},
+  {id:'v15', level:'C1', free:false, en:'Idioms & Fixed Expressions',         ko:'관용어 & 고정 표현'},
+  {id:'v16', level:'C1', free:false, en:'Academic & Professional Vocabulary', ko:'학술 & 전문 어휘'},
+  {id:'v17', level:'C2', free:false, en:'Nuance & Register',                  ko:'뉘앙스 & 어감'},
+  {id:'v18', level:'C2', free:false, en:'Literary & Rhetorical Devices',      ko:'문학적 & 수사적 장치'},
+];
+
+let apiKey = '', currentTopic = null, messages = [], isLoading = false, currentPracticeData = [];
+
+function saveApiKey() {
+  const key = document.getElementById('api-key-input').value.trim();
+  if (!key.startsWith('sk-ant-')) { alert('API key must start with sk-ant-'); return; }
+  try { sessionStorage.setItem('lw-api-key', key); } catch(e) {}
+  apiKey = key;
+  document.getElementById('api-setup').style.display = 'none';
+  document.getElementById('main-content').style.display = 'block';
+  renderTopicSelector();
+}
+
+function renderTopicSelector(activeId) {
+  document.getElementById('ts-grid').innerHTML = ALL_TOPICS.map(t => {
+    const name = lang === 'ko' ? t.ko : t.en;
+    const isLocked = !t.free;
+    return `<button class="ts-btn ${activeId===t.id?'act':''} ${isLocked?'locked':''}"
+      onclick="${isLocked ? 'showProAlert()' : `loadTopic('${t.id}')`}">
+      <span>${name}</span>
+      <span class="ts-lv">${t.level}${isLocked?' 🔒':''}</span>
+    </button>`;
+  }).join('');
+}
+
+function showProAlert() {
+  alert(lang==='ko' ? 'C1·C2 토픽은 Pro 전용입니다!' : 'C1 & C2 topics are Pro only!');
+}
+
+async function loadTopic(id) {
+  if (isLoading) return;
+  const topic = ALL_TOPICS.find(t => t.id === id);
+  if (!topic) return;
+  currentTopic = topic;
+  const name = lang === 'ko' ? topic.ko : topic.en;
+
+  document.getElementById('topic-title').textContent = name;
+  document.getElementById('topic-level').textContent = topic.level;
+  document.getElementById('topic-desc').textContent = lang === 'ko' ? 'AI가 내용을 생성하고 있습니다...' : 'AI is generating content...';
+  renderTopicSelector(id);
+  ['wordcard-section','tutor-section','practice-section','topic-nav'].forEach(i => document.getElementById(i).style.display='none');
+  document.getElementById('loading-overlay').style.display = 'block';
+  document.getElementById('loading-text').innerHTML = lang === 'ko'
+    ? `🤖 <strong>${name}</strong> 어휘를 생성하고 있습니다...`
+    : `🤖 Generating <strong>${name}</strong> vocabulary...`;
+
+  isLoading = true;
+  try {
+    const prompt = lang === 'ko'
+      ? `영어 어휘 토픽 "${name}" (레벨: ${topic.level})에 대해 다음 JSON을 생성해주세요. {"desc":"한 줄 설명","intro":"환영 메시지 2-3문장","words":[{"w":"단어","type":"품사","m":"의미","ex":"예문 (한국어번역)"}],"quickQ":["질문1","질문2","질문3","질문4"],"practice":[{"q":"빈칸___ 문제","opts":["A","B","C","D"],"ans":0,"fb":"피드백"}]} 단어 10개, 문제 3개. JSON만 반환하세요.`
+      : `Generate English vocabulary content for topic "${name}" (level: ${topic.level}). Return ONLY this JSON: {"desc":"one line description","intro":"welcome message 2-3 sentences","words":[{"w":"word","type":"part of speech","m":"meaning","ex":"Example sentence."}],"quickQ":["q1","q2","q3","q4"],"practice":[{"q":"sentence with ___ blank","opts":["A","B","C","D"],"ans":0,"fb":"feedback"}]} 10 words, 3 questions. JSON only.`;
+
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:2000,messages:[{role:'user',content:prompt}]})
+    });
+    const data = await resp.json();
+    const content = JSON.parse(data.content[0].text.replace(/```json|```/g,'').trim());
+
+    document.getElementById('loading-overlay').style.display = 'none';
+    document.getElementById('topic-desc').textContent = content.desc;
+
+    // Words
+    document.getElementById('word-grid').innerHTML = content.words.map(w =>
+      `<div class="word-card" onclick="askWord('${w.w.replace(/'/g,"\\'")}')">
+        <div class="wc-word">${w.w}</div>
+        <div class="wc-type">${w.type}</div>
+        <div class="wc-meaning">${w.m}</div>
+        <div class="wc-example">"${w.ex}"</div>
+      </div>`
+    ).join('');
+    document.getElementById('wc-count').textContent = (lang==='ko'?'총 ':'')+content.words.length+(lang==='ko'?'개 단어':' words');
+    document.getElementById('wordcard-section').style.display = 'block';
+
+    // Chat
+    messages = [];
+    document.getElementById('tutor-messages').innerHTML = '';
+    addMsg('ai', content.intro);
+    document.getElementById('quick-questions').innerHTML = content.quickQ.map(q =>
+      `<button class="quick-btn" onclick="askQ(this)">${q}</button>`).join('');
+    document.getElementById('tutor-section').style.display = 'block';
+
+    // Practice
+    renderPractice(content.practice);
+    document.getElementById('practice-section').style.display = 'block';
+    document.getElementById('topic-nav').style.display = 'flex';
+
+  } catch(e) {
+    document.getElementById('loading-overlay').style.display = 'none';
+    document.getElementById('topic-desc').textContent = lang==='ko' ? '오류가 발생했습니다. 다시 시도해 주세요.' : 'Error. Please try again.';
+    alert(lang==='ko' ? '콘텐츠 생성 오류입니다.' : 'Error generating content.');
+  }
+  isLoading = false;
+}
+
+function askWord(w) { document.getElementById('user-input').value = lang==='ko' ? `"${w}" 더 많은 예문과 사용법을 알려주세요.` : `Give me more examples for "${w}".`; sendMessage(); }
+function askQ(btn) { document.getElementById('user-input').value = btn.textContent; sendMessage(); }
+
+async function sendMessage() {
+  if (isLoading || !currentTopic) return;
+  const inp = document.getElementById('user-input');
+  const text = inp.value.trim(); if (!text) return;
+  inp.value = ''; addMsg('user', text);
+  messages.push({role:'user',content:text});
+  isLoading = true;
+  document.getElementById('send-btn').disabled = true;
+  document.getElementById('tutor-status').textContent = lang==='ko' ? '답변 작성 중...' : 'Typing...';
+  const tid = showTyping();
+  const name = lang==='ko' ? currentTopic.ko : currentTopic.en;
+  const sys = lang==='ko'
+    ? `친절한 영어 어휘 튜터입니다. "${name}" (${currentTopic.level}) 토픽을 가르칩니다. 한국어로 간결하게 답하세요.`
+    : `Friendly English vocabulary tutor teaching "${name}" (${currentTopic.level}). Keep responses concise.`;
+  try {
+    const r = await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:500,system:sys,messages:messages.slice(-6)})});
+    const d = await r.json(); removeTyping(tid);
+    if (d.content?.[0]) { const rep=d.content[0].text; messages.push({role:'assistant',content:rep}); addMsg('ai',rep); }
+  } catch(e) { removeTyping(tid); addMsg('ai',lang==='ko'?'⚠️ 연결 오류입니다.':'⚠️ Connection error.'); }
+  isLoading=false; document.getElementById('send-btn').disabled=false;
+  document.getElementById('tutor-status').textContent = lang==='ko'?'도움 준비 완료':'Ready to help';
+}
+
+function addMsg(role, text) {
+  const wrap=document.getElementById('tutor-messages');
+  const d=document.createElement('div'); d.className=`msg ${role}`;
+  const fmt=text.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\*(.*?)\*/g,'<em>$1</em>').replace(/\n/g,'<br>');
+  d.innerHTML=`<div class="msg-avatar ${role}">${role==='ai'?'🤖':'👤'}</div><div class="msg-bubble">${fmt}</div>`;
+  wrap.appendChild(d); wrap.scrollTop=wrap.scrollHeight;
+}
+function showTyping() {
+  const wrap=document.getElementById('tutor-messages');
+  const id='t'+Date.now(); const d=document.createElement('div'); d.className='msg ai'; d.id=id;
+  d.innerHTML=`<div class="msg-avatar ai">🤖</div><div class="typing"><span></span><span></span><span></span></div>`;
+  wrap.appendChild(d); wrap.scrollTop=wrap.scrollHeight; return id;
+}
+function removeTyping(id) { const e=document.getElementById(id); if(e) e.remove(); }
+
+function renderPractice(qs) {
+  currentPracticeData=qs;
+  document.getElementById('practice-questions').innerHTML=qs.map((q,i)=>`
+    <div class="practice-q" id="pq-${i}">
+      <div class="pq-text">${i+1}. ${q.q}</div>
+      <div class="pq-options">${q.opts.map((o,j)=>`<button class="pq-opt" onclick="checkAnswer(${i},${j})">${o}</button>`).join('')}</div>
+      <div class="pq-feedback" id="fb-${i}"></div>
+    </div>`).join('');
+}
+function checkAnswer(qi,sel) {
+  const c=document.getElementById(`pq-${qi}`); if(c.querySelector('.correct')) return;
+  const q=currentPracticeData[qi]; const opts=c.querySelectorAll('.pq-opt');
+  opts[sel].classList.add(sel===q.ans?'correct':'wrong');
+  if(sel!==q.ans) opts[q.ans].classList.add('correct');
+  opts.forEach(o=>o.disabled=true);
+  const fb=document.getElementById(`fb-${qi}`); fb.textContent=q.fb;
+  fb.className=`pq-feedback show ${sel===q.ans?'correct':'wrong'}`;
+}
+
+async function generateMorePractice() {
+  if(isLoading||!currentTopic) return;
+  isLoading=true;
+  const btn=document.getElementById('gen-btn'); btn.disabled=true;
+  btn.innerHTML='🤖 '+(lang==='ko'?'문제 생성 중...':'Generating...');
+  const name=lang==='ko'?currentTopic.ko:currentTopic.en;
+  const p=lang==='ko'
+    ? `"${name}" (${currentTopic.level}) 어휘 문제 3개 JSON: [{"q":"___문제","opts":["A","B","C","D"],"ans":0,"fb":"피드백"}] JSON만 반환`
+    : `3 vocabulary questions for "${name}" (${currentTopic.level}). JSON only: [{"q":"___ blank","opts":["A","B","C","D"],"ans":0,"fb":"feedback"}]`;
+  try {
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:800,messages:[{role:'user',content:p}]})});
+    const d=await r.json();
+    renderPractice(JSON.parse(d.content[0].text.replace(/```json|```/g,'').trim()));
+  } catch(e) { alert(lang==='ko'?'오류입니다.':'Error.'); }
+  isLoading=false; btn.disabled=false;
+  btn.innerHTML='🤖 '+(lang==='ko'?'AI로 새 문제 생성':'Generate new questions with AI');
+}
+
+(function(){
+  let saved; try{saved=localStorage.getItem('lw-lang');}catch(e){}
+  setLang(saved||((navigator.language||'').startsWith('ko')?'ko':'en'));
+  try{apiKey=sessionStorage.getItem('lw-api-key')||'';}catch(e){}
+  if(apiKey){
+    document.getElementById('api-setup').style.display='none';
+    document.getElementById('main-content').style.display='block';
+    renderTopicSelector();
+  }
+})();
+</script>
+</body>
+</html>
