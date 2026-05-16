@@ -3,428 +3,375 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LinguaWalk English — Choose Your Path</title>
-<meta name="description" content="Learn English with AI. Choose from Level Test, Grammar, Vocabulary, Listening, Reading, Speaking, Writing and Exam Prep.">
+<title>LinguaWalk — Learn English</title>
+<meta name="description" content="Learn English with AI. General English A1–C2, TOEIC, TOEFL, and IELTS preparation.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
-    --navy: #1C2B45; --teal: #2A7F6F; --teal-light: #E1F5EE; --teal-mid: #1D9E75;
-    --bg: #F8F7F4; --white: #fff; --text: #1C2B45; --text-muted: #5a6a82; --text-light: #94a3b8;
-    --border: rgba(28,43,69,0.1); --border-md: rgba(28,43,69,0.18);
+    --navy:#1C2B45; --teal:#2A7F6F; --teal-light:#E1F5EE; --teal-mid:#1D9E75;
+    --bg:#F8F7F4; --white:#fff; --text:#1C2B45; --text-muted:#5a6a82; --text-light:#94a3b8;
+    --border:rgba(28,43,69,0.1); --border-md:rgba(28,43,69,0.18);
+    --general:#2A7F6F; --general-light:#E1F5EE;
+    --toeic:#ba7517; --toeic-light:#faeeda;
+    --toefl:#185fa5; --toefl-light:#e6f1fb;
+    --ielts:#993556; --ielts-light:#fbeaf0;
   }
-  html { scroll-behavior: smooth; }
-  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+  body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
 
   /* NAV */
-  nav {
-    background: rgba(28,43,69,0.97); backdrop-filter: blur(12px);
-    height: 56px; display: flex; align-items: center; padding: 0 5%;
-    border-bottom: 0.5px solid rgba(255,255,255,0.08); position: sticky; top: 0; z-index: 100;
-  }
-  .nav-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; }
-  .nav-lm { width: 28px; height: 28px; background: var(--teal); border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: #fff; }
-  .nav-lt { font-size: 16px; font-weight: 600; color: #fff; letter-spacing: -.3px; }
-  .nav-sep { width: 1px; height: 18px; background: rgba(255,255,255,0.15); margin: 0 12px; }
-  .nav-lang { display: flex; align-items: center; gap: 6px; font-size: 13px; color: rgba(255,255,255,0.7); }
-  .nav-flag { font-size: 16px; }
-  .nav-space { flex: 1; }
-  .nav-right { display: flex; align-items: center; gap: 6px; }
-  .lang-sw { display: flex; background: rgba(255,255,255,0.08); border-radius: 7px; padding: 2px; gap: 2px; margin-right: 6px; }
-  .lbtn { padding: 4px 10px; border-radius: 5px; font-size: 11px; font-weight: 500; border: none; background: transparent; color: rgba(255,255,255,0.5); cursor: pointer; font-family: inherit; transition: all 0.2s; }
-  .lbtn.act { background: var(--teal); color: #fff; }
-  .lbtn:hover:not(.act) { color: #fff; }
-  .nav-link { font-size: 13px; color: rgba(255,255,255,0.6); text-decoration: none; padding: 6px 10px; border-radius: 7px; }
-  .nav-link:hover { background: rgba(255,255,255,0.08); color: #fff; }
-  .nav-cta { padding: 6px 16px; border-radius: 7px; font-size: 13px; font-weight: 500; background: var(--teal); color: #fff; text-decoration: none; border: none; cursor: pointer; font-family: inherit; }
-  .nav-cta:hover { background: var(--teal-mid); }
+  nav { background:rgba(28,43,69,0.97); height:60px; display:flex; align-items:center; padding:0 6%; border-bottom:0.5px solid rgba(255,255,255,0.08); position:sticky; top:0; z-index:100; }
+  .nav-logo { display:flex; align-items:center; gap:10px; text-decoration:none; }
+  .nav-lm { width:32px; height:32px; background:var(--teal); border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; color:#fff; }
+  .nav-lt { font-size:17px; font-weight:600; color:#fff; }
+  .nav-divider { width:1px; height:20px; background:rgba(255,255,255,0.12); margin:0 14px; }
+  .nav-lang { display:flex; align-items:center; gap:6px; }
+  .nav-flag { font-size:14px; }
+  .nav-lang-text { font-size:13px; color:rgba(255,255,255,0.6); }
+  .nav-space { flex:1; }
+  .nav-links { display:flex; align-items:center; gap:4px; }
+  .nav-link { font-size:13px; color:rgba(255,255,255,0.65); text-decoration:none; padding:6px 12px; border-radius:8px; transition:all 0.2s; white-space:nowrap; }
+  .nav-link:hover { background:rgba(255,255,255,0.08); color:#fff; }
+  .nav-cta { font-size:13px; font-weight:500; color:#fff; text-decoration:none; padding:7px 16px; border-radius:8px; background:var(--teal); margin-left:8px; }
+  .nav-cta:hover { background:var(--teal-mid); }
+  .lang-sw { display:flex; background:rgba(255,255,255,0.08); border-radius:7px; padding:2px; gap:2px; margin-left:12px; }
+  .lbtn { padding:4px 10px; border-radius:5px; font-size:11px; font-weight:500; border:none; background:transparent; color:rgba(255,255,255,0.5); cursor:pointer; font-family:inherit; transition:all 0.2s; }
+  .lbtn.act { background:var(--teal); color:#fff; }
 
-  /* HERO STRIP */
-  .hero-strip {
-    background: var(--navy); padding: 48px 5% 40px; text-align: center; position: relative; overflow: hidden;
-  }
-  .hero-strip::before {
-    content: ''; position: absolute; inset: 0; pointer-events: none;
-    background: radial-gradient(ellipse 70% 80% at 50% 100%, rgba(42,127,111,0.2) 0%, transparent 70%);
-  }
-  .hs-back { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: rgba(255,255,255,0.45); text-decoration: none; margin-bottom: 20px; transition: color 0.2s; }
-  .hs-back:hover { color: rgba(255,255,255,0.75); }
-  .hs-flag { font-size: 32px; margin-bottom: 10px; }
-  .hs-title { font-family: 'DM Serif Display', serif; font-size: clamp(28px, 5vw, 48px); color: #fff; line-height: 1.15; margin-bottom: 10px; }
-  .hs-title em { font-style: italic; color: #6ee7c7; }
-  .hs-sub { font-size: 15px; color: rgba(255,255,255,0.5); font-weight: 300; max-width: 440px; margin: 0 auto 24px; line-height: 1.6; }
+  /* HERO */
+  .hero { background:linear-gradient(135deg,#0f1c30 0%,#1C2B45 55%,#1e3558 100%); padding:60px 6% 0; position:relative; overflow:hidden; }
+  .hero::before { content:''; position:absolute; right:-60px; top:-60px; width:360px; height:360px; border-radius:50%; background:rgba(42,127,111,0.1); pointer-events:none; }
+  .hero-inner { max-width:860px; margin:0 auto; position:relative; }
+  .hero-tag { font-size:11px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; color:var(--teal-mid); margin-bottom:14px; }
+  .hero-title { font-family:'DM Serif Display',serif; font-size:clamp(30px,5vw,50px); color:#fff; line-height:1.15; margin-bottom:14px; }
+  .hero-title em { color:var(--teal-mid); font-style:normal; }
+  .hero-desc { font-size:15px; color:rgba(255,255,255,0.58); line-height:1.75; max-width:500px; margin-bottom:28px; }
+  .hero-btns { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:36px; }
+  .h-btn { padding:12px 24px; border-radius:10px; font-size:14px; font-weight:500; text-decoration:none; transition:all 0.2s; border:none; cursor:pointer; font-family:inherit; }
+  .h-btn.primary { background:var(--teal); color:#fff; }
+  .h-btn.primary:hover { background:var(--teal-mid); }
+  .h-btn.ghost { background:rgba(255,255,255,0.09); color:#fff; border:0.5px solid rgba(255,255,255,0.18); }
+  .h-btn.ghost:hover { background:rgba(255,255,255,0.14); }
+  .hero-stats { display:flex; gap:32px; padding-bottom:36px; flex-wrap:wrap; }
+  .hs { }
+  .hs-val { font-family:'DM Serif Display',serif; font-size:26px; color:#fff; }
+  .hs-lbl { font-size:10px; color:rgba(255,255,255,0.4); letter-spacing:.8px; text-transform:uppercase; margin-top:2px; }
 
-  /* USER STATUS BAR */
-  .status-bar {
-    background: var(--white); border-bottom: 0.5px solid var(--border);
-    padding: 12px 5%; display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
-  }
-  .sb-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-muted); }
-  .sb-val { font-weight: 600; color: var(--text); }
-  .sb-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--border-md); }
-  .sb-space { flex: 1; }
-  .sb-level { display: flex; align-items: center; gap: 6px; }
-  .level-badge { padding: 3px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; background: var(--teal-light); color: var(--teal); }
+  /* LEVEL TEST STRIP */
+  .lt-strip { background:rgba(255,255,255,0.06); border-top:0.5px solid rgba(255,255,255,0.08); }
+  .lt-inner { max-width:860px; margin:0 auto; padding:0 0; }
+  .lt-link { display:flex; align-items:center; gap:14px; padding:16px 0; text-decoration:none; transition:opacity 0.2s; }
+  .lt-link:hover { opacity:0.85; }
+  .lt-icon { width:38px; height:38px; background:var(--teal); border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:17px; flex-shrink:0; }
+  .lt-txt { flex:1; }
+  .lt-top { font-size:10px; font-weight:600; letter-spacing:1px; color:var(--teal-mid); text-transform:uppercase; margin-bottom:2px; }
+  .lt-main { font-size:14px; font-weight:500; color:#fff; }
+  .lt-sub { font-size:12px; color:rgba(255,255,255,0.45); }
+  .lt-arr { font-size:18px; color:rgba(255,255,255,0.35); }
 
-  /* MAIN */
-  .main { max-width: 1000px; margin: 0 auto; padding: 36px 5% 60px; }
+  /* CONTENT */
+  .wrap { max-width:860px; margin:0 auto; padding:44px 6% 80px; }
 
-  /* LEVEL TEST CARD — full width */
-  .test-card {
-    background: linear-gradient(135deg, var(--navy) 0%, #1a3d5c 100%);
-    border-radius: 16px; padding: 28px 32px; margin-bottom: 28px;
-    display: flex; align-items: center; gap: 28px; cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s; text-decoration: none; color: inherit;
-    position: relative; overflow: hidden;
-  }
-  .test-card::before {
-    content: ''; position: absolute; right: -30px; top: -30px;
-    width: 180px; height: 180px; border-radius: 50%;
-    background: rgba(42,127,111,0.15); pointer-events: none;
-  }
-  .test-card:hover { transform: translateY(-2px); box-shadow: 0 16px 40px rgba(28,43,69,0.25); }
-  .tc-icon { width: 56px; height: 56px; border-radius: 14px; background: rgba(42,127,111,0.3); display: flex; align-items: center; justify-content: center; font-size: 26px; flex-shrink: 0; }
-  .tc-info { flex: 1; }
-  .tc-tag { font-size: 10px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: #6ee7c7; margin-bottom: 4px; }
-  .tc-title { font-size: 20px; font-weight: 600; color: #fff; margin-bottom: 4px; }
-  .tc-desc { font-size: 13px; color: rgba(255,255,255,0.55); line-height: 1.5; }
-  .tc-arrow { font-size: 24px; color: rgba(255,255,255,0.3); flex-shrink: 0; transition: transform 0.2s; }
-  .test-card:hover .tc-arrow { transform: translateX(4px); color: #6ee7c7; }
+  /* SECTION HEADER */
+  .sh { display:flex; align-items:center; gap:10px; margin-bottom:16px; }
+  .sh-label { font-size:11px; font-weight:600; letter-spacing:1px; text-transform:uppercase; color:var(--text-light); }
+  .sh-line { flex:1; height:0.5px; background:var(--border); }
 
-  /* AI TUTOR BANNER */
-  .tutor-banner {
-    background: var(--teal-light); border: 0.5px solid rgba(42,127,111,0.25);
-    border-radius: 12px; padding: 14px 20px; margin-bottom: 28px;
-    display: flex; align-items: center; gap: 12px;
-  }
-  .tb-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--teal); display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
-  .tb-msg { flex: 1; font-size: 13px; color: var(--teal); line-height: 1.5; }
-  .tb-msg strong { font-weight: 600; }
-  .tb-btn { padding: 6px 14px; border-radius: 7px; font-size: 12px; font-weight: 500; background: var(--teal); color: #fff; border: none; cursor: pointer; font-family: inherit; white-space: nowrap; }
-  .tb-btn:hover { background: var(--teal-mid); }
+  /* GENERAL CARD */
+  .g-card { background:var(--white); border:0.5px solid var(--border); border-radius:16px; overflow:hidden; margin-bottom:36px; text-decoration:none; display:block; transition:all 0.25s; }
+  .g-card:hover { box-shadow:0 12px 36px rgba(0,0,0,0.09); transform:translateY(-2px); }
+  .g-top { background:linear-gradient(135deg,#1a4a3f 0%,#2A7F6F 100%); padding:28px 30px 24px; position:relative; overflow:hidden; }
+  .g-top::after { content:''; position:absolute; right:-24px; top:-24px; width:160px; height:160px; border-radius:50%; background:rgba(255,255,255,0.07); }
+  .g-tag { font-size:10px; font-weight:600; letter-spacing:1px; text-transform:uppercase; color:rgba(255,255,255,0.55); margin-bottom:7px; }
+  .g-name { font-family:'DM Serif Display',serif; font-size:26px; color:#fff; margin-bottom:7px; }
+  .g-desc { font-size:13px; color:rgba(255,255,255,0.62); line-height:1.65; max-width:460px; }
+  .g-levels { display:flex; gap:6px; margin-top:16px; flex-wrap:wrap; }
+  .g-lv { font-size:11px; padding:3px 11px; border-radius:16px; font-weight:600; }
+  .g-lv.free { background:rgba(255,255,255,0.14); color:#fff; border:0.5px solid rgba(255,255,255,0.22); }
+  .g-lv.pro { background:rgba(201,149,42,0.25); color:#fcd34d; border:0.5px solid rgba(201,149,42,0.3); }
+  .g-parts { padding:18px 30px 22px; display:flex; gap:8px; flex-wrap:wrap; }
+  .g-part { display:flex; align-items:center; gap:8px; padding:10px 14px; border-radius:10px; border:0.5px solid var(--border-md); flex:1; min-width:110px; text-decoration:none; background:var(--bg); transition:all 0.2s; }
+  .g-part:hover { border-color:var(--general); background:var(--general-light); }
+  .g-part-icon { font-size:18px; }
+  .g-part-name { font-size:12px; font-weight:600; color:var(--text); }
+  .g-part-sub { font-size:10px; color:var(--text-light); margin-top:1px; }
 
-  /* SECTION LABEL */
-  .sec-label { font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--text-light); margin-bottom: 12px; }
+  /* EXAM GRID */
+  .exam-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:14px; margin-bottom:40px; }
+  .e-card { background:var(--white); border:0.5px solid var(--border); border-radius:14px; overflow:hidden; text-decoration:none; display:flex; flex-direction:column; transition:all 0.25s; }
+  .e-card:hover { box-shadow:0 10px 30px rgba(0,0,0,0.09); transform:translateY(-2px); }
+  .e-head { padding:22px 22px 16px; }
+  .e-top-row { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:10px; }
+  .e-icon { font-size:30px; }
+  .e-tag { font-size:10px; font-weight:600; padding:3px 9px; border-radius:14px; margin-top:4px; }
+  .e-name { font-size:18px; font-weight:600; margin-bottom:3px; }
+  .e-full { font-size:11px; margin-bottom:8px; }
+  .e-desc { font-size:12px; line-height:1.6; }
+  .e-parts { flex:1; padding:12px 22px 14px; border-top:0.5px solid var(--border); display:flex; flex-direction:column; gap:5px; }
+  .e-part { display:flex; align-items:center; gap:8px; font-size:12px; color:var(--text-muted); }
+  .e-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
+  .e-foot { padding:12px 22px; border-top:0.5px solid var(--border); font-size:13px; font-weight:500; display:flex; align-items:center; justify-content:space-between; }
 
-  /* SKILL GRID */
-  .skill-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 28px; }
-  @media (max-width: 600px) { .skill-grid { grid-template-columns: 1fr; } }
+  /* TOEIC colors */
+  .e-toeic .e-head { background:linear-gradient(135deg,#3d1f00,#ba7517); }
+  .e-toeic .e-name,.e-toeic .e-desc { color:rgba(255,255,255,0.92); }
+  .e-toeic .e-full { color:rgba(255,255,255,0.55); }
+  .e-toeic .e-tag { background:rgba(255,255,255,0.14); color:#fcd34d; }
+  .e-toeic .e-foot { color:var(--toeic); }
 
-  .skill-card {
-    background: var(--white); border: 0.5px solid var(--border); border-radius: 14px;
-    padding: 20px; cursor: pointer; text-decoration: none; color: inherit;
-    transition: all 0.2s; display: flex; align-items: flex-start; gap: 14px; position: relative;
-  }
-  .skill-card:hover { border-color: var(--sc-color, var(--teal)); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(28,43,69,0.07); }
-  .skill-card.locked { opacity: 0.7; cursor: not-allowed; }
-  .skill-card.locked:hover { transform: none; box-shadow: none; border-color: var(--border); }
+  /* TOEFL colors */
+  .e-toefl .e-head { background:linear-gradient(135deg,#092848,#185fa5); }
+  .e-toefl .e-name,.e-toefl .e-desc { color:rgba(255,255,255,0.92); }
+  .e-toefl .e-full { color:rgba(255,255,255,0.55); }
+  .e-toefl .e-tag { background:rgba(255,255,255,0.14); color:#93c5fd; }
+  .e-toefl .e-foot { color:var(--toefl); }
 
-  .sc-icon { width: 44px; height: 44px; border-radius: 11px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
-  .sc-info { flex: 1; min-width: 0; }
-  .sc-name { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
-  .sc-desc { font-size: 12px; color: var(--text-muted); line-height: 1.5; margin-bottom: 8px; }
-  .sc-levels { display: flex; gap: 4px; flex-wrap: wrap; }
-  .sc-lv { font-size: 10px; font-weight: 500; padding: 2px 6px; border-radius: 4px; background: var(--bg); color: var(--text-muted); }
-  .sc-lv.free { background: var(--teal-light); color: var(--teal); }
-  .sc-lv.pro { background: #faeeda; color: #854f0b; }
-  .sc-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; }
-  .sc-progress { display: flex; align-items: center; gap: 6px; flex: 1; }
-  .sc-prog-track { flex: 1; height: 3px; background: var(--bg); border-radius: 3px; overflow: hidden; }
-  .sc-prog-fill { height: 100%; border-radius: 3px; }
-  .sc-prog-txt { font-size: 10px; color: var(--text-light); }
-  .sc-badge { font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 5px; }
-  .badge-free { background: var(--teal-light); color: var(--teal); }
-  .badge-pro { background: #faeeda; color: #854f0b; }
-  .badge-new { background: #e6f1fb; color: #185fa5; }
-  .lock-icon { position: absolute; top: 14px; right: 14px; font-size: 14px; color: var(--text-light); }
+  /* IELTS colors */
+  .e-ielts .e-head { background:linear-gradient(135deg,#3d0d1f,#993556); }
+  .e-ielts .e-name,.e-ielts .e-desc { color:rgba(255,255,255,0.92); }
+  .e-ielts .e-full { color:rgba(255,255,255,0.55); }
+  .e-ielts .e-tag { background:rgba(255,255,255,0.14); color:#fca5c0; }
+  .e-ielts .e-foot { color:var(--ielts); }
 
-  /* EXAM CARD */
-  .exam-card {
-    background: var(--white); border: 0.5px solid var(--border); border-radius: 14px;
-    padding: 20px 24px; display: flex; align-items: center; gap: 16px;
-    cursor: pointer; text-decoration: none; color: inherit; transition: all 0.2s;
-  }
-  .exam-card:hover { border-color: #185fa5; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(28,43,69,0.07); }
-  .exam-icon { width: 44px; height: 44px; border-radius: 11px; background: #e6f1fb; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
-  .exam-info { flex: 1; }
-  .exam-name { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
-  .exam-desc { font-size: 12px; color: var(--text-muted); }
-  .exam-tags { display: flex; gap: 6px; margin-top: 8px; }
-  .exam-tag { font-size: 10px; font-weight: 500; padding: 2px 7px; border-radius: 4px; background: #e6f1fb; color: #185fa5; }
-  .exam-arrow { font-size: 20px; color: var(--text-light); transition: transform 0.2s; }
-  .exam-card:hover .exam-arrow { transform: translateX(3px); color: #185fa5; }
+  /* WHY */
+  .why-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(190px,1fr)); gap:12px; }
+  .w-item { background:var(--white); border:0.5px solid var(--border); border-radius:12px; padding:18px; }
+  .w-icon { font-size:22px; margin-bottom:8px; }
+  .w-title { font-size:13px; font-weight:600; color:var(--text); margin-bottom:4px; }
+  .w-desc { font-size:12px; color:var(--text-muted); line-height:1.55; }
 
-  /* SPEAKING CARD */
-  .speaking-card {
-    background: linear-gradient(135deg, #2d1f3d 0%, #3d1f2d 100%);
-    border-radius: 14px; padding: 20px 24px; display: flex; align-items: center; gap: 16px;
-    cursor: pointer; text-decoration: none; color: inherit; transition: all 0.2s; margin-top: 12px;
-  }
-  .speaking-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
-  .speak-icon { width: 44px; height: 44px; border-radius: 11px; background: rgba(153,53,86,0.3); display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
-  .speak-info { flex: 1; }
-  .speak-tag { font-size: 10px; font-weight: 600; letter-spacing: .8px; text-transform: uppercase; color: #f48fb1; margin-bottom: 3px; }
-  .speak-name { font-size: 15px; font-weight: 600; color: #fff; margin-bottom: 3px; }
-  .speak-desc { font-size: 12px; color: rgba(255,255,255,0.5); }
-  .speak-price { font-size: 12px; font-weight: 600; color: #f48fb1; white-space: nowrap; }
-
-  @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
-  .fade { opacity: 0; animation: fadeUp 0.5s ease forwards; }
-  .fade:nth-child(1) { animation-delay: 0.05s; }
-  .fade:nth-child(2) { animation-delay: 0.1s; }
-  .fade:nth-child(3) { animation-delay: 0.15s; }
-  .fade:nth-child(4) { animation-delay: 0.2s; }
-  .fade:nth-child(5) { animation-delay: 0.25s; }
-  .fade:nth-child(6) { animation-delay: 0.3s; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+  .fade { opacity:0; animation:fadeUp 0.45s ease forwards; }
+  .fade:nth-child(1){animation-delay:.05s}
+  .fade:nth-child(2){animation-delay:.10s}
+  .fade:nth-child(3){animation-delay:.15s}
+  .fade:nth-child(4){animation-delay:.20s}
 </style>
 </head>
 <body>
 
-<!-- NAV -->
 <nav>
   <a href="/" class="nav-logo">
     <div class="nav-lm">LW</div>
     <span class="nav-lt">LinguaWalk</span>
   </a>
-  <div class="nav-sep"></div>
+  <div class="nav-divider"></div>
   <div class="nav-lang">
     <span class="nav-flag">🇺🇸</span>
-    <span data-en="English" data-ko="영어">English</span>
+    <span class="nav-lang-text" data-en="English" data-ko="영어">English</span>
   </div>
   <div class="nav-space"></div>
-  <div class="nav-right">
-    <div class="lang-sw">
-      <button class="lbtn act" onclick="setLang('en')" id="btn-en">🇺🇸 EN</button>
-      <button class="lbtn" onclick="setLang('ko')" id="btn-ko">🇰🇷 한국어</button>
-    </div>
-    <a href="#" class="nav-link" data-en="My progress" data-ko="내 학습현황">My progress</a>
+  <div class="nav-links">
+    <a href="general/index.html" class="nav-link" data-en="General" data-ko="일반 영어">General</a>
+    <a href="toeic/index.html" class="nav-link">TOEIC</a>
+    <a href="toefl/index.html" class="nav-link">TOEFL</a>
+    <a href="ielts/index.html" class="nav-link">IELTS</a>
+    <a href="test.html" class="nav-link" data-en="Level Test" data-ko="레벨 테스트">Level Test</a>
     <a href="#" class="nav-cta" data-en="Sign in" data-ko="로그인">Sign in</a>
+  </div>
+  <div class="lang-sw">
+    <button class="lbtn act" onclick="setLang('en')" id="btn-en">EN</button>
+    <button class="lbtn" onclick="setLang('ko')" id="btn-ko">한국어</button>
   </div>
 </nav>
 
-<!-- HERO STRIP -->
-<div class="hero-strip">
-  <a href="/" class="hs-back">← <span data-en="All languages" data-ko="언어 선택으로">All languages</span></a>
-  <div class="hs-flag">🇺🇸</div>
-  <h1 class="hs-title" data-en="Learn <em>English</em>" data-ko="<em>영어</em> 학습하기">Learn <em>English</em></h1>
-  <p class="hs-sub" data-en="Choose where to start. Your AI tutor will guide you from A1 all the way to C2." data-ko="시작할 영역을 선택하세요. AI 튜터가 A1부터 C2까지 함께 안내합니다.">Choose where to start. Your AI tutor will guide you from A1 all the way to C2.</p>
-</div>
-
-<!-- STATUS BAR -->
-<div class="status-bar">
-  <div class="sb-item">
-    <span data-en="Your level:" data-ko="내 레벨:">Your level:</span>
-    <span class="sb-val" data-en="Not tested yet" data-ko="레벨 테스트 필요">Not tested yet</span>
-  </div>
-  <div class="sb-dot"></div>
-  <div class="sb-item">
-    <span data-en="Streak:" data-ko="연속 학습:">Streak:</span>
-    <span class="sb-val">🔥 0 <span data-en="days" data-ko="일">days</span></span>
-  </div>
-  <div class="sb-dot"></div>
-  <div class="sb-item">
-    <span data-en="Plan:" data-ko="플랜:">Plan:</span>
-    <span class="sb-val" data-en="Free" data-ko="무료">Free</span>
-  </div>
-  <div class="sb-space"></div>
-  <a href="#" class="nav-cta" style="font-size:12px;padding:5px 14px;" data-en="Upgrade to Pro →" data-ko="Pro로 업그레이드 →">Upgrade to Pro →</a>
-</div>
-
-<!-- MAIN -->
-<div class="main">
-
-  <!-- Level Test -->
-  <a href="test.html" class="test-card fade">
-    <div class="tc-icon">🎯</div>
-    <div class="tc-info">
-      <div class="tc-tag" data-en="START HERE · FREE" data-ko="여기서 시작 · 무료">START HERE · FREE</div>
-      <div class="tc-title" data-en="Level Test" data-ko="레벨 테스트">Level Test</div>
-      <div class="tc-desc" data-en="Let AI diagnose your current English level. Takes about 10 minutes. Results saved to your account." data-ko="AI가 현재 영어 수준을 정확하게 진단합니다. 약 10분 소요. 결과는 계정에 저장됩니다.">Let AI diagnose your current English level. Takes about 10 minutes. Results saved to your account.</div>
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-tag" data-en="AI-Powered English Learning" data-ko="AI 영어 학습 플랫폼">AI-Powered English Learning</div>
+    <h1 class="hero-title">
+      <span data-en="Learn English,<br><em>Your Way</em>" data-ko="영어를 배우는<br><em>나만의 방법</em>">Learn English,<br><em>Your Way</em></span>
+    </h1>
+    <p class="hero-desc" data-en="General English from A1 to C2, or focused preparation for TOEIC, TOEFL, and IELTS — all powered by your personal AI tutor." data-ko="A1~C2 일반 영어부터 TOEIC, TOEFL, IELTS 시험 준비까지 — 개인 AI 튜터가 함께합니다.">General English A1–C2 · TOEIC · TOEFL · IELTS</p>
+    <div class="hero-btns">
+      <a href="test.html" class="h-btn primary" data-en="🎯 Free Level Test" data-ko="🎯 무료 레벨 테스트">🎯 Free Level Test</a>
+      <a href="general/index.html" class="h-btn ghost" data-en="📚 Start Learning" data-ko="📚 학습 시작">📚 Start Learning</a>
     </div>
-    <div class="tc-arrow">→</div>
+    <div class="hero-stats">
+      <div class="hs"><div class="hs-val">6</div><div class="hs-lbl" data-en="Skills" data-ko="학습 영역">Skills</div></div>
+      <div class="hs"><div class="hs-val">A1–C2</div><div class="hs-lbl" data-en="All Levels" data-ko="전체 레벨">All Levels</div></div>
+      <div class="hs"><div class="hs-val">3</div><div class="hs-lbl" data-en="Exams" data-ko="시험 종류">Exams</div></div>
+      <div class="hs"><div class="hs-val">∞</div><div class="hs-lbl" data-en="AI Questions" data-ko="AI 문제">AI Questions</div></div>
+    </div>
+  </div>
+
+  <!-- Level Test Strip -->
+  <div class="lt-strip">
+    <div class="lt-inner">
+      <a href="test.html" class="lt-link">
+        <div class="lt-icon">🎯</div>
+        <div class="lt-txt">
+          <div class="lt-top" data-en="START HERE · FREE" data-ko="여기서 시작 · 무료">START HERE · FREE</div>
+          <div class="lt-main" data-en="Level Test — Find your English level in 10 minutes" data-ko="레벨 테스트 — 10분 안에 내 영어 레벨 확인하기">Level Test — Find your English level in 10 minutes</div>
+          <div class="lt-sub" data-en="AI diagnoses A1 to C2. Results guide your learning path." data-ko="AI가 A1~C2 레벨을 진단합니다. 결과에 맞는 학습 경로를 안내합니다.">AI diagnoses A1 to C2 · Results guide your path</div>
+        </div>
+        <div class="lt-arr">→</div>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- CONTENT -->
+<div class="wrap">
+
+  <!-- General English -->
+  <div class="sh fade">
+    <span class="sh-label" data-en="GENERAL ENGLISH — A1 to C2" data-ko="일반 영어 — A1 ~ C2">GENERAL ENGLISH — A1 to C2</span>
+    <div class="sh-line"></div>
+  </div>
+
+  <a href="general/index.html" class="g-card fade">
+    <div class="g-top">
+      <div class="g-tag" data-en="MOST POPULAR · A1 & A2 FREE" data-ko="가장 인기 · A1, A2 무료">MOST POPULAR · A1 & A2 FREE</div>
+      <div class="g-name" data-en="General English" data-ko="일반 영어">General English</div>
+      <div class="g-desc" data-en="Vocabulary, Grammar, Listening, Reading, Speaking, and Writing — all in one place. Build your foundation from A1 and advance to C2 fluency." data-ko="어휘, 문법, 듣기, 읽기, 말하기, 쓰기 — 한 곳에서 모두. A1 기초부터 C2 유창함까지.">6 skills, all levels, AI-powered learning.</div>
+      <div class="g-levels">
+        <span class="g-lv free" data-en="A1 Free" data-ko="A1 무료">A1 Free</span>
+        <span class="g-lv free" data-en="A2 Free" data-ko="A2 무료">A2 Free</span>
+        <span class="g-lv pro" data-en="B1 Pro" data-ko="B1 유료">B1 Pro</span>
+        <span class="g-lv pro" data-en="B2 Pro" data-ko="B2 유료">B2 Pro</span>
+        <span class="g-lv pro" data-en="C1 Pro" data-ko="C1 유료">C1 Pro</span>
+        <span class="g-lv pro" data-en="C2 Pro" data-ko="C2 유료">C2 Pro</span>
+      </div>
+    </div>
+    <div class="g-parts">
+      <a href="general/vocabulary.html" class="g-part" onclick="event.stopPropagation()">
+        <span class="g-part-icon">📖</span>
+        <div><div class="g-part-name" data-en="Vocabulary" data-ko="어휘">Vocabulary</div><div class="g-part-sub" data-en="18 topics" data-ko="18개 주제">18 topics</div></div>
+      </a>
+      <a href="general/grammar.html" class="g-part" onclick="event.stopPropagation()">
+        <span class="g-part-icon">✏️</span>
+        <div><div class="g-part-name" data-en="Grammar" data-ko="문법">Grammar</div><div class="g-part-sub" data-en="14 topics" data-ko="14개 주제">14 topics</div></div>
+      </a>
+      <a href="general/listening.html" class="g-part" onclick="event.stopPropagation()">
+        <span class="g-part-icon">🎧</span>
+        <div><div class="g-part-name" data-en="Listening" data-ko="듣기">Listening</div><div class="g-part-sub">A1–C2</div></div>
+      </a>
+      <a href="general/reading.html" class="g-part" onclick="event.stopPropagation()">
+        <span class="g-part-icon">📰</span>
+        <div><div class="g-part-name" data-en="Reading" data-ko="읽기">Reading</div><div class="g-part-sub">A1–C2</div></div>
+      </a>
+      <a href="general/speaking.html" class="g-part" onclick="event.stopPropagation()">
+        <span class="g-part-icon">🗣️</span>
+        <div><div class="g-part-name" data-en="Speaking" data-ko="말하기">Speaking</div><div class="g-part-sub">A1–C2</div></div>
+      </a>
+      <a href="general/writing.html" class="g-part" onclick="event.stopPropagation()">
+        <span class="g-part-icon">✍️</span>
+        <div><div class="g-part-name" data-en="Writing" data-ko="쓰기">Writing</div><div class="g-part-sub">A1–C2</div></div>
+      </a>
+    </div>
   </a>
-
-  <!-- AI Tutor Banner -->
-  <div class="tutor-banner fade">
-    <div class="tb-avatar">🤖</div>
-    <div class="tb-msg" data-en="<strong>AI Tutor:</strong> Take the Level Test first so I can recommend the perfect learning path for you!" data-ko="<strong>AI 튜터:</strong> 먼저 레벨 테스트를 받으시면 나에게 딱 맞는 학습 경로를 추천해 드릴 수 있어요!"><strong>AI Tutor:</strong> Take the Level Test first so I can recommend the perfect learning path for you!</div>
-    <button class="tb-btn" onclick="window.location.href='test.html'" data-en="Take test" data-ko="테스트 받기">Take test</button>
-  </div>
-
-  <!-- Free Skills -->
-  <div class="sec-label fade" data-en="FREE — Grammar & Vocabulary (A1–B2)" data-ko="무료 — Grammar & Vocabulary (A1~B2)">FREE — Grammar & Vocabulary (A1–B2)</div>
-  <div class="skill-grid">
-
-    <a href="grammar.html" class="skill-card fade" style="--sc-color:#185fa5;">
-      <div class="sc-icon" style="background:#e6f1fb;">📝</div>
-      <div class="sc-info">
-        <div class="sc-name">Grammar</div>
-        <div class="sc-desc" data-en="Tenses, conditionals, sentence structure and more. 14 topics from A1 to C2." data-ko="시제, 가정법, 문장 구조 등. A1~C2 14개 토픽.">Tenses, conditionals, sentence structure and more.</div>
-        <div class="sc-levels">
-          <span class="sc-lv free">A1</span><span class="sc-lv free">A2</span>
-          <span class="sc-lv free">B1</span><span class="sc-lv free">B2</span>
-          <span class="sc-lv pro">C1 PRO</span><span class="sc-lv pro">C2 PRO</span>
-        </div>
-        <div class="sc-footer">
-          <div class="sc-progress">
-            <div class="sc-prog-track"><div class="sc-prog-fill" style="width:0%;background:#185fa5;"></div></div>
-            <span class="sc-prog-txt">0 / 14</span>
-          </div>
-          <span class="sc-badge badge-free" data-en="Free A1–B2" data-ko="A1~B2 무료">Free A1–B2</span>
-        </div>
-      </div>
-    </a>
-
-    <a href="vocabulary.html" class="skill-card fade" style="--sc-color:#2A7F6F;">
-      <div class="sc-icon" style="background:#E1F5EE;">📖</div>
-      <div class="sc-info">
-        <div class="sc-name">Vocabulary</div>
-        <div class="sc-desc" data-en="Daily life, business, idioms and more. 16 topics from A1 to C2." data-ko="일상, 비즈니스, 관용어 등. A1~C2 16개 토픽.">Daily life, business, idioms and more.</div>
-        <div class="sc-levels">
-          <span class="sc-lv free">A1</span><span class="sc-lv free">A2</span>
-          <span class="sc-lv free">B1</span><span class="sc-lv free">B2</span>
-          <span class="sc-lv pro">C1 PRO</span><span class="sc-lv pro">C2 PRO</span>
-        </div>
-        <div class="sc-footer">
-          <div class="sc-progress">
-            <div class="sc-prog-track"><div class="sc-prog-fill" style="width:0%;background:#2A7F6F;"></div></div>
-            <span class="sc-prog-txt">0 / 16</span>
-          </div>
-          <span class="sc-badge badge-free" data-en="Free A1–B2" data-ko="A1~B2 무료">Free A1–B2</span>
-        </div>
-      </div>
-    </a>
-
-  </div>
-
-  <!-- Pro Skills -->
-  <div class="sec-label fade" data-en="PRO — Full AI Tutor Experience (A1–C2)" data-ko="PRO — AI 튜터 전체 학습 (A1~C2)">PRO — Full AI Tutor Experience (A1–C2)</div>
-  <div class="skill-grid">
-
-    <a href="listening.html" class="skill-card fade" style="--sc-color:#ba7517;">
-      <div class="sc-icon" style="background:#faeeda;">🎧</div>
-      <div class="sc-info">
-        <div class="sc-name">Listening</div>
-        <div class="sc-desc" data-en="Podcasts, news, lectures, conversations. 8 types from A1 to C2." data-ko="팟캐스트, 뉴스, 강의, 대화. A1~C2 8가지 유형.">Podcasts, news, lectures, conversations.</div>
-        <div class="sc-levels">
-          <span class="sc-lv">A1</span><span class="sc-lv">A2</span><span class="sc-lv">B1</span>
-          <span class="sc-lv">B2</span><span class="sc-lv">C1</span><span class="sc-lv">C2</span>
-        </div>
-        <div class="sc-footer">
-          <div class="sc-progress">
-            <div class="sc-prog-track"><div class="sc-prog-fill" style="width:0%;background:#ba7517;"></div></div>
-            <span class="sc-prog-txt">0 / 8</span>
-          </div>
-          <span class="sc-badge badge-pro">PRO</span>
-        </div>
-      </div>
-      <span class="lock-icon">🔒</span>
-    </a>
-
-    <a href="reading.html" class="skill-card fade" style="--sc-color:#3b6d11;">
-      <div class="sc-icon" style="background:#eaf3de;">📰</div>
-      <div class="sc-info">
-        <div class="sc-name">Reading</div>
-        <div class="sc-desc" data-en="Signs, emails, articles, essays, academic texts. 9 types from A1 to C2." data-ko="안내문, 이메일, 기사, 에세이, 학술 텍스트. A1~C2 9가지 유형.">Signs, emails, articles, essays, academic texts.</div>
-        <div class="sc-levels">
-          <span class="sc-lv">A1</span><span class="sc-lv">A2</span><span class="sc-lv">B1</span>
-          <span class="sc-lv">B2</span><span class="sc-lv">C1</span><span class="sc-lv">C2</span>
-        </div>
-        <div class="sc-footer">
-          <div class="sc-progress">
-            <div class="sc-prog-track"><div class="sc-prog-fill" style="width:0%;background:#3b6d11;"></div></div>
-            <span class="sc-prog-txt">0 / 9</span>
-          </div>
-          <span class="sc-badge badge-pro">PRO</span>
-        </div>
-      </div>
-      <span class="lock-icon">🔒</span>
-    </a>
-
-    <a href="speaking.html" class="skill-card fade" style="--sc-color:#993556;">
-      <div class="sc-icon" style="background:#fbeaf0;">🗣️</div>
-      <div class="sc-info">
-        <div class="sc-name">Speaking</div>
-        <div class="sc-desc" data-en="Role-play, presentations, debates. 8 types from A1 to C2." data-ko="롤플레이, 프레젠테이션, 토론. A1~C2 8가지 유형.">Role-play, presentations, debates.</div>
-        <div class="sc-levels">
-          <span class="sc-lv">A1</span><span class="sc-lv">A2</span><span class="sc-lv">B1</span>
-          <span class="sc-lv">B2</span><span class="sc-lv">C1</span><span class="sc-lv">C2</span>
-        </div>
-        <div class="sc-footer">
-          <div class="sc-progress">
-            <div class="sc-prog-track"><div class="sc-prog-fill" style="width:0%;background:#993556;"></div></div>
-            <span class="sc-prog-txt">0 / 8</span>
-          </div>
-          <span class="sc-badge badge-pro">PRO</span>
-        </div>
-      </div>
-      <span class="lock-icon">🔒</span>
-    </a>
-
-    <a href="writing.html" class="skill-card fade" style="--sc-color:#534ab7;">
-      <div class="sc-icon" style="background:#f1effe;">✍️</div>
-      <div class="sc-info">
-        <div class="sc-name">Writing</div>
-        <div class="sc-desc" data-en="Emails, reports, essays, creative writing. 7 types from A1 to C2." data-ko="이메일, 보고서, 에세이, 창작. A1~C2 7가지 유형.">Emails, reports, essays, creative writing.</div>
-        <div class="sc-levels">
-          <span class="sc-lv">A1</span><span class="sc-lv">A2</span><span class="sc-lv">B1</span>
-          <span class="sc-lv">B2</span><span class="sc-lv">C1</span><span class="sc-lv">C2</span>
-        </div>
-        <div class="sc-footer">
-          <div class="sc-progress">
-            <div class="sc-prog-track"><div class="sc-prog-fill" style="width:0%;background:#534ab7;"></div></div>
-            <span class="sc-prog-txt">0 / 7</span>
-          </div>
-          <span class="sc-badge badge-pro">PRO</span>
-        </div>
-      </div>
-      <span class="lock-icon">🔒</span>
-    </a>
-
-  </div>
 
   <!-- Exam Prep -->
-  <div class="sec-label fade" data-en="PRO — Exam Preparation (included)" data-ko="PRO — 시험 준비 (포함)">PRO — Exam Preparation (included)</div>
-  <a href="exam.html" class="exam-card fade">
-    <div class="exam-icon">📋</div>
-    <div class="exam-info">
-      <div class="exam-name" data-en="Exam Prep" data-ko="시험 준비">Exam Prep</div>
-      <div class="exam-desc" data-en="AI-powered practice for major English exams. Included free with Pro plan." data-ko="주요 영어 시험 AI 맞춤 연습. Pro 플랜에 추가 비용 없이 포함.">AI-powered practice for major English exams. Included free with Pro plan.</div>
-      <div class="exam-tags">
-        <span class="exam-tag">TOEIC</span>
-        <span class="exam-tag">IELTS</span>
-        <span class="exam-tag">TOEFL</span>
-        <span class="exam-tag">OPIc</span>
+  <div class="sh fade">
+    <span class="sh-label" data-en="EXAM PREPARATION — Separate plan" data-ko="시험 준비 — 별도 플랜">EXAM PREPARATION — Separate plan</span>
+    <div class="sh-line"></div>
+  </div>
+
+  <div class="exam-grid">
+
+    <!-- TOEIC -->
+    <a href="toeic/index.html" class="e-card e-toeic fade">
+      <div class="e-head">
+        <div class="e-top-row">
+          <div class="e-icon">🏆</div>
+          <span class="e-tag" data-en="Separate Plan" data-ko="별도 플랜">Separate Plan</span>
+        </div>
+        <div class="e-name">TOEIC</div>
+        <div class="e-full" data-en="Test of English for International Communication" data-ko="국제 의사소통 영어 시험">Test of English for International Communication</div>
+        <div class="e-desc" data-en="Listening and Reading. The most widely used business English proficiency test." data-ko="듣기와 읽기. 전 세계에서 가장 많이 사용되는 비즈니스 영어 능력 시험.">Listening & Reading · Business English</div>
       </div>
-    </div>
-    <div class="exam-arrow">→</div>
-    <span class="lock-icon" style="position:static;font-size:14px;color:var(--text-light);">🔒</span>
-  </a>
+      <div class="e-parts">
+        <div class="e-part"><div class="e-dot" style="background:#ba7517;"></div><span data-en="🎧 Listening — Part 1 · 2 · 3 · 4" data-ko="🎧 듣기 — Part 1 · 2 · 3 · 4">🎧 Listening — Part 1 · 2 · 3 · 4</span></div>
+        <div class="e-part"><div class="e-dot" style="background:#3b6d11;"></div><span data-en="📰 Reading — Part 5 · 6 · 7" data-ko="📰 읽기 — Part 5 · 6 · 7">📰 Reading — Part 5 · 6 · 7</span></div>
+      </div>
+      <div class="e-foot">
+        <span data-en="Start TOEIC Prep" data-ko="TOEIC 준비 시작">Start TOEIC Prep</span>
+        <span>→</span>
+      </div>
+    </a>
 
+    <!-- TOEFL -->
+    <a href="toefl/index.html" class="e-card e-toefl fade">
+      <div class="e-head">
+        <div class="e-top-row">
+          <div class="e-icon">🎓</div>
+          <span class="e-tag" data-en="Separate Plan" data-ko="별도 플랜">Separate Plan</span>
+        </div>
+        <div class="e-name">TOEFL iBT</div>
+        <div class="e-full" data-en="Test of English as a Foreign Language" data-ko="외국어로서의 영어 시험">Test of English as a Foreign Language</div>
+        <div class="e-desc" data-en="All 4 skills. Required for US and Canadian university admissions." data-ko="4개 영역 전체. 미국 및 캐나다 대학 입학에 필수.">4 Skills · US University Admission</div>
+      </div>
+      <div class="e-parts">
+        <div class="e-part"><div class="e-dot" style="background:#3b6d11;"></div><span data-en="📰 Reading — Factual · Inference · Vocabulary" data-ko="📰 읽기 — 사실 · 추론 · 어휘">📰 Reading — Factual · Inference · Vocabulary</span></div>
+        <div class="e-part"><div class="e-dot" style="background:#ba7517;"></div><span data-en="🎧 Listening — Lectures · Conversations" data-ko="🎧 듣기 — 강의 · 대화">🎧 Listening — Lectures · Conversations</span></div>
+        <div class="e-part"><div class="e-dot" style="background:#993556;"></div><span data-en="🗣️ Speaking — Independent · Integrated" data-ko="🗣️ 말하기 — 독립형 · 통합형">🗣️ Speaking — Independent · Integrated</span></div>
+        <div class="e-part"><div class="e-dot" style="background:#534ab7;"></div><span data-en="✍️ Writing — Integrated · Discussion" data-ko="✍️ 쓰기 — 통합형 · 토론">✍️ Writing — Integrated · Discussion</span></div>
+      </div>
+      <div class="e-foot">
+        <span data-en="Start TOEFL Prep" data-ko="TOEFL 준비 시작">Start TOEFL Prep</span>
+        <span>→</span>
+      </div>
+    </a>
 
+    <!-- IELTS -->
+    <a href="ielts/index.html" class="e-card e-ielts fade">
+      <div class="e-head">
+        <div class="e-top-row">
+          <div class="e-icon">🌍</div>
+          <span class="e-tag" data-en="Separate Plan" data-ko="별도 플랜">Separate Plan</span>
+        </div>
+        <div class="e-name">IELTS</div>
+        <div class="e-full" data-en="International English Language Testing System" data-ko="국제 영어 능력 시험">International English Language Testing System</div>
+        <div class="e-desc" data-en="All 4 skills. Accepted by UK, Australia, Canada and 10,000+ institutions." data-ko="4개 영역 전체. 영국, 호주, 캐나다 등 전 세계 10,000개 이상 기관 인정.">4 Skills · UK & Global Recognition</div>
+      </div>
+      <div class="e-parts">
+        <div class="e-part"><div class="e-dot" style="background:#ba7517;"></div><span data-en="🎧 Listening — Section 1 · 2 · 3 · 4" data-ko="🎧 듣기 — Section 1 · 2 · 3 · 4">🎧 Listening — Section 1 · 2 · 3 · 4</span></div>
+        <div class="e-part"><div class="e-dot" style="background:#3b6d11;"></div><span data-en="📰 Reading — T/F/NG · Matching · MC" data-ko="📰 읽기 — T/F/NG · Matching · MC">📰 Reading — T/F/NG · Matching · MC</span></div>
+        <div class="e-part"><div class="e-dot" style="background:#534ab7;"></div><span data-en="✍️ Writing — Task 1 Graph · Task 2 Essay" data-ko="✍️ 쓰기 — Task 1 그래프 · Task 2 에세이">✍️ Writing — Task 1 · Task 2</span></div>
+        <div class="e-part"><div class="e-dot" style="background:#993556;"></div><span data-en="🗣️ Speaking — Part 1 · 2 · 3" data-ko="🗣️ 말하기 — Part 1 · 2 · 3">🗣️ Speaking — Part 1 · 2 · 3</span></div>
+      </div>
+      <div class="e-foot">
+        <span data-en="Start IELTS Prep" data-ko="IELTS 준비 시작">Start IELTS Prep</span>
+        <span>→</span>
+      </div>
+    </a>
+
+  </div>
+
+  <!-- Why LinguaWalk -->
+  <div class="sh fade">
+    <span class="sh-label" data-en="WHY LINGUAWALK" data-ko="왜 LinguaWalk인가">WHY LINGUAWALK</span>
+    <div class="sh-line"></div>
+  </div>
+  <div class="why-grid">
+    <div class="w-item fade"><div class="w-icon">🤖</div><div class="w-title" data-en="AI-Generated Content" data-ko="AI 생성 콘텐츠">AI-Generated Content</div><div class="w-desc" data-en="Every question is freshly generated. Infinite variety, never the same twice." data-ko="모든 문제는 AI가 새로 생성합니다. 무한한 다양성, 같은 문제 없음.">Fresh content every time.</div></div>
+    <div class="w-item fade"><div class="w-icon">🎯</div><div class="w-title" data-en="Exam-Accurate Format" data-ko="정확한 시험 형식">Exam-Accurate Format</div><div class="w-desc" data-en="TOEIC, TOEFL, and IELTS questions follow the exact format of the real exam." data-ko="실제 시험과 동일한 형식의 문제가 출제됩니다.">Authentic exam formats.</div></div>
+    <div class="w-item fade"><div class="w-icon">💬</div><div class="w-title" data-en="AI Tutor Support" data-ko="AI 튜터 지원">AI Tutor Support</div><div class="w-desc" data-en="Ask about any word or concept. Your AI tutor explains in Korean." data-ko="단어, 문법, 개념을 바로 질문하세요. AI 튜터가 한국어로 설명합니다.">Instant explanations.</div></div>
+    <div class="w-item fade"><div class="w-icon">🔊</div><div class="w-title" data-en="Voice Practice" data-ko="음성 연습">Voice Practice</div><div class="w-desc" data-en="Record your speaking and get AI feedback on content, fluency, and grammar." data-ko="말하기를 녹음하고 내용, 유창성, 문법 AI 피드백을 받으세요.">Speak and get scored.</div></div>
+  </div>
 
 </div>
 
 <script>
-  let lang = 'en';
-  function setLang(l) {
-    lang = l;
-    document.documentElement.lang = l === 'ko' ? 'ko' : 'en';
-    document.querySelectorAll('[data-en][data-ko]').forEach(el => {
-      const t = l === 'ko' ? el.getAttribute('data-ko') : el.getAttribute('data-en');
-      if (t) el.innerHTML = t;
-    });
-    document.getElementById('btn-en').classList.toggle('act', l === 'en');
-    document.getElementById('btn-ko').classList.toggle('act', l === 'ko');
-    try { localStorage.setItem('lw-lang', l); } catch(e) {}
-  }
-  (function() {
-    let saved; try { saved = localStorage.getItem('lw-lang'); } catch(e) {}
-    const browser = (navigator.language || '').toLowerCase();
-    setLang(saved || (browser.startsWith('ko') ? 'ko' : 'en'));
-  })();
+let lang='en';
+function setLang(l){
+  lang=l;
+  document.documentElement.lang=l==='ko'?'ko':'en';
+  document.querySelectorAll('[data-en][data-ko]').forEach(el=>{
+    const t=l==='ko'?el.getAttribute('data-ko'):el.getAttribute('data-en');
+    if(t) el.innerHTML=t;
+  });
+  document.getElementById('btn-en').classList.toggle('act',l==='en');
+  document.getElementById('btn-ko').classList.toggle('act',l==='ko');
+  try{localStorage.setItem('lw-lang',l);}catch(e){}
+}
+(function(){
+  let saved; try{saved=localStorage.getItem('lw-lang');}catch(e){}
+  setLang(saved||((navigator.language||'').startsWith('ko')?'ko':'en'));
+})();
 </script>
 </body>
 </html>
