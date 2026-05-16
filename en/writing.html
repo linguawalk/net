@@ -621,6 +621,24 @@ JSON only: {"question":"essay question in English","outline":{"intro":"intro tip
     currentTask=JSON.parse(data.content[0].text.replace(/```json|```/g,'').trim());
     document.getElementById('loading-overlay').style.display='none';
     renderTask(topic,currentTask);
+    // Load images after render
+    if(unsplashKey){
+      if(fmt==='toeic_sentence'){
+        fetchUnsplashImage(currentTask.imageKeyword||'office workplace').then(url=>{
+          const el=document.getElementById('writing-scene-img');
+          const ph=document.getElementById('writing-scene-placeholder');
+          if(el&&url){el.src=url;el.style.display='block';}
+          if(ph) ph.style.display='none';
+        });
+      } else if(fmt==='ielts_task1_graph'){
+        fetchUnsplashImage(currentTask.chartType?.toLowerCase().replace(' ','_')||'data chart graph').then(url=>{
+          const el=document.getElementById('ielts-chart-img');
+          const ph=document.getElementById('ielts-chart-placeholder');
+          if(el&&url){el.src=url;el.style.display='block';}
+          if(ph) ph.style.display='none';
+        });
+      }
+    }
     initTutor(topic);
   }catch(e){
     document.getElementById('loading-overlay').style.display='none';
@@ -648,8 +666,8 @@ function renderTask(topic,task){
           <div class="task-badges"><span class="t-badge tb-type">1 Sentence</span><span class="t-badge tb-time">8 min</span></div>
         </div>
         <div class="task-body">
+          <div id="writing-scene-placeholder" style="width:100%;height:180px;background:var(--bg);border-radius:10px;margin-bottom:14px;display:flex;align-items:center;justify-content:center;border:0.5px solid var(--border);"><div style="text-align:center;color:var(--text-light);"><div style="font-size:28px;margin-bottom:6px;">🖼</div><div style="font-size:12px;">${lang==="ko"?"사진 로딩 중...":"Loading photo..."}</div></div></div>
           <img id="writing-scene-img" style="width:100%;max-height:220px;object-fit:cover;border-radius:10px;margin-bottom:14px;display:none;" alt="Writing prompt">
-  <script>fetchUnsplashImage(currentTask?.imageKeyword||'office workplace').then(url=>{const el=document.getElementById('writing-scene-img');if(el&&url){el.src=url;el.style.display='block';}});<\/script>
           <div class="prompt-box">
             <div class="pb-label write">${lang==='ko'?'상황':'SITUATION'}</div>
             <div class="pb-text">${task.situation||''}</div>
@@ -708,6 +726,14 @@ function renderTask(topic,task){
           <div class="task-badges"><span class="t-badge tb-type">${task.chartType||'Chart'}</span><span class="t-badge tb-time">20 min</span><span class="t-badge tb-words">150w+</span></div>
         </div>
         <div class="task-body">
+          <div id="ielts-chart-placeholder" style="width:100%;height:180px;background:var(--bg);border-radius:10px;margin-bottom:14px;display:flex;align-items:center;justify-content:center;border:0.5px dashed var(--border-md);">
+            <div style="text-align:center;color:var(--text-light);">
+              <div style="font-size:36px;margin-bottom:8px;">📊</div>
+              <div style="font-size:13px;font-weight:500;color:var(--text-muted);">${task.chartType||'Chart'} — ${task.title||''}</div>
+              <div style="font-size:11px;margin-top:4px;">${lang==='ko'?'아래 데이터를 참고하여 묘사하세요':'Use the data below to write your description'}</div>
+            </div>
+          </div>
+          <img id="ielts-chart-img" style="width:100%;max-height:220px;object-fit:cover;border-radius:10px;margin-bottom:14px;display:none;" alt="Chart reference">
           <div class="prompt-box">
             <div class="pb-label write">📊 ${lang==='ko'?'차트 정보':'CHART INFORMATION'} — ${task.title||''}</div>
             <div class="pb-text">${task.description||''}</div>
