@@ -525,6 +525,23 @@ async function generateTask(){
   const fmt=topic.format;
   let prompt='';
 
+  // Random seed for variety — forces AI to generate different topics each time
+  const topics_en=[
+    'technology and society','environment and climate','education systems','remote work','social media',
+    'healthcare','urban development','globalization','arts and culture','sports and fitness',
+    'food and nutrition','travel and tourism','economic inequality','scientific research','family life',
+    'workplace diversity','mental health','public transportation','renewable energy','consumer habits'
+  ];
+  const topics_ko=[
+    '기술과 사회','환경과 기후','교육 시스템','재택근무','소셜 미디어',
+    '의료 시스템','도시 개발','세계화','예술과 문화','스포츠와 건강',
+    '음식과 영양','여행과 관광','경제적 불평등','과학 연구','가족 생활',
+    '직장 다양성','정신 건강','대중교통','신재생 에너지','소비 습관'
+  ];
+  const randTopic_en=topics_en[Math.floor(Math.random()*topics_en.length)];
+  const randTopic_ko=topics_ko[Math.floor(Math.random()*topics_ko.length)];
+  const randSeed=Math.floor(Math.random()*10000);
+
   if(fmt==='toeic_sentence'){
     prompt=lang==='ko'
       ?`TOEIC Writing Part 1 사진 묘사 문장 과제를 생성해주세요. 레벨: ${level}.
@@ -543,11 +560,11 @@ JSON only: {"from":"sender","to":"recipient","subject":"subject","emailBody":"En
   }
   else if(fmt==='toeic_sentence'||fmt==='opinion_essay'||fmt==='general_opinion'){
     prompt=lang==='ko'
-      ?`${examLabel} 의견 에세이 과제를 생성해주세요. 레벨: ${level}.
-JSON: {"question":"에세이 주제 질문 (영어)","keyPoints":["작성해야 할 핵심 포인트 (한국어)"],"outline":{"intro":"서론 팁","body1":"본론 1 팁","body2":"본론 2 팁","conclusion":"결론 팁"},"modelEssay":"모범 에세이 (영어, 200~250단어)","tip":"에세이 전략 (한국어)"}
+      ?`${examLabel} 의견 에세이 과제를 생성해주세요. 레벨: ${level}. 주제 영역: ${randTopic_ko}. (seed:${randSeed})
+JSON: {"question":"에세이 주제 질문 (영어, 이전과 다른 새로운 주제)","keyPoints":["작성해야 할 핵심 포인트 (한국어)"],"outline":{"intro":"서론 팁","body1":"본론 1 팁","body2":"본론 2 팁","conclusion":"결론 팁"},"modelEssay":"모범 에세이 (영어, 200~250단어)","tip":"에세이 전략 (한국어)"}
 JSON만 반환하세요.`
-      :`Generate a ${examLabel} opinion essay task. Level: ${level}.
-JSON only: {"question":"essay question in English","keyPoints":["key points to address"],"outline":{"intro":"intro tip","body1":"body paragraph 1 tip","body2":"body paragraph 2 tip","conclusion":"conclusion tip"},"modelEssay":"model essay (200-250 words)","tip":"essay writing strategy"}`;
+      :`Generate a ${examLabel} opinion essay task. Level: ${level}. Topic area: ${randTopic_en}. (seed:${randSeed})
+JSON only: {"question":"UNIQUE essay question in English about ${randTopic_en}","keyPoints":["key points to address"],"outline":{"intro":"intro tip","body1":"body paragraph 1 tip","body2":"body paragraph 2 tip","conclusion":"conclusion tip"},"modelEssay":"model essay (200-250 words)","tip":"essay writing strategy"}`;
   }
   else if(fmt==='ielts_task1_graph'){
     prompt=lang==='ko'
@@ -569,47 +586,47 @@ JSON only: {"processTitle":"process title","stages":["stage 1","stage 2","stage 
   else if(fmt==='ielts_task2_argue'||fmt==='ielts_task2_discuss'){
     const essayType=fmt==='ielts_task2_argue'?'argumentative':'discussion';
     prompt=lang==='ko'
-      ?`IELTS Writing Task 2 ${essayType==='argumentative'?'논증':'토론'} 에세이 과제를 생성해주세요. 레벨: ${level}.
-JSON: {"question":"에세이 주제 (영어)","essayType":"${essayType}","outline":{"intro":"서론 전략","body1":"본론 1","body2":"본론 2","conclusion":"결론"},"modelEssay":"모범 에세이 (영어, 260~280단어)","tip":"${essayType==='argumentative'?'논증':'토론'} 에세이 전략 (한국어)"}
+      ?`IELTS Writing Task 2 ${essayType==='argumentative'?'논증':'토론'} 에세이 과제를 생성해주세요. 레벨: ${level}. 주제 영역: ${randTopic_ko}. (seed:${randSeed})
+JSON: {"question":"IELTS Task 2 에세이 질문 (영어, ${randTopic_ko} 관련 새로운 주제)","essayType":"${essayType}","outline":{"intro":"서론 전략","body1":"본론 1","body2":"본론 2","conclusion":"결론"},"modelEssay":"모범 에세이 (영어, 260~280단어)","tip":"${essayType==='argumentative'?'논증':'토론'} 에세이 전략 (한국어)"}
 JSON만 반환하세요.`
-      :`Generate an IELTS Writing Task 2 ${essayType} essay task. Level: ${level}.
-JSON only: {"question":"essay question in English","essayType":"${essayType}","outline":{"intro":"intro strategy","body1":"body 1","body2":"body 2","conclusion":"conclusion"},"modelEssay":"model essay (260-280 words)","tip":"${essayType} essay strategy"}`;
+      :`Generate an IELTS Writing Task 2 ${essayType} essay task. Level: ${level}. Topic area: ${randTopic_en}. (seed:${randSeed})
+JSON only: {"question":"UNIQUE IELTS Task 2 question about ${randTopic_en}","essayType":"${essayType}","outline":{"intro":"intro strategy","body1":"body 1","body2":"body 2","conclusion":"conclusion"},"modelEssay":"model essay (260-280 words)","tip":"${essayType} essay strategy"}`;
   }
   else if(fmt==='toefl_integrated'){
     prompt=lang==='ko'
-      ?`TOEFL Integrated Writing 과제를 생성해주세요. 레벨: ${level}.
-JSON: {"topic":"주제","readingTitle":"읽기 제목","readingText":"영어 읽기 지문 (150~180단어, 주장 포함)","lectureScript":"강의 스크립트 (영어, 180~220단어, 읽기 내용에 반박하거나 보완)","speakingTask":"쓰기 과제 설명 (한국어)","modelEssay":"모범 에세이 (영어, 160~180단어)","tip":"통합 쓰기 전략 (한국어)"}
+      ?`TOEFL Integrated Writing 과제를 생성해주세요. 레벨: ${level}. 주제 영역: ${randTopic_ko}. (seed:${randSeed})
+JSON: {"topic":"${randTopic_ko} 관련 새로운 주제","readingTitle":"읽기 제목","readingText":"영어 읽기 지문 (150~180단어, 주장 포함)","lectureScript":"강의 스크립트 (영어, 180~220단어, 읽기 내용에 반박하거나 보완)","speakingTask":"쓰기 과제 설명 (한국어)","modelEssay":"모범 에세이 (영어, 160~180단어)","tip":"통합 쓰기 전략 (한국어)"}
 JSON만 반환하세요.`
-      :`Generate a TOEFL Integrated Writing task. Level: ${level}.
-JSON only: {"topic":"topic","readingTitle":"reading title","readingText":"English reading passage (150-180 words with a clear argument)","lectureScript":"lecture script (English, 180-220 words, challenges or supports reading)","speakingTask":"writing task description","modelEssay":"model essay (160-180 words)","tip":"integrated writing strategy"}`;
+      :`Generate a TOEFL Integrated Writing task. Level: ${level}. Topic area: ${randTopic_en}. (seed:${randSeed})
+JSON only: {"topic":"UNIQUE topic about ${randTopic_en}","readingTitle":"reading title","readingText":"English reading passage (150-180 words with a clear argument)","lectureScript":"lecture script (English, 180-220 words, challenges or supports reading)","speakingTask":"writing task description","modelEssay":"model essay (160-180 words)","tip":"integrated writing strategy"}`;
   }
   else if(fmt==='toefl_discussion'){
     prompt=lang==='ko'
-      ?`TOEFL Academic Discussion Writing 과제를 생성해주세요. 레벨: ${level}.
-JSON: {"professorQuestion":"교수의 질문 (영어)","student1":{"name":"학생 이름","response":"학생 1의 답변 (영어, 60~80단어)"},"student2":{"name":"학생 이름","response":"학생 2의 답변 (영어, 60~80단어)"},"modelResponse":"모범 답변 (영어, 100~120단어)","tip":"Academic Discussion 전략 (한국어)"}
+      ?`TOEFL Academic Discussion Writing 과제를 생성해주세요. 레벨: ${level}. 주제 영역: ${randTopic_ko}. (seed:${randSeed})
+JSON: {"professorQuestion":"${randTopic_ko} 관련 새로운 교수 질문 (영어)","student1":{"name":"학생 이름","response":"학생 1의 답변 (영어, 60~80단어)"},"student2":{"name":"학생 이름","response":"학생 2의 답변 (영어, 60~80단어)"},"modelResponse":"모범 답변 (영어, 100~120단어)","tip":"Academic Discussion 전략 (한국어)"}
 JSON만 반환하세요.`
-      :`Generate a TOEFL Academic Discussion Writing task. Level: ${level}.
-JSON only: {"professorQuestion":"professor's question in English","student1":{"name":"student name","response":"student 1 response (English, 60-80 words)"},"student2":{"name":"student name","response":"student 2 response (English, 60-80 words)"},"modelResponse":"model response (English, 100-120 words)","tip":"academic discussion strategy"}`;
+      :`Generate a TOEFL Academic Discussion Writing task. Level: ${level}. Topic area: ${randTopic_en}. (seed:${randSeed})
+JSON only: {"professorQuestion":"UNIQUE professor question about ${randTopic_en} (in English)","student1":{"name":"student name","response":"student 1 response (English, 60-80 words)"},"student2":{"name":"student name","response":"student 2 response (English, 60-80 words)"},"modelResponse":"model response (English, 100-120 words)","tip":"academic discussion strategy"}`;
   }
   else{
     // General writing
     const genType={'general_email':'formal email','general_opinion':'opinion essay','general_report':'report or summary','general_narrative':'narrative or story'}[fmt]||'essay';
     prompt=lang==='ko'
-      ?`영어 ${genType} 쓰기 과제를 생성해주세요. 레벨: ${level}.
-JSON: {"prompt":"쓰기 과제 설명 (영어)","context":"배경 정보 (있는 경우, 한국어)","outline":["작성 구조 팁 (한국어)"],"modelEssay":"모범 답안 (영어, 150~200단어)","tip":"쓰기 전략 (한국어)"}
+      ?`영어 ${genType} 쓰기 과제를 생성해주세요. 레벨: ${level}. 주제 영역: ${randTopic_ko}. (seed:${randSeed})
+JSON: {"prompt":"${randTopic_ko} 관련 새로운 쓰기 과제 설명 (영어)","context":"배경 정보 (있는 경우, 한국어)","outline":["작성 구조 팁 (한국어)"],"modelEssay":"모범 답안 (영어, 150~200단어)","tip":"쓰기 전략 (한국어)"}
 JSON만 반환하세요.`
-      :`Generate a General English ${genType} writing task. Level: ${level}.
-JSON only: {"prompt":"writing task description in English","context":"background context if needed","outline":["structure tips"],"modelEssay":"model answer (English, 150-200 words)","tip":"writing strategy"}`;
+      :`Generate a General English ${genType} writing task. Level: ${level}. Topic area: ${randTopic_en}. (seed:${randSeed})
+JSON only: {"prompt":"UNIQUE ${genType} task description about ${randTopic_en}","context":"background context if needed","outline":["structure tips"],"modelEssay":"model answer (English, 150-200 words)","tip":"writing strategy"}`;
   }
 
-  // Override prompt for opinion_essay which was duplicated
+  // Override prompt for opinion_essay (TOEIC Part 3)
   if(fmt==='opinion_essay'){
     prompt=lang==='ko'
-      ?`TOEIC Writing Part 3 의견 에세이 과제를 생성해주세요. 레벨: ${level}.
-JSON: {"question":"에세이 주제 질문 (영어)","outline":{"intro":"서론 팁","body1":"본론 1 팁","body2":"본론 2 팁","conclusion":"결론 팁"},"modelEssay":"모범 에세이 (영어, 220~250단어)","tip":"TOEIC 에세이 전략 (한국어)"}
+      ?`TOEIC Writing Part 3 의견 에세이 과제를 생성해주세요. 레벨: ${level}. 주제 영역: ${randTopic_ko}. (seed:${randSeed})
+JSON: {"question":"${randTopic_ko} 관련 새로운 TOEIC 에세이 질문 (영어)","outline":{"intro":"서론 팁","body1":"본론 1 팁","body2":"본론 2 팁","conclusion":"결론 팁"},"modelEssay":"모범 에세이 (영어, 220~250단어)","tip":"TOEIC 에세이 전략 (한국어)"}
 JSON만 반환하세요.`
-      :`Generate a TOEIC Writing Part 3 opinion essay task. Level: ${level}.
-JSON only: {"question":"essay question in English","outline":{"intro":"intro tip","body1":"body 1 tip","body2":"body 2 tip","conclusion":"conclusion tip"},"modelEssay":"model essay (220-250 words)","tip":"TOEIC essay strategy"}`;
+      :`Generate a TOEIC Writing Part 3 opinion essay task. Level: ${level}. Topic area: ${randTopic_en}. (seed:${randSeed})
+JSON only: {"question":"UNIQUE TOEIC essay question about ${randTopic_en}","outline":{"intro":"intro tip","body1":"body 1 tip","body2":"body 2 tip","conclusion":"conclusion tip"},"modelEssay":"model essay (220-250 words)","tip":"TOEIC essay strategy"}`;
   }
 
   try{
