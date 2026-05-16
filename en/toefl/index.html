@@ -1,1 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LinguaWalk — TOEFL iBT Preparation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  :root{
+    --navy:#1C2B45;--teal:#2A7F6F;--teal-light:#E1F5EE;--teal-mid:#1D9E75;
+    --bg:#F8F7F4;--white:#fff;--text:#1C2B45;--text-muted:#5a6a82;--text-light:#94a3b8;
+    --border:rgba(28,43,69,0.1);--border-md:rgba(28,43,69,0.18);
+    --accent:#185fa5;--accent-light:#e6f1fb;
+  }
+  body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+  nav{background:rgba(28,43,69,0.97);height:56px;display:flex;align-items:center;padding:0 6%;border-bottom:0.5px solid rgba(255,255,255,0.08);position:sticky;top:0;z-index:100;}
+  .nav-logo{display:flex;align-items:center;gap:8px;text-decoration:none;}
+  .nav-lm{width:28px;height:28px;background:var(--teal);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;}
+  .nav-lt{font-size:16px;font-weight:600;color:#fff;}
+  .nav-sep{width:1px;height:18px;background:rgba(255,255,255,0.15);margin:0 12px;}
+  .nav-page{font-size:13px;color:rgba(255,255,255,0.6);}
+  .nav-space{flex:1;}
+  .nav-back{font-size:13px;color:rgba(255,255,255,0.6);text-decoration:none;padding:6px 12px;border-radius:7px;}
+  .nav-back:hover{background:rgba(255,255,255,0.08);color:#fff;}
+  .lang-sw{display:flex;background:rgba(255,255,255,0.08);border-radius:7px;padding:2px;gap:2px;margin-left:8px;}
+  .lbtn{padding:4px 10px;border-radius:5px;font-size:11px;font-weight:500;border:none;background:transparent;color:rgba(255,255,255,0.5);cursor:pointer;font-family:inherit;transition:all 0.2s;}
+  .lbtn.act{background:var(--teal);color:#fff;}
+  .hero{background:linear-gradient(135deg,#092848 0%,#185fa5 100%);padding:48px 6% 44px;position:relative;overflow:hidden;}
+  .hero::before{content:'';position:absolute;right:-40px;top:-40px;width:240px;height:240px;border-radius:50%;background:rgba(255,255,255,0.07);pointer-events:none;}
+  .hero-inner{max-width:760px;margin:0 auto;position:relative;}
+  .hero-tag{font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.6);margin-bottom:10px;}
+  .hero-title{font-family:'DM Serif Display',serif;font-size:clamp(28px,4vw,42px);color:#fff;margin-bottom:10px;}
+  .hero-desc{font-size:14px;color:rgba(255,255,255,0.62);line-height:1.7;max-width:480px;margin-bottom:20px;}
+  .hero-badges{display:flex;gap:8px;flex-wrap:wrap;}
+  .h-badge{font-size:11px;padding:4px 12px;border-radius:20px;background:rgba(255,255,255,0.14);color:rgba(255,255,255,0.85);border:0.5px solid rgba(255,255,255,0.2);}
+  .wrap{max-width:760px;margin:0 auto;padding:40px 6% 80px;}
+  .sh{display:flex;align-items:center;gap:10px;margin-bottom:16px;}
+  .sh-label{font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--text-light);}
+  .sh-line{flex:1;height:0.5px;background:var(--border);}
+  .part-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;margin-bottom:36px;}
+  .part-card{background:var(--white);border:0.5px solid var(--border);border-radius:14px;overflow:hidden;text-decoration:none;display:block;transition:all 0.25s;}
+  .part-card:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(0,0,0,0.09);}
+  .pc-top{padding:24px 24px 18px;}
+  .pc-icon{font-size:36px;margin-bottom:12px;}
+  .pc-name{font-size:20px;font-weight:600;color:var(--text);margin-bottom:5px;}
+  .pc-desc{font-size:13px;color:var(--text-muted);line-height:1.6;margin-bottom:14px;}
+  .pc-parts{display:flex;flex-direction:column;gap:5px;}
+  .pc-part{font-size:12px;color:var(--text-muted);display:flex;align-items:center;gap:7px;}
+  .pc-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0;}
+  .pc-bottom{padding:14px 24px;border-top:0.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+  .pc-cta{font-size:13px;font-weight:600;}
+  .pc-time{font-size:11px;color:var(--text-light);}
+  .info-box{background:var(--white);border:0.5px solid var(--border);border-radius:14px;padding:22px 24px;margin-bottom:28px;}
+  .ib-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+  .ib-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;}
+  .ib-item{background:var(--bg);border-radius:10px;padding:14px;}
+  .ib-val{font-size:20px;font-weight:600;color:var(--accent);margin-bottom:3px;}
+  .ib-label{font-size:11px;color:var(--text-muted);}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+  .fade{opacity:0;animation:fadeUp 0.45s ease forwards;}
+  .fade:nth-child(1){animation-delay:.05s}.fade:nth-child(2){animation-delay:.1s}
+  .fade:nth-child(3){animation-delay:.15s}.fade:nth-child(4){animation-delay:.2s}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/" class="nav-logo"><div class="nav-lm">LW</div><span class="nav-lt">LinguaWalk</span></a>
+  <div class="nav-sep"></div>
+  <span class="nav-page">🎓 TOEFL iBT</span>
+  <div class="nav-space"></div>
+  <a href="../index.html" class="nav-back" data-en="← English Home" data-ko="← 영어 홈">← English Home</a>
+  <div class="lang-sw">
+    <button class="lbtn act" onclick="setLang('en')" id="btn-en">EN</button>
+    <button class="lbtn" onclick="setLang('ko')" id="btn-ko">한국어</button>
+  </div>
+</nav>
 
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-tag">EXAM PREPARATION</div>
+    <h1 class="hero-title">🎓 TOEFL iBT</h1>
+    <p class="hero-desc" data-en="Master all 4 skills with AI-generated questions in authentic TOEFL iBT format. Get detailed AI feedback on Speaking and Writing." data-ko="AI가 생성한 실제 TOEFL iBT 형식 문제로 4개 영역을 마스터하세요. 말하기와 쓰기 AI 피드백 포함.">All 4 skills · AI-powered TOEFL preparation.</p>
+    <div class="hero-badges">
+      <span class="h-badge" data-en="Reading 35min" data-ko="읽기 35분">Reading 35min</span>
+      <span class="h-badge" data-en="Listening 36min" data-ko="듣기 36분">Listening 36min</span>
+      <span class="h-badge" data-en="🗣️ Speaking AI" data-ko="🗣️ 말하기 AI">🗣️ Speaking AI</span>
+      <span class="h-badge" data-en="✍️ Writing AI" data-ko="✍️ 쓰기 AI">✍️ Writing AI</span>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="sh fade"><span class="sh-label" data-en="EXAM OVERVIEW" data-ko="시험 개요">EXAM OVERVIEW</span><div class="sh-line"></div></div>
+  <div class="info-box fade">
+    <div class="ib-title">📋 <span data-en="TOEFL iBT Test Information" data-ko="TOEFL iBT 시험 정보">TOEFL iBT Test Information</span></div>
+    <div class="ib-grid">
+      <div class="ib-item"><div class="ib-val">54–72</div><div class="ib-label" data-en="Total Questions" data-ko="전체 문제 수">Total Questions</div></div>
+      <div class="ib-item"><div class="ib-val">120</div><div class="ib-label" data-en="Perfect Score" data-ko="만점">Perfect Score</div></div>
+      <div class="ib-item"><div class="ib-val">~2 hrs</div><div class="ib-label" data-en="Test Duration" data-ko="시험 시간">Test Duration</div></div>
+      <div class="ib-item"><div class="ib-val">4</div><div class="ib-label" data-en="All Skills" data-ko="4개 영역">All Skills</div></div>
+    </div>
+  </div>
+
+  <div class="sh fade"><span class="sh-label" data-en="CHOOSE A SKILL" data-ko="영역 선택">CHOOSE A SKILL</span><div class="sh-line"></div></div>
+  <div class="part-grid">
+    <a href="reading.html" class="part-card fade">
+      <div class="pc-top">
+        <div class="pc-icon">📰</div>
+        <div class="pc-name" data-en="Reading" data-ko="읽기">Reading</div>
+        <div class="pc-desc" data-en="Academic passages with factual, inference, vocabulary, and sentence simplification questions." data-ko="사실 정보, 추론, 어휘, 문장 단순화 문제가 포함된 학술 지문.">Academic passages, varied question types.</div>
+        <div class="pc-parts">
+          <div class="pc-part"><div class="pc-dot" style="background:#3b6d11;"></div><span data-en="Factual &amp; Detail Questions" data-ko="사실 &amp; 세부 정보">Factual &amp; Detail Questions</span></div>
+          <div class="pc-part"><div class="pc-dot" style="background:#3b6d11;"></div><span data-en="Inference &amp; Rhetorical Purpose" data-ko="추론 &amp; 수사적 목적">Inference &amp; Rhetorical Purpose</span></div>
+          <div class="pc-part"><div class="pc-dot" style="background:#3b6d11;"></div><span data-en="Vocabulary in Context" data-ko="문맥 속 어휘">Vocabulary in Context</span></div>
+          <div class="pc-part"><div class="pc-dot" style="background:#3b6d11;"></div><span data-en="Sentence Simplification" data-ko="문장 단순화">Sentence Simplification</span></div>
+        </div>
+      </div>
+      <div class="pc-bottom">
+        <span class="pc-cta" style="color:#3b6d11;" data-en="Start Reading →" data-ko="읽기 시작 →">Start Reading →</span>
+        <span class="pc-time" data-en="35 min in real exam" data-ko="실제 시험 35분">35 min in real exam</span>
+      </div>
+    </a>
+    <a href="listening.html" class="part-card fade">
+      <div class="pc-top">
+        <div class="pc-icon">🎧</div>
+        <div class="pc-name" data-en="Listening" data-ko="듣기">Listening</div>
+        <div class="pc-desc" data-en="Campus conversations and academic lectures with multi-voice TTS and AI comprehension questions." data-ko="캠퍼스 대화와 학술 강의. 다중 음성 TTS와 AI 이해력 문제.">Conversations &amp; Lectures with TTS.</div>
+        <div class="pc-parts">
+          <div class="pc-part"><div class="pc-dot" style="background:#ba7517;"></div><span data-en="Campus Conversations" data-ko="캠퍼스 대화">Campus Conversations</span></div>
+          <div class="pc-part"><div class="pc-dot" style="background:#ba7517;"></div><span data-en="Academic Lectures" data-ko="학술 강의">Academic Lectures</span></div>
+          <div class="pc-part"><div class="pc-dot" style="background:#ba7517;"></div><span data-en="Detail &amp; Attitude Questions" data-ko="세부 &amp; 태도 문제">Detail &amp; Attitude Questions</span></div>
+        </div>
+      </div>
+      <div class="pc-bottom">
+        <span class="pc-cta" style="color:#ba7517;" data-en="Start Listening →" data-ko="듣기 시작 →">Start Listening →</span>
+        <span class="pc-time" data-en="36 min in real exam" data-ko="실제 시험 36분">36 min in real exam</span>
+      </div>
+    </a>
+    <a href="speaking.html" class="part-card fade">
+      <div class="pc-top">
+        <div class="pc-icon">🗣️</div>
+        <div class="pc-name" data-en="Speaking" data-ko="말하기">Speaking</div>
+        <div class="pc-desc" data-en="Independent and integrated speaking tasks with voice recording and detailed AI scoring." data-ko="독립형 및 통합형 말하기 과제. 음성 녹음과 AI 상세 채점.">Record and get AI scored.</div>
+        <div class="pc-parts">
+          <div class="pc-part"><div class="pc-dot" style="background:#993556;"></div><span data-en="Task 1 — Independent Opinion" data-ko="Task 1 — 독립형 의견">Task 1 — Independent Opinion</span></div>
+          <div class="pc-part"><div class="pc-dot" style="background:#993556;"></div><span data-en="Task 2 — Campus Integrated" data-ko="Task 2 — 캠퍼스 통합형">Task 2 — Campus Integrated</span></div>
+          <div class="pc-part"><div class="pc-dot" style="background:#993556;"></div><span data-en="Task 3 — Academic Integrated" data-ko="Task 3 — 학술 통합형">Task 3 — Academic Integrated</span></div>
+          <div class="pc-part"><div class="pc-dot" style="background:#993556;"></div><span data-en="Task 4 — Lecture Summary" data-ko="Task 4 — 강의 요약">Task 4 — Lecture Summary</span></div>
+        </div>
+      </div>
+      <div class="pc-bottom">
+        <span class="pc-cta" style="color:#993556;" data-en="Start Speaking →" data-ko="말하기 시작 →">Start Speaking →</span>
+        <span class="pc-time" data-en="17 min in real exam" data-ko="실제 시험 17분">17 min in real exam</span>
+      </div>
+    </a>
+    <a href="writing.html" class="part-card fade">
+      <div class="pc-top">
+        <div class="pc-icon">✍️</div>
+        <div class="pc-name" data-en="Writing" data-ko="쓰기">Writing</div>
+        <div class="pc-desc" data-en="Integrated writing and academic discussion tasks with word count tracking and AI scoring." data-ko="통합형 쓰기와 학술 토론 과제. 단어 수 추적 및 AI 채점.">Integrated &amp; Discussion board.</div>
+        <div class="pc-parts">
+          <div class="pc-part"><div class="pc-dot" style="background:#534ab7;"></div><span data-en="Integrated Writing (Read+Listen)" data-ko="통합형 쓰기 (읽기+듣기)">Integrated Writing</span></div>
+          <div class="pc-part"><div class="pc-dot" style="background:#534ab7;"></div><span data-en="Academic Discussion Board" data-ko="학술 토론 게시판">Academic Discussion Board</span></div>
+        </div>
+      </div>
+      <div class="pc-bottom">
+        <span class="pc-cta" style="color:#534ab7;" data-en="Start Writing →" data-ko="쓰기 시작 →">Start Writing →</span>
+        <span class="pc-time" data-en="29 min in real exam" data-ko="실제 시험 29분">29 min in real exam</span>
+      </div>
+    </a>
+  </div>
+</div>
+
+<script>
+let lang='en';
+function setLang(l){
+  lang=l;
+  document.documentElement.lang=l==='ko'?'ko':'en';
+  document.querySelectorAll('[data-en][data-ko]').forEach(el=>{
+    const t=l==='ko'?el.getAttribute('data-ko'):el.getAttribute('data-en');
+    if(t) el.innerHTML=t;
+  });
+  document.getElementById('btn-en').classList.toggle('act',l==='en');
+  document.getElementById('btn-ko').classList.toggle('act',l==='ko');
+  try{localStorage.setItem('lw-lang',l);}catch(e){}
+}
+(function(){
+  let saved; try{saved=localStorage.getItem('lw-lang');}catch(e){}
+  setLang(saved||((navigator.language||'').startsWith('ko')?'ko':'en'));
+})();
+</script>
+</body>
+</html>
