@@ -291,10 +291,12 @@
     <div class="setting-item">
       <div class="si-label" data-en="Level" data-ko="레벨">Level</div>
       <select class="si-select" id="level-select" onchange="if(!checkLevelLock(this.value)) this.value='A1'">
+        <option value="A1" selected>A1 — Free</option>
         <option value="A2">A2 — Free</option>
         <option value="B1">B1 — 🔒 Pro</option>
         <option value="B2">B2 — 🔒 Pro</option>
         <option value="C1">C1 — 🔒 Pro</option>
+        <option value="C2">C2 — 🔒 Pro</option>
       </select>
     </div>
     <div class="setting-item" id="qcount-wrap">
