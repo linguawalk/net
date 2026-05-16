@@ -296,9 +296,12 @@
     <div class="setting-item">
       <div class="si-label" data-en="Level" data-ko="레벨">Level</div>
       <select class="si-select" id="level-select" onchange="if(!checkLevelLock(this.value)) this.value='A1'">
-        <option value="beginner" data-en="Beginner" data-ko="초급">Beginner</option>
-        <option value="intermediate" selected data-en="Intermediate" data-ko="중급">Intermediate</option>
-        <option value="advanced" data-en="Advanced" data-ko="고급">Advanced</option>
+        <option value="A1" selected>A1 — Free</option>
+        <option value="A2">A2 — Free</option>
+        <option value="B1">B1 — 🔒 Pro</option>
+        <option value="B2">B2 — 🔒 Pro</option>
+        <option value="C1">C1 — 🔒 Pro</option>
+        <option value="C2">C2 — 🔒 Pro</option>
       </select>
     </div>
     <div class="setting-item">
@@ -436,6 +439,30 @@ const EXAM_TYPES={
        info_ko:'📝 TOEFL Speaking Task 4: 학술 강의 일부 듣기 → 핵심 내용 요약. 준비: 20초 / 말하기: 60초.'},
     ]
   },
+  general:{
+    topics:[
+      {id:'g1', en:'Daily Conversation',    ko:'일상 대화',
+       desc_en:'Everyday topics and situations',desc_ko:'일상적인 주제와 상황',
+       icons:'💬🎤', format:'interview', prepSec:0, ansSec:60,
+       info_en:'📝 General Speaking: Practice everyday English conversations on familiar topics.',
+       info_ko:'📝 일반 말하기: 친숙한 주제로 일상 영어 대화를 연습합니다.'},
+      {id:'g2', en:'Opinion & Discussion',  ko:'의견 & 토론',
+       desc_en:'Express and support your opinion',desc_ko:'의견을 표현하고 뒷받침',
+       icons:'🗣️🎤', format:'express_opinion', prepSec:30, ansSec:60,
+       info_en:'📝 General Speaking: State your opinion clearly and support it with reasons.',
+       info_ko:'📝 일반 말하기: 의견을 명확하게 표현하고 이유로 뒷받침하세요.'},
+      {id:'g3', en:'Describe a Picture',    ko:'그림/사진 묘사',
+       desc_en:'Describe what you see in detail',desc_ko:'보이는 것을 자세히 묘사',
+       icons:'🖼🎤', format:'describe_picture', prepSec:30, ansSec:45,
+       info_en:'📝 General Speaking: Describe a scene or photo using rich vocabulary.',
+       info_ko:'📝 일반 말하기: 풍부한 어휘로 장면이나 사진을 묘사하세요.'},
+      {id:'g4', en:'Story Telling',         ko:'이야기 말하기',
+       desc_en:'Narrate a past experience',  desc_ko:'과거 경험을 이야기로',
+       icons:'📖🎤', format:'opic_past', prepSec:0, ansSec:90,
+       info_en:'📝 General Speaking: Tell a story about a past experience in detail.',
+       info_ko:'📝 일반 말하기: 과거 경험을 자세히 이야기하세요.'},
+    ]
+  }
   opic:{
     topics:[
       {id:'op1', en:'Self Introduction & Survey',   ko:'자기소개 & 설문',
@@ -467,7 +494,7 @@ const EXAM_TYPES={
   }
 };
 
-let apiKey='', currentExam='general', currentTopicId='ts1';
+let apiKey='', currentExam='general', currentTopicId='g1';
 let messages=[], isLoading=false;
 let recognition=null, isRecording=false;
 let currentTask=null, userTranscript='';
@@ -543,7 +570,7 @@ async function generateTask(){
   const topic=getCurrentTopic();
   const topicName=lang==='ko'?topic.ko:topic.en;
   const level=document.getElementById('level-select').value;
-  const examLabel={toeic:'TOEIC Speaking',ielts:'IELTS Speaking',toefl:'TOEFL Speaking',opic:'OPIc'}[currentExam];
+  const examLabel={toeic:'TOEIC Speaking',ielts:'IELTS Speaking',toefl:'TOEFL Speaking',opic:'OPIc',general:'General Speaking'}[currentExam]||'General Speaking';
 
   document.getElementById('loading-overlay').style.display='block';
   document.getElementById('loading-text').innerHTML=lang==='ko'
@@ -665,7 +692,7 @@ JSON only: {"question":"OPIc English question","situation":"situation descriptio
 // ── RENDER TASK ──
 function renderTask(topic, task){
   const fmt=topic.format;
-  const examLabel={toeic:'TOEIC Speaking',ielts:'IELTS Speaking',toefl:'TOEFL Speaking',opic:'OPIc'}[currentExam];
+  const examLabel={toeic:'TOEIC Speaking',ielts:'IELTS Speaking',toefl:'TOEFL Speaking',opic:'OPIc',general:'General Speaking'}[currentExam]||'General Speaking';
   const topicName=lang==='ko'?topic.ko:topic.en;
   const prepSec=parseInt(document.getElementById('prep-time').value);
   const ansSec=parseInt(document.getElementById('ans-time').value);
@@ -1013,7 +1040,7 @@ async function submitAnswer(id){
   const transcript=transcripts[id]||'';
   if(!transcript.trim()){alert(lang==='ko'?'먼저 답변을 녹음해 주세요.':'Please record your answer first.');return;}
   const topic=getCurrentTopic();
-  const examLabel={toeic:'TOEIC Speaking',ielts:'IELTS Speaking',toefl:'TOEFL Speaking',opic:'OPIc'}[currentExam];
+  const examLabel={toeic:'TOEIC Speaking',ielts:'IELTS Speaking',toefl:'TOEFL Speaking',opic:'OPIc',general:'General Speaking'}[currentExam]||'General Speaking';
   const fbSection=document.getElementById(`fb-${id}`);
   if(!fbSection) return;
   fbSection.innerHTML=`<div style="padding:14px;text-align:center;color:var(--text-muted);font-size:13px;">🤖 ${lang==='ko'?'AI가 평가하고 있습니다...':'AI is evaluating your answer...'}</div>`;
@@ -1083,7 +1110,7 @@ Return ONLY this JSON:
 function initTutor(topic){
   messages=[];
   document.getElementById('tutor-messages').innerHTML='';
-  const examLabel={toeic:'TOEIC Speaking',ielts:'IELTS Speaking',toefl:'TOEFL Speaking',opic:'OPIc'}[currentExam];
+  const examLabel={toeic:'TOEIC Speaking',ielts:'IELTS Speaking',toefl:'TOEFL Speaking',opic:'OPIc',general:'General Speaking'}[currentExam]||'General Speaking';
   const intro=lang==='ko'
     ?`안녕하세요! 👋 **${examLabel} — ${lang==='ko'?topic.ko:topic.en}** 준비가 되었습니다.\n\n🎤 녹음 버튼을 눌러 답변하고 AI 피드백을 받으세요. 궁금한 점이 있으면 언제든 질문하세요!`
     :`Hi! 👋 **${examLabel} — ${topic.en}** task is ready.\n\nPress 🎤 to record your answer and get AI feedback. Ask me anything about speaking strategies!`;
@@ -1106,7 +1133,7 @@ async function sendMessage(){
   document.getElementById('tutor-status').textContent=lang==='ko'?'답변 작성 중...':'Typing...';
   const tid=showTyping();
   const topic=getCurrentTopic();
-  const examLabel={toeic:'TOEIC Speaking',ielts:'IELTS Speaking',toefl:'TOEFL Speaking',opic:'OPIc'}[currentExam];
+  const examLabel={toeic:'TOEIC Speaking',ielts:'IELTS Speaking',toefl:'TOEFL Speaking',opic:'OPIc',general:'General Speaking'}[currentExam]||'General Speaking';
   const sys=lang==='ko'
     ?`당신은 친절한 ${examLabel} 말하기 튜터입니다. 현재 "${lang==='ko'?topic.ko:topic.en}" 파트를 연습 중입니다. 한국어로 실용적인 조언을 간결하게 하세요.`
     :`You are a helpful ${examLabel} speaking tutor. Student is practicing "${topic.en}". Give concise, practical speaking advice.`;
