@@ -238,21 +238,12 @@
 <div class="api-setup fade-in" id="api-setup">
   <div class="api-icon">🗣️</div>
   <div class="api-title" data-en="Speaking Practice" data-ko="말하기 연습">Speaking Practice</div>
-  <div class="api-desc" data-en="Enter your API keys to activate AI tasks, voice recording, and scene images." data-ko="API 키를 입력하면 AI 과제, 음성 녹음, 장면 이미지가 활성화됩니다.">Enter your API keys to start.</div>
-  <div style="text-align:left;margin-bottom:8px;">
-    <div style="font-size:11px;font-weight:600;color:var(--text-muted);margin-bottom:4px;">🤖 Anthropic API Key</div>
-    <div class="api-input-wrap" style="margin-bottom:0;">
-      <input type="password" class="api-input" id="api-key-input" placeholder="sk-ant-api03-...">
-    </div>
+  <div class="api-desc" data-en="Enter your Anthropic API key to activate AI speaking tasks and feedback." data-ko="Anthropic API 키를 입력하면 AI 말하기 과제와 피드백이 활성화됩니다.">Enter your API key to start.</div>
+  <div class="api-input-wrap">
+    <input type="password" class="api-input" id="api-key-input" placeholder="sk-ant-api03-...">
+    <button class="api-btn" onclick="saveApiKey()" data-en="Connect" data-ko="연결">Connect</button>
   </div>
-  <div style="text-align:left;margin-bottom:16px;">
-    <div style="font-size:11px;font-weight:600;color:var(--text-muted);margin-bottom:4px;">🖼 Unsplash Access Key <span style="font-weight:400;color:var(--text-light);">(optional — for scene images)</span></div>
-    <div class="api-input-wrap" style="margin-bottom:0;">
-      <input type="password" class="api-input" id="unsplash-key-input" placeholder="Unsplash Access Key...">
-    </div>
-  </div>
-  <button class="api-btn" onclick="saveApiKey()" style="width:100%;padding:11px;" data-en="Connect" data-ko="연결">Connect</button>
-  <div class="api-note" style="margin-top:10px;" data-en="🔒 Both keys stored in your browser only." data-ko="🔒 두 키 모두 브라우저에만 저장됩니다.">🔒 Stored in your browser only.</div>
+  <div class="api-note" data-en="🔒 Stored in your browser only." data-ko="🔒 브라우저에만 저장됩니다.">🔒 Stored in your browser only.</div>
 </div>
 
 <div class="main fade-in" id="main-content">
@@ -506,7 +497,8 @@ let unsplashKey='';
 function saveApiKey(){
   const key=document.getElementById('api-key-input').value.trim();
   if(!key.startsWith('sk-ant-')){alert('Anthropic API key must start with sk-ant-');return;}
-  const uKey=document.getElementById('unsplash-key-input').value.trim();
+  const uKeyEl=document.getElementById('unsplash-key-input');
+  const uKey=uKeyEl?uKeyEl.value.trim():'';
   try{
     sessionStorage.setItem('lw-api-key',key);
     if(uKey) sessionStorage.setItem('lw-unsplash-key',uKey);
