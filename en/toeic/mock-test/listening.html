@@ -182,14 +182,20 @@
   <div class="api-icon">📝</div>
   <div class="api-title" data-en="TOEIC LC Mock Test" data-ko="TOEIC 듣기 모의테스트">TOEIC LC Mock Test</div>
   <div class="api-desc" data-en="AI generates a complete TOEIC Listening mock test — all 100 questions across Parts 1–4." data-ko="AI가 TOEIC 듣기 모의테스트 100문항(Part 1~4 전체)을 자동 생성합니다.">Enter your API key to generate a full mock test.</div>
-  <div style="text-align:left;margin-bottom:16px;">
+  <div style="text-align:left;margin-bottom:8px;">
     <div style="font-size:11px;font-weight:600;color:var(--text-muted);margin-bottom:4px;">🤖 Anthropic API Key</div>
     <div class="api-input-wrap" style="margin-bottom:0;">
       <input type="password" class="api-input" id="api-key-input" placeholder="sk-ant-api03-...">
     </div>
   </div>
+  <div style="text-align:left;margin-bottom:16px;">
+    <div style="font-size:11px;font-weight:600;color:var(--text-muted);margin-bottom:4px;">🖼 Unsplash Access Key <span style="font-weight:400;color:var(--text-light);">(Part 1 scene photos)</span></div>
+    <div class="api-input-wrap" style="margin-bottom:0;">
+      <input type="password" class="api-input" id="unsplash-key-input" placeholder="Unsplash Access Key...">
+    </div>
+  </div>
   <button class="api-btn" onclick="saveApiKey()" style="width:100%;padding:11px;" data-en="Connect & Start" data-ko="연결하고 시작">Connect & Start</button>
-  <p class="api-note" data-en="🔒 Your key is stored in this browser session only." data-ko="🔒 키는 현재 브라우저 세션에만 저장됩니다.">🔒 Stored in browser session only.</p>
+  <p class="api-note" data-en="🔒 Keys stored in this browser session only." data-ko="🔒 키는 현재 브라우저 세션에만 저장됩니다.">🔒 Stored in browser session only.</p>
 </div>
 
 <!-- MAIN -->
@@ -353,7 +359,7 @@
 </div><!-- /main -->
 
 <script>
-let lang='en', apiKey='';
+let lang='en', apiKey='', unsplashKey='';
 
 let testData={p1:[],p2:[],p3:[],p4:[]};
 let userAnswers={}; // {qNum: optionIdx}
@@ -377,8 +383,9 @@ function setLang(l){
 function saveApiKey(){
   const key=document.getElementById('api-key-input').value.trim();
   if(!key.startsWith('sk-ant-')){alert('Anthropic API key must start with sk-ant-');return;}
-  try{sessionStorage.setItem('lw-api-key',key);}catch(e){}
-  apiKey=key;
+  const uKey=document.getElementById('unsplash-key-input').value.trim();
+  try{sessionStorage.setItem('lw-api-key',key);if(uKey) sessionStorage.setItem('lw-unsplash-key',uKey);}catch(e){}
+  apiKey=key; unsplashKey=uKey;
   document.getElementById('api-setup').style.display='none';
   document.getElementById('main-content').style.display='block';
 }
@@ -530,31 +537,36 @@ function buildTestUI(){
   qGlobal=1; answered=0; userAnswers={};
   document.getElementById('progress-text').textContent=`0 / 100`;
 
-  // Part 1
+  // Part 1 — Unsplash API key 기반 실제 사진
   document.getElementById('part1-body').innerHTML=testData.p1.map((q,i)=>{
     const qn=qGlobal++;
-    const kw=encodeURIComponent((q.imageKeyword||q.scene||'office workplace').replace(/\s+/g,','));
-    const seed=100+i*7;
-    // Use Unsplash Source (no key) with Picsum as fallback
     const imgId=`p1img${qn}`;
+    const skelId=`p1sk${qn}`;
     const capId=`p1cap${qn}`;
+    const keyword=q.imageKeyword||q.scene||'office workplace';
     return `<div class="q-item" id="qi-${qn}">
       <div class="q-num">Q ${qn}</div>
       <div style="position:relative;width:100%;border-radius:10px;overflow:hidden;margin-bottom:10px;border:0.5px solid var(--border);background:#f0f0f0;min-height:200px;">
-        <div id="${imgId}-skel" style="width:100%;height:200px;display:flex;align-items:center;justify-content:center;background:linear-gradient(90deg,#e8e8e8 25%,#f2f2f2 50%,#e8e8e8 75%);background-size:200% 100%;animation:skelAnim 1.4s infinite;">
-          <span style="font-size:24px;opacity:0.4;">🖼</span>
+        <div id="${skelId}" style="width:100%;height:200px;display:flex;align-items:center;justify-content:center;background:linear-gradient(90deg,#ede8e0 25%,#f5f2ee 50%,#ede8e0 75%);background-size:200% 100%;animation:skelAnim 1.4s infinite;">
+          <div style="text-align:center;"><div style="font-size:24px;opacity:0.35;">📷</div><div style="font-size:11px;color:#b0a090;font-family:DM Sans,sans-serif;margin-top:4px;">${lang==='ko'?'사진 검색 중...':'Searching photo...'}</div></div>
         </div>
-        <img id="${imgId}" style="width:100%;height:200px;object-fit:cover;display:none;border-radius:10px;"
-          src="https://source.unsplash.com/800x480/?${kw}"
-          onerror="this.src='https://picsum.photos/seed/${seed}/800/480';this.onerror=null;"
-          onload="document.getElementById('${imgId}-skel').style.display='none';this.style.display='block';document.getElementById('${capId}').style.display='block';"
-          alt="${q.scene||'Photograph'}">
-        <div id="${capId}" style="display:none;position:absolute;bottom:0;left:0;right:0;padding:8px 14px;background:linear-gradient(transparent,rgba(0,0,0,0.55));color:#fff;font-size:11.5px;font-family:DM Sans,sans-serif;line-height:1.4;">${q.scene||''}</div>
+        <img id="${imgId}" style="width:100%;height:200px;object-fit:cover;display:none;" alt="${q.scene||'Photograph'}">
+        <div id="${capId}" style="display:none;position:absolute;bottom:0;left:0;right:0;padding:8px 14px;background:linear-gradient(transparent,rgba(0,0,0,0.6));color:#fff;font-size:11.5px;font-family:DM Sans,sans-serif;line-height:1.4;">${q.scene||keyword}</div>
       </div>
       <div class="q-context">${lang==='ko'?'🔊 4개의 진술을 듣고 사진을 가장 잘 묘사한 것을 선택하세요.':'🔊 Listen to 4 statements and choose the one that best describes the photograph.'}</div>
       <div class="q-opts">${(q.options||['(A)','(B)','(C)','(D)']).map((o,j)=>`<button class="q-opt" id="q${qn}o${j}" onclick="selectOpt(${qn},${j},4)"><span class="q-opt-ltr">${['A','B','C','D'][j]}</span>${o}</button>`).join('')}</div>
     </div>`;
   }).join('');
+
+  // Load images after render (Unsplash API key search)
+  testData.p1.forEach((q,i)=>{
+    const qn=i+1;
+    const imgId=`p1img${qn}`;
+    const skelId=`p1sk${qn}`;
+    const capId=`p1cap${qn}`;
+    const keyword=q.imageKeyword||q.scene||'office workplace';
+    loadP1Photo(keyword, imgId, skelId, capId, q.scene||keyword);
+  });
 
   // Part 2
   document.getElementById('part2-body').innerHTML=testData.p2.map((q,i)=>{
@@ -781,11 +793,55 @@ function resetTest(){
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
+// ── Unsplash Photo Loader (API key) ──
+async function loadP1Photo(keyword, imgId, skelId, capId, caption){
+  if(!unsplashKey){
+    // No key: show clean placeholder
+    const skel=document.getElementById(skelId);
+    if(skel) skel.innerHTML=`<div style="text-align:center;padding:20px;"><div style="font-size:32px;margin-bottom:8px;">📷</div><div style="font-size:12px;color:#b0a090;font-family:DM Sans,sans-serif;line-height:1.5;">${caption}</div></div>`;
+    return;
+  }
+  try{
+    const page=Math.floor(Math.random()*3)+1;
+    const r=await fetch(`https://api.unsplash.com/search/photos?query=${encodeURIComponent(keyword)}&per_page=20&page=${page}&orientation=landscape&content_filter=high`,{headers:{'Authorization':'Client-ID '+unsplashKey}});
+    const d=await r.json();
+    let url=null;
+    if(d.results&&d.results.length>0){
+      url=d.results[Math.floor(Math.random()*Math.min(d.results.length,10))].urls.regular;
+    } else {
+      // Retry with first word
+      const kw=keyword.split(' ')[0];
+      const r2=await fetch(`https://api.unsplash.com/search/photos?query=${encodeURIComponent(kw)}&per_page=10&orientation=landscape`,{headers:{'Authorization':'Client-ID '+unsplashKey}});
+      const d2=await r2.json();
+      if(d2.results&&d2.results.length>0) url=d2.results[Math.floor(Math.random()*d2.results.length)].urls.regular;
+    }
+    if(url){
+      const img=document.getElementById(imgId);
+      const skel=document.getElementById(skelId);
+      const cap=document.getElementById(capId);
+      if(img){
+        img.onload=()=>{if(skel) skel.style.display='none'; img.style.display='block'; if(cap) cap.style.display='block';};
+        img.onerror=()=>{if(skel) skel.innerHTML=`<div style="text-align:center;padding:20px;"><div style="font-size:32px;">📷</div><div style="font-size:11px;color:#b0a090;margin-top:6px;font-family:DM Sans,sans-serif;">${caption}</div></div>`;};
+        img.src=url;
+      }
+    } else {
+      const skel=document.getElementById(skelId);
+      if(skel) skel.innerHTML=`<div style="text-align:center;padding:20px;"><div style="font-size:32px;margin-bottom:8px;">📷</div><div style="font-size:12px;color:#b0a090;font-family:DM Sans,sans-serif;line-height:1.5;">${caption}</div></div>`;
+    }
+  }catch(e){
+    const skel=document.getElementById(skelId);
+    if(skel) skel.innerHTML=`<div style="text-align:center;padding:20px;"><div style="font-size:32px;">📷</div><div style="font-size:11px;color:#b0a090;margin-top:6px;font-family:DM Sans,sans-serif;">${caption}</div></div>`;
+  }
+}
+
 // ── Init ──
 (function(){
   let saved; try{saved=localStorage.getItem('lw-lang');}catch(e){}
   setLang(saved||((navigator.language||'').startsWith('ko')?'ko':'en'));
-  try{apiKey=sessionStorage.getItem('lw-api-key')||'';}catch(e){}
+  try{
+    apiKey=sessionStorage.getItem('lw-api-key')||'';
+    unsplashKey=sessionStorage.getItem('lw-unsplash-key')||'';
+  }catch(e){}
   if(apiKey){
     document.getElementById('api-setup').style.display='none';
     document.getElementById('main-content').style.display='block';
