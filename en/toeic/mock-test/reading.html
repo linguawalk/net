@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LinguaWalk — TOEIC Mock Test — Reading (RC)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --navy:#1C2B45; --teal:#2A7F6F; --teal-light:#E1F5EE; --teal-mid:#1D9E75;
+    --bg:#F8F7F4; --white:#fff; --text:#1C2B45; --text-muted:#5a6a82; --text-light:#94a3b8;
+    --border:rgba(28,43,69,0.1); --border-md:rgba(28,43,69,0.18);
+    --toeic:#ba7517; --toeic-light:#faeeda; --toeic-dark:#3d1f00;
+  }
+  body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
+
+  nav { background:rgba(28,43,69,0.97); height:56px; display:flex; align-items:center; padding:0 5%; border-bottom:0.5px solid rgba(255,255,255,0.08); position:sticky; top:0; z-index:100; }
+  .nav-logo { display:flex; align-items:center; gap:8px; text-decoration:none; }
+  .nav-lm { width:28px; height:28px; background:var(--teal); border-radius:7px; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:#fff; }
+  .nav-lt { font-size:16px; font-weight:600; color:#fff; }
+  .nav-sep { width:1px; height:18px; background:rgba(255,255,255,0.15); margin:0 12px; }
+  .nav-page { font-size:13px; color:rgba(255,255,255,0.6); }
+  .nav-space { flex:1; }
+  .nav-back { font-size:13px; color:rgba(255,255,255,0.6); text-decoration:none; padding:6px 10px; border-radius:7px; margin-right:6px; transition:all 0.2s; }
+  .nav-back:hover { background:rgba(255,255,255,0.08); color:#fff; }
+  .lang-sw { display:flex; background:rgba(255,255,255,0.08); border-radius:7px; padding:2px; gap:2px; }
+  .lbtn { padding:4px 10px; border-radius:5px; font-size:11px; font-weight:500; border:none; background:transparent; color:rgba(255,255,255,0.5); cursor:pointer; font-family:inherit; transition:all 0.2s; }
+  .lbtn.act { background:var(--teal); color:#fff; }
+
+  /* API SETUP */
+  .api-setup { max-width:520px; margin:60px auto; padding:32px; background:var(--white); border-radius:16px; border:0.5px solid var(--border-md); text-align:center; }
+  .api-icon { font-size:48px; margin-bottom:16px; }
+  .api-title { font-family:'DM Serif Display',serif; font-size:24px; color:var(--navy); margin-bottom:8px; }
+  .api-desc { font-size:14px; color:var(--text-muted); line-height:1.6; margin-bottom:24px; }
+  .api-input-wrap { display:flex; gap:8px; margin-bottom:12px; }
+  .api-input { flex:1; padding:10px 14px; border:0.5px solid var(--border-md); border-radius:8px; font-size:13px; font-family:monospace; color:var(--text); background:var(--bg); outline:none; }
+  .api-input:focus { border-color:var(--teal); }
+  .api-btn { padding:10px 18px; border-radius:8px; font-size:13px; font-weight:500; background:var(--teal); color:#fff; border:none; cursor:pointer; font-family:inherit; }
+  .api-note { font-size:11px; color:var(--text-light); margin-top:10px; }
+
+  /* MAIN */
+  .main { max-width:900px; margin:0 auto; padding:28px 5% 80px; display:none; }
+
+  /* HERO */
+  .hero { background:linear-gradient(135deg,var(--toeic-dark) 0%,var(--toeic) 100%); border-radius:14px; padding:28px 32px; margin-bottom:24px; position:relative; overflow:hidden; }
+  .hero::before { content:''; position:absolute; right:-30px; top:-30px; width:200px; height:200px; border-radius:50%; background:rgba(255,255,255,0.06); pointer-events:none; }
+  .hero-tag { font-size:11px; font-weight:600; letter-spacing:1px; text-transform:uppercase; color:#fcd34d; margin-bottom:8px; }
+  .hero-title { font-family:'DM Serif Display',serif; font-size:clamp(24px,4vw,36px); color:#fff; margin-bottom:6px; }
+  .hero-desc { font-size:13px; color:rgba(255,255,255,0.65); line-height:1.6; max-width:500px; }
+  .hero-stats { display:flex; gap:24px; margin-top:18px; flex-wrap:wrap; }
+  .hs { text-align:center; }
+  .hs-num { font-family:'DM Serif Display',serif; font-size:28px; color:#fcd34d; line-height:1; }
+  .hs-label { font-size:11px; color:rgba(255,255,255,0.55); margin-top:2px; text-transform:uppercase; letter-spacing:.5px; }
+
+  /* SETUP CARD */
+  .setup-card { background:var(--white); border:0.5px solid var(--border); border-radius:14px; padding:22px; margin-bottom:20px; }
+  .sc-title { font-size:13px; font-weight:600; margin-bottom:14px; display:flex; align-items:center; gap:8px; }
+  .sc-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; margin-bottom:16px; }
+  .sc-item { background:var(--bg); border:0.5px solid var(--border); border-radius:10px; padding:12px 14px; }
+  .sc-label { font-size:10px; font-weight:600; letter-spacing:.5px; text-transform:uppercase; color:var(--text-light); margin-bottom:6px; }
+  .sc-select { width:100%; border:none; background:transparent; font-size:13px; font-weight:500; color:var(--text); font-family:inherit; cursor:pointer; outline:none; }
+  .part-breakdown { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px; }
+  .pb-item { flex:1; min-width:120px; padding:10px 12px; border-radius:10px; border:0.5px solid var(--border); background:var(--bg); text-align:center; }
+  .pb-part { font-size:10px; font-weight:600; color:var(--text-light); text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px; }
+  .pb-count { font-family:'DM Serif Display',serif; font-size:20px; color:var(--toeic); }
+  .pb-type { font-size:11px; color:var(--text-muted); margin-top:2px; }
+
+  /* PROGRESS */
+  .gen-progress { background:var(--white); border:0.5px solid var(--border); border-radius:14px; padding:24px; margin-bottom:20px; display:none; }
+  .gp-title { font-size:14px; font-weight:600; margin-bottom:14px; text-align:center; }
+  .gp-steps { display:flex; flex-direction:column; gap:10px; }
+  .gp-step { display:flex; align-items:center; gap:12px; padding:10px 14px; border-radius:10px; background:var(--bg); border:0.5px solid var(--border); }
+  .gp-icon { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0; background:var(--border); }
+  .gp-step.done .gp-icon { background:#eaf3de; }
+  .gp-step.active .gp-icon { background:var(--toeic-light); animation:pulse 1s infinite; }
+  .gp-step.error .gp-icon { background:#fcebeb; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.6} }
+  .gp-text { font-size:13px; font-weight:500; }
+  .gp-sub { font-size:11px; color:var(--text-muted); margin-top:2px; }
+  .gp-bar-wrap { margin-top:16px; }
+  .gp-bar { height:8px; background:var(--bg); border-radius:8px; overflow:hidden; border:0.5px solid var(--border); }
+  .gp-fill { height:100%; background:linear-gradient(90deg,var(--toeic-dark),var(--toeic)); border-radius:8px; transition:width 0.5s ease; }
+  .gp-pct { text-align:center; font-size:13px; font-weight:600; color:var(--toeic); margin-top:8px; }
+
+  /* TEST AREA */
+  .test-area { display:none; }
+  .test-header { background:var(--white); border:0.5px solid var(--border); border-radius:14px; padding:16px 20px; margin-bottom:16px; display:flex; align-items:center; gap:16px; flex-wrap:wrap; position:sticky; top:57px; z-index:50; }
+  .th-badge { padding:4px 12px; border-radius:20px; font-size:11px; font-weight:600; background:var(--toeic-light); color:var(--toeic); }
+  .th-timer { font-family:'DM Serif Display',serif; font-size:22px; color:var(--navy); min-width:56px; }
+  .th-timer.warning { color:#e24b4a; }
+  .th-progress { flex:1; min-width:120px; }
+  .th-prog-label { font-size:11px; color:var(--text-muted); margin-bottom:4px; display:flex; justify-content:space-between; }
+  .th-prog-bar { height:6px; background:var(--bg); border-radius:6px; overflow:hidden; }
+  .th-prog-fill { height:100%; background:linear-gradient(90deg,var(--toeic-dark),var(--toeic)); border-radius:6px; transition:width 0.3s; }
+  .th-submit { padding:8px 18px; border-radius:8px; background:var(--toeic); color:#fff; border:none; font-family:inherit; font-size:13px; font-weight:600; cursor:pointer; transition:all 0.2s; white-space:nowrap; }
+  .th-submit:hover { background:#9a6010; }
+
+  /* PART SECTIONS */
+  .part-section { background:var(--white); border:0.5px solid var(--border); border-radius:14px; margin-bottom:16px; overflow:hidden; }
+  .ps-header { padding:14px 18px; background:var(--toeic-light); border-bottom:0.5px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+  .ps-title { font-size:14px; font-weight:600; color:var(--toeic); }
+  .ps-range { font-size:11px; color:var(--text-muted); }
+  .ps-body { padding:18px; }
+
+  /* PART 5 — standalone sentence */
+  .p5-item { margin-bottom:14px; padding:14px 16px; background:var(--bg); border-radius:10px; border:0.5px solid var(--border); }
+  .p5-item:last-child { margin-bottom:0; }
+  .p5-num { font-size:10px; font-weight:700; color:var(--toeic); letter-spacing:.5px; text-transform:uppercase; margin-bottom:8px; }
+  .p5-sentence { font-size:14px; color:var(--text); line-height:1.7; margin-bottom:12px; padding:10px 14px; background:var(--white); border-radius:8px; border-left:3px solid var(--toeic); }
+  .p5-blank { display:inline-block; min-width:80px; border-bottom:2px solid var(--toeic); text-align:center; font-weight:600; color:var(--toeic); padding:0 4px; }
+
+  /* PART 6 — passage with blanks */
+  .p6-set { margin-bottom:24px; padding:18px; background:var(--bg); border-radius:12px; border:0.5px solid var(--border); }
+  .p6-set:last-child { margin-bottom:0; }
+  .p6-set-title { font-size:11px; font-weight:700; color:var(--toeic); text-transform:uppercase; letter-spacing:.5px; margin-bottom:10px; }
+  .p6-passage { font-size:13px; color:var(--text); line-height:1.85; padding:14px 16px; background:var(--white); border-radius:10px; border:0.5px solid var(--border); margin-bottom:14px; }
+  .p6-blank-num { display:inline-flex; align-items:center; justify-content:center; width:28px; height:20px; background:var(--toeic); color:#fff; border-radius:4px; font-size:10px; font-weight:700; margin:0 2px; vertical-align:middle; }
+
+  /* PART 7 — reading passages */
+  .p7-set { margin-bottom:24px; }
+  .p7-set:last-child { margin-bottom:0; }
+  .p7-set-header { font-size:11px; font-weight:700; color:var(--toeic); text-transform:uppercase; letter-spacing:.5px; margin-bottom:10px; display:flex; align-items:center; gap:8px; }
+  .p7-type-badge { padding:2px 8px; border-radius:10px; background:var(--toeic-light); color:var(--toeic); font-size:10px; font-weight:600; border:0.5px solid rgba(186,117,23,0.2); }
+  .p7-passages { display:flex; flex-direction:column; gap:10px; margin-bottom:14px; }
+  .p7-passage { font-size:13px; color:var(--text); line-height:1.85; padding:16px 18px; background:var(--white); border-radius:10px; border:0.5px solid var(--border); }
+  .p7-passage-label { font-size:10px; font-weight:700; color:var(--text-light); text-transform:uppercase; letter-spacing:.5px; margin-bottom:8px; }
+
+  /* SHARED QUESTION STYLES */
+  .q-item { margin-bottom:12px; padding:14px; background:var(--white); border-radius:10px; border:0.5px solid var(--border); }
+  .q-item:last-child { margin-bottom:0; }
+  .q-num { font-size:10px; font-weight:700; color:var(--toeic); letter-spacing:.5px; text-transform:uppercase; margin-bottom:6px; }
+  .q-text { font-size:14px; font-weight:500; color:var(--text); margin-bottom:10px; line-height:1.5; }
+  .q-opts { display:flex; flex-direction:column; gap:7px; }
+  .q-opt { padding:9px 14px; border-radius:8px; border:1.5px solid var(--border-md); background:var(--bg); cursor:pointer; font-size:13px; color:var(--text); transition:all 0.2s; text-align:left; font-family:inherit; display:flex; align-items:center; gap:10px; }
+  .q-opt:hover:not(:disabled) { border-color:var(--toeic); background:var(--toeic-light); }
+  .q-opt.selected { border-color:var(--toeic); background:var(--toeic-light); }
+  .q-opt.correct { border-color:var(--teal-mid); background:#eaf3de; color:#3b6d11; font-weight:500; }
+  .q-opt.wrong { border-color:#e24b4a; background:#fcebeb; color:#a32d2d; }
+  .q-opt-ltr { width:24px; height:24px; border-radius:50%; background:var(--white); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:600; color:var(--text-muted); flex-shrink:0; border:0.5px solid var(--border); }
+  .q-opt.selected .q-opt-ltr { background:var(--toeic); color:#fff; border-color:var(--toeic); }
+  .q-opt.correct .q-opt-ltr { background:var(--teal-mid); color:#fff; border-color:var(--teal-mid); }
+  .q-opt.wrong .q-opt-ltr { background:#e24b4a; color:#fff; border-color:#e24b4a; }
+  .q-feedback { margin-top:8px; font-size:12px; padding:8px 12px; border-radius:7px; display:none; line-height:1.55; }
+  .q-feedback.show { display:block; }
+  .q-feedback.correct { background:#eaf3de; color:#3b6d11; }
+  .q-feedback.wrong { background:#fcebeb; color:#a32d2d; }
+
+  /* RESULTS */
+  .results-area { display:none; }
+  .result-hero { background:linear-gradient(135deg,var(--toeic-dark),var(--toeic)); border-radius:14px; padding:32px; text-align:center; margin-bottom:20px; color:#fff; }
+  .rh-label { font-size:13px; opacity:.7; margin-bottom:8px; }
+  .rh-score { font-family:'DM Serif Display',serif; font-size:64px; line-height:1; margin-bottom:4px; }
+  .rh-max { font-size:14px; opacity:.6; margin-bottom:16px; }
+  .rh-pct { font-size:18px; font-weight:600; color:#fcd34d; }
+  .rh-msg { font-size:13px; opacity:.8; margin-top:8px; }
+  .result-breakdown { background:var(--white); border:0.5px solid var(--border); border-radius:14px; padding:20px; margin-bottom:20px; }
+  .rb-title { font-size:13px; font-weight:600; margin-bottom:14px; }
+  .rb-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+  .rb-cell { background:var(--bg); border-radius:10px; padding:14px; text-align:center; }
+  .rb-num { font-family:'DM Serif Display',serif; font-size:24px; color:var(--toeic); line-height:1; margin-bottom:3px; }
+  .rb-label { font-size:11px; color:var(--text-muted); }
+  .rb-pct { font-size:12px; font-weight:600; color:var(--toeic); margin-top:4px; }
+
+  /* BUTTONS */
+  .btn-primary { padding:13px 24px; border-radius:10px; background:var(--toeic); color:#fff; border:none; font-family:inherit; font-size:14px; font-weight:600; cursor:pointer; transition:all 0.2s; width:100%; }
+  .btn-primary:hover { background:#9a6010; }
+  .btn-primary:disabled { opacity:.5; cursor:not-allowed; }
+  .btn-secondary { padding:12px 20px; border-radius:10px; background:var(--white); color:var(--text); border:0.5px solid var(--border-md); font-family:inherit; font-size:13px; font-weight:500; cursor:pointer; transition:all 0.2s; }
+  .btn-secondary:hover { background:var(--bg); }
+
+  @keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+  .fade-in { animation:fadeUp 0.4s ease forwards; }
+
+  @media(max-width:600px){
+    .hero-stats { gap:16px; }
+    .rb-grid { grid-template-columns:1fr 1fr 1fr; }
+    .part-breakdown { flex-direction:column; }
+    .test-header { top:56px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/en/index.html" class="nav-logo">
+    <div class="nav-lm">LW</div>
+    <span class="nav-lt">LinguaWalk</span>
+  </a>
+  <div class="nav-sep"></div>
+  <span class="nav-page">📖 TOEIC RC Mock Test</span>
+  <div class="nav-space"></div>
+  <a href="index.html" class="nav-back" data-en="← Mock Tests" data-ko="← 모의테스트">← Mock Tests</a>
+  <div class="lang-sw">
+    <button class="lbtn act" onclick="setLang('en')" id="btn-en">EN</button>
+    <button class="lbtn" onclick="setLang('ko')" id="btn-ko">한국어</button>
+  </div>
+</nav>
+
+<!-- API SETUP -->
+<div class="api-setup fade-in" id="api-setup">
+  <div class="api-icon">📖</div>
+  <div class="api-title" data-en="TOEIC RC Mock Test" data-ko="TOEIC 읽기 모의테스트">TOEIC RC Mock Test</div>
+  <div class="api-desc" data-en="AI generates a complete TOEIC Reading mock test — all 100 questions across Parts 5, 6, and 7." data-ko="AI가 TOEIC 읽기 모의테스트 100문항(Part 5~7 전체)을 자동 생성합니다.">Enter your API key to generate a full mock test.</div>
+  <div style="text-align:left;margin-bottom:16px;">
+    <div style="font-size:11px;font-weight:600;color:var(--text-muted);margin-bottom:4px;">🤖 Anthropic API Key</div>
+    <div class="api-input-wrap" style="margin-bottom:0;">
+      <input type="password" class="api-input" id="api-key-input" placeholder="sk-ant-api03-...">
+    </div>
+  </div>
+  <button class="api-btn" onclick="saveApiKey()" style="width:100%;padding:11px;" data-en="Connect & Start" data-ko="연결하고 시작">Connect & Start</button>
+  <p class="api-note" data-en="🔒 Your key is stored in this browser session only." data-ko="🔒 키는 현재 브라우저 세션에만 저장됩니다.">🔒 Stored in browser session only.</p>
+</div>
+
+<!-- MAIN -->
+<div class="main fade-in" id="main-content">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-tag">📖 TOEIC READING COMPREHENSION — FULL MOCK TEST</div>
+    <h1 class="hero-title" data-en="Complete RC Mock Test" data-ko="읽기 완전 모의테스트">Complete RC Mock Test</h1>
+    <p class="hero-desc" data-en="AI generates all 100 questions across Parts 5–7. Grammar, vocabulary, and reading passages — timed and scored like the real exam." data-ko="AI가 Part 5~7에 걸쳐 100문항 전체를 생성합니다. 문법·어휘·독해 지문을 실제 시험처럼 타이머·채점으로 진행하세요.">AI-generated full TOEIC Reading test, scored like the real exam.</p>
+    <div class="hero-stats">
+      <div class="hs"><div class="hs-num">100</div><div class="hs-label" data-en="Questions" data-ko="문항">Questions</div></div>
+      <div class="hs"><div class="hs-num">75'</div><div class="hs-label" data-en="Time Limit" data-ko="제한 시간">Time Limit</div></div>
+      <div class="hs"><div class="hs-num">495</div><div class="hs-label" data-en="Max Score" data-ko="만점">Max Score</div></div>
+      <div class="hs"><div class="hs-num">3</div><div class="hs-label" data-en="Parts" data-ko="파트">Parts</div></div>
+    </div>
+  </div>
+
+  <!-- SETUP -->
+  <div class="setup-card" id="setup-card">
+    <div class="sc-title">⚙️ <span data-en="Test Configuration" data-ko="테스트 설정">Test Configuration</span></div>
+    <div class="sc-grid">
+      <div class="sc-item">
+        <div class="sc-label" data-en="Difficulty" data-ko="난이도">Difficulty</div>
+        <select class="sc-select" id="diff-select">
+          <option value="Easy" data-en="Easy" data-ko="쉬움">Easy</option>
+          <option value="Medium" selected data-en="Medium" data-ko="보통">Medium</option>
+          <option value="Hard" data-en="Hard" data-ko="어려움">Hard</option>
+        </select>
+      </div>
+      <div class="sc-item">
+        <div class="sc-label" data-en="Time Limit" data-ko="제한 시간">Time Limit</div>
+        <select class="sc-select" id="time-select">
+          <option value="0" data-en="No Limit" data-ko="제한 없음">No Limit</option>
+          <option value="75" selected data-en="75 min (Real)" data-ko="75분 (실제)">75 min (Real)</option>
+          <option value="60" data-en="60 min" data-ko="60분">60 min</option>
+          <option value="45" data-en="45 min" data-ko="45분">45 min</option>
+        </select>
+      </div>
+      <div class="sc-item">
+        <div class="sc-label" data-en="Mode" data-ko="모드">Mode</div>
+        <select class="sc-select" id="mode-select">
+          <option value="exam" data-en="Exam Mode" data-ko="시험 모드">Exam Mode</option>
+          <option value="practice" data-en="Practice Mode" data-ko="연습 모드">Practice Mode</option>
+        </select>
+      </div>
+    </div>
+    <div class="sc-title" style="font-size:12px;color:var(--text-muted);margin-bottom:10px;">
+      <span data-en="Question distribution (real exam format):" data-ko="문제 배분 (실제 시험 형식):">Question distribution:</span>
+    </div>
+    <div class="part-breakdown">
+      <div class="pb-item">
+        <div class="pb-part">Part 5</div>
+        <div class="pb-count">30</div>
+        <div class="pb-type" data-en="Incomplete Sentences" data-ko="단문 빈칸채우기">Incomplete Sentences</div>
+      </div>
+      <div class="pb-item">
+        <div class="pb-part">Part 6</div>
+        <div class="pb-count">16</div>
+        <div class="pb-type" data-en="Text Completion" data-ko="장문 빈칸채우기">Text Completion</div>
+      </div>
+      <div class="pb-item">
+        <div class="pb-part">Part 7</div>
+        <div class="pb-count">54</div>
+        <div class="pb-type" data-en="Reading Comprehension" data-ko="독해">Reading Comprehension</div>
+      </div>
+    </div>
+    <button class="btn-primary" id="start-btn" onclick="startGeneration()">
+      🤖 <span data-en="Generate Full Mock Test" data-ko="전체 모의테스트 생성">Generate Full Mock Test</span>
+    </button>
+  </div>
+
+  <!-- GENERATION PROGRESS -->
+  <div class="gen-progress" id="gen-progress">
+    <div class="gp-title" data-en="🤖 Generating your TOEIC RC Mock Test..." data-ko="🤖 TOEIC 읽기 모의테스트를 생성하고 있습니다...">🤖 Generating your TOEIC RC Mock Test...</div>
+    <div class="gp-steps">
+      <div class="gp-step" id="step-p5">
+        <div class="gp-icon">📝</div>
+        <div>
+          <div class="gp-text">Part 5 — Incomplete Sentences <span style="color:var(--text-light);font-size:12px;">(30 questions)</span></div>
+          <div class="gp-sub" id="sub-p5" data-en="Waiting..." data-ko="대기 중...">Waiting...</div>
+        </div>
+      </div>
+      <div class="gp-step" id="step-p6">
+        <div class="gp-icon">📄</div>
+        <div>
+          <div class="gp-text">Part 6 — Text Completion <span style="color:var(--text-light);font-size:12px;">(16 questions / 4 passages)</span></div>
+          <div class="gp-sub" id="sub-p6" data-en="Waiting..." data-ko="대기 중...">Waiting...</div>
+        </div>
+      </div>
+      <div class="gp-step" id="step-p7s">
+        <div class="gp-icon">📚</div>
+        <div>
+          <div class="gp-text">Part 7 — Single Passages <span style="color:var(--text-light);font-size:12px;">(29 questions / 10 passages)</span></div>
+          <div class="gp-sub" id="sub-p7s" data-en="Waiting..." data-ko="대기 중...">Waiting...</div>
+        </div>
+      </div>
+      <div class="gp-step" id="step-p7m">
+        <div class="gp-icon">📰</div>
+        <div>
+          <div class="gp-text">Part 7 — Multiple Passages <span style="color:var(--text-light);font-size:12px;">(25 questions / 5 sets)</span></div>
+          <div class="gp-sub" id="sub-p7m" data-en="Waiting..." data-ko="대기 중...">Waiting...</div>
+        </div>
+      </div>
+    </div>
+    <div class="gp-bar-wrap">
+      <div class="gp-bar"><div class="gp-fill" id="gp-fill" style="width:0%"></div></div>
+      <div class="gp-pct" id="gp-pct">0%</div>
+    </div>
+  </div>
+
+  <!-- TEST AREA -->
+  <div class="test-area" id="test-area">
+    <div class="test-header">
+      <div class="th-badge" data-en="TOEIC RC Mock Test" data-ko="TOEIC 읽기 모의테스트">TOEIC RC Mock Test</div>
+      <div class="th-timer" id="th-timer">75:00</div>
+      <div class="th-progress">
+        <div class="th-prog-label">
+          <span data-en="Progress" data-ko="진행">Progress</span>
+          <span id="progress-text">0 / 100</span>
+        </div>
+        <div class="th-prog-bar"><div class="th-prog-fill" id="th-prog-fill" style="width:0%"></div></div>
+      </div>
+      <button class="th-submit" onclick="submitTest()">
+        <span data-en="Submit Test" data-ko="시험 제출">Submit Test</span>
+      </button>
+    </div>
+
+    <!-- Part 5 -->
+    <div class="part-section">
+      <div class="ps-header">
+        <div class="ps-title">📝 Part 5 — Incomplete Sentences</div>
+        <div class="ps-range">Q101–130</div>
+      </div>
+      <div class="ps-body" id="part5-body"></div>
+    </div>
+
+    <!-- Part 6 -->
+    <div class="part-section">
+      <div class="ps-header">
+        <div class="ps-title">📄 Part 6 — Text Completion</div>
+        <div class="ps-range">Q131–146</div>
+      </div>
+      <div class="ps-body" id="part6-body"></div>
+    </div>
+
+    <!-- Part 7 -->
+    <div class="part-section">
+      <div class="ps-header">
+        <div class="ps-title">📚 Part 7 — Reading Comprehension</div>
+        <div class="ps-range">Q147–200</div>
+      </div>
+      <div class="ps-body" id="part7-body"></div>
+    </div>
+
+    <div style="text-align:center;margin-top:20px;">
+      <button class="btn-primary" onclick="submitTest()" style="max-width:320px;">
+        ✅ <span data-en="Submit & View Results" data-ko="제출하고 결과 보기">Submit & View Results</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="results-area" id="results-area">
+    <div class="result-hero">
+      <div class="rh-label" data-en="TOEIC Reading Score" data-ko="TOEIC 읽기 점수">TOEIC Reading Score</div>
+      <div class="rh-score" id="rh-score">—</div>
+      <div class="rh-max" data-en="out of 495" data-ko="/ 495점">out of 495</div>
+      <div class="rh-pct" id="rh-pct"></div>
+      <div class="rh-msg" id="rh-msg"></div>
+    </div>
+    <div class="result-breakdown">
+      <div class="rb-title" data-en="Score Breakdown by Part" data-ko="파트별 점수 분석">Score Breakdown by Part</div>
+      <div class="rb-grid">
+        <div class="rb-cell">
+          <div class="rb-num" id="rb-p5">—</div>
+          <div class="rb-label">Part 5</div>
+          <div class="rb-pct" id="rb-p5-pct"></div>
+        </div>
+        <div class="rb-cell">
+          <div class="rb-num" id="rb-p6">—</div>
+          <div class="rb-label">Part 6</div>
+          <div class="rb-pct" id="rb-p6-pct"></div>
+        </div>
+        <div class="rb-cell">
+          <div class="rb-num" id="rb-p7">—</div>
+          <div class="rb-label">Part 7</div>
+          <div class="rb-pct" id="rb-p7-pct"></div>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;">
+      <button class="btn-secondary" style="flex:1;" onclick="reviewAnswers()" data-en="📋 Review Answers" data-ko="📋 답안 검토">📋 Review Answers</button>
+      <button class="btn-primary" style="flex:1;" onclick="resetTest()" data-en="🔄 New Mock Test" data-ko="🔄 새 모의테스트">🔄 New Mock Test</button>
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<script>
+let lang='en', apiKey='';
+// testData.p5: [{sentence, blank_position, options[4], answer(0-3), explanation}]
+// testData.p6: [{title, passage(html with [1][2][3][4] markers), questions[4]{q,opts,ans,fb}}]
+// testData.p7single: [{title, type, passage, questions[2-4]{q,opts,ans,fb}}]
+// testData.p7multi: [{title, type('double'|'triple'), passages[2-3], questions[4-5]{q,opts,ans,fb}}]
+let testData={p5:[],p6:[],p7single:[],p7multi:[]};
+let userAnswers={};
+let timerInterval=null, timeLeft=0;
+let isPracticeMode=false;
+let answered=0;
+let qGlobal=101; // TOEIC RC starts at Q101
+
+// ── Language ──
+function setLang(l){
+  lang=l;
+  document.documentElement.lang=l==='ko'?'ko':'en';
+  document.querySelectorAll('[data-en][data-ko]').forEach(el=>{
+    const t=l==='ko'?el.getAttribute('data-ko'):el.getAttribute('data-en');
+    if(t) el.innerHTML=t;
+  });
+  document.getElementById('btn-en').classList.toggle('act',l==='en');
+  document.getElementById('btn-ko').classList.toggle('act',l==='ko');
+  try{localStorage.setItem('lw-lang',l);}catch(e){}
+}
+
+function saveApiKey(){
+  const key=document.getElementById('api-key-input').value.trim();
+  if(!key.startsWith('sk-ant-')){alert('Anthropic API key must start with sk-ant-');return;}
+  try{sessionStorage.setItem('lw-api-key',key);}catch(e){}
+  apiKey=key;
+  document.getElementById('api-setup').style.display='none';
+  document.getElementById('main-content').style.display='block';
+}
+
+// ── API ──
+async function callAPI(prompt, maxTokens){
+  const r=await fetch('https://api.anthropic.com/v1/messages',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+    body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:maxTokens||2000,messages:[{role:'user',content:prompt}]})
+  });
+  const d=await r.json();
+  if(d.error) throw new Error(d.error.message);
+  const raw=d.content[0].text.replace(/```json|```/g,'').trim();
+  return JSON.parse(raw);
+}
+
+function setStep(id,state,sub){
+  document.getElementById('step-'+id).className='gp-step '+state;
+  if(sub) document.getElementById('sub-'+id).textContent=sub;
+}
+function setProgress(pct){
+  document.getElementById('gp-fill').style.width=pct+'%';
+  document.getElementById('gp-pct').textContent=Math.round(pct)+'%';
+}
+
+// ── GENERATION ──
+async function startGeneration(){
+  const diff=document.getElementById('diff-select').value;
+  const timeLimitMin=parseInt(document.getElementById('time-select').value);
+  isPracticeMode=document.getElementById('mode-select').value==='practice';
+
+  document.getElementById('setup-card').style.display='none';
+  document.getElementById('gen-progress').style.display='block';
+  document.getElementById('start-btn').disabled=true;
+  testData={p5:[],p6:[],p7single:[],p7multi:[]};
+
+  try{
+    // ── Part 5: 30 incomplete sentences ──
+    setStep('p5','active',lang==='ko'?'30문항 생성 중 (1/2)...':'Generating 30 questions (1/2)...');
+    const p5a=await callAPI(`Generate 15 TOEIC Part 5 Incomplete Sentences questions. Difficulty: ${diff}.
+Mix of: grammar (verb tense, preposition, pronoun, conjunction) and vocabulary.
+Return JSON array of 15:
+[{"sentence":"The manager _____ the report before the deadline.","options":["(A) submitting","(B) submitted","(C) will submit","(D) submission"],"answer":1,"explanation":"Simple past tense fits because 'before the deadline' indicates a completed action."}]
+answer is 0-indexed. Sentence must have exactly one blank shown as _____. All 4 options must be plausible. JSON only.`, 3500);
+    setProgress(12);
+    setStep('p5','active',lang==='ko'?'30문항 생성 중 (2/2)...':'Generating 30 questions (2/2)...');
+    const p5b=await callAPI(`Generate 15 TOEIC Part 5 Incomplete Sentences questions. Difficulty: ${diff}.
+Focus on: relative clauses, conditionals, passive voice, word form (noun/verb/adj/adv).
+Return JSON array of 15:
+[{"sentence":"The proposal _____ by the committee last Tuesday.","options":["(A) approves","(B) was approved","(C) has approving","(D) approve"],"answer":1,"explanation":"Passive voice required; 'last Tuesday' calls for simple past passive."}]
+answer is 0-indexed. One blank per sentence shown as _____. JSON only.`, 3500);
+    const allP5=[...(Array.isArray(p5a)?p5a:[]),...(Array.isArray(p5b)?p5b:[])];
+    testData.p5=allP5.slice(0,30);
+    setStep('p5','done',lang==='ko'?`✓ ${testData.p5.length}문항 완료`:`✓ ${testData.p5.length} questions done`);
+    setProgress(25);
+
+    // ── Part 6: 4 passages × 4 blanks = 16 ──
+    setStep('p6','active',lang==='ko'?'4개 지문 생성 중 (1/2)...':'Generating 4 passages (1/2)...');
+    const p6a=await callAPI(`Generate 2 TOEIC Part 6 Text Completion passages. Difficulty: ${diff}.
+Each passage: business letter/memo/email/notice with exactly 4 blanks marked as [1], [2], [3], [4].
+Each blank has 4 options (one includes a full inserted sentence for variety).
+Return JSON array of 2:
+[{
+  "title": "Memorandum — Q131-134",
+  "docType": "Memo",
+  "passage": "To: All Staff\nFrom: HR Department\n\nWe are pleased to announce that the annual company picnic will be held [1] Saturday, June 15. All employees are [2] to attend. Please note that the event will begin at noon and [3] until 6 p.m. Refreshments will be [4] throughout the afternoon.",
+  "questions": [
+    {"q":"[1]","opts":["(A) on","(B) in","(C) at","(D) by"],"ans":0,"fb":"'On' is used with specific days of the week."},
+    {"q":"[2]","opts":["(A) encouraging","(B) encouraged","(C) encourage","(D) encouragement"],"ans":1,"fb":"Passive construction 'are encouraged' is correct here."},
+    {"q":"[3]","opts":["(A) continues","(B) will continue","(C) continued","(D) continuing"],"ans":1,"fb":"Future tense matches the context of the upcoming event."},
+    {"q":"[4]","opts":["(A) served","(B) serving","(C) serve","(D) servers"],"ans":0,"fb":"Passive 'will be served' — past participle after 'will be'."}
+  ]
+}]
+JSON only.`, 3000);
+    setStep('p6','active',lang==='ko'?'4개 지문 생성 중 (2/2)...':'Generating 4 passages (2/2)...');
+    setProgress(38);
+    const p6b=await callAPI(`Generate 2 TOEIC Part 6 Text Completion passages. Difficulty: ${diff}.
+Use different doc types: business letter, notice, or advertisement.
+Return JSON array of 2 with same structure:
+[{"title":"...","docType":"Letter","passage":"full text with [1] [2] [3] [4] blanks","questions":[{"q":"[1]","opts":["(A)","(B)","(C)","(D)"],"ans":0,"fb":"explanation"},...4 questions]}]
+Vary blank types: grammar, vocabulary, sentence insertion. JSON only.`, 3000);
+    const allP6=[...(Array.isArray(p6a)?p6a:[]),...(Array.isArray(p6b)?p6b:[])];
+    testData.p6=allP6.slice(0,4);
+    setStep('p6','done',lang==='ko'?`✓ 4개 지문 완료 (${testData.p6.length*4}문항)`:`✓ 4 passages done (${testData.p6.length*4}q)`);
+    setProgress(50);
+
+    // ── Part 7 Single Passages: 10 passages (2-3 questions each ≈ 29q) ──
+    setStep('p7s','active',lang==='ko'?'단일 지문 생성 중 (1/2)...':'Generating single passages (1/2)...');
+    const p7sa=await callAPI(`Generate 5 TOEIC Part 7 Single Passage reading sets. Difficulty: ${diff}.
+Types: email, letter, advertisement, notice, article, schedule, form, memo.
+Each passage: 80-130 words. Each set: 2-3 comprehension questions.
+Return JSON array of 5:
+[{
+  "title": "Email — Q147-149",
+  "passageType": "Email",
+  "passage": "Subject: Project Update\nFrom: Sarah Kim\nTo: Michael Chen\n\n[Full realistic email text 80-130 words]",
+  "questions": [
+    {"q":"What is the purpose of the email?","opts":["(A) To request a meeting","(B) To provide a project update","(C) To confirm a deadline","(D) To introduce a new employee"],"ans":1,"fb":"The subject line and opening paragraph indicate this is an update."},
+    {"q":"What does Sarah ask Michael to do?","opts":["(A) Submit a report","(B) Attend a meeting","(C) Review the attached file","(D) Contact a client"],"ans":2,"fb":"The last paragraph mentions 'please review the attached file'."}
+  ]
+}]
+JSON only.`, 3500);
+    setProgress(62);
+    setStep('p7s','active',lang==='ko'?'단일 지문 생성 중 (2/2)...':'Generating single passages (2/2)...');
+    const p7sb=await callAPI(`Generate 5 TOEIC Part 7 Single Passage reading sets. Difficulty: ${diff}.
+Use different types: advertisement, notice, article, schedule, online review.
+Each: 80-130 word passage + 2-3 questions.
+Return JSON array of 5 with same structure:
+[{"title":"...","passageType":"Advertisement","passage":"[full text]","questions":[{"q":"...","opts":["(A)","(B)","(C)","(D)"],"ans":0,"fb":"..."}]}]
+JSON only.`, 3500);
+    const allP7s=[...(Array.isArray(p7sa)?p7sa:[]),...(Array.isArray(p7sb)?p7sb:[])];
+    testData.p7single=allP7s.slice(0,10);
+    setStep('p7s','done',lang==='ko'?`✓ ${testData.p7single.length}개 단일 지문 완료`:`✓ ${testData.p7single.length} single passages done`);
+    setProgress(75);
+
+    // ── Part 7 Multiple Passages: 5 sets (double×3 + triple×2, ~25q) ──
+    setStep('p7m','active',lang==='ko'?'복수 지문 생성 중 (1/2)...':'Generating multiple passages (1/2)...');
+    const p7ma=await callAPI(`Generate 3 TOEIC Part 7 Double Passage sets. Difficulty: ${diff}.
+Each set: 2 related passages (email+reply, article+comment, ad+inquiry) + 5 questions.
+Questions should require reading BOTH passages (cross-reference questions).
+Return JSON array of 3:
+[{
+  "title": "Double Passage — Q181-185",
+  "type": "double",
+  "passages": [
+    {"label":"Email","text":"[Passage 1 text 70-100 words]"},
+    {"label":"Reply","text":"[Passage 2 text 70-100 words]"}
+  ],
+  "questions": [
+    {"q":"What is the main topic of the first email?","opts":["(A)","(B)","(C)","(D)"],"ans":0,"fb":"explanation"},
+    {"q":"What does the writer of the reply suggest?","opts":["(A)","(B)","(C)","(D)"],"ans":2,"fb":"explanation"},
+    {"q":"What can be inferred about both writers?","opts":["(A)","(B)","(C)","(D)"],"ans":1,"fb":"explanation"},
+    {"q":"According to the reply, when will the meeting take place?","opts":["(A)","(B)","(C)","(D)"],"ans":3,"fb":"explanation"},
+    {"q":"What is implied about the project?","opts":["(A)","(B)","(C)","(D)"],"ans":0,"fb":"explanation"}
+  ]
+}]
+JSON only.`, 4000);
+    setProgress(87);
+    setStep('p7m','active',lang==='ko'?'복수 지문 생성 중 (2/2)...':'Generating multiple passages (2/2)...');
+    const p7mb=await callAPI(`Generate 2 TOEIC Part 7 Triple Passage sets. Difficulty: ${diff}.
+Each set: 3 related passages (e.g. job posting + application letter + interview confirmation) + 5 questions.
+Return JSON array of 2:
+[{
+  "title": "Triple Passage — Q191-195",
+  "type": "triple",
+  "passages": [
+    {"label":"Job Posting","text":"[70-90 words]"},
+    {"label":"Application","text":"[70-90 words]"},
+    {"label":"Confirmation","text":"[60-80 words]"}
+  ],
+  "questions": [
+    {"q":"What position is being advertised?","opts":["(A)","(B)","(C)","(D)"],"ans":0,"fb":"explanation"},
+    {"q":"What qualification does the applicant mention?","opts":["(A)","(B)","(C)","(D)"],"ans":1,"fb":"explanation"},
+    {"q":"What is the purpose of the third document?","opts":["(A)","(B)","(C)","(D)"],"ans":2,"fb":"explanation"},
+    {"q":"According to the job posting, what is required?","opts":["(A)","(B)","(C)","(D)"],"ans":3,"fb":"explanation"},
+    {"q":"What can be inferred about the applicant?","opts":["(A)","(B)","(C)","(D)"],"ans":0,"fb":"explanation"}
+  ]
+}]
+JSON only.`, 3500);
+    const allP7m=[...(Array.isArray(p7ma)?p7ma:[]),...(Array.isArray(p7mb)?p7mb:[])];
+    testData.p7multi=allP7m.slice(0,5);
+    setStep('p7m','done',lang==='ko'?`✓ ${testData.p7multi.length}개 복수 지문 완료`:`✓ ${testData.p7multi.length} multiple passage sets done`);
+    setProgress(100);
+
+    setTimeout(()=>{
+      document.getElementById('gen-progress').style.display='none';
+      buildTestUI();
+      document.getElementById('test-area').style.display='block';
+      if(timeLimitMin>0) startTimer(timeLimitMin*60);
+      else document.getElementById('th-timer').textContent='—';
+    },800);
+
+  }catch(e){
+    console.error(e);
+    const failedStep=testData.p5.length===0?'p5':testData.p6.length===0?'p6':testData.p7single.length===0?'p7s':'p7m';
+    setStep(failedStep,'error','⚠️ '+(lang==='ko'?'오류 발생':'Error: '+e.message));
+    setTimeout(()=>{
+      document.getElementById('gen-progress').style.display='none';
+      document.getElementById('setup-card').style.display='block';
+      document.getElementById('start-btn').disabled=false;
+      alert(lang==='ko'?'생성 중 오류가 발생했습니다. 다시 시도해 주세요.\n\n'+e.message:'Generation failed. Please try again.\n\n'+e.message);
+    },1500);
+  }
+}
+
+// ── BUILD TEST UI ──
+function buildTestUI(){
+  qGlobal=101; answered=0; userAnswers={};
+  document.getElementById('progress-text').textContent='0 / 100';
+  buildPart5();
+  buildPart6();
+  buildPart7();
+}
+
+function optHtml(qn, opts, totalOpts){
+  const letters=['A','B','C','D'];
+  return `<div class="q-opts">${opts.map((o,j)=>`
+    <button class="q-opt" id="q${qn}o${j}" onclick="selectOpt(${qn},${j},${totalOpts})">
+      <span class="q-opt-ltr">${letters[j]}</span>${o}
+    </button>`).join('')}
+  </div>`;
+}
+
+// Part 5
+function buildPart5(){
+  document.getElementById('part5-body').innerHTML=testData.p5.map(q=>{
+    const qn=qGlobal++;
+    const displaySentence=q.sentence.replace('_____',`<span class="p5-blank">_____</span>`);
+    return `<div class="p5-item">
+      <div class="p5-num">Q ${qn}</div>
+      <div class="p5-sentence">${displaySentence}</div>
+      ${optHtml(qn, q.options||['(A)','(B)','(C)','(D)'], 4)}
+      <div class="q-feedback" id="qf-${qn}"></div>
+    </div>`;
+  }).join('');
+}
+
+// Part 6
+function buildPart6(){
+  let html='';
+  testData.p6.forEach((passage,pi)=>{
+    const qStart=qGlobal;
+    // Render passage with blank number badges
+    let passageHtml=(passage.passage||'').replace(/\n/g,'<br>');
+    for(let b=1;b<=4;b++){
+      passageHtml=passageHtml.replace(`[${b}]`,`<span class="p6-blank-num">${b}</span>`);
+    }
+    html+=`<div class="p6-set">
+      <div class="p6-set-title">${passage.title||passage.docType||'Passage '+(pi+1)}</div>
+      <div class="p6-passage">${passageHtml}</div>`;
+    (passage.questions||[]).forEach((q,qi)=>{
+      const qn=qGlobal++;
+      const label=q.q||`[${qi+1}]`;
+      html+=`<div class="q-item">
+        <div class="q-num">Q ${qn} — ${label}</div>
+        ${optHtml(qn, q.opts||['(A)','(B)','(C)','(D)'], 4)}
+        <div class="q-feedback" id="qf-${qn}"></div>
+      </div>`;
+    });
+    html+='</div>';
+  });
+  document.getElementById('part6-body').innerHTML=html;
+}
+
+// Part 7
+function buildPart7(){
+  let html='';
+
+  // Single passages
+  testData.p7single.forEach((set,si)=>{
+    html+=`<div class="p7-set">
+      <div class="p7-set-header">
+        ${set.title||'Passage '+(si+1)}
+        <span class="p7-type-badge">${set.passageType||'Single'}</span>
+      </div>
+      <div class="p7-passages">
+        <div class="p7-passage">${(set.passage||'').replace(/\n/g,'<br>')}</div>
+      </div>`;
+    (set.questions||[]).forEach(q=>{
+      const qn=qGlobal++;
+      html+=`<div class="q-item">
+        <div class="q-num">Q ${qn}</div>
+        <div class="q-text">${q.q}</div>
+        ${optHtml(qn, q.opts||['(A)','(B)','(C)','(D)'], 4)}
+        <div class="q-feedback" id="qf-${qn}"></div>
+      </div>`;
+    });
+    html+='</div>';
+  });
+
+  // Multiple passages
+  testData.p7multi.forEach((set,mi)=>{
+    const typeLabel=set.type==='triple'
+      ?(lang==='ko'?'삼중 지문':'Triple Passage')
+      :(lang==='ko'?'이중 지문':'Double Passage');
+    html+=`<div class="p7-set">
+      <div class="p7-set-header">
+        ${set.title||typeLabel+' '+(mi+1)}
+        <span class="p7-type-badge">${typeLabel}</span>
+      </div>
+      <div class="p7-passages">
+        ${(set.passages||[]).map(p=>`
+          <div class="p7-passage">
+            <div class="p7-passage-label">${p.label||''}</div>
+            ${(p.text||'').replace(/\n/g,'<br>')}
+          </div>`).join('')}
+      </div>`;
+    (set.questions||[]).forEach(q=>{
+      const qn=qGlobal++;
+      html+=`<div class="q-item">
+        <div class="q-num">Q ${qn}</div>
+        <div class="q-text">${q.q}</div>
+        ${optHtml(qn, q.opts||['(A)','(B)','(C)','(D)'], 4)}
+        <div class="q-feedback" id="qf-${qn}"></div>
+      </div>`;
+    });
+    html+='</div>';
+  });
+
+  document.getElementById('part7-body').innerHTML=html;
+}
+
+// ── Interaction ──
+function selectOpt(qn, optIdx, totalOpts){
+  for(let j=0;j<totalOpts;j++){
+    const el=document.getElementById(`q${qn}o${j}`);
+    if(el) el.classList.remove('selected');
+  }
+  const sel=document.getElementById(`q${qn}o${optIdx}`);
+  if(sel) sel.classList.add('selected');
+  const wasAnswered=qn in userAnswers;
+  userAnswers[qn]=optIdx;
+  if(!wasAnswered){answered++;updateProgress();}
+  if(isPracticeMode) showInstantFeedback(qn, optIdx, totalOpts);
+}
+
+function showInstantFeedback(qn, chosen, totalOpts){
+  const correct=getCorrectAnswer(qn);
+  const expl=getExplanation(qn);
+  if(correct===null) return;
+  const isRight=chosen===correct;
+  for(let j=0;j<totalOpts;j++){
+    const el=document.getElementById(`q${qn}o${j}`);
+    if(!el) continue;
+    el.classList.remove('selected'); el.disabled=true;
+    if(j===chosen && !isRight) el.classList.add('wrong');
+    if(j===correct) el.classList.add('correct');
+  }
+  const fb=document.getElementById(`qf-${qn}`);
+  if(fb && expl){fb.textContent=expl;fb.className=`q-feedback show ${isRight?'correct':'wrong'}`;}
+}
+
+function getCorrectAnswer(qn){
+  const idx=qn-101;
+  // Part 5
+  if(idx<testData.p5.length) return testData.p5[idx].answer??0;
+  let off=testData.p5.length;
+  // Part 6
+  for(const p of testData.p6){
+    for(const q of (p.questions||[])){
+      if(off===idx) return q.ans??0;
+      off++;
+    }
+  }
+  // Part 7 single
+  for(const s of testData.p7single){
+    for(const q of (s.questions||[])){
+      if(off===idx) return q.ans??0;
+      off++;
+    }
+  }
+  // Part 7 multi
+  for(const m of testData.p7multi){
+    for(const q of (m.questions||[])){
+      if(off===idx) return q.ans??0;
+      off++;
+    }
+  }
+  return null;
+}
+
+function getExplanation(qn){
+  const idx=qn-101;
+  if(idx<testData.p5.length) return testData.p5[idx].explanation||'';
+  let off=testData.p5.length;
+  for(const p of testData.p6){
+    for(const q of (p.questions||[])){if(off===idx) return q.fb||'';off++;}
+  }
+  for(const s of testData.p7single){
+    for(const q of (s.questions||[])){if(off===idx) return q.fb||'';off++;}
+  }
+  for(const m of testData.p7multi){
+    for(const q of (m.questions||[])){if(off===idx) return q.fb||'';off++;}
+  }
+  return '';
+}
+
+function updateProgress(){
+  document.getElementById('progress-text').textContent=`${answered} / 100`;
+  document.getElementById('th-prog-fill').style.width=(answered/100*100)+'%';
+}
+
+// ── Timer ──
+function startTimer(seconds){
+  timeLeft=seconds;
+  updateTimerDisplay();
+  timerInterval=setInterval(()=>{
+    timeLeft--;
+    updateTimerDisplay();
+    if(timeLeft<=0){clearInterval(timerInterval);submitTest();}
+  },1000);
+}
+function updateTimerDisplay(){
+  const m=Math.floor(timeLeft/60), s=timeLeft%60;
+  const el=document.getElementById('th-timer');
+  el.textContent=`${m}:${s.toString().padStart(2,'0')}`;
+  el.classList.toggle('warning',timeLeft<=300);
+}
+
+// ── Submit & Score ──
+function submitTest(){
+  if(timerInterval) clearInterval(timerInterval);
+  const s=calcScores();
+  showResults(s);
+}
+
+function calcScores(){
+  let p5c=0, p6c=0, p7c=0, total=0;
+  let qn=101;
+
+  testData.p5.forEach((q,i)=>{
+    if(userAnswers[qn]===(q.answer??0)){p5c++;total++;}
+    qn++;
+  });
+  testData.p6.forEach(p=>{
+    (p.questions||[]).forEach(q=>{
+      if(userAnswers[qn]===(q.ans??0)){p6c++;total++;}
+      qn++;
+    });
+  });
+  testData.p7single.forEach(s=>{
+    (s.questions||[]).forEach(q=>{
+      if(userAnswers[qn]===(q.ans??0)){p7c++;total++;}
+      qn++;
+    });
+  });
+  testData.p7multi.forEach(m=>{
+    (m.questions||[]).forEach(q=>{
+      if(userAnswers[qn]===(q.ans??0)){p7c++;total++;}
+      qn++;
+    });
+  });
+
+  const pct=Math.round(total/100*100);
+  const toeicScore=Math.round((pct/100)*495);
+  const p7total=p7c;
+  const p7max=testData.p7single.reduce((s,x)=>s+(x.questions||[]).length,0)
+             +testData.p7multi.reduce((s,x)=>s+(x.questions||[]).length,0);
+  return {p5c,p6c,p7c,p7max,total,pct,toeicScore};
+}
+
+function showResults(s){
+  document.getElementById('test-area').style.display='none';
+  document.getElementById('results-area').style.display='block';
+  document.getElementById('rh-score').textContent=s.toeicScore;
+  document.getElementById('rh-pct').textContent=`${s.total}/100 ${lang==='ko'?'정답':'correct'} (${s.pct}%)`;
+  document.getElementById('rh-msg').textContent=
+    s.pct>=80?(lang==='ko'?'🎉 훌륭합니다! 실전에서도 좋은 결과를 기대할 수 있습니다.':'🎉 Excellent! You are well-prepared for the real exam.')
+    :s.pct>=60?(lang==='ko'?'👍 좋은 성적입니다. 틀린 문제를 다시 풀어보세요.':'👍 Good result. Review the questions you missed.')
+    :(lang==='ko'?'💪 꾸준한 연습이 필요합니다. 파트별로 집중해 보세요.':'💪 Keep practicing. Focus on each part systematically.');
+
+  const p6max=(testData.p6.length)*4;
+  document.getElementById('rb-p5').textContent=`${s.p5c}/30`;
+  document.getElementById('rb-p5-pct').textContent=`${Math.round(s.p5c/30*100)}%`;
+  document.getElementById('rb-p6').textContent=`${s.p6c}/${p6max}`;
+  document.getElementById('rb-p6-pct').textContent=`${p6max?Math.round(s.p6c/p6max*100):0}%`;
+  document.getElementById('rb-p7').textContent=`${s.p7c}/${s.p7max}`;
+  document.getElementById('rb-p7-pct').textContent=`${s.p7max?Math.round(s.p7c/s.p7max*100):0}%`;
+  document.getElementById('results-area').scrollIntoView({behavior:'smooth'});
+}
+
+// ── Review ──
+function reviewAnswers(){
+  document.getElementById('results-area').style.display='none';
+  document.getElementById('test-area').style.display='block';
+  for(let qn=101;qn<101+100;qn++){
+    const correct=getCorrectAnswer(qn);
+    if(correct===null) break;
+    const chosen=userAnswers[qn]??-1;
+    for(let j=0;j<4;j++){
+      const el=document.getElementById(`q${qn}o${j}`);
+      if(!el) continue;
+      el.disabled=true;
+      el.classList.remove('selected','wrong','correct');
+      if(j===chosen && j!==correct) el.classList.add('wrong');
+      if(j===correct) el.classList.add('correct');
+    }
+    const expl=getExplanation(qn);
+    const fb=document.getElementById(`qf-${qn}`);
+    if(fb && expl){
+      fb.textContent=expl;
+      fb.className=`q-feedback show ${chosen===correct?'correct':'wrong'}`;
+    }
+  }
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ── Reset ──
+function resetTest(){
+  document.getElementById('results-area').style.display='none';
+  document.getElementById('test-area').style.display='none';
+  document.getElementById('setup-card').style.display='block';
+  document.getElementById('start-btn').disabled=false;
+  ['p5','p6','p7s','p7m'].forEach(p=>{
+    document.getElementById('step-'+p).className='gp-step';
+    document.getElementById('sub-'+p).textContent=lang==='ko'?'대기 중...':'Waiting...';
+  });
+  document.getElementById('gp-fill').style.width='0%';
+  document.getElementById('gp-pct').textContent='0%';
+  testData={p5:[],p6:[],p7single:[],p7multi:[]};
+  userAnswers={}; answered=0; qGlobal=101;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ── Init ──
+(function(){
+  let saved; try{saved=localStorage.getItem('lw-lang');}catch(e){}
+  setLang(saved||((navigator.language||'').startsWith('ko')?'ko':'en'));
+  try{apiKey=sessionStorage.getItem('lw-api-key')||'';}catch(e){}
+  if(apiKey){
+    document.getElementById('api-setup').style.display='none';
+    document.getElementById('main-content').style.display='block';
+  }
+})();
+</script>
+</body>
+</html>
