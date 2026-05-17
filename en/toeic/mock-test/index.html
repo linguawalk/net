@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LinguaWalk — TOEIC Mock Tests</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --navy:#1C2B45; --teal:#2A7F6F; --teal-light:#E1F5EE;
+    --bg:#F8F7F4; --white:#fff; --text:#1C2B45; --text-muted:#5a6a82; --text-light:#94a3b8;
+    --border:rgba(28,43,69,0.1); --border-md:rgba(28,43,69,0.18);
+    --toeic:#ba7517; --toeic-light:#faeeda; --toeic-dark:#3d1f00;
+  }
+  body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
+
+  /* NAV */
+  nav { background:rgba(28,43,69,0.97); height:56px; display:flex; align-items:center; padding:0 5%; border-bottom:0.5px solid rgba(255,255,255,0.08); position:sticky; top:0; z-index:100; }
+  .nav-logo { display:flex; align-items:center; gap:8px; text-decoration:none; }
+  .nav-lm { width:28px; height:28px; background:var(--teal); border-radius:7px; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:#fff; }
+  .nav-lt { font-size:16px; font-weight:600; color:#fff; }
+  .nav-sep { width:1px; height:18px; background:rgba(255,255,255,0.15); margin:0 12px; }
+  .nav-page { font-size:13px; color:rgba(255,255,255,0.6); }
+  .nav-space { flex:1; }
+  .nav-back { font-size:13px; color:rgba(255,255,255,0.6); text-decoration:none; padding:6px 10px; border-radius:7px; margin-right:6px; transition:all 0.2s; }
+  .nav-back:hover { background:rgba(255,255,255,0.08); color:#fff; }
+  .lang-sw { display:flex; background:rgba(255,255,255,0.08); border-radius:7px; padding:2px; gap:2px; }
+  .lbtn { padding:4px 10px; border-radius:5px; font-size:11px; font-weight:500; border:none; background:transparent; color:rgba(255,255,255,0.5); cursor:pointer; font-family:inherit; transition:all 0.2s; }
+  .lbtn.act { background:var(--teal); color:#fff; }
+
+  /* MAIN */
+  .main { max-width:820px; margin:0 auto; padding:36px 5% 80px; }
+
+  /* HERO */
+  .hero { background:linear-gradient(135deg,var(--toeic-dark) 0%,var(--toeic) 100%); border-radius:16px; padding:32px 36px; margin-bottom:28px; position:relative; overflow:hidden; }
+  .hero::before { content:''; position:absolute; right:-30px; top:-30px; width:200px; height:200px; border-radius:50%; background:rgba(255,255,255,0.06); pointer-events:none; }
+  .hero::after { content:''; position:absolute; left:-20px; bottom:-40px; width:140px; height:140px; border-radius:50%; background:rgba(255,255,255,0.04); pointer-events:none; }
+  .hero-tag { font-size:11px; font-weight:600; letter-spacing:1px; text-transform:uppercase; color:#fcd34d; margin-bottom:8px; }
+  .hero-title { font-family:'DM Serif Display',serif; font-size:clamp(24px,4vw,36px); color:#fff; margin-bottom:8px; }
+  .hero-desc { font-size:13px; color:rgba(255,255,255,0.65); line-height:1.65; max-width:480px; }
+  .hero-note { display:inline-flex; align-items:center; gap:6px; margin-top:16px; padding:6px 14px; background:rgba(255,255,255,0.12); border-radius:20px; font-size:12px; color:rgba(255,255,255,0.8); border:0.5px solid rgba(255,255,255,0.2); }
+
+  /* SECTION LABEL */
+  .section-label { font-size:10px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--text-light); margin-bottom:12px; }
+
+  /* TEST CARDS */
+  .test-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:14px; margin-bottom:28px; }
+
+  .test-card { background:var(--white); border:0.5px solid var(--border); border-radius:16px; overflow:hidden; transition:all 0.2s; text-decoration:none; display:block; }
+  .test-card:hover { border-color:var(--toeic); transform:translateY(-2px); box-shadow:0 8px 24px rgba(186,117,23,0.12); }
+  .test-card.coming-soon { opacity:.6; pointer-events:none; }
+
+  .tc-header { padding:20px 22px 16px; background:linear-gradient(135deg,var(--toeic-dark),var(--toeic)); position:relative; overflow:hidden; }
+  .tc-header::before { content:''; position:absolute; right:-16px; top:-16px; width:90px; height:90px; border-radius:50%; background:rgba(255,255,255,0.08); }
+  .tc-icon { font-size:28px; margin-bottom:8px; }
+  .tc-part { font-size:10px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:rgba(255,255,255,0.6); margin-bottom:4px; }
+  .tc-name { font-family:'DM Serif Display',serif; font-size:20px; color:#fff; line-height:1.2; }
+  .tc-badge { display:inline-flex; align-items:center; gap:4px; margin-top:10px; padding:3px 10px; background:rgba(255,255,255,0.15); border-radius:20px; font-size:11px; color:rgba(255,255,255,0.85); border:0.5px solid rgba(255,255,255,0.2); }
+
+  .tc-body { padding:18px 22px; }
+  .tc-stats { display:flex; gap:16px; margin-bottom:14px; }
+  .tc-stat { text-align:center; }
+  .tc-stat-num { font-family:'DM Serif Display',serif; font-size:20px; color:var(--toeic); line-height:1; }
+  .tc-stat-key { font-size:10px; color:var(--text-light); text-transform:uppercase; letter-spacing:.4px; margin-top:2px; }
+  .tc-divider { width:1px; background:var(--border); }
+  .tc-desc { font-size:12px; color:var(--text-muted); line-height:1.65; margin-bottom:16px; }
+  .tc-parts { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:16px; }
+  .tc-part-tag { font-size:11px; padding:3px 10px; border-radius:16px; background:var(--toeic-light); color:var(--toeic); border:0.5px solid rgba(186,117,23,0.2); font-weight:500; }
+  .tc-btn { display:flex; align-items:center; justify-content:center; gap:6px; width:100%; padding:11px; border-radius:10px; background:var(--toeic); color:#fff; font-size:13px; font-weight:600; border:none; font-family:inherit; cursor:pointer; transition:all 0.2s; }
+  .tc-btn:hover { background:#9a6010; }
+  .tc-btn.disabled { background:var(--border-md); color:var(--text-light); cursor:not-allowed; }
+
+  /* COMING SOON CARD */
+  .tc-header.gray { background:linear-gradient(135deg,#3a4a5c,#5a6a82); }
+  .tc-btn.gray { background:var(--border-md); color:var(--text-muted); }
+
+  /* INFO ROW */
+  .info-row { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:10px; margin-bottom:28px; }
+  .info-card { background:var(--white); border:0.5px solid var(--border); border-radius:12px; padding:16px; }
+  .ic-icon { font-size:20px; margin-bottom:8px; }
+  .ic-title { font-size:12px; font-weight:600; color:var(--text); margin-bottom:4px; }
+  .ic-desc { font-size:11px; color:var(--text-muted); line-height:1.6; }
+
+  /* BREADCRUMB */
+  .breadcrumb { display:flex; align-items:center; gap:6px; font-size:12px; color:var(--text-muted); margin-bottom:20px; }
+  .breadcrumb a { color:var(--toeic); text-decoration:none; }
+  .breadcrumb a:hover { text-decoration:underline; }
+  .bc-sep { color:var(--text-light); }
+
+  @keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+  .fade-in { animation:fadeUp 0.4s ease forwards; }
+
+  @media(max-width:600px) {
+    .hero { padding:24px 20px; }
+    .tc-stats { gap:12px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/en/index.html" class="nav-logo">
+    <div class="nav-lm">LW</div>
+    <span class="nav-lt">LinguaWalk</span>
+  </a>
+  <div class="nav-sep"></div>
+  <span class="nav-page">📝 TOEIC Mock Tests</span>
+  <div class="nav-space"></div>
+  <a href="../index.html" class="nav-back" data-en="← TOEIC" data-ko="← TOEIC">← TOEIC</a>
+  <div class="lang-sw">
+    <button class="lbtn act" onclick="setLang('en')" id="btn-en">EN</button>
+    <button class="lbtn" onclick="setLang('ko')" id="btn-ko">한국어</button>
+  </div>
+</nav>
+
+<div class="main fade-in">
+
+  <!-- Breadcrumb -->
+  <div class="breadcrumb">
+    <a href="/en/index.html">LinguaWalk</a>
+    <span class="bc-sep">›</span>
+    <a href="../index.html">TOEIC</a>
+    <span class="bc-sep">›</span>
+    <span data-en="Mock Tests" data-ko="모의테스트">Mock Tests</span>
+  </div>
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-tag">📝 TOEIC FULL MOCK TESTS</div>
+    <h1 class="hero-title" data-en="TOEIC Mock Test Center" data-ko="TOEIC 모의테스트 센터">TOEIC Mock Test Center</h1>
+    <p class="hero-desc" data-en="AI-generated full-length mock tests for Listening (LC) and Reading (RC). Timed, scored, and reviewed just like the real TOEIC exam." data-ko="듣기(LC)와 읽기(RC) 전 파트를 AI가 자동 생성합니다. 실제 토익 시험처럼 타이머, 채점, 리뷰까지 완벽 지원.">AI-generated full-length mock tests for Listening and Reading.</p>
+    <div class="hero-note">🤖 <span data-en="Powered by Claude AI — new test every time" data-ko="Claude AI 기반 — 매번 새로운 문제 생성">Powered by Claude AI — new test every time</span></div>
+  </div>
+
+  <!-- Test Cards -->
+  <div class="section-label" data-en="AVAILABLE TESTS" data-ko="이용 가능한 테스트">AVAILABLE TESTS</div>
+  <div class="test-grid">
+
+    <!-- LC Mock Test -->
+    <a href="listening.html" class="test-card">
+      <div class="tc-header">
+        <div class="tc-icon">🎧</div>
+        <div class="tc-part" data-en="LISTENING COMPREHENSION" data-ko="듣기 영역">LISTENING COMPREHENSION</div>
+        <div class="tc-name" data-en="LC Full Mock Test" data-ko="LC 완전 모의테스트">LC Full Mock Test</div>
+        <div class="tc-badge">✅ <span data-en="Available Now" data-ko="지금 이용 가능">Available Now</span></div>
+      </div>
+      <div class="tc-body">
+        <div class="tc-stats">
+          <div class="tc-stat"><div class="tc-stat-num">100</div><div class="tc-stat-key" data-en="Questions" data-ko="문항">Questions</div></div>
+          <div class="tc-divider"></div>
+          <div class="tc-stat"><div class="tc-stat-num">45'</div><div class="tc-stat-key" data-en="Time Limit" data-ko="제한 시간">Time Limit</div></div>
+          <div class="tc-divider"></div>
+          <div class="tc-stat"><div class="tc-stat-num">495</div><div class="tc-stat-key" data-en="Max Score" data-ko="만점">Max Score</div></div>
+        </div>
+        <p class="tc-desc" data-en="AI generates all 100 questions across Parts 1–4 in one go. Choose difficulty, time limit, and exam or practice mode." data-ko="Part 1~4 전체 100문항을 AI가 한 번에 생성합니다. 난이도, 시간 제한, 시험/연습 모드를 선택하세요.">AI generates all 100 questions across Parts 1–4.</p>
+        <div class="tc-parts">
+          <span class="tc-part-tag">📸 Part 1 · 6q</span>
+          <span class="tc-part-tag">💬 Part 2 · 25q</span>
+          <span class="tc-part-tag">🗣 Part 3 · 39q</span>
+          <span class="tc-part-tag">📢 Part 4 · 30q</span>
+        </div>
+        <div class="tc-btn">
+          🚀 <span data-en="Start LC Mock Test" data-ko="LC 모의테스트 시작">Start LC Mock Test</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- RC Mock Test (Coming Soon) -->
+    <div class="test-card coming-soon">
+      <div class="tc-header gray">
+        <div class="tc-icon">📖</div>
+        <div class="tc-part" data-en="READING COMPREHENSION" data-ko="읽기 영역">READING COMPREHENSION</div>
+        <div class="tc-name" data-en="RC Full Mock Test" data-ko="RC 완전 모의테스트">RC Full Mock Test</div>
+        <div class="tc-badge">🔜 <span data-en="Coming Soon" data-ko="준비 중">Coming Soon</span></div>
+      </div>
+      <div class="tc-body">
+        <div class="tc-stats">
+          <div class="tc-stat"><div class="tc-stat-num">100</div><div class="tc-stat-key" data-en="Questions" data-ko="문항">Questions</div></div>
+          <div class="tc-divider"></div>
+          <div class="tc-stat"><div class="tc-stat-num">75'</div><div class="tc-stat-key" data-en="Time Limit" data-ko="제한 시간">Time Limit</div></div>
+          <div class="tc-divider"></div>
+          <div class="tc-stat"><div class="tc-stat-num">495</div><div class="tc-stat-key" data-en="Max Score" data-ko="만점">Max Score</div></div>
+        </div>
+        <p class="tc-desc" data-en="AI generates 100 questions across Parts 5–7: grammar, vocabulary, single and double passages." data-ko="Part 5~7 전체 100문항. 문법, 어휘, 단일/이중 지문 등을 AI가 생성합니다.">100 questions across Parts 5–7.</p>
+        <div class="tc-parts">
+          <span class="tc-part-tag">📝 Part 5 · 30q</span>
+          <span class="tc-part-tag">📄 Part 6 · 16q</span>
+          <span class="tc-part-tag">📚 Part 7 · 54q</span>
+        </div>
+        <div class="tc-btn gray">
+          🔜 <span data-en="Coming Soon" data-ko="준비 중">Coming Soon</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Info Cards -->
+  <div class="section-label" data-en="HOW IT WORKS" data-ko="이용 방법">HOW IT WORKS</div>
+  <div class="info-row">
+    <div class="info-card">
+      <div class="ic-icon">🔑</div>
+      <div class="ic-title" data-en="API Key Required" data-ko="API 키 필요">API Key Required</div>
+      <div class="ic-desc" data-en="An Anthropic API key is needed to generate questions. Your key is stored only in this browser session." data-ko="문제 생성을 위해 Anthropic API 키가 필요합니다. 키는 현재 브라우저 세션에만 저장됩니다.">Anthropic API key required. Stored in browser session only.</div>
+    </div>
+    <div class="info-card">
+      <div class="ic-icon">⏱</div>
+      <div class="ic-title" data-en="~2–3 Min to Generate" data-ko="약 2~3분 생성">~2–3 Min to Generate</div>
+      <div class="ic-desc" data-en="The AI generates all 100 questions before the test begins. A progress bar shows each step as it completes." data-ko="시험 시작 전 AI가 100문항 전체를 생성합니다. 진행 상황이 단계별로 표시됩니다.">AI generates all questions before you begin.</div>
+    </div>
+    <div class="info-card">
+      <div class="ic-icon">🎯</div>
+      <div class="ic-title" data-en="Exam & Practice Modes" data-ko="시험 / 연습 모드">Exam & Practice Modes</div>
+      <div class="ic-desc" data-en="Exam mode: submit at the end for a full score. Practice mode: see the correct answer immediately after each question." data-ko="시험 모드: 마지막에 제출 후 전체 채점. 연습 모드: 각 문제 직후 정답 즉시 확인.">Choose exam mode or instant-feedback practice.</div>
+    </div>
+    <div class="info-card">
+      <div class="ic-icon">📊</div>
+      <div class="ic-title" data-en="Scored Like the Real Test" data-ko="실제 시험 기준 채점">Scored Like the Real Test</div>
+      <div class="ic-desc" data-en="Results show your estimated TOEIC score (out of 495) and a breakdown by part so you know where to improve." data-ko="결과에 TOEIC 환산 점수(~495점)와 파트별 분석이 표시되어 취약점을 파악할 수 있습니다.">TOEIC scaled score + part-by-part breakdown.</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+let lang='en';
+function setLang(l){
+  lang=l;
+  document.documentElement.lang=l==='ko'?'ko':'en';
+  document.querySelectorAll('[data-en][data-ko]').forEach(el=>{
+    const t=l==='ko'?el.getAttribute('data-ko'):el.getAttribute('data-en');
+    if(t) el.innerHTML=t;
+  });
+  document.getElementById('btn-en').classList.toggle('act',l==='en');
+  document.getElementById('btn-ko').classList.toggle('act',l==='ko');
+  try{localStorage.setItem('lw-lang',l);}catch(e){}
+}
+(function(){
+  let saved; try{saved=localStorage.getItem('lw-lang');}catch(e){}
+  setLang(saved||((navigator.language||'').startsWith('ko')?'ko':'en'));
+})();
+</script>
+</body>
+</html>
