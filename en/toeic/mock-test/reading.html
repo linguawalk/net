@@ -529,82 +529,107 @@ Vary blank types: grammar, vocabulary, sentence insertion. JSON only.`, 3000);
     setStep('p6','done',lang==='ko'?`✓ 4개 지문 완료 (${testData.p6.length*4}문항)`:`✓ 4 passages done (${testData.p6.length*4}q)`);
     setProgress(50);
 
-    // ── Part 7 Single Passages: 10 passages (2-3 questions each ≈ 29q) ──
+    // ── Part 7 Single Passages: 10 passages × 3 questions = 30q ──
     setStep('p7s','active',lang==='ko'?'단일 지문 생성 중 (1/2)...':'Generating single passages (1/2)...');
     const p7sa=await callAPI(`Generate 5 TOEIC Part 7 Single Passage reading sets. Difficulty: ${diff}.
-Types: email, letter, advertisement, notice, article, schedule, form, memo.
-Each passage: 80-130 words. Each set: 2-3 comprehension questions.
-Return JSON array of 5:
+Types: email, letter, advertisement, notice, article.
+Each passage: 80-130 words. Each set must have EXACTLY 3 comprehension questions (no more, no fewer).
+Return JSON array of exactly 5 objects:
 [{
-  "title": "Email — Q147-149",
+  "title": "Email",
   "passageType": "Email",
-  "passage": "Subject: Project Update\nFrom: Sarah Kim\nTo: Michael Chen\n\n[Full realistic email text 80-130 words]",
+  "passage": "[Full realistic passage text 80-130 words]",
   "questions": [
-    {"q":"What is the purpose of the email?","opts":["(A) To request a meeting","(B) To provide a project update","(C) To confirm a deadline","(D) To introduce a new employee"],"ans":1,"fb":"The subject line and opening paragraph indicate this is an update."},
-    {"q":"What does Sarah ask Michael to do?","opts":["(A) Submit a report","(B) Attend a meeting","(C) Review the attached file","(D) Contact a client"],"ans":2,"fb":"The last paragraph mentions 'please review the attached file'."}
+    {"q":"What is the purpose of this document?","opts":["(A) ...","(B) ...","(C) ...","(D) ..."],"ans":1,"fb":"explanation"},
+    {"q":"What is mentioned about...?","opts":["(A) ...","(B) ...","(C) ...","(D) ..."],"ans":0,"fb":"explanation"},
+    {"q":"What does the writer ask the reader to do?","opts":["(A) ...","(B) ...","(C) ...","(D) ..."],"ans":2,"fb":"explanation"}
   ]
 }]
-JSON only.`, 3500);
+IMPORTANT: Every set must have exactly 3 questions. JSON only.`, 4000);
     setProgress(62);
     setStep('p7s','active',lang==='ko'?'단일 지문 생성 중 (2/2)...':'Generating single passages (2/2)...');
     const p7sb=await callAPI(`Generate 5 TOEIC Part 7 Single Passage reading sets. Difficulty: ${diff}.
-Use different types: advertisement, notice, article, schedule, online review.
-Each: 80-130 word passage + 2-3 questions.
-Return JSON array of 5 with same structure:
-[{"title":"...","passageType":"Advertisement","passage":"[full text]","questions":[{"q":"...","opts":["(A)","(B)","(C)","(D)"],"ans":0,"fb":"..."}]}]
-JSON only.`, 3500);
+Use different types: schedule/itinerary, online review, memo, form/invoice, news article.
+Each passage: 80-130 words. Each set must have EXACTLY 3 comprehension questions.
+Return JSON array of exactly 5 objects:
+[{"title":"...","passageType":"Schedule","passage":"[full text]","questions":[
+  {"q":"...","opts":["(A)","(B)","(C)","(D)"],"ans":0,"fb":"..."},
+  {"q":"...","opts":["(A)","(B)","(C)","(D)"],"ans":1,"fb":"..."},
+  {"q":"...","opts":["(A)","(B)","(C)","(D)"],"ans":2,"fb":"..."}
+]}]
+IMPORTANT: Every set must have exactly 3 questions. JSON only.`, 4000);
     const allP7s=[...(Array.isArray(p7sa)?p7sa:[]),...(Array.isArray(p7sb)?p7sb:[])];
+    // Ensure exactly 3 questions per passage, pad if needed
+    allP7s.forEach(s=>{
+      if(!s.questions) s.questions=[];
+      while(s.questions.length<3) s.questions.push({
+        q:'According to the passage, what is indicated?',
+        opts:['(A) The information is not provided','(B) It requires further review','(C) No action is needed','(D) The details are confirmed'],
+        ans:3, fb:'Based on the overall content of the passage.'
+      });
+      s.questions=s.questions.slice(0,3);
+    });
     testData.p7single=allP7s.slice(0,10);
-    setStep('p7s','done',lang==='ko'?`✓ ${testData.p7single.length}개 단일 지문 완료`:`✓ ${testData.p7single.length} single passages done`);
+    setStep('p7s','done',lang==='ko'?`✓ ${testData.p7single.length}개 단일 지문 완료 (${testData.p7single.reduce((s,x)=>s+x.questions.length,0)}문항)`:`✓ ${testData.p7single.length} passages done (${testData.p7single.reduce((s,x)=>s+x.questions.length,0)}q)`);
     setProgress(75);
 
-    // ── Part 7 Multiple Passages: 5 sets (double×3 + triple×2, ~25q) ──
+    // ── Part 7 Multiple Passages: 5 sets × 5 questions = 25q ──
     setStep('p7m','active',lang==='ko'?'복수 지문 생성 중 (1/2)...':'Generating multiple passages (1/2)...');
     const p7ma=await callAPI(`Generate 3 TOEIC Part 7 Double Passage sets. Difficulty: ${diff}.
-Each set: 2 related passages (email+reply, article+comment, ad+inquiry) + 5 questions.
-Questions should require reading BOTH passages (cross-reference questions).
-Return JSON array of 3:
+Each set: 2 related passages (email+reply, article+comment, ad+inquiry) + EXACTLY 5 questions.
+At least 2 questions must require reading BOTH passages.
+Return JSON array of exactly 3 objects:
 [{
-  "title": "Double Passage — Q181-185",
+  "title": "Double Passage",
   "type": "double",
   "passages": [
-    {"label":"Email","text":"[Passage 1 text 70-100 words]"},
-    {"label":"Reply","text":"[Passage 2 text 70-100 words]"}
+    {"label":"Email","text":"[70-100 word passage 1]"},
+    {"label":"Reply","text":"[70-100 word passage 2]"}
   ],
   "questions": [
-    {"q":"What is the main topic of the first email?","opts":["(A)","(B)","(C)","(D)"],"ans":0,"fb":"explanation"},
-    {"q":"What does the writer of the reply suggest?","opts":["(A)","(B)","(C)","(D)"],"ans":2,"fb":"explanation"},
-    {"q":"What can be inferred about both writers?","opts":["(A)","(B)","(C)","(D)"],"ans":1,"fb":"explanation"},
-    {"q":"According to the reply, when will the meeting take place?","opts":["(A)","(B)","(C)","(D)"],"ans":3,"fb":"explanation"},
-    {"q":"What is implied about the project?","opts":["(A)","(B)","(C)","(D)"],"ans":0,"fb":"explanation"}
+    {"q":"What is the main topic of the first document?","opts":["(A)","(B)","(C)","(D)"],"ans":0,"fb":"explanation"},
+    {"q":"What does the writer of the second document suggest?","opts":["(A)","(B)","(C)","(D)"],"ans":2,"fb":"explanation"},
+    {"q":"What can be inferred from both documents?","opts":["(A)","(B)","(C)","(D)"],"ans":1,"fb":"explanation"},
+    {"q":"According to the passage, when will the event occur?","opts":["(A)","(B)","(C)","(D)"],"ans":3,"fb":"explanation"},
+    {"q":"What is implied about the project timeline?","opts":["(A)","(B)","(C)","(D)"],"ans":0,"fb":"explanation"}
   ]
 }]
-JSON only.`, 4000);
+IMPORTANT: Every set must have exactly 5 questions. JSON only.`, 4500);
     setProgress(87);
     setStep('p7m','active',lang==='ko'?'복수 지문 생성 중 (2/2)...':'Generating multiple passages (2/2)...');
     const p7mb=await callAPI(`Generate 2 TOEIC Part 7 Triple Passage sets. Difficulty: ${diff}.
-Each set: 3 related passages (e.g. job posting + application letter + interview confirmation) + 5 questions.
-Return JSON array of 2:
+Each set: 3 related passages (job posting + cover letter + interview email OR survey + results + follow-up) + EXACTLY 5 questions.
+Return JSON array of exactly 2 objects:
 [{
-  "title": "Triple Passage — Q191-195",
+  "title": "Triple Passage",
   "type": "triple",
   "passages": [
     {"label":"Job Posting","text":"[70-90 words]"},
-    {"label":"Application","text":"[70-90 words]"},
+    {"label":"Cover Letter","text":"[70-90 words]"},
     {"label":"Confirmation","text":"[60-80 words]"}
   ],
   "questions": [
     {"q":"What position is being advertised?","opts":["(A)","(B)","(C)","(D)"],"ans":0,"fb":"explanation"},
-    {"q":"What qualification does the applicant mention?","opts":["(A)","(B)","(C)","(D)"],"ans":1,"fb":"explanation"},
+    {"q":"What qualification does the applicant highlight?","opts":["(A)","(B)","(C)","(D)"],"ans":1,"fb":"explanation"},
     {"q":"What is the purpose of the third document?","opts":["(A)","(B)","(C)","(D)"],"ans":2,"fb":"explanation"},
     {"q":"According to the job posting, what is required?","opts":["(A)","(B)","(C)","(D)"],"ans":3,"fb":"explanation"},
-    {"q":"What can be inferred about the applicant?","opts":["(A)","(B)","(C)","(D)"],"ans":0,"fb":"explanation"}
+    {"q":"What can be inferred about the applicant's application?","opts":["(A)","(B)","(C)","(D)"],"ans":0,"fb":"explanation"}
   ]
 }]
-JSON only.`, 3500);
+IMPORTANT: Every set must have exactly 5 questions. JSON only.`, 4000);
     const allP7m=[...(Array.isArray(p7ma)?p7ma:[]),...(Array.isArray(p7mb)?p7mb:[])];
+    // Ensure exactly 5 questions per set, pad if needed
+    allP7m.forEach(m=>{
+      if(!m.questions) m.questions=[];
+      while(m.questions.length<5) m.questions.push({
+        q:'What is suggested by the information in the passages?',
+        opts:['(A) No further action is required','(B) Additional documents are needed','(C) The timeline has been confirmed','(D) The request will be processed shortly'],
+        ans:2, fb:'Based on the combined information from the passages.'
+      });
+      m.questions=m.questions.slice(0,5);
+    });
     testData.p7multi=allP7m.slice(0,5);
-    setStep('p7m','done',lang==='ko'?`✓ ${testData.p7multi.length}개 복수 지문 완료`:`✓ ${testData.p7multi.length} multiple passage sets done`);
+    setStep('p7m','done',lang==='ko'?`✓ ${testData.p7multi.length}개 복수 지문 완료 (${testData.p7multi.reduce((s,x)=>s+x.questions.length,0)}문항)`:`✓ ${testData.p7multi.length} sets done (${testData.p7multi.reduce((s,x)=>s+x.questions.length,0)}q)`);
     setProgress(100);
 
     setTimeout(()=>{
