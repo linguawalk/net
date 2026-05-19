@@ -3,160 +3,199 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LinguaWalk — TOEIC Mock Test — Listening (LC)</title>
+<title>LinguaWalk — TOEIC LC Mock Test</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  :root {
-    --navy:#1C2B45; --teal:#2A7F6F; --teal-light:#E1F5EE; --teal-mid:#1D9E75;
-    --bg:#F8F7F4; --white:#fff; --text:#1C2B45; --text-muted:#5a6a82; --text-light:#94a3b8;
-    --border:rgba(28,43,69,0.1); --border-md:rgba(28,43,69,0.18);
-    --toeic:#ba7517; --toeic-light:#faeeda; --toeic-dark:#3d1f00;
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  :root{
+    --navy:#1C2B45;--teal:#2A7F6F;--teal-light:#E1F5EE;--teal-mid:#1D9E75;
+    --bg:#F8F7F4;--white:#fff;--text:#1C2B45;--text-muted:#5a6a82;--text-light:#94a3b8;
+    --border:rgba(28,43,69,0.1);--border-md:rgba(28,43,69,0.18);
+    --toeic:#ba7517;--toeic-light:#faeeda;--toeic-dark:#3d1f00;
   }
-  body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
+  body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
 
-  nav { background:rgba(28,43,69,0.97); height:56px; display:flex; align-items:center; padding:0 5%; border-bottom:0.5px solid rgba(255,255,255,0.08); position:sticky; top:0; z-index:100; }
-  .nav-logo { display:flex; align-items:center; gap:8px; text-decoration:none; }
-  .nav-lm { width:28px; height:28px; background:var(--teal); border-radius:7px; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:#fff; }
-  .nav-lt { font-size:16px; font-weight:600; color:#fff; }
-  .nav-sep { width:1px; height:18px; background:rgba(255,255,255,0.15); margin:0 12px; }
-  .nav-page { font-size:13px; color:rgba(255,255,255,0.6); }
-  .nav-space { flex:1; }
-  .nav-back { font-size:13px; color:rgba(255,255,255,0.6); text-decoration:none; padding:6px 10px; border-radius:7px; margin-right:6px; transition:all 0.2s; }
-  .nav-back:hover { background:rgba(255,255,255,0.08); color:#fff; }
-  .lang-sw { display:flex; background:rgba(255,255,255,0.08); border-radius:7px; padding:2px; gap:2px; }
-  .lbtn { padding:4px 10px; border-radius:5px; font-size:11px; font-weight:500; border:none; background:transparent; color:rgba(255,255,255,0.5); cursor:pointer; font-family:inherit; transition:all 0.2s; }
-  .lbtn.act { background:var(--teal); color:#fff; }
+  /* NAV */
+  nav{background:rgba(28,43,69,0.97);height:56px;display:flex;align-items:center;padding:0 5%;border-bottom:0.5px solid rgba(255,255,255,0.08);position:sticky;top:0;z-index:100;}
+  .nav-logo{display:flex;align-items:center;gap:8px;text-decoration:none;}
+  .nav-lm{width:28px;height:28px;background:var(--teal);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;}
+  .nav-lt{font-size:16px;font-weight:600;color:#fff;}
+  .nav-sep{width:1px;height:18px;background:rgba(255,255,255,0.15);margin:0 12px;}
+  .nav-page{font-size:13px;color:rgba(255,255,255,0.6);}
+  .nav-space{flex:1;}
+  .nav-back{font-size:13px;color:rgba(255,255,255,0.6);text-decoration:none;padding:6px 10px;border-radius:7px;margin-right:6px;transition:all 0.2s;}
+  .nav-back:hover{background:rgba(255,255,255,0.08);color:#fff;}
+  .lang-sw{display:flex;background:rgba(255,255,255,0.08);border-radius:7px;padding:2px;gap:2px;}
+  .lbtn{padding:4px 10px;border-radius:5px;font-size:11px;font-weight:500;border:none;background:transparent;color:rgba(255,255,255,0.5);cursor:pointer;font-family:inherit;transition:all 0.2s;}
+  .lbtn.act{background:var(--teal);color:#fff;}
 
   /* API SETUP */
-  .api-setup { max-width:520px; margin:60px auto; padding:32px; background:var(--white); border-radius:16px; border:0.5px solid var(--border-md); text-align:center; }
-  .api-icon { font-size:48px; margin-bottom:16px; }
-  .api-title { font-family:'DM Serif Display',serif; font-size:24px; color:var(--navy); margin-bottom:8px; }
-  .api-desc { font-size:14px; color:var(--text-muted); line-height:1.6; margin-bottom:24px; }
-  .api-input-wrap { display:flex; gap:8px; margin-bottom:12px; }
-  .api-input { flex:1; padding:10px 14px; border:0.5px solid var(--border-md); border-radius:8px; font-size:13px; font-family:monospace; color:var(--text); background:var(--bg); outline:none; }
-  .api-input:focus { border-color:var(--teal); }
-  .api-btn { padding:10px 18px; border-radius:8px; font-size:13px; font-weight:500; background:var(--teal); color:#fff; border:none; cursor:pointer; font-family:inherit; }
-  .api-note { font-size:11px; color:var(--text-light); margin-top:10px; }
+  .api-setup{max-width:520px;margin:60px auto;padding:32px;background:var(--white);border-radius:16px;border:0.5px solid var(--border-md);text-align:center;}
+  .api-icon{font-size:48px;margin-bottom:16px;}
+  .api-title{font-family:'DM Serif Display',serif;font-size:24px;color:var(--navy);margin-bottom:8px;}
+  .api-desc{font-size:14px;color:var(--text-muted);line-height:1.6;margin-bottom:20px;}
+  .api-field{text-align:left;margin-bottom:10px;}
+  .api-field-label{font-size:11px;font-weight:600;color:var(--text-muted);margin-bottom:4px;}
+  .api-input{width:100%;padding:10px 14px;border:0.5px solid var(--border-md);border-radius:8px;font-size:13px;font-family:monospace;color:var(--text);background:var(--bg);outline:none;}
+  .api-input:focus{border-color:var(--teal);}
+  .api-btn{width:100%;padding:12px;border-radius:8px;font-size:14px;font-weight:600;background:var(--teal);color:#fff;border:none;cursor:pointer;font-family:inherit;margin-top:6px;}
+  .api-note{font-size:11px;color:var(--text-light);margin-top:10px;}
 
   /* MAIN */
-  .main { max-width:860px; margin:0 auto; padding:28px 5% 80px; display:none; }
+  .main{max-width:760px;margin:0 auto;padding:28px 5% 80px;display:none;}
 
   /* HERO */
-  .hero { background:linear-gradient(135deg,var(--toeic-dark) 0%,var(--toeic) 100%); border-radius:14px; padding:28px 32px; margin-bottom:24px; position:relative; overflow:hidden; }
-  .hero::before { content:''; position:absolute; right:-30px; top:-30px; width:200px; height:200px; border-radius:50%; background:rgba(255,255,255,0.06); pointer-events:none; }
-  .hero-tag { font-size:11px; font-weight:600; letter-spacing:1px; text-transform:uppercase; color:#fcd34d; margin-bottom:8px; }
-  .hero-title { font-family:'DM Serif Display',serif; font-size:clamp(24px,4vw,36px); color:#fff; margin-bottom:6px; }
-  .hero-desc { font-size:13px; color:rgba(255,255,255,0.65); line-height:1.6; max-width:500px; }
-  .hero-stats { display:flex; gap:24px; margin-top:18px; flex-wrap:wrap; }
-  .hs { text-align:center; }
-  .hs-num { font-family:'DM Serif Display',serif; font-size:28px; color:#fcd34d; line-height:1; }
-  .hs-label { font-size:11px; color:rgba(255,255,255,0.55); margin-top:2px; text-transform:uppercase; letter-spacing:.5px; }
+  .hero{background:linear-gradient(135deg,var(--toeic-dark),var(--toeic));border-radius:14px;padding:24px 28px;margin-bottom:20px;position:relative;overflow:hidden;}
+  .hero::before{content:'';position:absolute;right:-20px;top:-20px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,0.06);pointer-events:none;}
+  .hero-tag{font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#fcd34d;margin-bottom:6px;}
+  .hero-title{font-family:'DM Serif Display',serif;font-size:clamp(22px,4vw,32px);color:#fff;margin-bottom:6px;}
+  .hero-desc{font-size:13px;color:rgba(255,255,255,0.65);line-height:1.6;}
+  .hero-stats{display:flex;gap:20px;margin-top:14px;flex-wrap:wrap;}
+  .hs{text-align:center;}
+  .hs-num{font-family:'DM Serif Display',serif;font-size:24px;color:#fcd34d;line-height:1;}
+  .hs-label{font-size:10px;color:rgba(255,255,255,0.5);margin-top:2px;text-transform:uppercase;letter-spacing:.5px;}
 
   /* SETUP CARD */
-  .setup-card { background:var(--white); border:0.5px solid var(--border); border-radius:14px; padding:22px; margin-bottom:20px; }
-  .sc-title { font-size:13px; font-weight:600; margin-bottom:14px; display:flex; align-items:center; gap:8px; }
-  .sc-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; margin-bottom:16px; }
-  .sc-item { background:var(--bg); border:0.5px solid var(--border); border-radius:10px; padding:12px 14px; }
-  .sc-label { font-size:10px; font-weight:600; letter-spacing:.5px; text-transform:uppercase; color:var(--text-light); margin-bottom:6px; }
-  .sc-select { width:100%; border:none; background:transparent; font-size:13px; font-weight:500; color:var(--text); font-family:inherit; cursor:pointer; outline:none; }
-  .part-breakdown { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px; }
-  .pb-item { flex:1; min-width:120px; padding:10px 12px; border-radius:10px; border:0.5px solid var(--border); background:var(--bg); text-align:center; }
-  .pb-part { font-size:10px; font-weight:600; color:var(--text-light); text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px; }
-  .pb-count { font-family:'DM Serif Display',serif; font-size:20px; color:var(--toeic); }
-  .pb-type { font-size:11px; color:var(--text-muted); margin-top:2px; }
+  .setup-card{background:var(--white);border:0.5px solid var(--border);border-radius:14px;padding:22px;margin-bottom:20px;}
+  .sc-title{font-size:13px;font-weight:600;margin-bottom:14px;}
+  .sc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:16px;}
+  .sc-item{background:var(--bg);border:0.5px solid var(--border);border-radius:10px;padding:12px 14px;}
+  .sc-label{font-size:10px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--text-light);margin-bottom:6px;}
+  .sc-select{width:100%;border:none;background:transparent;font-size:13px;font-weight:500;color:var(--text);font-family:inherit;cursor:pointer;outline:none;}
+  .part-breakdown{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px;}
+  .pb-item{padding:10px;border-radius:10px;border:0.5px solid var(--border);background:var(--bg);text-align:center;}
+  .pb-part{font-size:10px;font-weight:600;color:var(--text-light);text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px;}
+  .pb-count{font-family:'DM Serif Display',serif;font-size:20px;color:var(--toeic);}
+  .pb-type{font-size:10px;color:var(--text-muted);margin-top:2px;}
 
-  /* PROGRESS */
-  .gen-progress { background:var(--white); border:0.5px solid var(--border); border-radius:14px; padding:24px; margin-bottom:20px; display:none; }
-  .gp-title { font-size:14px; font-weight:600; margin-bottom:14px; text-align:center; }
-  .gp-steps { display:flex; flex-direction:column; gap:10px; }
-  .gp-step { display:flex; align-items:center; gap:12px; padding:10px 14px; border-radius:10px; background:var(--bg); border:0.5px solid var(--border); }
-  .gp-icon { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0; background:var(--border); }
-  .gp-step.done .gp-icon { background:#eaf3de; }
-  .gp-step.active .gp-icon { background:var(--toeic-light); animation:pulse 1s infinite; }
-  .gp-step.error .gp-icon { background:#fcebeb; }
-  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.6} }
-  .gp-text { font-size:13px; font-weight:500; }
-  .gp-sub { font-size:11px; color:var(--text-muted); margin-top:2px; }
-  .gp-bar-wrap { margin-top:16px; }
-  .gp-bar { height:8px; background:var(--bg); border-radius:8px; overflow:hidden; border:0.5px solid var(--border); }
-  .gp-fill { height:100%; background:linear-gradient(90deg,var(--toeic-dark),var(--toeic)); border-radius:8px; transition:width 0.5s ease; }
-  .gp-pct { text-align:center; font-size:13px; font-weight:600; color:var(--toeic); margin-top:8px; }
+  /* GENERATION PROGRESS */
+  .gen-progress{background:var(--white);border:0.5px solid var(--border);border-radius:14px;padding:24px;margin-bottom:20px;display:none;}
+  .gp-title{font-size:14px;font-weight:600;margin-bottom:14px;text-align:center;}
+  .gp-steps{display:flex;flex-direction:column;gap:8px;}
+  .gp-step{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:10px;background:var(--bg);border:0.5px solid var(--border);}
+  .gp-icon{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;background:var(--border);}
+  .gp-step.done .gp-icon{background:#eaf3de;}
+  .gp-step.active .gp-icon{background:var(--toeic-light);animation:pulse 1s infinite;}
+  .gp-step.error .gp-icon{background:#fcebeb;}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
+  .gp-text{font-size:13px;font-weight:500;}
+  .gp-sub{font-size:11px;color:var(--text-muted);margin-top:2px;}
+  .gp-bar{height:8px;background:var(--bg);border-radius:8px;overflow:hidden;border:0.5px solid var(--border);margin-top:16px;}
+  .gp-fill{height:100%;background:linear-gradient(90deg,var(--toeic-dark),var(--toeic));border-radius:8px;transition:width 0.5s ease;}
+  .gp-pct{text-align:center;font-size:13px;font-weight:600;color:var(--toeic);margin-top:8px;}
 
-  /* TEST AREA */
-  .test-area { display:none; }
-  .test-header { background:var(--white); border:0.5px solid var(--border); border-radius:14px; padding:16px 20px; margin-bottom:16px; display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
-  .th-badge { padding:4px 12px; border-radius:20px; font-size:11px; font-weight:600; background:var(--toeic-light); color:var(--toeic); }
-  .th-timer { font-family:'DM Serif Display',serif; font-size:22px; color:var(--navy); }
-  .th-timer.warning { color:#e24b4a; }
-  .th-progress { flex:1; min-width:120px; }
-  .th-prog-label { font-size:11px; color:var(--text-muted); margin-bottom:4px; display:flex; justify-content:space-between; }
-  .th-prog-bar { height:6px; background:var(--bg); border-radius:6px; overflow:hidden; }
-  .th-prog-fill { height:100%; background:linear-gradient(90deg,var(--toeic-dark),var(--toeic)); border-radius:6px; transition:width 0.3s; }
-  .th-submit { padding:8px 18px; border-radius:8px; background:var(--toeic); color:#fff; border:none; font-family:inherit; font-size:13px; font-weight:600; cursor:pointer; transition:all 0.2s; }
-  .th-submit:hover { background:#9a6010; }
+  /* ── TEST PLAYER ── */
+  .player-area{display:none;}
 
-  /* PART SECTIONS */
-  .part-section { background:var(--white); border:0.5px solid var(--border); border-radius:14px; margin-bottom:16px; overflow:hidden; }
-  .ps-header { padding:14px 18px; background:var(--toeic-light); border-bottom:0.5px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
-  .ps-title { font-size:14px; font-weight:600; color:var(--toeic); }
-  .ps-range { font-size:11px; color:var(--text-muted); }
-  .ps-body { padding:18px; }
+  /* Sticky header bar */
+  .player-header{position:sticky;top:56px;z-index:50;background:var(--white);border:0.5px solid var(--border);border-radius:14px;padding:12px 18px;margin-bottom:16px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;box-shadow:0 2px 12px rgba(0,0,0,0.06);}
+  .ph-part{font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--toeic);min-width:60px;}
+  .ph-qnum{font-family:'DM Serif Display',serif;font-size:22px;color:var(--navy);min-width:52px;}
+  .ph-timer-wrap{flex:1;min-width:100px;}
+  .ph-timer-label{font-size:10px;color:var(--text-muted);margin-bottom:3px;display:flex;justify-content:space-between;}
+  .ph-timer-bar{height:5px;background:var(--bg);border-radius:5px;overflow:hidden;border:0.5px solid var(--border);}
+  .ph-timer-fill{height:100%;background:linear-gradient(90deg,var(--toeic-dark),var(--toeic));border-radius:5px;transition:width 0.5s linear;}
+  .ph-timer-fill.urgent{background:#e24b4a;}
+  .ph-clock{font-family:'DM Serif Display',serif;font-size:20px;color:var(--navy);min-width:54px;text-align:right;}
+  .ph-clock.warning{color:#e24b4a;}
+  .ph-skip{padding:6px 14px;border-radius:8px;border:0.5px solid var(--border-md);background:transparent;font-size:12px;font-weight:500;color:var(--text-muted);cursor:pointer;font-family:inherit;transition:all 0.2s;}
+  .ph-skip:hover{background:var(--toeic-light);color:var(--toeic);border-color:var(--toeic);}
+  .ph-finish{padding:6px 14px;border-radius:8px;background:var(--toeic);color:#fff;border:none;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;}
 
-  /* QUESTION ITEMS */
-  .q-item { margin-bottom:18px; padding:16px; background:var(--bg); border-radius:10px; border:0.5px solid var(--border); }
-  .q-item:last-child { margin-bottom:0; }
-  .q-num { font-size:10px; font-weight:700; color:var(--toeic); letter-spacing:.5px; text-transform:uppercase; margin-bottom:6px; }
-  .q-context { font-size:12px; color:var(--text-muted); background:var(--white); padding:8px 12px; border-radius:8px; margin-bottom:10px; border-left:3px solid var(--toeic); line-height:1.55; font-style:italic; }
-  .q-text { font-size:14px; font-weight:500; color:var(--text); margin-bottom:10px; line-height:1.5; }
-  .q-opts { display:flex; flex-direction:column; gap:7px; }
-  .q-opt { padding:9px 14px; border-radius:8px; border:1.5px solid var(--border-md); background:var(--white); cursor:pointer; font-size:13px; color:var(--text); transition:all 0.2s; text-align:left; font-family:inherit; display:flex; align-items:center; gap:10px; }
-  .q-opt:hover:not(:disabled) { border-color:var(--toeic); background:var(--toeic-light); }
-  .q-opt.selected { border-color:var(--toeic); background:var(--toeic-light); }
-  .q-opt.correct { border-color:var(--teal-mid); background:#eaf3de; color:#3b6d11; font-weight:500; }
-  .q-opt.wrong { border-color:#e24b4a; background:#fcebeb; color:#a32d2d; }
-  .q-opt-ltr { width:24px; height:24px; border-radius:50%; background:var(--bg); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:600; color:var(--text-muted); flex-shrink:0; }
-  .q-opt.selected .q-opt-ltr { background:var(--toeic); color:#fff; }
-  .q-opt.correct .q-opt-ltr { background:var(--teal-mid); color:#fff; }
-  .q-opt.wrong .q-opt-ltr { background:#e24b4a; color:#fff; }
+  /* Question card */
+  .q-card{background:var(--white);border:0.5px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:16px;animation:fadeIn 0.3s ease;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+  .qc-header{padding:12px 18px;background:var(--toeic-light);border-bottom:0.5px solid var(--border);display:flex;align-items:center;gap:10px;}
+  .qc-part-badge{font-size:10px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--toeic);padding:3px 10px;border-radius:12px;background:rgba(186,117,23,0.12);}
+  .qc-title{font-size:13px;font-weight:600;color:var(--toeic);}
+  .qc-body{padding:18px;}
 
-  /* PHOTO PLACEHOLDER */
-  .photo-box { width:100%; height:180px; background:var(--bg); border-radius:10px; display:flex; align-items:center; justify-content:center; border:0.5px dashed var(--border-md); margin-bottom:12px; font-size:12px; color:var(--text-muted); flex-direction:column; gap:6px; }
-  .photo-box .photo-icon { font-size:32px; }
+  /* Photo */
+  .q-photo{width:100%;height:260px;border-radius:10px;overflow:hidden;position:relative;margin-bottom:16px;background:#f0ebe3;border:0.5px solid var(--border);}
+  .q-photo img{width:100%;height:100%;object-fit:cover;display:none;}
+  .q-photo .photo-skel{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(90deg,#ede8e0 25%,#f5f2ee 50%,#ede8e0 75%);background-size:200% 100%;animation:skelAnim 1.4s infinite;}
+  .q-photo .photo-caption{position:absolute;bottom:0;left:0;right:0;padding:10px 16px;background:linear-gradient(transparent,rgba(0,0,0,0.6));color:#fff;font-size:12px;line-height:1.5;display:none;}
+  @keyframes skelAnim{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+  /* Audio status */
+  .audio-status{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--bg);border-radius:10px;margin-bottom:14px;border:0.5px solid var(--border);}
+  .audio-wave{display:flex;align-items:center;gap:3px;}
+  .audio-wave span{display:inline-block;width:3px;border-radius:2px;background:var(--toeic);}
+  .audio-wave.playing span{animation:wave 0.6s infinite alternate;}
+  .audio-wave span:nth-child(1){height:8px;animation-delay:0s;}
+  .audio-wave span:nth-child(2){height:16px;animation-delay:0.1s;}
+  .audio-wave span:nth-child(3){height:10px;animation-delay:0.2s;}
+  .audio-wave span:nth-child(4){height:18px;animation-delay:0.15s;}
+  .audio-wave span:nth-child(5){height:8px;animation-delay:0.05s;}
+  @keyframes wave{from{transform:scaleY(0.5)}to{transform:scaleY(1)}}
+  .audio-label{font-size:13px;color:var(--text-muted);flex:1;}
+  .audio-label strong{color:var(--toeic);}
+
+  /* Dialogue (Part 3/4) */
+  .dialogue-box{background:var(--bg);border-radius:10px;padding:14px;margin-bottom:14px;border:0.5px solid var(--border);max-height:180px;overflow-y:auto;}
+  .dl-line{display:flex;gap:8px;margin-bottom:8px;align-items:flex-start;}
+  .dl-line:last-child{margin-bottom:0;}
+  .dl-speaker{font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;white-space:nowrap;flex-shrink:0;margin-top:2px;}
+  .sp-woman{background:#e6f1fb;color:#185fa5;}
+  .sp-man{background:#fbeaf0;color:#993556;}
+  .sp-narrator{background:var(--toeic-light);color:var(--toeic);}
+  .dl-text{font-size:12px;color:var(--text);line-height:1.6;padding:6px 10px;background:var(--white);border-radius:7px;flex:1;}
+  .dl-text.highlight{background:rgba(186,117,23,0.1);border-left:3px solid var(--toeic);}
+
+  /* Sub-questions (Part 3/4) */
+  .sub-q{margin-bottom:10px;padding:12px 14px;background:var(--bg);border-radius:10px;border:0.5px solid var(--border);}
+  .sub-q:last-child{margin-bottom:0;}
+  .sub-q-num{font-size:10px;font-weight:700;color:var(--toeic);margin-bottom:6px;text-transform:uppercase;letter-spacing:.4px;}
+  .sub-q-text{font-size:13px;font-weight:500;color:var(--text);margin-bottom:8px;line-height:1.5;}
+
+  /* Options */
+  .opts{display:flex;flex-direction:column;gap:7px;}
+  .opt{padding:9px 14px;border-radius:8px;border:1.5px solid var(--border-md);background:var(--white);cursor:pointer;font-size:13px;color:var(--text);transition:all 0.2s;text-align:left;font-family:inherit;display:flex;align-items:center;gap:10px;}
+  .opt:hover:not(:disabled){border-color:var(--toeic);background:var(--toeic-light);}
+  .opt.selected{border-color:var(--toeic);background:var(--toeic-light);}
+  .opt.correct{border-color:var(--teal-mid);background:#eaf3de;color:#3b6d11;}
+  .opt.wrong{border-color:#e24b4a;background:#fcebeb;color:#a32d2d;}
+  .opt-ltr{width:24px;height:24px;border-radius:50%;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:var(--text-muted);flex-shrink:0;border:0.5px solid var(--border);}
+  .opt.selected .opt-ltr{background:var(--toeic);color:#fff;border-color:var(--toeic);}
+  .opt.correct .opt-ltr{background:var(--teal-mid);color:#fff;border-color:var(--teal-mid);}
+  .opt.wrong .opt-ltr{background:#e24b4a;color:#fff;border-color:#e24b4a;}
+
+  /* Progress answered pills */
+  .answered-wrap{background:var(--white);border:0.5px solid var(--border);border-radius:14px;padding:14px 18px;margin-bottom:16px;}
+  .aw-title{font-size:11px;font-weight:600;color:var(--text-muted);margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px;}
+  .aw-pills{display:flex;gap:4px;flex-wrap:wrap;}
+  .aw-pill{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;background:var(--bg);border:0.5px solid var(--border);color:var(--text-muted);}
+  .aw-pill.answered{background:var(--toeic);color:#fff;border-color:var(--toeic);}
+  .aw-pill.current{background:var(--navy);color:#fff;border-color:var(--navy);}
 
   /* RESULTS */
-  .results-area { display:none; }
-  .result-hero { background:linear-gradient(135deg,var(--toeic-dark),var(--toeic)); border-radius:14px; padding:32px; text-align:center; margin-bottom:20px; color:#fff; }
-  .rh-label { font-size:13px; opacity:.7; margin-bottom:8px; }
-  .rh-score { font-family:'DM Serif Display',serif; font-size:64px; line-height:1; margin-bottom:4px; }
-  .rh-max { font-size:14px; opacity:.6; margin-bottom:16px; }
-  .rh-pct { font-size:18px; font-weight:600; color:#fcd34d; }
-  .rh-msg { font-size:13px; opacity:.8; margin-top:8px; }
-  .result-breakdown { background:var(--white); border:0.5px solid var(--border); border-radius:14px; padding:20px; margin-bottom:20px; }
-  .rb-title { font-size:13px; font-weight:600; margin-bottom:14px; }
-  .rb-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
-  .rb-cell { background:var(--bg); border-radius:10px; padding:12px; text-align:center; }
-  .rb-num { font-family:'DM Serif Display',serif; font-size:24px; color:var(--toeic); line-height:1; margin-bottom:3px; }
-  .rb-label { font-size:11px; color:var(--text-muted); }
-  .rb-pct { font-size:12px; font-weight:600; color:var(--toeic); margin-top:4px; }
+  .results-area{display:none;}
+  .result-hero{background:linear-gradient(135deg,var(--toeic-dark),var(--toeic));border-radius:14px;padding:32px;text-align:center;margin-bottom:20px;color:#fff;}
+  .rh-label{font-size:13px;opacity:.7;margin-bottom:8px;}
+  .rh-score{font-family:'DM Serif Display',serif;font-size:64px;line-height:1;margin-bottom:4px;}
+  .rh-max{font-size:14px;opacity:.6;margin-bottom:16px;}
+  .rh-pct{font-size:18px;font-weight:600;color:#fcd34d;}
+  .rh-msg{font-size:13px;opacity:.8;margin-top:8px;}
+  .rb-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px;}
+  .rb-cell{background:var(--bg);border-radius:10px;padding:12px;text-align:center;}
+  .rb-num{font-family:'DM Serif Display',serif;font-size:22px;color:var(--toeic);}
+  .rb-label{font-size:11px;color:var(--text-muted);margin-top:2px;}
+  .rb-pct{font-size:12px;font-weight:600;color:var(--toeic);margin-top:3px;}
 
-  /* BUTTONS */
-  .btn-primary { padding:13px 24px; border-radius:10px; background:var(--toeic); color:#fff; border:none; font-family:inherit; font-size:14px; font-weight:600; cursor:pointer; transition:all 0.2s; width:100%; }
-  .btn-primary:hover { background:#9a6010; }
-  .btn-primary:disabled { opacity:.5; cursor:not-allowed; }
-  .btn-secondary { padding:12px 20px; border-radius:10px; background:var(--white); color:var(--text); border:0.5px solid var(--border-md); font-family:inherit; font-size:13px; font-weight:500; cursor:pointer; transition:all 0.2s; }
-  .btn-secondary:hover { background:var(--bg); }
+  .btn-primary{padding:13px 24px;border-radius:10px;background:var(--toeic);color:#fff;border:none;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;transition:all 0.2s;width:100%;}
+  .btn-primary:hover{background:#9a6010;}
+  .btn-secondary{padding:12px 20px;border-radius:10px;background:var(--white);color:var(--text);border:0.5px solid var(--border-md);font-family:inherit;font-size:13px;font-weight:500;cursor:pointer;transition:all 0.2s;}
+  .btn-secondary:hover{background:var(--bg);}
 
-  @keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
-  @keyframes skelAnim { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
-  .fade-in { animation:fadeUp 0.4s ease forwards; }
+  @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+  .fade-in{animation:fadeUp 0.4s ease forwards;}
 
   @media(max-width:600px){
-    .hero-stats { gap:16px; }
-    .rb-grid { grid-template-columns:repeat(2,1fr); }
-    .part-breakdown { flex-direction:column; }
+    .part-breakdown{grid-template-columns:repeat(2,1fr);}
+    .rb-grid{grid-template-columns:repeat(2,1fr);}
+    .q-photo{height:200px;}
   }
 </style>
 </head>
@@ -168,7 +207,7 @@
     <span class="nav-lt">LinguaWalk</span>
   </a>
   <div class="nav-sep"></div>
-  <span class="nav-page">📝 TOEIC LC Mock Test</span>
+  <span class="nav-page">🎧 TOEIC LC Mock Test</span>
   <div class="nav-space"></div>
   <a href="../index.html" class="nav-back">← TOEIC</a>
   <div class="lang-sw">
@@ -179,38 +218,33 @@
 
 <!-- API SETUP -->
 <div class="api-setup fade-in" id="api-setup">
-  <div class="api-icon">📝</div>
+  <div class="api-icon">🎧</div>
   <div class="api-title" data-en="TOEIC LC Mock Test" data-ko="TOEIC 듣기 모의테스트">TOEIC LC Mock Test</div>
-  <div class="api-desc" data-en="AI generates a complete TOEIC Listening mock test — all 100 questions across Parts 1–4." data-ko="AI가 TOEIC 듣기 모의테스트 100문항(Part 1~4 전체)을 자동 생성합니다.">Enter your API key to generate a full mock test.</div>
-  <div style="text-align:left;margin-bottom:8px;">
-    <div style="font-size:11px;font-weight:600;color:var(--text-muted);margin-bottom:4px;">🤖 Anthropic API Key</div>
-    <div class="api-input-wrap" style="margin-bottom:0;">
-      <input type="password" class="api-input" id="api-key-input" placeholder="sk-ant-api03-...">
-    </div>
+  <div class="api-desc" data-en="AI generates 100 questions. Audio plays automatically — just like the real exam." data-ko="AI가 100문항을 생성합니다. 실제 시험처럼 음성이 자동으로 재생됩니다.">Enter your API keys to begin.</div>
+  <div class="api-field">
+    <div class="api-field-label">🤖 Anthropic API Key</div>
+    <input type="password" class="api-input" id="api-key-input" placeholder="sk-ant-api03-...">
   </div>
-  <div style="text-align:left;margin-bottom:16px;">
-    <div style="font-size:11px;font-weight:600;color:var(--text-muted);margin-bottom:4px;">🖼 Unsplash Access Key <span style="font-weight:400;color:var(--text-light);">(Part 1 scene photos)</span></div>
-    <div class="api-input-wrap" style="margin-bottom:0;">
-      <input type="password" class="api-input" id="unsplash-key-input" placeholder="Unsplash Access Key...">
-    </div>
+  <div class="api-field">
+    <div class="api-field-label">🖼 Unsplash Access Key <span style="font-weight:400;color:var(--text-light);">(Part 1 photos)</span></div>
+    <input type="password" class="api-input" id="unsplash-key-input" placeholder="Unsplash Access Key...">
   </div>
-  <button class="api-btn" onclick="saveApiKey()" style="width:100%;padding:11px;" data-en="Connect & Start" data-ko="연결하고 시작">Connect & Start</button>
-  <p class="api-note" data-en="🔒 Keys stored in this browser session only." data-ko="🔒 키는 현재 브라우저 세션에만 저장됩니다.">🔒 Stored in browser session only.</p>
+  <button class="api-btn" onclick="saveApiKey()" data-en="Connect & Start" data-ko="연결하고 시작">Connect & Start</button>
+  <p class="api-note" data-en="🔒 Keys stored in this browser session only." data-ko="🔒 키는 현재 세션에만 저장됩니다.">🔒 Stored in session only.</p>
 </div>
 
 <!-- MAIN -->
 <div class="main fade-in" id="main-content">
 
-  <!-- HERO -->
   <div class="hero">
-    <div class="hero-tag">📝 TOEIC LISTENING COMPREHENSION — FULL MOCK TEST</div>
+    <div class="hero-tag">🎧 TOEIC · LISTENING COMPREHENSION — FULL MOCK TEST</div>
     <h1 class="hero-title" data-en="Complete LC Mock Test" data-ko="듣기 완전 모의테스트">Complete LC Mock Test</h1>
-    <p class="hero-desc" data-en="AI generates all 100 questions across Parts 1–4. Timed, scored, and reviewed just like the real exam." data-ko="AI가 Part 1~4에 걸쳐 100문항 전체를 생성합니다. 실제 시험처럼 타이머, 채점, 리뷰까지.">AI-generated full TOEIC Listening test, scored like the real exam.</p>
+    <p class="hero-desc" data-en="AI generates all 100 questions. Audio plays automatically — 1 question at a time, just like the real TOEIC." data-ko="AI가 100문항 전체를 생성합니다. 실제 TOEIC처럼 1문제씩 자동으로 음성이 재생됩니다.">Auto-play, one question at a time.</p>
     <div class="hero-stats">
-      <div class="hs"><div class="hs-num">100</div><div class="hs-label">Questions</div></div>
-      <div class="hs"><div class="hs-num">45'</div><div class="hs-label">Time Limit</div></div>
-      <div class="hs"><div class="hs-num">495</div><div class="hs-label">Max Score</div></div>
-      <div class="hs"><div class="hs-num">4</div><div class="hs-label">Parts</div></div>
+      <div class="hs"><div class="hs-num">100</div><div class="hs-label" data-en="Questions" data-ko="문항">Questions</div></div>
+      <div class="hs"><div class="hs-num">45'</div><div class="hs-label" data-en="Time Limit" data-ko="제한 시간">Time Limit</div></div>
+      <div class="hs"><div class="hs-num">~30s</div><div class="hs-label" data-en="Per Question" data-ko="문제당">Per Question</div></div>
+      <div class="hs"><div class="hs-num">495</div><div class="hs-label" data-en="Max Score" data-ko="만점">Max Score</div></div>
     </div>
   </div>
 
@@ -227,24 +261,22 @@
         </select>
       </div>
       <div class="sc-item">
-        <div class="sc-label" data-en="Time Limit" data-ko="제한 시간">Time Limit</div>
-        <select class="sc-select" id="time-select">
-          <option value="0" data-en="No Limit" data-ko="제한 없음">No Limit</option>
-          <option value="45" selected data-en="45 min (Real)" data-ko="45분 (실제)">45 min (Real)</option>
-          <option value="30" data-en="30 min" data-ko="30분">30 min</option>
-          <option value="20" data-en="20 min" data-ko="20분">20 min</option>
+        <div class="sc-label" data-en="Speech Speed" data-ko="음성 속도">Speech Speed</div>
+        <select class="sc-select" id="speed-select">
+          <option value="0.75" data-en="Slow (0.75x)" data-ko="느림">Slow (0.75x)</option>
+          <option value="0.9" selected data-en="Normal– (0.9x)" data-ko="보통–">Normal– (0.9x)</option>
+          <option value="1.0" data-en="Normal (1.0x)" data-ko="보통">Normal (1.0x)</option>
+          <option value="1.1" data-en="Fast (1.1x)" data-ko="빠름">Fast (1.1x)</option>
         </select>
       </div>
       <div class="sc-item">
-        <div class="sc-label" data-en="Mode" data-ko="모드">Mode</div>
-        <select class="sc-select" id="mode-select">
-          <option value="exam" data-en="Exam Mode" data-ko="시험 모드">Exam Mode</option>
-          <option value="practice" data-en="Practice Mode" data-ko="연습 모드">Practice Mode</option>
+        <div class="sc-label" data-en="Answer Time" data-ko="답변 시간">Answer Time</div>
+        <select class="sc-select" id="answer-time-select">
+          <option value="20" data-en="20 sec" data-ko="20초">20 sec</option>
+          <option value="30" selected data-en="30 sec" data-ko="30초">30 sec</option>
+          <option value="45" data-en="45 sec" data-ko="45초">45 sec</option>
         </select>
       </div>
-    </div>
-    <div class="sc-title" style="font-size:12px;color:var(--text-muted);margin-bottom:10px;">
-      <span data-en="Question distribution (real exam format):" data-ko="문제 배분 (실제 시험 형식):">Question distribution (real exam format):</span>
     </div>
     <div class="part-breakdown">
       <div class="pb-item"><div class="pb-part">Part 1</div><div class="pb-count">6</div><div class="pb-type" data-en="Photographs" data-ko="사진 묘사">Photographs</div></div>
@@ -253,84 +285,54 @@
       <div class="pb-item"><div class="pb-part">Part 4</div><div class="pb-count">30</div><div class="pb-type" data-en="Short Talks" data-ko="설명문">Short Talks</div></div>
     </div>
     <button class="btn-primary" id="start-btn" onclick="startGeneration()">
-      🤖 <span data-en="Generate Full Mock Test" data-ko="전체 모의테스트 생성">Generate Full Mock Test</span>
+      🤖 <span data-en="Generate & Start Mock Test" data-ko="모의테스트 생성 시작">Generate & Start Mock Test</span>
     </button>
   </div>
 
   <!-- GENERATION PROGRESS -->
   <div class="gen-progress" id="gen-progress">
-    <div class="gp-title" data-en="🤖 Generating your TOEIC LC Mock Test..." data-ko="🤖 TOEIC 듣기 모의테스트를 생성하고 있습니다...">🤖 Generating your TOEIC LC Mock Test...</div>
+    <div class="gp-title" data-en="🤖 Generating your TOEIC LC Mock Test..." data-ko="🤖 TOEIC 듣기 모의테스트 생성 중...">Generating...</div>
     <div class="gp-steps">
-      <div class="gp-step" id="step-p1"><div class="gp-icon">📸</div><div><div class="gp-text">Part 1 — Photographs <span style="color:var(--text-light);font-size:12px;">(6 questions)</span></div><div class="gp-sub" id="sub-p1" data-en="Waiting..." data-ko="대기 중...">Waiting...</div></div></div>
-      <div class="gp-step" id="step-p2"><div class="gp-icon">💬</div><div><div class="gp-text">Part 2 — Q&amp;A <span style="color:var(--text-light);font-size:12px;">(25 questions)</span></div><div class="gp-sub" id="sub-p2" data-en="Waiting..." data-ko="대기 중...">Waiting...</div></div></div>
-      <div class="gp-step" id="step-p3"><div class="gp-icon">🗣</div><div><div class="gp-text">Part 3 — Conversations <span style="color:var(--text-light);font-size:12px;">(39 questions / 13 sets)</span></div><div class="gp-sub" id="sub-p3" data-en="Waiting..." data-ko="대기 중...">Waiting...</div></div></div>
-      <div class="gp-step" id="step-p4"><div class="gp-icon">📢</div><div><div class="gp-text">Part 4 — Short Talks <span style="color:var(--text-light);font-size:12px;">(30 questions / 10 sets)</span></div><div class="gp-sub" id="sub-p4" data-en="Waiting..." data-ko="대기 중...">Waiting...</div></div></div>
+      <div class="gp-step" id="step-p1"><div class="gp-icon">📸</div><div><div class="gp-text">Part 1 — Photographs <span style="color:var(--text-light);font-size:11px;">(6q)</span></div><div class="gp-sub" id="sub-p1">Waiting...</div></div></div>
+      <div class="gp-step" id="step-p2"><div class="gp-icon">💬</div><div><div class="gp-text">Part 2 — Q&A <span style="color:var(--text-light);font-size:11px;">(25q)</span></div><div class="gp-sub" id="sub-p2">Waiting...</div></div></div>
+      <div class="gp-step" id="step-p3"><div class="gp-icon">🗣</div><div><div class="gp-text">Part 3 — Conversations <span style="color:var(--text-light);font-size:11px;">(39q / 13 sets)</span></div><div class="gp-sub" id="sub-p3">Waiting...</div></div></div>
+      <div class="gp-step" id="step-p4"><div class="gp-icon">📢</div><div><div class="gp-text">Part 4 — Short Talks <span style="color:var(--text-light);font-size:11px;">(30q / 10 sets)</span></div><div class="gp-sub" id="sub-p4">Waiting...</div></div></div>
     </div>
-    <div class="gp-bar-wrap">
-      <div class="gp-bar"><div class="gp-fill" id="gp-fill" style="width:0%"></div></div>
-      <div class="gp-pct" id="gp-pct">0%</div>
-    </div>
+    <div class="gp-bar"><div class="gp-fill" id="gp-fill" style="width:0%"></div></div>
+    <div class="gp-pct" id="gp-pct">0%</div>
   </div>
 
-  <!-- TEST AREA -->
-  <div class="test-area" id="test-area">
-    <div class="test-header">
-      <div class="th-badge" data-en="TOEIC LC Mock Test" data-ko="TOEIC 듣기 모의테스트">TOEIC LC Mock Test</div>
-      <div class="th-timer" id="th-timer">45:00</div>
-      <div class="th-progress">
-        <div class="th-prog-label">
-          <span data-en="Progress" data-ko="진행">Progress</span>
-          <span id="progress-text">0 / 100</span>
+  <!-- ── TEST PLAYER ── -->
+  <div class="player-area" id="player-area">
+
+    <!-- Sticky header -->
+    <div class="player-header">
+      <div>
+        <div class="ph-part" id="ph-part">Part 1</div>
+        <div class="ph-qnum" id="ph-qnum">Q 1</div>
+      </div>
+      <div class="ph-timer-wrap">
+        <div class="ph-timer-label">
+          <span id="ph-timer-left" data-en="Time remaining" data-ko="남은 시간">Time remaining</span>
+          <span id="ph-prog-txt">1 / 100</span>
         </div>
-        <div class="th-prog-bar"><div class="th-prog-fill" id="th-prog-fill" style="width:0%"></div></div>
+        <div class="ph-timer-bar"><div class="ph-timer-fill" id="ph-timer-fill" style="width:100%"></div></div>
       </div>
-      <button class="th-submit" onclick="submitTest()">
-        <span data-en="Submit Test" data-ko="시험 제출">Submit Test</span>
-      </button>
+      <div class="ph-clock" id="ph-clock">45:00</div>
+      <button class="ph-skip" onclick="skipToNext()" data-en="Skip →" data-ko="건너뛰기 →">Skip →</button>
+      <button class="ph-finish" onclick="finishTest()" data-en="Finish" data-ko="종료">Finish</button>
     </div>
 
-    <!-- Part 1 -->
-    <div class="part-section">
-      <div class="ps-header">
-        <div class="ps-title">📸 Part 1 — Photographs</div>
-        <div class="ps-range">Q1–6</div>
-      </div>
-      <div class="ps-body" id="part1-body"></div>
+    <!-- Question card (single question displayed at a time) -->
+    <div id="q-card-wrap"></div>
+
+    <!-- Answered pills -->
+    <div class="answered-wrap">
+      <div class="aw-title" data-en="ANSWERED" data-ko="답변 현황">ANSWERED</div>
+      <div class="aw-pills" id="aw-pills"></div>
     </div>
 
-    <!-- Part 2 -->
-    <div class="part-section">
-      <div class="ps-header">
-        <div class="ps-title">💬 Part 2 — Question & Response</div>
-        <div class="ps-range">Q7–31</div>
-      </div>
-      <div class="ps-body" id="part2-body"></div>
-    </div>
-
-    <!-- Part 3 -->
-    <div class="part-section">
-      <div class="ps-header">
-        <div class="ps-title">🗣 Part 3 — Short Conversations</div>
-        <div class="ps-range">Q32–70</div>
-      </div>
-      <div class="ps-body" id="part3-body"></div>
-    </div>
-
-    <!-- Part 4 -->
-    <div class="part-section">
-      <div class="ps-header">
-        <div class="ps-title">📢 Part 4 — Short Talks</div>
-        <div class="ps-range">Q71–100</div>
-      </div>
-      <div class="ps-body" id="part4-body"></div>
-    </div>
-
-    <div style="text-align:center;margin-top:20px;">
-      <button class="btn-primary" onclick="submitTest()" style="max-width:320px;">
-        ✅ <span data-en="Submit & View Results" data-ko="제출하고 결과 보기">Submit & View Results</span>
-      </button>
-    </div>
-  </div>
+  </div><!-- /player-area -->
 
   <!-- RESULTS -->
   <div class="results-area" id="results-area">
@@ -341,33 +343,48 @@
       <div class="rh-pct" id="rh-pct"></div>
       <div class="rh-msg" id="rh-msg"></div>
     </div>
-    <div class="result-breakdown">
-      <div class="rb-title" data-en="Score Breakdown by Part" data-ko="파트별 점수 분석">Score Breakdown by Part</div>
+    <div style="background:var(--white);border:0.5px solid var(--border);border-radius:14px;padding:20px;margin-bottom:20px;">
+      <div style="font-size:13px;font-weight:600;margin-bottom:12px;" data-en="Score by Part" data-ko="파트별 점수">Score by Part</div>
       <div class="rb-grid">
-        <div class="rb-cell"><div class="rb-num" id="rb-p1">—</div><div class="rb-label">Part 1</div><div class="rb-pct" id="rb-p1-pct"></div></div>
-        <div class="rb-cell"><div class="rb-num" id="rb-p2">—</div><div class="rb-label">Part 2</div><div class="rb-pct" id="rb-p2-pct"></div></div>
-        <div class="rb-cell"><div class="rb-num" id="rb-p3">—</div><div class="rb-label">Part 3</div><div class="rb-pct" id="rb-p3-pct"></div></div>
-        <div class="rb-cell"><div class="rb-num" id="rb-p4">—</div><div class="rb-label">Part 4</div><div class="rb-pct" id="rb-p4-pct"></div></div>
+        <div class="rb-cell"><div class="rb-num" id="rb-p1">—</div><div class="rb-label">Part 1</div><div class="rb-pct" id="rb-p1p"></div></div>
+        <div class="rb-cell"><div class="rb-num" id="rb-p2">—</div><div class="rb-label">Part 2</div><div class="rb-pct" id="rb-p2p"></div></div>
+        <div class="rb-cell"><div class="rb-num" id="rb-p3">—</div><div class="rb-label">Part 3</div><div class="rb-pct" id="rb-p3p"></div></div>
+        <div class="rb-cell"><div class="rb-num" id="rb-p4">—</div><div class="rb-label">Part 4</div><div class="rb-pct" id="rb-p4p"></div></div>
       </div>
     </div>
-    <div style="display:flex;gap:10px;">
-      <button class="btn-secondary" style="flex:1;" onclick="reviewAnswers()" data-en="📋 Review Answers" data-ko="📋 답안 검토">📋 Review Answers</button>
-      <button class="btn-primary" style="flex:1;" onclick="resetTest()" data-en="🔄 New Mock Test" data-ko="🔄 새 모의테스트">🔄 New Mock Test</button>
-    </div>
+    <button class="btn-primary" onclick="resetTest()" data-en="🔄 New Mock Test" data-ko="🔄 새 모의테스트">🔄 New Mock Test</button>
   </div>
 
 </div><!-- /main -->
 
 <script>
+// ════════════════════════════════════════════════
+//  STATE
+// ════════════════════════════════════════════════
 let lang='en', apiKey='', unsplashKey='';
+let diff='Medium', speechRate=0.9, answerTimeSec=30;
 
+// Flat question list built after generation
+// Each item: {part, qNum, type, ...data, answer(correct index)}
+let questions=[];        // flat list of 100 Q items
+let userAnswers={};      // qNum→chosenIdx
+let currentQIdx=0;       // index into questions[]
+
+let totalClock=45*60;    // 45 min countdown
+let clockInterval=null;
+let qTimerInterval=null; // per-question countdown
+let qTimeLeft=0;
+
+// Generation data
 let testData={p1:[],p2:[],p3:[],p4:[]};
-let userAnswers={}; // {qNum: optionIdx}
-let timerInterval=null, timeLeft=0;
-let isPracticeMode=false;
-let answered=0;
 
-// ── Language ──
+// Voices
+let voices=[];
+speechSynthesis.onvoiceschanged=()=>{voices=speechSynthesis.getVoices();};
+
+// ════════════════════════════════════════════════
+//  LANGUAGE
+// ════════════════════════════════════════════════
 function setLang(l){
   lang=l;
   document.documentElement.lang=l==='ko'?'ko':'en';
@@ -380,6 +397,9 @@ function setLang(l){
   try{localStorage.setItem('lw-lang',l);}catch(e){}
 }
 
+// ════════════════════════════════════════════════
+//  API KEY SAVE
+// ════════════════════════════════════════════════
 function saveApiKey(){
   const key=document.getElementById('api-key-input').value.trim();
   if(!key.startsWith('sk-ant-')){alert('Anthropic API key must start with sk-ant-');return;}
@@ -390,8 +410,10 @@ function saveApiKey(){
   document.getElementById('main-content').style.display='block';
 }
 
-// ── API call ──
-async function callAPI(prompt, maxTokens){
+// ════════════════════════════════════════════════
+//  API CALL
+// ════════════════════════════════════════════════
+async function callAPI(prompt,maxTokens){
   const r=await fetch('https://api.anthropic.com/v1/messages',{
     method:'POST',
     headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
@@ -402,403 +424,409 @@ async function callAPI(prompt, maxTokens){
   return JSON.parse(d.content[0].text.replace(/```json|```/g,'').trim());
 }
 
-function setStep(part, state, sub){
-  const el=document.getElementById('step-'+part);
-  el.className='gp-step '+state;
-  if(sub) document.getElementById('sub-'+part).textContent=sub;
+function setStep(id,state,sub){
+  document.getElementById('step-'+id).className='gp-step '+state;
+  if(sub) document.getElementById('sub-'+id).textContent=sub;
 }
 function setProgress(pct){
   document.getElementById('gp-fill').style.width=pct+'%';
   document.getElementById('gp-pct').textContent=Math.round(pct)+'%';
 }
 
-// ── GENERATION ──
+// ════════════════════════════════════════════════
+//  GENERATION
+// ════════════════════════════════════════════════
 async function startGeneration(){
-  const diff=document.getElementById('diff-select').value;
-  const timeLimitMin=parseInt(document.getElementById('time-select').value);
-  isPracticeMode=document.getElementById('mode-select').value==='practice';
+  diff=document.getElementById('diff-select').value;
+  speechRate=parseFloat(document.getElementById('speed-select').value);
+  answerTimeSec=parseInt(document.getElementById('answer-time-select').value);
 
   document.getElementById('setup-card').style.display='none';
   document.getElementById('gen-progress').style.display='block';
   document.getElementById('start-btn').disabled=true;
-
   testData={p1:[],p2:[],p3:[],p4:[]};
 
   try{
-    // ── Part 1: 6 questions ──
+    // Part 1
     setStep('p1','active',lang==='ko'?'6문항 생성 중...':'Generating 6 questions...');
-    const p1=await callAPI(`Generate 6 TOEIC Part 1 Photographs questions. Difficulty: ${diff}.
-Return JSON array of 6 objects:
-[{"scene":"brief photo description","options":["(A) statement","(B) statement","(C) statement","(D) statement"],"answer":0,"explanation":"why A is correct"}]
-answer is 0-indexed. Wrong options should be plausible but incorrect. JSON only.`, 2000);
-    testData.p1=Array.isArray(p1)?p1:p1.questions||[];
-    setStep('p1','done',lang==='ko'?`✓ ${testData.p1.length}문항 완료`:`✓ ${testData.p1.length} questions done`);
-    setProgress(10);
+    const p1=await callAPI(`Generate 6 TOEIC Part 1 Photographs questions. Difficulty:${diff}.
+JSON array of 6: [{"imageKeyword":"2-word Unsplash keyword","scene":"brief photo description","options":["(A) statement","(B) statement","(C) statement","(D) statement"],"answer":0,"explanation":"why correct"}]
+answer 0-indexed. Wrong options plausible. JSON only.`,2000);
+    testData.p1=Array.isArray(p1)?p1:(p1.questions||[]);
+    setStep('p1','done',`✓ ${testData.p1.length}q`); setProgress(10);
 
-    // ── Part 2: 25 questions ──
-    setStep('p2','active',lang==='ko'?'25문항 생성 중 (1/3)...':'Generating 25 questions (1/3)...');
-    // Generate in 3 batches for reliability
-    const p2a=await callAPI(`Generate 9 TOEIC Part 2 Q&A questions. Difficulty: ${diff}.
-Return JSON array of 9 objects:
-[{"question":"spoken question/statement","options":["(A) response","(B) response","(C) response"],"answer":0,"explanation":"why A is best response"}]
-answer is 0-indexed. Vary question types: WH, yes/no, tag, statement, request. JSON only.`, 2500);
-    setStep('p2','active',lang==='ko'?'25문항 생성 중 (2/3)...':'Generating 25 questions (2/3)...');
+    // Part 2 (3 batches)
+    setStep('p2','active','Generating (1/3)...');
+    const p2a=await callAPI(`Generate 9 TOEIC Part 2 Q&A. Difficulty:${diff}. Vary WH/yes-no/tag/statement.
+JSON array: [{"question":"spoken question","options":["(A)","(B)","(C)"],"answer":0,"explanation":"why"}] JSON only.`,2200);
     setProgress(20);
-    const p2b=await callAPI(`Generate 8 TOEIC Part 2 Q&A questions. Difficulty: ${diff}.
-Vary from: WH questions, tag questions, requests, indirect answers.
-Return JSON array of 8 objects:
-[{"question":"spoken question","options":["(A) response","(B) response","(C) response"],"answer":0,"explanation":"explanation"}]
-JSON only.`, 2200);
-    setStep('p2','active',lang==='ko'?'25문항 생성 중 (3/3)...':'Generating 25 questions (3/3)...');
-    setProgress(30);
-    const p2c=await callAPI(`Generate 8 TOEIC Part 2 Q&A questions. Difficulty: ${diff}.
-Focus on: statements, suggestions, invitations, and indirect responses.
-Return JSON array of 8 objects:
-[{"question":"spoken question","options":["(A) response","(B) response","(C) response"],"answer":0,"explanation":"explanation"}]
-JSON only.`, 2200);
-    const allP2=[...(Array.isArray(p2a)?p2a:p2a.questions||[]),...(Array.isArray(p2b)?p2b:p2b.questions||[]),...(Array.isArray(p2c)?p2c:p2c.questions||[])];
-    testData.p2=allP2.slice(0,25);
-    setStep('p2','done',lang==='ko'?`✓ ${testData.p2.length}문항 완료`:`✓ ${testData.p2.length} questions done`);
-    setProgress(45);
+    const p2b=await callAPI(`Generate 8 TOEIC Part 2 Q&A. Difficulty:${diff}. Vary indirect/request/suggestion.
+JSON array same format. JSON only.`,2000);
+    setProgress(28);
+    const p2c=await callAPI(`Generate 8 TOEIC Part 2 Q&A. Difficulty:${diff}. Vary statement/invitation/offer.
+JSON array same format. JSON only.`,2000);
+    const all2=[...(Array.isArray(p2a)?p2a:[]),(Array.isArray(p2b)?p2b:[]),(Array.isArray(p2c)?p2c:[])].flat();
+    testData.p2=all2.slice(0,25);
+    setStep('p2','done',`✓ ${testData.p2.length}q`); setProgress(38);
 
-    // ── Part 3: 13 conversations × 3 questions = 39 ──
-    setStep('p3','active',lang==='ko'?'13개 대화 생성 중 (1/3)...':'Generating 13 conversations (1/3)...');
-    const p3a=await callAPI(`Generate 5 TOEIC Part 3 Short Conversation sets. Difficulty: ${diff}.
-Each set: 1 dialogue (2-3 speakers, 6-10 lines) + 3 comprehension questions.
-Return JSON array of 5 objects:
-[{"title":"conversation title","situation":"one sentence","dialogue":"Woman: ... Man: ... (full dialogue)","questions":[{"q":"question","opts":["(A)","(B)","(C)","(D)"],"ans":0,"fb":"explanation"}]}]
-JSON only.`, 3000);
-    setStep('p3','active',lang==='ko'?'13개 대화 생성 중 (2/3)...':'Generating 13 conversations (2/3)...');
-    setProgress(60);
-    const p3b=await callAPI(`Generate 4 TOEIC Part 3 Short Conversation sets. Difficulty: ${diff}.
-Topics: customer service, scheduling, office, travel. Vary speaker gender combinations.
-Return JSON array of 4 objects:
-[{"title":"title","situation":"situation","dialogue":"full dialogue with speaker labels","questions":[{"q":"q","opts":["A","B","C","D"],"ans":0,"fb":"explanation"}]}]
-JSON only.`, 2600);
-    setStep('p3','active',lang==='ko'?'13개 대화 생성 중 (3/3)...':'Generating 13 conversations (3/3)...');
-    setProgress(68);
-    const p3c=await callAPI(`Generate 4 TOEIC Part 3 Short Conversation sets. Difficulty: ${diff}.
-Topics: finance/banking, healthcare, retail, technology. Include at least one 3-speaker conversation.
-Return JSON array of 4 objects:
-[{"title":"title","situation":"situation","dialogue":"dialogue","questions":[{"q":"q","opts":["A","B","C","D"],"ans":0,"fb":"fb"}]}]
-JSON only.`, 2600);
-    const allP3=[...(Array.isArray(p3a)?p3a:p3a.conversations||[]),...(Array.isArray(p3b)?p3b:p3b.conversations||[]),...(Array.isArray(p3c)?p3c:p3c.conversations||[])];
-    testData.p3=allP3.slice(0,13);
-    setStep('p3','done',lang==='ko'?`✓ ${testData.p3.length}개 대화 완료 (${testData.p3.length*3}문항)`:`✓ ${testData.p3.length} conversations done (${testData.p3.length*3}q)`);
-    setProgress(80);
+    // Part 3 (3 batches → 13 conversations × 3q)
+    setStep('p3','active','Generating (1/3)...');
+    const p3a=await callAPI(`Generate 5 TOEIC Part 3 Short Conversation sets. Difficulty:${diff}.
+JSON array of 5: [{"title":"title","situation":"one sentence","dialogue":[{"speaker":"Woman","text":"..."},{"speaker":"Man","text":"..."}],"questions":[{"q":"question","opts":["(A)","(B)","(C)","(D)"],"ans":0,"fb":"explanation"}]}]
+8-10 dialogue lines, exactly 3 questions each. JSON only.`,3500);
+    setProgress(48);
+    const p3b=await callAPI(`Generate 4 TOEIC Part 3 Short Conversation sets. Difficulty:${diff}. Topics:customer service,scheduling,office,travel.
+Same JSON format. 8-10 lines, exactly 3 questions each. JSON only.`,3000);
+    setProgress(55);
+    const p3c=await callAPI(`Generate 4 TOEIC Part 3 Short Conversation sets. Difficulty:${diff}. Topics:finance,healthcare,retail,technology.
+Same JSON format. 8-10 lines, exactly 3 questions each. JSON only.`,3000);
+    const all3=[...(Array.isArray(p3a)?p3a:[]),(Array.isArray(p3b)?p3b:[]),(Array.isArray(p3c)?p3c:[])].flat();
+    all3.forEach(c=>{if(!c.questions)c.questions=[];while(c.questions.length<3)c.questions.push({q:'What is discussed?',opts:['(A) A schedule','(B) A budget','(C) A project','(D) A report'],ans:2,fb:'Based on the conversation.'});c.questions=c.questions.slice(0,3);});
+    testData.p3=all3.slice(0,13);
+    setStep('p3','done',`✓ ${testData.p3.length} sets (${testData.p3.reduce((s,c)=>s+c.questions.length,0)}q)`); setProgress(68);
 
-    // ── Part 4: 10 talks × 3 questions = 30 ──
-    setStep('p4','active',lang==='ko'?'10개 담화 생성 중 (1/2)...':'Generating 10 talks (1/2)...');
-    const p4a=await callAPI(`Generate 5 TOEIC Part 4 Short Talk sets. Difficulty: ${diff}.
-Types: announcement, advertisement, news report, voicemail, tour guide.
-Return JSON array of 5 objects:
-[{"title":"talk title","talkType":"Announcement/Ad/News/Voicemail/Tour","situation":"one sentence","script":"full monologue 8-12 sentences","questions":[{"q":"q","opts":["(A)","(B)","(C)","(D)"],"ans":0,"fb":"explanation"}]}]
-JSON only.`, 3000);
-    setStep('p4','active',lang==='ko'?'10개 담화 생성 중 (2/2)...':'Generating 10 talks (2/2)...');
-    setProgress(90);
-    const p4b=await callAPI(`Generate 5 TOEIC Part 4 Short Talk sets. Difficulty: ${diff}.
-Types: training instructions, radio program, meeting introduction, product launch, event announcement.
-Return JSON array of 5 objects:
-[{"title":"title","talkType":"type","situation":"situation","script":"monologue","questions":[{"q":"q","opts":["A","B","C","D"],"ans":0,"fb":"fb"}]}]
-JSON only.`, 3000);
-    const allP4=[...(Array.isArray(p4a)?p4a:p4a.talks||[]),...(Array.isArray(p4b)?p4b:p4b.talks||[])];
-    testData.p4=allP4.slice(0,10);
-    setStep('p4','done',lang==='ko'?`✓ ${testData.p4.length}개 담화 완료 (${testData.p4.length*3}문항)`:`✓ ${testData.p4.length} talks done (${testData.p4.length*3}q)`);
-    setProgress(100);
+    // Part 4 (2 batches → 10 talks × 3q)
+    setStep('p4','active','Generating (1/2)...');
+    const p4a=await callAPI(`Generate 5 TOEIC Part 4 Short Talk sets. Difficulty:${diff}. Types:announcement,ad,news,voicemail,tour.
+JSON array of 5: [{"title":"title","talkType":"Announcement","situation":"one sentence","lines":[{"speaker":"Narrator","text":"..."}],"questions":[{"q":"q","opts":["(A)","(B)","(C)","(D)"],"ans":0,"fb":"explanation"}]}]
+8-12 monologue lines, exactly 3 questions each. JSON only.`,3500);
+    setProgress(78);
+    const p4b=await callAPI(`Generate 5 TOEIC Part 4 Short Talk sets. Difficulty:${diff}. Types:training,radio,meeting intro,product launch,event.
+Same JSON format. 8-12 lines, exactly 3 questions each. JSON only.`,3500);
+    const all4=[...(Array.isArray(p4a)?p4a:[]),(Array.isArray(p4b)?p4b:[])].flat();
+    all4.forEach(t=>{if(!t.questions)t.questions=[];while(t.questions.length<3)t.questions.push({q:'What is the main topic?',opts:['(A) A promotion','(B) An event','(C) A schedule change','(D) A new product'],ans:1,fb:'Based on the talk.'});t.questions=t.questions.slice(0,3);});
+    testData.p4=all4.slice(0,10);
+    setStep('p4','done',`✓ ${testData.p4.length} sets (${testData.p4.reduce((s,t)=>s+t.questions.length,0)}q)`); setProgress(100);
 
-    // Show test
     setTimeout(()=>{
       document.getElementById('gen-progress').style.display='none';
-      buildTestUI();
-      document.getElementById('test-area').style.display='block';
-      if(timeLimitMin>0) startTimer(timeLimitMin*60);
-      else document.getElementById('th-timer').textContent='—';
-    },800);
+      buildFlatQuestions();
+      startPlayer();
+    },600);
 
   }catch(e){
     console.error(e);
-    const failedPart=testData.p1.length===0?'p1':testData.p2.length===0?'p2':testData.p3.length===0?'p3':'p4';
-    setStep(failedPart,'error',lang==='ko'?'⚠️ 오류 발생':'⚠️ Error: '+e.message);
+    const steps=['p1','p2','p3','p4'];
+    const failed=steps.find(s=>testData[s].length===0)||'p1';
+    setStep(failed,'error','⚠️ '+e.message.substring(0,40));
     setTimeout(()=>{
       document.getElementById('gen-progress').style.display='none';
       document.getElementById('setup-card').style.display='block';
       document.getElementById('start-btn').disabled=false;
-      alert(lang==='ko'?'생성 중 오류가 발생했습니다. 다시 시도해 주세요.':'Generation failed. Please try again.\n\n'+e.message);
+      alert((lang==='ko'?'생성 오류: ':'Error: ')+e.message);
     },1500);
   }
 }
 
-// ── BUILD TEST UI ──
-const letters=['A','B','C','D'];
-let qGlobal=1;
-answered=0;
+// ════════════════════════════════════════════════
+//  BUILD FLAT QUESTION LIST
+// ════════════════════════════════════════════════
+function buildFlatQuestions(){
+  questions=[];
+  let n=1;
 
-function buildTestUI(){
-  qGlobal=1; answered=0; userAnswers={};
-  document.getElementById('progress-text').textContent=`0 / 100`;
-
-  // Part 1 — Unsplash API key 기반 실제 사진
-  document.getElementById('part1-body').innerHTML=testData.p1.map((q,i)=>{
-    const qn=qGlobal++;
-    const imgId=`p1img${qn}`;
-    const skelId=`p1sk${qn}`;
-    const capId=`p1cap${qn}`;
-    const keyword=q.imageKeyword||q.scene||'office workplace';
-    return `<div class="q-item" id="qi-${qn}">
-      <div class="q-num">Q ${qn}</div>
-      <div style="position:relative;width:100%;border-radius:10px;overflow:hidden;margin-bottom:10px;border:0.5px solid var(--border);background:#f0f0f0;min-height:200px;">
-        <div id="${skelId}" style="width:100%;height:200px;display:flex;align-items:center;justify-content:center;background:linear-gradient(90deg,#ede8e0 25%,#f5f2ee 50%,#ede8e0 75%);background-size:200% 100%;animation:skelAnim 1.4s infinite;">
-          <div style="text-align:center;"><div style="font-size:24px;opacity:0.35;">📷</div><div style="font-size:11px;color:#b0a090;font-family:DM Sans,sans-serif;margin-top:4px;">${lang==='ko'?'사진 검색 중...':'Searching photo...'}</div></div>
-        </div>
-        <img id="${imgId}" style="width:100%;height:200px;object-fit:cover;display:none;" alt="${q.scene||'Photograph'}">
-        <div id="${capId}" style="display:none;position:absolute;bottom:0;left:0;right:0;padding:8px 14px;background:linear-gradient(transparent,rgba(0,0,0,0.6));color:#fff;font-size:11.5px;font-family:DM Sans,sans-serif;line-height:1.4;">${q.scene||keyword}</div>
-      </div>
-      <div class="q-context">${lang==='ko'?'🔊 4개의 진술을 듣고 사진을 가장 잘 묘사한 것을 선택하세요.':'🔊 Listen to 4 statements and choose the one that best describes the photograph.'}</div>
-      <div class="q-opts">${(q.options||['(A)','(B)','(C)','(D)']).map((o,j)=>`<button class="q-opt" id="q${qn}o${j}" onclick="selectOpt(${qn},${j},4)"><span class="q-opt-ltr">${['A','B','C','D'][j]}</span>${o}</button>`).join('')}</div>
-    </div>`;
-  }).join('');
-
-  // Load images after render (Unsplash API key search)
-  testData.p1.forEach((q,i)=>{
-    const qn=i+1;
-    const imgId=`p1img${qn}`;
-    const skelId=`p1sk${qn}`;
-    const capId=`p1cap${qn}`;
-    const keyword=q.imageKeyword||q.scene||'office workplace';
-    loadP1Photo(keyword, imgId, skelId, capId, q.scene||keyword);
+  // Part 1
+  testData.p1.forEach(q=>{
+    questions.push({part:'p1',partLabel:'Part 1',qNum:n++,type:'photo',
+      imageKeyword:q.imageKeyword||'office',scene:q.scene||'',
+      options:q.options||['(A)','(B)','(C)','(D)'],answer:q.answer??0,explanation:q.explanation||''});
   });
 
   // Part 2
-  document.getElementById('part2-body').innerHTML=testData.p2.map((q,i)=>{
-    const qn=qGlobal++;
-    return `<div class="q-item" id="qi-${qn}">
-      <div class="q-num">Q ${qn}</div>
-      <div class="q-context">🔊 "${q.question}"</div>
-      <div class="q-opts">${(q.options||['(A)','(B)','(C)']).map((o,j)=>`<button class="q-opt" id="q${qn}o${j}" onclick="selectOpt(${qn},${j},3)">${o}</button>`).join('')}</div>
-    </div>`;
-  }).join('');
+  testData.p2.forEach(q=>{
+    questions.push({part:'p2',partLabel:'Part 2',qNum:n++,type:'qa',
+      question:q.question||'',options:q.options||['(A)','(B)','(C)'],answer:q.answer??0,explanation:q.explanation||''});
+  });
 
-  // Part 3
-  document.getElementById('part3-body').innerHTML=testData.p3.map((conv,ci)=>{
-    let html=`<div style="margin-bottom:20px;padding:14px 16px;background:var(--bg);border-radius:10px;border:0.5px solid var(--border);">
-      <div style="font-size:11px;font-weight:700;color:var(--toeic);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">${conv.title||'Conversation '+(ci+1)}</div>
-      <div style="font-size:12px;color:var(--text-muted);background:var(--white);padding:10px 12px;border-radius:8px;border-left:3px solid var(--toeic);margin-bottom:12px;line-height:1.7;font-style:italic;">${(conv.dialogue||'').replace(/\n/g,'<br>')}</div>`;
-    (conv.questions||[]).forEach((q,qi)=>{
-      const qn=qGlobal++;
-      html+=`<div class="q-item" id="qi-${qn}">
-        <div class="q-num">Q ${qn}</div>
-        <div class="q-text">${q.q}</div>
-        <div class="q-opts">${(q.opts||['A','B','C','D']).map((o,j)=>`<button class="q-opt" id="q${qn}o${j}" onclick="selectOpt(${qn},${j},4)">${o}</button>`).join('')}</div>
-      </div>`;
+  // Part 3 — group: show conversation once, then 3 sub-questions
+  testData.p3.forEach(conv=>{
+    const qs=conv.questions||[];
+    qs.forEach((q,qi)=>{
+      questions.push({part:'p3',partLabel:'Part 3',qNum:n++,type:'conv',
+        convTitle:conv.title||'',situation:conv.situation||'',
+        dialogue:conv.dialogue||[],isFirstInSet:qi===0,setSize:qs.length,subIdx:qi,
+        q:q.q,opts:q.opts||['(A)','(B)','(C)','(D)'],ans:q.ans??0,fb:q.fb||''});
     });
-    html+='</div>';
-    return html;
-  }).join('');
+  });
 
   // Part 4
-  document.getElementById('part4-body').innerHTML=testData.p4.map((talk,ti)=>{
-    let html=`<div style="margin-bottom:20px;padding:14px 16px;background:var(--bg);border-radius:10px;border:0.5px solid var(--border);">
-      <div style="font-size:11px;font-weight:700;color:var(--toeic);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;">${talk.talkType||'Talk'} — ${talk.title||'Talk '+(ti+1)}</div>
-      <div style="font-size:12px;color:var(--text-muted);margin-bottom:8px;font-style:italic;">${talk.situation||''}</div>
-      <div style="font-size:12px;color:var(--text);background:var(--white);padding:10px 12px;border-radius:8px;border-left:3px solid var(--toeic);margin-bottom:12px;line-height:1.75;">${(talk.script||'').replace(/\n/g,'<br>')}</div>`;
-    (talk.questions||[]).forEach((q,qi)=>{
-      const qn=qGlobal++;
-      html+=`<div class="q-item" id="qi-${qn}">
-        <div class="q-num">Q ${qn}</div>
-        <div class="q-text">${q.q}</div>
-        <div class="q-opts">${(q.opts||['A','B','C','D']).map((o,j)=>`<button class="q-opt" id="q${qn}o${j}" onclick="selectOpt(${qn},${j},4)">${o}</button>`).join('')}</div>
-      </div>`;
+  testData.p4.forEach(talk=>{
+    const qs=talk.questions||[];
+    qs.forEach((q,qi)=>{
+      questions.push({part:'p4',partLabel:'Part 4',qNum:n++,type:'talk',
+        talkTitle:talk.title||'',talkType:talk.talkType||'Talk',situation:talk.situation||'',
+        lines:talk.lines||[],isFirstInSet:qi===0,setSize:qs.length,subIdx:qi,
+        q:q.q,opts:q.opts||['(A)','(B)','(C)','(D)'],ans:q.ans??0,fb:q.fb||''});
     });
-    html+='</div>';
-    return html;
-  }).join('');
+  });
+
+  // Build answered pills
+  buildPills();
 }
 
-function selectOpt(qn, optIdx, totalOpts){
-  // Deselect previous
-  for(let j=0;j<totalOpts;j++){
-    const el=document.getElementById(`q${qn}o${j}`);
-    if(el) el.classList.remove('selected');
-  }
-  const sel=document.getElementById(`q${qn}o${optIdx}`);
-  if(sel) sel.classList.add('selected');
-  const wasAnswered=qn in userAnswers;
-  userAnswers[qn]=optIdx;
-  if(!wasAnswered){answered++;updateProgress();}
-
-  // Practice mode: immediate feedback
-  if(isPracticeMode) showInstantFeedback(qn, optIdx);
+function buildPills(){
+  const wrap=document.getElementById('aw-pills');
+  wrap.innerHTML=questions.map(q=>`<div class="aw-pill" id="pill-${q.qNum}">${q.qNum}</div>`).join('');
 }
 
-function showInstantFeedback(qn, chosen){
-  // Determine correct answer
-  let correctAns=null;
-  // Find in testData
-  let idx=qn-1; // 0-indexed global
-  if(idx<testData.p1.length){
-    correctAns=testData.p1[idx].answer??0;
-  } else {
-    idx-=testData.p1.length;
-    if(idx<testData.p2.length){correctAns=testData.p2[idx].answer??0;}
-    else{
-      idx-=testData.p2.length;
-      let p3qi=idx;
-      let conv=null;let relQi=0;
-      for(const c of testData.p3){const qs=c.questions||[];if(p3qi<qs.length){conv=c;relQi=p3qi;break;}p3qi-=qs.length;}
-      if(conv) correctAns=conv.questions[relQi].ans??0;
-      else{
-        let p4qi=idx-testData.p3.reduce((s,c)=>s+(c.questions||[]).length,0);
-        let talk=null;let relQi2=0;
-        for(const t of testData.p4){const qs=t.questions||[];if(p4qi<qs.length){talk=t;relQi2=p4qi;break;}p4qi-=qs.length;}
-        if(talk) correctAns=talk.questions[relQi2].ans??0;
-      }
-    }
-  }
-  if(correctAns===null) return;
-  const isRight=chosen===correctAns;
-  const totalOpts=qn<=testData.p1.length+testData.p2.length?
-    (qn<=testData.p1.length?4:3):4;
-  for(let j=0;j<totalOpts;j++){
-    const el=document.getElementById(`q${qn}o${j}`);
-    if(!el) continue;
-    el.classList.remove('selected');
-    el.disabled=true;
-    if(j===chosen && !isRight) el.classList.add('wrong');
-    if(j===correctAns) el.classList.add('correct');
-  }
+// ════════════════════════════════════════════════
+//  PLAYER
+// ════════════════════════════════════════════════
+function startPlayer(){
+  document.getElementById('player-area').style.display='block';
+  currentQIdx=0;
+  userAnswers={};
+  totalClock=45*60;
+  startClock();
+  showQuestion(0);
 }
 
-function updateProgress(){
-  document.getElementById('progress-text').textContent=`${answered} / 100`;
-  document.getElementById('th-prog-fill').style.width=(answered/100*100)+'%';
-}
-
-// ── Timer ──
-function startTimer(seconds){
-  timeLeft=seconds;
-  updateTimerDisplay();
-  timerInterval=setInterval(()=>{
-    timeLeft--;
-    updateTimerDisplay();
-    if(timeLeft<=0){clearInterval(timerInterval);submitTest();}
+function startClock(){
+  clearInterval(clockInterval);
+  clockInterval=setInterval(()=>{
+    totalClock--;
+    const m=Math.floor(totalClock/60);
+    const s=totalClock%60;
+    const el=document.getElementById('ph-clock');
+    el.textContent=`${m}:${s.toString().padStart(2,'0')}`;
+    el.classList.toggle('warning',totalClock<=300);
+    if(totalClock<=0){clearInterval(clockInterval);finishTest();}
   },1000);
 }
-function updateTimerDisplay(){
-  const m=Math.floor(timeLeft/60);
-  const s=timeLeft%60;
-  const str=`${m}:${s.toString().padStart(2,'0')}`;
-  const el=document.getElementById('th-timer');
-  el.textContent=str;
-  el.classList.toggle('warning',timeLeft<=300);
+
+function showQuestion(idx){
+  if(idx>=questions.length){finishTest();return;}
+  currentQIdx=idx;
+  const q=questions[idx];
+
+  // Header
+  document.getElementById('ph-part').textContent=q.partLabel;
+  document.getElementById('ph-qnum').textContent=`Q ${q.qNum}`;
+  document.getElementById('ph-prog-txt').textContent=`${q.qNum} / ${questions.length}`;
+
+  // Pills
+  document.querySelectorAll('.aw-pill').forEach(p=>p.classList.remove('current'));
+  const pill=document.getElementById(`pill-${q.qNum}`);
+  if(pill){pill.classList.add('current');pill.scrollIntoView({behavior:'smooth',block:'nearest',inline:'nearest'});}
+
+  // Render card
+  renderCard(q);
+  window.scrollTo({top:0,behavior:'smooth'});
+
+  // Play audio THEN start answer timer
+  playAudioForQuestion(q,()=>{
+    startQTimer(answerTimeSec, ()=>advanceQuestion());
+  });
 }
 
-// ── Submit ──
-function submitTest(){
-  if(timerInterval) clearInterval(timerInterval);
-  const scores=calcScores();
-  showResults(scores);
+function advanceQuestion(){
+  stopQTimer();
+  speechSynthesis.cancel();
+  const next=currentQIdx+1;
+  if(next>=questions.length) finishTest();
+  else showQuestion(next);
 }
 
-function calcScores(){
-  let p1c=0,p2c=0,p3c=0,p4c=0;
-  let qn=1;
-
-  testData.p1.forEach(q=>{
-    if(userAnswers[qn]===(q.answer??0)) p1c++;
-    qn++;
-  });
-  testData.p2.forEach(q=>{
-    if(userAnswers[qn]===(q.answer??0)) p2c++;
-    qn++;
-  });
-  testData.p3.forEach(conv=>{
-    (conv.questions||[]).forEach(q=>{
-      if(userAnswers[qn]===(q.ans??0)) p3c++;
-      qn++;
-    });
-  });
-  testData.p4.forEach(talk=>{
-    (talk.questions||[]).forEach(q=>{
-      if(userAnswers[qn]===(q.ans??0)) p4c++;
-      qn++;
-    });
-  });
-
-  const total=p1c+p2c+p3c+p4c;
-  const pct=Math.round(total/100*100);
-  // Estimate TOEIC score (scaled, max 495)
-  const toeicScore=Math.round((pct/100)*495);
-  return {p1c,p2c,p3c,p4c,total,pct,toeicScore};
+function skipToNext(){
+  advanceQuestion();
 }
 
-function showResults(s){
-  document.getElementById('test-area').style.display='none';
-  document.getElementById('results-area').style.display='block';
-  document.getElementById('rh-score').textContent=s.toeicScore;
-  document.getElementById('rh-pct').textContent=`${s.total}/100 ${lang==='ko'?'정답':'correct'} (${s.pct}%)`;
-  const msg=s.pct>=80?(lang==='ko'?'🎉 훌륭합니다! 실전에서도 좋은 결과를 기대할 수 있습니다.':'🎉 Excellent! You are well-prepared for the real exam.')
-    :s.pct>=60?(lang==='ko'?'👍 좋은 성적입니다. 틀린 문제를 복습해 보세요.':'👍 Good result. Review the questions you missed.')
-    :(lang==='ko'?'💪 꾸준한 연습이 필요합니다. 각 파트별로 더 집중해 보세요.':'💪 Keep practicing. Focus on each part systematically.');
-  document.getElementById('rh-msg').textContent=msg;
+// ── Render card ──
+function renderCard(q){
+  const wrap=document.getElementById('q-card-wrap');
+  let html=`<div class="q-card">
+    <div class="qc-header">
+      <span class="qc-part-badge">${q.partLabel}</span>
+      <span class="qc-title">${getCardTitle(q)}</span>
+    </div>
+    <div class="qc-body">`;
 
-  document.getElementById('rb-p1').textContent=`${s.p1c}/6`;
-  document.getElementById('rb-p1-pct').textContent=`${Math.round(s.p1c/6*100)}%`;
-  document.getElementById('rb-p2').textContent=`${s.p2c}/25`;
-  document.getElementById('rb-p2-pct').textContent=`${Math.round(s.p2c/25*100)}%`;
-  document.getElementById('rb-p3').textContent=`${s.p3c}/39`;
-  document.getElementById('rb-p3-pct').textContent=`${Math.round(s.p3c/39*100)}%`;
-  document.getElementById('rb-p4').textContent=`${s.p4c}/30`;
-  document.getElementById('rb-p4-pct').textContent=`${Math.round(s.p4c/30*100)}%`;
-
-  document.getElementById('results-area').scrollIntoView({behavior:'smooth'});
-}
-
-function reviewAnswers(){
-  document.getElementById('results-area').style.display='none';
-  document.getElementById('test-area').style.display='block';
-  // Mark all correct/wrong
-  let qn=1;
-  function markQ(qn, correctAns, totalOpts){
-    const chosen=userAnswers[qn]??-1;
-    for(let j=0;j<totalOpts;j++){
-      const el=document.getElementById(`q${qn}o${j}`);
-      if(!el) continue;
-      el.disabled=true;
-      el.classList.remove('selected','wrong','correct');
-      if(j===chosen && j!==correctAns) el.classList.add('wrong');
-      if(j===correctAns) el.classList.add('correct');
-    }
+  if(q.type==='photo'){
+    html+=`<div class="q-photo" id="qphoto">
+      <div class="photo-skel" id="qphoto-skel"><span style="font-size:28px;opacity:0.3;">📷</span></div>
+      <img id="qphoto-img" alt="${q.scene}">
+      <div class="photo-caption" id="qphoto-cap">${q.scene}</div>
+    </div>`;
+    html+=`<div class="audio-status"><div class="audio-wave" id="audio-wave"><span></span><span></span><span></span><span></span><span></span></div><div class="audio-label" id="audio-label"><strong data-en="Listening..." data-ko="듣는 중...">Listening...</strong> — ${lang==='ko'?'4개 보기를 자동으로 읽어드립니다.':'4 options will be read aloud automatically.'}</div></div>`;
+    html+=`<div class="opts" id="opts-wrap">${optHtml(q.options,q.qNum)}</div>`;
+    // Load photo async
+    setTimeout(()=>loadPhoto(q.imageKeyword,q.scene),50);
   }
-  testData.p1.forEach(q=>{markQ(qn,q.answer??0,4);qn++;});
-  testData.p2.forEach(q=>{markQ(qn,q.answer??0,3);qn++;});
-  testData.p3.forEach(conv=>{(conv.questions||[]).forEach(q=>{markQ(qn,q.ans??0,4);qn++;});});
-  testData.p4.forEach(talk=>{(talk.questions||[]).forEach(q=>{markQ(qn,q.ans??0,4);qn++;});});
-  window.scrollTo({top:0,behavior:'smooth'});
+  else if(q.type==='qa'){
+    html+=`<div class="audio-status"><div class="audio-wave" id="audio-wave"><span></span><span></span><span></span><span></span><span></span></div><div class="audio-label" id="audio-label"><strong data-en="Listening..." data-ko="듣는 중...">Listening...</strong> — ${lang==='ko'?'질문과 3개의 응답을 듣고 선택하세요.':'Listen to the question and 3 responses, then choose.'}</div></div>`;
+    html+=`<div class="opts" id="opts-wrap">${optHtml(q.options,q.qNum)}</div>`;
+  }
+  else if(q.type==='conv'){
+    if(q.isFirstInSet){
+      // Show dialogue
+      html+=`<div style="font-size:11px;font-weight:600;color:var(--toeic);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px;">${q.convTitle}</div>`;
+      html+=`<div class="audio-status"><div class="audio-wave" id="audio-wave"><span></span><span></span><span></span><span></span><span></span></div><div class="audio-label" id="audio-label"><strong>🗣 ${lang==='ko'?'대화를 듣는 중...':'Listening to conversation...'}</strong></div></div>`;
+      html+=`<div class="dialogue-box" id="dialogue-box">${(q.dialogue||[]).map((l,i)=>`<div class="dl-line" id="dl-${i}"><span class="dl-speaker ${l.speaker==='Woman'?'sp-woman':l.speaker==='Man'?'sp-man':'sp-narrator'}">${l.speaker}</span><div class="dl-text">${l.text}</div></div>`).join('')}</div>`;
+    } else {
+      html+=`<div class="audio-status" style="margin-bottom:10px;"><div class="audio-wave" id="audio-wave"><span></span><span></span><span></span><span></span><span></span></div><div class="audio-label" id="audio-label"><strong>${lang==='ko'?'문제를 듣는 중...':'Listening to question...'}</strong> Q${q.subIdx+1} of ${q.setSize}</div></div>`;
+    }
+    html+=`<div class="sub-q"><div class="sub-q-num">Q ${q.qNum} — ${lang==='ko'?`${q.subIdx+1}번 문제`:`Question ${q.subIdx+1} of ${q.setSize}`}</div><div class="sub-q-text">${q.q}</div><div class="opts" id="opts-wrap">${optHtml(q.opts,q.qNum)}</div></div>`;
+  }
+  else if(q.type==='talk'){
+    if(q.isFirstInSet){
+      html+=`<div style="font-size:11px;font-weight:700;color:var(--toeic);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px;">${q.talkType} — ${q.talkTitle}</div>`;
+      html+=`<div style="font-size:11px;color:var(--text-muted);margin-bottom:10px;">${q.situation}</div>`;
+      html+=`<div class="audio-status"><div class="audio-wave" id="audio-wave"><span></span><span></span><span></span><span></span><span></span></div><div class="audio-label" id="audio-label"><strong>📢 ${lang==='ko'?'담화를 듣는 중...':'Listening to talk...'}</strong></div></div>`;
+      html+=`<div class="dialogue-box" id="dialogue-box">${(q.lines||[]).map((l,i)=>`<div class="dl-line" id="dl-${i}"><span class="dl-speaker sp-narrator">${l.speaker||'Narrator'}</span><div class="dl-text">${l.text}</div></div>`).join('')}</div>`;
+    } else {
+      html+=`<div class="audio-status" style="margin-bottom:10px;"><div class="audio-wave" id="audio-wave"><span></span><span></span><span></span><span></span><span></span></div><div class="audio-label" id="audio-label"><strong>${lang==='ko'?'문제를 듣는 중...':'Listening to question...'}</strong> Q${q.subIdx+1} of ${q.setSize}</div></div>`;
+    }
+    html+=`<div class="sub-q"><div class="sub-q-num">Q ${q.qNum} — ${lang==='ko'?`${q.subIdx+1}번 문제`:`Question ${q.subIdx+1} of ${q.setSize}`}</div><div class="sub-q-text">${q.q}</div><div class="opts" id="opts-wrap">${optHtml(q.opts,q.qNum)}</div></div>`;
+  }
+
+  html+='</div></div>';
+  wrap.innerHTML=html;
 }
 
-function resetTest(){
-  document.getElementById('results-area').style.display='none';
-  document.getElementById('test-area').style.display='none';
-  document.getElementById('setup-card').style.display='block';
-  document.getElementById('start-btn').disabled=false;
-  // Reset steps
-  ['p1','p2','p3','p4'].forEach(p=>{
-    document.getElementById('step-'+p).className='gp-step';
-    document.getElementById('sub-'+p).textContent=lang==='ko'?'대기 중...':'Waiting...';
+function getCardTitle(q){
+  if(q.type==='photo') return lang==='ko'?'사진 묘사 — 가장 잘 묘사한 문장을 선택하세요':'Photographs — Choose the best description';
+  if(q.type==='qa') return lang==='ko'?'질의응답 — 가장 알맞은 응답을 선택하세요':'Q&A — Choose the best response';
+  if(q.type==='conv') return q.convTitle||(lang==='ko'?'짧은 대화':'Short Conversation');
+  if(q.type==='talk') return `${q.talkType||''} — ${q.talkTitle||''}`;
+  return '';
+}
+
+const LETTERS=['A','B','C','D'];
+function optHtml(opts,qNum){
+  return (opts||[]).map((o,j)=>`<button class="opt" id="opt-${qNum}-${j}" onclick="selectAnswer(${qNum},${j})">
+    <span class="opt-ltr">${LETTERS[j]}</span>${o}
+  </button>`).join('');
+}
+
+function selectAnswer(qNum,idx){
+  userAnswers[qNum]=idx;
+  // Highlight selected
+  for(let j=0;j<4;j++){
+    const b=document.getElementById(`opt-${qNum}-${j}`);
+    if(b) b.classList.toggle('selected',j===idx);
+  }
+  // Mark pill answered
+  const pill=document.getElementById(`pill-${qNum}`);
+  if(pill) pill.classList.add('answered');
+}
+
+// ── AUDIO PLAYBACK ──
+function getEngVoices(){
+  const all=speechSynthesis.getVoices();
+  return all.filter(v=>v.lang.startsWith('en'));
+}
+function getFemaleVoice(eng){
+  return eng.find(v=>/(Samantha|Karen|Moira|Victoria|Fiona|Tessa|Zira|Hazel|female)/i.test(v.name))||eng[0];
+}
+function getMaleVoice(eng){
+  return eng.find(v=>/(Daniel|Alex|Fred|Tom|David|Mark|James|George|male)/i.test(v.name))||eng[Math.min(1,eng.length-1)];
+}
+
+function speak(text,voice,rate,onEnd){
+  if(!text){if(onEnd) onEnd();return;}
+  const utt=new SpeechSynthesisUtterance(text);
+  utt.lang='en-US'; utt.rate=rate||speechRate; utt.pitch=1.0;
+  if(voice) utt.voice=voice;
+  utt.onend=()=>{if(onEnd) onEnd();};
+  utt.onerror=()=>{if(onEnd) onEnd();};
+  speechSynthesis.speak(utt);
+}
+
+function setWave(playing){
+  const w=document.getElementById('audio-wave');
+  if(w) w.classList.toggle('playing',playing);
+}
+
+function highlightLine(idx){
+  document.querySelectorAll('.dl-text').forEach(el=>el.classList.remove('highlight'));
+  const el=document.getElementById(`dl-${idx}`);
+  if(el) el.querySelector('.dl-text')?.classList.add('highlight');
+}
+
+function playAudioForQuestion(q,onDone){
+  speechSynthesis.cancel();
+  setWave(true);
+  const eng=getEngVoices();
+  const femVoice=getFemaleVoice(eng);
+  const manVoice=getMaleVoice(eng);
+
+  if(q.type==='photo'){
+    // Read 4 options: A. text  B. text ...
+    const text=q.options.map((o,i)=>`${LETTERS[i]}. ${o.replace(/^\([ABCD]\)\s*/,'')}`).join('. ');
+    speak(text,femVoice,speechRate,()=>{setWave(false);if(onDone) onDone();});
+  }
+  else if(q.type==='qa'){
+    // Read question (female) then options (male)
+    const qText=q.question;
+    const optsText=q.options.map((o,i)=>`${LETTERS[i]}. ${o.replace(/^\([ABCD]\)\s*/,'')}`).join('. ');
+    speak(qText,femVoice,speechRate,()=>{
+      setTimeout(()=>speak(optsText,manVoice,speechRate,()=>{setWave(false);if(onDone) onDone();}),400);
+    });
+  }
+  else if(q.type==='conv' && q.isFirstInSet){
+    // Play full dialogue then read question
+    const lines=q.dialogue||[];
+    const speakers=[...new Set(lines.map(l=>l.speaker))];
+    const voiceMap={};
+    speakers.forEach((sp,i)=>voiceMap[sp]=i===0?femVoice:manVoice);
+    playLines(lines,voiceMap,0,()=>{
+      setTimeout(()=>{
+        highlightLine(-1);
+        speak(q.q,femVoice,speechRate,()=>{setWave(false);if(onDone) onDone();});
+      },500);
+    });
+  }
+  else if(q.type==='conv'){
+    // Follow-up question (no dialogue replay)
+    speak(q.q,femVoice,speechRate,()=>{setWave(false);if(onDone) onDone();});
+  }
+  else if(q.type==='talk' && q.isFirstInSet){
+    const lines=q.lines||[];
+    playLines(lines,{Narrator:manVoice},0,()=>{
+      setTimeout(()=>{
+        highlightLine(-1);
+        speak(q.q,femVoice,speechRate,()=>{setWave(false);if(onDone) onDone();});
+      },500);
+    });
+  }
+  else if(q.type==='talk'){
+    speak(q.q,femVoice,speechRate,()=>{setWave(false);if(onDone) onDone();});
+  }
+}
+
+function playLines(lines,voiceMap,idx,onAllDone){
+  if(idx>=lines.length){if(onAllDone) onAllDone();return;}
+  const line=lines[idx];
+  highlightLine(idx);
+  const v=voiceMap[line.speaker]||voiceMap['Narrator']||null;
+  speak(line.text,v,speechRate,()=>{
+    setTimeout(()=>playLines(lines,voiceMap,idx+1,onAllDone),180);
   });
-  document.getElementById('gp-fill').style.width='0%';
-  document.getElementById('gp-pct').textContent='0%';
-  testData={p1:[],p2:[],p3:[],p4:[]};
-  userAnswers={}; answered=0;
-  window.scrollTo({top:0,behavior:'smooth'});
 }
 
-// ── Unsplash Photo Loader (API key) ──
-async function loadP1Photo(keyword, imgId, skelId, capId, caption){
+// ── Per-question timer ──
+function startQTimer(sec,onExpire){
+  clearInterval(qTimerInterval);
+  qTimeLeft=sec;
+  updateTimerBar(sec,sec);
+  qTimerInterval=setInterval(()=>{
+    qTimeLeft--;
+    updateTimerBar(qTimeLeft,sec);
+    if(qTimeLeft<=0){clearInterval(qTimerInterval);if(onExpire) onExpire();}
+  },1000);
+}
+function stopQTimer(){clearInterval(qTimerInterval);}
+function updateTimerBar(left,total){
+  const pct=Math.max(0,left/total*100);
+  const fill=document.getElementById('ph-timer-fill');
+  if(fill){fill.style.width=pct+'%';fill.classList.toggle('urgent',left<=8);}
+}
+
+// ── Photo loader ──
+async function loadPhoto(keyword,caption){
   if(!unsplashKey){
-    // No key: show clean placeholder
-    const skel=document.getElementById(skelId);
-    if(skel) skel.innerHTML=`<div style="text-align:center;padding:20px;"><div style="font-size:32px;margin-bottom:8px;">📷</div><div style="font-size:12px;color:#b0a090;font-family:DM Sans,sans-serif;line-height:1.5;">${caption}</div></div>`;
+    const skel=document.getElementById('qphoto-skel');
+    if(skel) skel.innerHTML=`<div style="text-align:center;padding:20px;"><div style="font-size:36px;">📷</div><div style="font-size:12px;color:#b0a090;margin-top:8px;font-family:DM Sans,sans-serif;">${caption}</div></div>`;
     return;
   }
   try{
@@ -806,35 +834,96 @@ async function loadP1Photo(keyword, imgId, skelId, capId, caption){
     const r=await fetch(`https://api.unsplash.com/search/photos?query=${encodeURIComponent(keyword)}&per_page=20&page=${page}&orientation=landscape&content_filter=high`,{headers:{'Authorization':'Client-ID '+unsplashKey}});
     const d=await r.json();
     let url=null;
-    if(d.results&&d.results.length>0){
-      url=d.results[Math.floor(Math.random()*Math.min(d.results.length,10))].urls.regular;
-    } else {
-      // Retry with first word
-      const kw=keyword.split(' ')[0];
-      const r2=await fetch(`https://api.unsplash.com/search/photos?query=${encodeURIComponent(kw)}&per_page=10&orientation=landscape`,{headers:{'Authorization':'Client-ID '+unsplashKey}});
+    if(d.results?.length) url=d.results[Math.floor(Math.random()*Math.min(d.results.length,10))].urls.regular;
+    else{
+      const r2=await fetch(`https://api.unsplash.com/search/photos?query=${encodeURIComponent(keyword.split(' ')[0])}&per_page=10&orientation=landscape`,{headers:{'Authorization':'Client-ID '+unsplashKey}});
       const d2=await r2.json();
-      if(d2.results&&d2.results.length>0) url=d2.results[Math.floor(Math.random()*d2.results.length)].urls.regular;
+      if(d2.results?.length) url=d2.results[0].urls.regular;
     }
     if(url){
-      const img=document.getElementById(imgId);
-      const skel=document.getElementById(skelId);
-      const cap=document.getElementById(capId);
+      const img=document.getElementById('qphoto-img');
+      const skel=document.getElementById('qphoto-skel');
+      const cap=document.getElementById('qphoto-cap');
       if(img){
-        img.onload=()=>{if(skel) skel.style.display='none'; img.style.display='block'; if(cap) cap.style.display='block';};
-        img.onerror=()=>{if(skel) skel.innerHTML=`<div style="text-align:center;padding:20px;"><div style="font-size:32px;">📷</div><div style="font-size:11px;color:#b0a090;margin-top:6px;font-family:DM Sans,sans-serif;">${caption}</div></div>`;};
+        img.onload=()=>{if(skel)skel.style.display='none';img.style.display='block';if(cap)cap.style.display='block';};
         img.src=url;
       }
     } else {
-      const skel=document.getElementById(skelId);
-      if(skel) skel.innerHTML=`<div style="text-align:center;padding:20px;"><div style="font-size:32px;margin-bottom:8px;">📷</div><div style="font-size:12px;color:#b0a090;font-family:DM Sans,sans-serif;line-height:1.5;">${caption}</div></div>`;
+      const skel=document.getElementById('qphoto-skel');
+      if(skel) skel.innerHTML=`<div style="text-align:center;padding:20px;"><div style="font-size:36px;">📷</div><div style="font-size:12px;color:#b0a090;margin-top:8px;font-family:DM Sans,sans-serif;">${caption}</div></div>`;
     }
-  }catch(e){
-    const skel=document.getElementById(skelId);
-    if(skel) skel.innerHTML=`<div style="text-align:center;padding:20px;"><div style="font-size:32px;">📷</div><div style="font-size:11px;color:#b0a090;margin-top:6px;font-family:DM Sans,sans-serif;">${caption}</div></div>`;
-  }
+  }catch(e){console.warn('Photo load failed',e);}
 }
 
-// ── Init ──
+// ════════════════════════════════════════════════
+//  FINISH & RESULTS
+// ════════════════════════════════════════════════
+function finishTest(){
+  stopQTimer(); clearInterval(clockInterval); speechSynthesis.cancel();
+  document.getElementById('player-area').style.display='none';
+  showResults();
+}
+
+function showResults(){
+  let p1c=0,p2c=0,p3c=0,p4c=0,total=0;
+  questions.forEach(q=>{
+    const chosen=userAnswers[q.qNum];
+    const correct=q.answer??q.ans??0;
+    const isRight=chosen===correct;
+    if(isRight) total++;
+    if(q.part==='p1'&&isRight) p1c++;
+    if(q.part==='p2'&&isRight) p2c++;
+    if(q.part==='p3'&&isRight) p3c++;
+    if(q.part==='p4'&&isRight) p4c++;
+  });
+  const pct=Math.round(total/questions.length*100);
+  const score=Math.round(pct/100*495);
+
+  document.getElementById('rh-score').textContent=score;
+  document.getElementById('rh-pct').textContent=`${total}/${questions.length} ${lang==='ko'?'정답':'correct'} (${pct}%)`;
+  document.getElementById('rh-msg').textContent=pct>=80?(lang==='ko'?'🎉 훌륭합니다! 실전 준비 완료.':'🎉 Excellent! You are exam-ready.')
+    :pct>=60?(lang==='ko'?'👍 좋은 성적! 틀린 문제를 복습해 보세요.':'👍 Good result! Review what you missed.')
+    :(lang==='ko'?'💪 꾸준히 연습해 보세요.':'💪 Keep practicing!');
+
+  const p1total=testData.p1.length;
+  const p2total=testData.p2.length;
+  const p3total=testData.p3.reduce((s,c)=>s+c.questions.length,0);
+  const p4total=testData.p4.reduce((s,t)=>s+t.questions.length,0);
+
+  document.getElementById('rb-p1').textContent=`${p1c}/${p1total}`;document.getElementById('rb-p1p').textContent=`${p1total?Math.round(p1c/p1total*100):0}%`;
+  document.getElementById('rb-p2').textContent=`${p2c}/${p2total}`;document.getElementById('rb-p2p').textContent=`${p2total?Math.round(p2c/p2total*100):0}%`;
+  document.getElementById('rb-p3').textContent=`${p3c}/${p3total}`;document.getElementById('rb-p3p').textContent=`${p3total?Math.round(p3c/p3total*100):0}%`;
+  document.getElementById('rb-p4').textContent=`${p4c}/${p4total}`;document.getElementById('rb-p4p').textContent=`${p4total?Math.round(p4c/p4total*100):0}%`;
+
+  document.getElementById('results-area').style.display='block';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ════════════════════════════════════════════════
+//  RESET
+// ════════════════════════════════════════════════
+function resetTest(){
+  stopQTimer(); clearInterval(clockInterval); speechSynthesis.cancel();
+  document.getElementById('results-area').style.display='none';
+  document.getElementById('player-area').style.display='none';
+  document.getElementById('setup-card').style.display='block';
+  document.getElementById('start-btn').disabled=false;
+  ['p1','p2','p3','p4'].forEach(p=>{
+    document.getElementById('step-'+p).className='gp-step';
+    document.getElementById('sub-'+p).textContent='Waiting...';
+  });
+  document.getElementById('gp-fill').style.width='0%';
+  document.getElementById('gp-pct').textContent='0%';
+  testData={p1:[],p2:[],p3:[],p4:[]};
+  questions=[]; userAnswers={}; currentQIdx=0;
+  document.getElementById('q-card-wrap').innerHTML='';
+  document.getElementById('aw-pills').innerHTML='';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ════════════════════════════════════════════════
+//  INIT
+// ════════════════════════════════════════════════
 (function(){
   let saved; try{saved=localStorage.getItem('lw-lang');}catch(e){}
   setLang(saved||((navigator.language||'').startsWith('ko')?'ko':'en'));
@@ -846,6 +935,7 @@ async function loadP1Photo(keyword, imgId, skelId, capId, caption){
     document.getElementById('api-setup').style.display='none';
     document.getElementById('main-content').style.display='block';
   }
+  voices=speechSynthesis.getVoices();
 })();
 </script>
 </body>
