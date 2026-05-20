@@ -267,6 +267,25 @@ nav{background:var(--navy2);height:56px;display:flex;align-items:center;padding:
   .form-row{grid-template-columns:1fr;}
 }
 </style>
+<script>
+// ── AUTH GUARD ──
+(function(){
+  var user;
+  try{ user = JSON.parse(localStorage.getItem('lw-user')); }catch(e){}
+  if(!user){ location.href='login.html'; return; }
+  if(user.role === 'admin'){ location.href='admin.html'; return; }
+  // 사용자 정보 반영
+  document.addEventListener('DOMContentLoaded', function(){
+    var nameEl = document.getElementById('user-name');
+    var emailEl = document.getElementById('user-email');
+    var badgeEl = document.getElementById('plan-badge');
+    if(nameEl) nameEl.textContent = user.name || '';
+    if(emailEl) emailEl.textContent = user.email || '';
+    if(badgeEl) badgeEl.textContent = user.plan || 'Free';
+    var avatarEl = document.querySelector('.avatar, [style*="font-size:22px"]');
+  });
+})();
+</script>
 </head>
 <body>
 
@@ -278,7 +297,7 @@ nav{background:var(--navy2);height:56px;display:flex;align-items:center;padding:
   </a>
   <div class="nav-right">
     <span class="nav-badge" id="plan-badge">TOEIC + IELTS</span>
-    <button class="nav-signout" onclick="alert('로그아웃')" data-en="Sign out" data-ko="로그아웃">Sign out</button>
+    <button class="nav-signout" onclick="localStorage.removeItem('lw-user');location.href='login.html'" data-en="Sign out" data-ko="로그아웃">Sign out</button>
     <div class="lang-sw">
       <button class="lbtn act" onclick="setLang('en')" id="btn-en">EN</button>
       <button class="lbtn" onclick="setLang('ko')" id="btn-ko">한국어</button>
