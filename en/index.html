@@ -164,7 +164,7 @@ nav{
   border:1px solid rgba(255,255,255,0.25);cursor:pointer;transition:all 0.2s;text-decoration:none;
 }
 .pill-free{background:rgba(255,255,255,0.22);color:#fff;}
-.pill-pro{background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.7);}
+.pill-pro{background:rgba(255,255,255,0.22);color:#fff;}
 .pill:hover{background:rgba(255,255,255,0.3);color:#fff;}
 
 /* Skill cards grid */
@@ -230,6 +230,17 @@ nav{
   font-size:10px;font-weight:700;padding:3px 9px;border-radius:8px;
   background:#fff7ed;color:#c2410c;border:0.5px solid rgba(194,65,12,0.2);
 }
+/* pricing info strip under each exam card */
+.ec-pricing{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 14px;border-radius:9px;margin-bottom:14px;
+  font-size:12px;font-weight:500;
+}
+.ecp-toeic{background:var(--toeic-light,#faeeda);color:var(--toeic,#b07010);}
+.ecp-toefl{background:#e5edf8;color:var(--toefl,#2952a3);}
+.ecp-ielts{background:#f7eef1;color:var(--ielts,#7a1535);}
+.ecp-opic{background:#f0eaf8;color:var(--opic,#5b2d8e);}
+.ecp-price{font-family:'DM Serif Display',serif;font-size:16px;font-weight:400;}
 
 /* TOEIC */
 .toeic-header{background:var(--toeic-card);}
@@ -343,17 +354,17 @@ nav{
     <div class="general-card">
       <div class="gc-inner">
         <div class="gc-top">
-          <div class="gc-badge" data-en="MOST POPULAR · A1 &amp; A2 FREE" data-ko="인기 · A1 &amp; A2 무료">MOST POPULAR · A1 &amp; A2 FREE</div>
+          <div class="gc-badge" data-en="MOST POPULAR · 100% FREE" data-ko="인기 · 100% 무료">MOST POPULAR · 100% FREE</div>
         </div>
         <div class="gc-title" data-en="General English" data-ko="General 영어">General English</div>
-        <div class="gc-desc" data-en="Vocabulary, Grammar, Listening, Reading, Speaking, and Writing — all in one place. Build your foundation from A1 and advance to C2 fluency." data-ko="어휘, 문법, 듣기, 읽기, 말하기, 쓰기 — 한 곳에서 모두. A1부터 기초를 쌓고 C2 유창성까지 향상하세요.">Vocabulary, Grammar, Listening, Reading, Speaking, and Writing — all in one place. Build your foundation from A1 and advance to C2 fluency.</div>
+        <div class="gc-desc" data-en="Vocabulary, Grammar, Listening, Reading, Speaking, and Writing — all in one place. All levels A1 to C2 are completely free, forever." data-ko="어휘, 문법, 듣기, 읽기, 말하기, 쓰기 — 한 곳에서 모두. A1~C2 전 레벨이 완전히 무료입니다.">Vocabulary, Grammar, Listening, Reading, Speaking, and Writing — all in one place. All levels A1 to C2 are completely free, forever.</div>
         <div class="level-pills">
           <a href="general/index.html?level=A1" class="pill pill-free">A1 Free</a>
           <a href="general/index.html?level=A2" class="pill pill-free">A2 Free</a>
-          <a href="general/index.html?level=B1" class="pill pill-pro">B1 Pro</a>
-          <a href="general/index.html?level=B2" class="pill pill-pro">B2 Pro</a>
-          <a href="general/index.html?level=C1" class="pill pill-pro">C1 Pro</a>
-          <a href="general/index.html?level=C2" class="pill pill-pro">C2 Pro</a>
+          <a href="general/index.html?level=B1" class="pill pill-free">B1 Free</a>
+          <a href="general/index.html?level=B2" class="pill pill-free">B2 Free</a>
+          <a href="general/index.html?level=C1" class="pill pill-free">C1 Free</a>
+          <a href="general/index.html?level=C2" class="pill pill-free">C2 Free</a>
         </div>
       </div>
     </div>
@@ -407,14 +418,14 @@ nav{
 
   <!-- ──── EXAM PREPARATION ──── -->
   <div class="exam-section fade-in">
-    <div class="sec-heading" data-en="EXAM PREPARATION — SEPARATE PLAN" data-ko="시험 대비 — 별도 플랜">EXAM PREPARATION — SEPARATE PLAN</div>
+    <div class="sec-heading" data-en="EXAM PREPARATION — PER EXAM PLAN" data-ko="시험 대비 — 시험별 플랜">EXAM PREPARATION — PER EXAM PLAN</div>
 
     <div class="exam-grid">
 
       <!-- TOEIC -->
       <div class="exam-card">
         <div class="ec-header toeic-header">
-          <span class="ec-badge">Separate Plan</span>
+          <span class="ec-badge" data-en="Per Exam Plan" data-ko="시험별 플랜">Per Exam Plan</span>
           <span class="ec-icon">🏆</span>
           <div class="ec-title">TOEIC</div>
           <div class="ec-subtitle" data-en="Test of English for International Communication" data-ko="국제 영어소통 능력 시험">Test of English for International Communication</div>
@@ -430,6 +441,14 @@ nav{
               <span class="ep-dot toeic-dot"></span>
               <span>📖 <strong data-en="Reading" data-ko="읽기">Reading</strong> — <span data-en="Part 5 · 6 · 7" data-ko="Part 5 · 6 · 7">Part 5 · 6 · 7</span></span>
             </div>
+            <div class="ep-item">
+              <span class="ep-dot toeic-dot"></span>
+              <span>📝 <strong data-en="Full Mock Test" data-ko="실전 모의고사">Full Mock Test</strong> — <span data-en="LC 100Q + RC 100Q · Auto-scored" data-ko="LC 100문항 + RC 100문항 · 자동 채점">LC 100Q + RC 100Q · Auto-scored</span></span>
+            </div>
+          </div>
+          <div class="ec-pricing ecp-toeic">
+            <span data-en="🏷 Full TOEIC Access (LC + RC + Mock Test)" data-ko="🏷 TOEIC 전체 이용 (LC + RC + 모의고사)">🏷 Full TOEIC Access (LC + RC + Mock Test)</span>
+            <span class="ecp-price" data-en="₩12,900/mo" data-ko="₩12,900/월">₩12,900/mo</span>
           </div>
           <a href="toeic/index.html" class="ec-footer toeic-footer">
             <span data-en="Start TOEIC Prep" data-ko="TOEIC 준비 시작">Start TOEIC Prep</span>
@@ -441,7 +460,7 @@ nav{
       <!-- TOEFL -->
       <div class="exam-card">
         <div class="ec-header toefl-header">
-          <span class="ec-badge">Separate Plan</span>
+          <span class="ec-badge" data-en="Per Exam Plan" data-ko="시험별 플랜">Per Exam Plan</span>
           <span class="ec-icon">🎓</span>
           <div class="ec-title">TOEFL iBT</div>
           <div class="ec-subtitle" data-en="Test of English as a Foreign Language" data-ko="외국어로서의 영어 시험">Test of English as a Foreign Language</div>
@@ -466,6 +485,10 @@ nav{
               <span>✍️ <strong data-en="Writing" data-ko="쓰기">Writing</strong> — <span data-en="Integrated · Discussion" data-ko="통합형 · 토론형">Integrated · Discussion</span></span>
             </div>
           </div>
+          <div class="ec-pricing ecp-toefl">
+            <span data-en="🏷 Full TOEFL Access (R + L + S + W)" data-ko="🏷 TOEFL 전체 이용 (읽기+듣기+말하기+쓰기)">🏷 Full TOEFL Access (R + L + S + W)</span>
+            <span class="ecp-price" data-en="₩12,900/mo" data-ko="₩12,900/월">₩12,900/mo</span>
+          </div>
           <a href="toefl/index.html" class="ec-footer toefl-footer">
             <span data-en="Start TOEFL Prep" data-ko="TOEFL 준비 시작">Start TOEFL Prep</span>
             <span class="ef-arrow">→</span>
@@ -476,7 +499,7 @@ nav{
       <!-- IELTS -->
       <div class="exam-card">
         <div class="ec-header ielts-header">
-          <span class="ec-badge">Separate Plan</span>
+          <span class="ec-badge" data-en="Per Exam Plan" data-ko="시험별 플랜">Per Exam Plan</span>
           <span class="ec-icon">🌍</span>
           <div class="ec-title">IELTS</div>
           <div class="ec-subtitle" data-en="International English Language Testing System" data-ko="국제 영어 능력 평가 시험">International English Language Testing System</div>
@@ -501,6 +524,10 @@ nav{
               <span>🗣 <strong data-en="Speaking" data-ko="말하기">Speaking</strong> — <span data-en="Part 1 · 2 · 3" data-ko="Part 1 · 2 · 3">Part 1 · 2 · 3</span></span>
             </div>
           </div>
+          <div class="ec-pricing ecp-ielts">
+            <span data-en="🏷 Full IELTS Access (L + R + W + S)" data-ko="🏷 IELTS 전체 이용 (듣기+읽기+쓰기+말하기)">🏷 Full IELTS Access (L + R + W + S)</span>
+            <span class="ecp-price" data-en="₩12,900/mo" data-ko="₩12,900/월">₩12,900/mo</span>
+          </div>
           <a href="ielts/index.html" class="ec-footer ielts-footer">
             <span data-en="Start IELTS Prep" data-ko="IELTS 준비 시작">Start IELTS Prep</span>
             <span class="ef-arrow">→</span>
@@ -511,7 +538,7 @@ nav{
       <!-- OPIc -->
       <div class="exam-card">
         <div class="ec-header opic-header">
-          <span class="ec-badge">Separate Plan</span>
+          <span class="ec-badge" data-en="Per Exam Plan" data-ko="시험별 플랜">Per Exam Plan</span>
           <span class="ec-icon">🎤</span>
           <div class="ec-title">OPIc</div>
           <div class="ec-subtitle" data-en="Oral Proficiency Interview — computer" data-ko="컴퓨터 기반 구술 능력 인터뷰">Oral Proficiency Interview — computer</div>
@@ -535,6 +562,10 @@ nav{
               <span class="ep-dot opic-dot"></span>
               <span>🔄 <span data-en="Role Play &amp; Compare" data-ko="롤플레이 &amp; 비교">Role Play &amp; Compare</span></span>
             </div>
+          </div>
+          <div class="ec-pricing ecp-opic">
+            <span data-en="🏷 Full OPIc Access (5 Question Types)" data-ko="🏷 OPIc 전체 이용 (5가지 유형)">🏷 Full OPIc Access (5 Question Types)</span>
+            <span class="ecp-price" data-en="₩9,900/mo" data-ko="₩9,900/월">₩9,900/mo</span>
           </div>
           <a href="opic/index.html" class="ec-footer opic-footer">
             <span data-en="Start OPIc Prep" data-ko="OPIc 준비 시작">Start OPIc Prep</span>
