@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LinguaWalk — TOEFL iBT — Writing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  :root{
+    --navy:#1C2B45;--tfl:#1C3A6E;--tfl-mid:#2952a3;--tfl-light:#e8eef8;
+    --teal:#2A7F6F;--teal-mid:#1D9E75;
+    --bg:#F8F7F4;--white:#fff;--text:#1C2B45;--text-muted:#5a6a82;--text-light:#94a3b8;
+    --border:rgba(28,43,69,0.1);--border-md:rgba(28,43,69,0.18);
+  }
+  body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+  nav{background:rgba(28,43,69,0.97);height:56px;display:flex;align-items:center;padding:0 5%;border-bottom:0.5px solid rgba(255,255,255,0.08);position:sticky;top:0;z-index:100;}
+  .nav-logo{display:flex;align-items:center;gap:8px;text-decoration:none;}
+  .nav-lm{width:28px;height:28px;background:var(--teal);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;}
+  .nav-lt{font-size:16px;font-weight:600;color:#fff;}
+  .nav-sep{width:1px;height:18px;background:rgba(255,255,255,0.15);margin:0 12px;}
+  .nav-page{font-size:13px;color:rgba(255,255,255,0.6);}
+  .nav-space{flex:1;}
+  .nav-back{font-size:13px;color:rgba(255,255,255,0.6);text-decoration:none;padding:6px 10px;border-radius:7px;margin-right:6px;transition:all 0.2s;}
+  .nav-back:hover{background:rgba(255,255,255,0.08);color:#fff;}
+  .lang-sw{display:flex;background:rgba(255,255,255,0.08);border-radius:7px;padding:2px;gap:2px;}
+  .lbtn{padding:4px 10px;border-radius:5px;font-size:11px;font-weight:500;border:none;background:transparent;color:rgba(255,255,255,0.5);cursor:pointer;font-family:inherit;transition:all 0.2s;}
+  .lbtn.act{background:var(--tfl-mid);color:#fff;}
+
+  .api-setup{max-width:500px;margin:60px auto;padding:32px;background:var(--white);border-radius:16px;border:0.5px solid var(--border-md);text-align:center;}
+  .api-icon{font-size:48px;margin-bottom:16px;}
+  .api-title{font-family:'DM Serif Display',serif;font-size:24px;color:var(--navy);margin-bottom:8px;}
+  .api-desc{font-size:14px;color:var(--text-muted);line-height:1.6;margin-bottom:20px;}
+  .api-input{width:100%;padding:10px 14px;border:0.5px solid var(--border-md);border-radius:8px;font-size:13px;font-family:monospace;color:var(--text);background:var(--bg);outline:none;margin-bottom:10px;}
+  .api-input:focus{border-color:var(--tfl-mid);}
+  .api-btn{width:100%;padding:11px;border-radius:8px;font-size:14px;font-weight:600;background:var(--tfl-mid);color:#fff;border:none;cursor:pointer;font-family:inherit;}
+  .api-note{font-size:11px;color:var(--text-light);margin-top:10px;}
+
+  .main{max-width:900px;margin:0 auto;padding:28px 5% 80px;display:none;}
+
+  .hero{background:linear-gradient(135deg,#0d2244,var(--tfl-mid));border-radius:14px;padding:24px 28px;margin-bottom:20px;position:relative;overflow:hidden;}
+  .hero::before{content:'';position:absolute;right:-20px;top:-20px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,0.06);pointer-events:none;}
+  .hero-tag{font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#93c5fd;margin-bottom:6px;}
+  .hero-title{font-family:'DM Serif Display',serif;font-size:clamp(22px,4vw,30px);color:#fff;margin-bottom:6px;}
+  .hero-desc{font-size:13px;color:rgba(255,255,255,0.65);line-height:1.6;}
+  .hero-badges{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;}
+  .hero-badge{font-size:11px;padding:3px 12px;border-radius:20px;background:rgba(255,255,255,0.12);color:rgba(255,255,255,0.85);border:0.5px solid rgba(255,255,255,0.2);}
+
+  .task-tabs{display:flex;background:var(--white);border:0.5px solid var(--border);border-radius:14px;padding:4px;margin-bottom:16px;gap:4px;}
+  .task-tab{flex:1;padding:12px 14px;border-radius:10px;font-size:13px;font-weight:500;cursor:pointer;border:none;background:transparent;color:var(--text-muted);font-family:inherit;transition:all 0.2s;text-align:center;}
+  .task-tab:hover{color:var(--tfl-mid);}
+  .task-tab.act{background:var(--tfl-mid);color:#fff;}
+
+  .task-info{background:var(--white);border:0.5px solid var(--border);border-radius:14px;padding:16px 18px;margin-bottom:16px;}
+  .ti-row{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-bottom:10px;}
+  .ti-stat{text-align:center;flex-shrink:0;}
+  .ti-num{font-family:'DM Serif Display',serif;font-size:22px;color:var(--tfl-mid);line-height:1;}
+  .ti-key{font-size:10px;color:var(--text-light);text-transform:uppercase;letter-spacing:.4px;margin-top:2px;}
+  .ti-div{width:1px;height:36px;background:var(--border);flex-shrink:0;}
+  .ti-desc{font-size:12px;color:var(--text-muted);line-height:1.65;flex:1;min-width:180px;}
+  .ti-tip{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;background:var(--tfl-light);border-radius:8px;font-size:12px;color:var(--tfl-mid);line-height:1.55;}
+
+  .gen-btn{width:100%;padding:14px;border-radius:10px;font-size:15px;font-weight:600;background:var(--tfl-mid);color:#fff;border:none;cursor:pointer;font-family:inherit;transition:all 0.2s;margin-bottom:20px;}
+  .gen-btn:disabled{opacity:.5;cursor:not-allowed;}
+
+  .loading-overlay{padding:48px;text-align:center;background:var(--white);border:0.5px solid var(--border);border-radius:14px;margin-bottom:20px;}
+  .loading-spinner{width:44px;height:44px;border:3px solid var(--border);border-top-color:var(--tfl-mid);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 16px;}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .loading-text{font-size:14px;color:var(--text-muted);}
+
+  /* TASK LAYOUT */
+  .task-layout{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;}
+  .task-layout.single{grid-template-columns:1fr;}
+  @media(max-width:700px){.task-layout{grid-template-columns:1fr;}}
+
+  /* SOURCE BOX */
+  .source-box{background:var(--white);border:0.5px solid var(--border);border-radius:12px;overflow:hidden;}
+  .source-header{padding:10px 14px;background:var(--tfl-light);border-bottom:0.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+  .source-title{font-size:12px;font-weight:600;color:var(--tfl-mid);}
+  .source-badge{font-size:10px;padding:2px 8px;border-radius:10px;background:rgba(41,82,163,0.12);color:var(--tfl-mid);font-weight:500;}
+  .source-body{padding:14px;}
+  .source-text{font-size:13px;color:var(--text);line-height:1.8;max-height:320px;overflow-y:auto;}
+
+  /* AUDIO PLAYER */
+  .audio-cue{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--tfl-light);border-radius:8px;margin-bottom:10px;border:0.5px solid rgba(41,82,163,0.2);}
+  .ac-play{width:40px;height:40px;border-radius:50%;background:var(--tfl-mid);border:none;cursor:pointer;font-size:16px;color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .ac-play:hover{background:#1d3f8a;}
+  .ac-info{flex:1;}
+  .ac-title{font-size:12px;font-weight:600;color:var(--tfl-mid);}
+  .ac-desc{font-size:11px;color:var(--text-muted);margin-top:2px;}
+
+  /* DISCUSSION POST */
+  .discussion-thread{background:var(--bg);border-radius:10px;padding:14px;margin-bottom:12px;border:0.5px solid var(--border);}
+  .dt-post{padding:12px;background:var(--white);border-radius:8px;margin-bottom:8px;border:0.5px solid var(--border);}
+  .dt-post:last-child{margin-bottom:0;}
+  .dt-avatar{width:30px;height:30px;border-radius:50%;background:var(--tfl-mid);display:flex;align-items:center;justify-content:center;font-size:13px;color:#fff;flex-shrink:0;}
+  .dt-name{font-size:12px;font-weight:600;color:var(--tfl-mid);}
+  .dt-role{font-size:10px;color:var(--text-light);}
+  .dt-text{font-size:13px;color:var(--text);line-height:1.7;margin-top:8px;}
+
+  /* QUESTION BOX */
+  .question-box{background:var(--navy);border-radius:10px;padding:14px;margin-bottom:14px;}
+  .qb-label{font-size:10px;font-weight:700;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;}
+  .qb-text{font-size:14px;font-weight:600;color:#fff;line-height:1.55;}
+
+  /* WRITING EDITOR */
+  .editor-section{background:var(--white);border:0.5px solid var(--border);border-radius:12px;overflow:hidden;}
+  .editor-header{padding:10px 16px;background:var(--tfl-light);border-bottom:0.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+  .editor-title{font-size:12px;font-weight:600;color:var(--tfl-mid);}
+  .word-count{font-size:12px;color:var(--text-muted);}
+  .word-count.good{color:var(--teal-mid);}
+  .word-count.low{color:#e24b4a;}
+  .timer-bar{height:4px;background:var(--bg);}
+  .timer-fill{height:100%;background:linear-gradient(90deg,var(--tfl-mid),#93c5fd);transition:width 0.5s linear;}
+  .timer-fill.urgent{background:linear-gradient(90deg,#e24b4a,#f97316);}
+  textarea{width:100%;min-height:280px;padding:16px;border:none;outline:none;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--text);line-height:1.8;resize:vertical;background:transparent;}
+
+  /* SUBMIT BUTTON */
+  .submit-btn{width:100%;padding:13px;border-radius:10px;font-size:14px;font-weight:600;background:var(--tfl-mid);color:#fff;border:none;cursor:pointer;font-family:inherit;margin-bottom:14px;transition:all 0.2s;}
+  .submit-btn:hover{background:#1d3f8a;}
+  .submit-btn:disabled{opacity:.5;cursor:not-allowed;}
+
+  /* AI SCORE */
+  .ai-score-section{background:var(--white);border:0.5px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:16px;display:none;}
+  .ass-header{padding:12px 18px;background:var(--tfl-light);border-bottom:0.5px solid var(--border);}
+  .ass-title{font-size:13px;font-weight:600;color:var(--tfl-mid);}
+  .ass-body{padding:18px;}
+  .score-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px;}
+  .sg-cell{background:var(--bg);border-radius:10px;padding:12px;text-align:center;}
+  .sg-score{font-family:'DM Serif Display',serif;font-size:26px;color:var(--tfl-mid);}
+  .sg-max{font-size:11px;color:var(--text-light);}
+  .sg-label{font-size:10px;color:var(--text-muted);margin-top:4px;font-weight:500;}
+  .ai-feedback{font-size:13px;color:var(--text);line-height:1.7;padding:14px;background:var(--tfl-light);border-radius:8px;margin-bottom:12px;}
+  .revised-box{background:var(--bg);border-radius:10px;padding:14px;border-left:3px solid var(--tfl-mid);font-size:13px;color:var(--text);line-height:1.8;}
+
+  .action-btns{display:flex;gap:10px;}
+  .act-btn{flex:1;padding:12px;border-radius:10px;font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;border:0.5px solid var(--border-md);background:var(--white);color:var(--text);transition:all 0.2s;text-decoration:none;text-align:center;display:block;}
+  .act-btn.primary{background:var(--tfl-mid);color:#fff;border-color:var(--tfl-mid);}
+
+  @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+  .fade-in{animation:fadeUp 0.4s ease forwards;}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/en/index.html" class="nav-logo"><div class="nav-lm">LW</div><span class="nav-lt">LinguaWalk</span></a>
+  <div class="nav-sep"></div>
+  <span class="nav-page">✍️ TOEFL Writing</span>
+  <div class="nav-space"></div>
+  <a href="index.html" class="nav-back" data-en="← TOEFL" data-ko="← TOEFL">← TOEFL</a>
+  <div class="lang-sw">
+    <button class="lbtn act" onclick="setLang('en')" id="btn-en">EN</button>
+    <button class="lbtn" onclick="setLang('ko')" id="btn-ko">한국어</button>
+  </div>
+</nav>
+
+<div class="api-setup fade-in" id="api-setup">
+  <div class="api-icon">✍️</div>
+  <div class="api-title">TOEFL Writing</div>
+  <div class="api-desc" data-en="Two writing tasks: Integrated Writing (Read+Listen+Write) and Academic Discussion. AI scores your essay 0–5." data-ko="통합형 쓰기(읽기+듣기+쓰기)와 학문적 토론 2가지 과제. AI가 0~5점으로 채점합니다.">Write and get detailed AI feedback.</div>
+  <input type="password" class="api-input" id="api-key-input" placeholder="sk-ant-api03-...">
+  <button class="api-btn" onclick="saveKey()" data-en="Connect" data-ko="연결">Connect</button>
+  <p class="api-note" data-en="🔒 Stored in browser session only." data-ko="🔒 브라우저 세션에만 저장됩니다.">🔒 Session only.</p>
+</div>
+
+<div class="main fade-in" id="main-content">
+  <div class="hero">
+    <div class="hero-tag">✍️ TOEFL iBT · WRITING</div>
+    <h1 class="hero-title" data-en="TOEFL Writing Practice" data-ko="TOEFL 쓰기 연습">TOEFL Writing Practice</h1>
+    <p class="hero-desc" data-en="Integrated Writing and Academic Discussion tasks with word count tracking and detailed AI scoring on all rubric dimensions." data-ko="통합형 쓰기와 학문적 토론 과제. 단어 수 추적과 루브릭 전 항목 AI 채점을 제공합니다.">Timed writing + AI scoring (0–5 scale).</p>
+    <div class="hero-badges">
+      <span class="hero-badge">Task 1 Integrated Writing</span>
+      <span class="hero-badge">Task 2 Academic Discussion</span>
+      <span class="hero-badge">⏱ Timed</span>
+      <span class="hero-badge">📊 AI Scoring</span>
+      <span class="hero-badge">🔤 Word Count</span>
+    </div>
+  </div>
+
+  <div class="task-tabs">
+    <button class="task-tab act" onclick="selectTask('integrated',this)">
+      📄 Task 1 — Integrated Writing<br><span style="font-size:11px;opacity:.7">Read + Listen + Write (20 min)</span>
+    </button>
+    <button class="task-tab" onclick="selectTask('discussion',this)">
+      💬 Task 2 — Academic Discussion<br><span style="font-size:11px;opacity:.7">Online Discussion (10 min)</span>
+    </button>
+  </div>
+
+  <div class="task-info" id="task-info-box"></div>
+
+  <button class="gen-btn" id="gen-btn" onclick="generate()">
+    🤖 <span data-en="Generate Writing Task" data-ko="쓰기 과제 생성">Generate Writing Task</span>
+  </button>
+
+  <div class="loading-overlay" id="loading-overlay" style="display:none;">
+    <div class="loading-spinner"></div>
+    <div class="loading-text" id="loading-text"></div>
+  </div>
+
+  <!-- CONTENT AREA -->
+  <div id="content-area"></div>
+
+  <!-- AI SCORE -->
+  <div class="ai-score-section" id="ai-score-section">
+    <div class="ass-header"><div class="ass-title">🤖 AI Scoring & Feedback</div></div>
+    <div class="ass-body" id="ass-body"></div>
+  </div>
+
+  <div class="action-btns" id="action-btns" style="display:none;">
+    <button class="act-btn primary" onclick="generate()" data-en="🔄 New Task" data-ko="🔄 새 과제">🔄 New Task</button>
+    <a href="index.html" class="act-btn" data-en="← TOEFL Home" data-ko="← TOEFL 홈">← TOEFL Home</a>
+  </div>
+</div>
+
+<script>
+let lang='en', apiKey='';
+let currentTask='integrated', isLoading=false;
+let taskData=null;
+let writingTimer=null, timeLeft=0;
+
+const TASKS={
+  integrated:{en:'Task 1 — Integrated Writing',ko:'Task 1 — 통합형 쓰기',
+    timeSec:1200,minWords:150,maxWords:225,
+    descEn:'Read a passage (3 min) + listen to a lecture → write how the lecture relates to the reading (20 min).',
+    descKo:'지문 읽기(3분) + 강의 듣기 → 강의가 지문과 어떻게 연관되는지 쓰기 (20분).',
+    tipEn:'💡 Structure: Introduction → Point 1 + Lecture detail → Point 2 + Lecture detail → Point 3 + Lecture detail → Conclusion.',
+    tipKo:'💡 구조: 도입 → 포인트1 + 강의 세부 → 포인트2 + 강의 세부 → 포인트3 + 강의 세부 → 결론.',
+    rubric:['Content/Accuracy','Organization','Language Use']},
+  discussion:{en:'Task 2 — Academic Discussion',ko:'Task 2 — 학문적 토론',
+    timeSec:600,minWords:100,maxWords:999,
+    descEn:'A professor posts a discussion question. Two classmates share their opinions. Add your own well-reasoned response (10 min).',
+    descKo:'교수가 토론 질문을 올립니다. 두 학생의 의견을 읽고 자신의 의견을 덧붙이세요 (10분).',
+    tipEn:'💡 State your opinion clearly → explain your reasoning → connect to what classmates said.',
+    tipKo:'💡 의견 명확히 제시 → 이유 설명 → 학우 의견과 연결하세요.',
+    rubric:['Content/Relevance','Language Precision','Development']}
+};
+
+function setLang(l){
+  lang=l;
+  document.documentElement.lang=l==='ko'?'ko':'en';
+  document.querySelectorAll('[data-en][data-ko]').forEach(el=>{
+    const t=l==='ko'?el.getAttribute('data-ko'):el.getAttribute('data-en');
+    if(t) el.innerHTML=t;
+  });
+  document.getElementById('btn-en').classList.toggle('act',l==='en');
+  document.getElementById('btn-ko').classList.toggle('act',l==='ko');
+  renderTaskInfo();
+  try{localStorage.setItem('lw-lang',l);}catch(e){}
+}
+
+function saveKey(){
+  const k=document.getElementById('api-key-input').value.trim();
+  if(!k.startsWith('sk-ant-')){alert('Key must start with sk-ant-');return;}
+  try{sessionStorage.setItem('lw-api-key',k);}catch(e){}
+  apiKey=k;
+  document.getElementById('api-setup').style.display='none';
+  document.getElementById('main-content').style.display='block';
+  renderTaskInfo();
+}
+
+function selectTask(id,btn){
+  currentTask=id;
+  document.querySelectorAll('.task-tab').forEach(t=>t.classList.remove('act'));
+  btn.classList.add('act');
+  renderTaskInfo(); resetContent();
+}
+
+function renderTaskInfo(){
+  const t=TASKS[currentTask];
+  if(!t) return;
+  const min=Math.floor(t.timeSec/60);
+  document.getElementById('task-info-box').innerHTML=`
+    <div class="ti-row">
+      <div class="ti-stat"><div class="ti-num">${min}'</div><div class="ti-key">${lang==='ko'?'제한 시간':'Time Limit'}</div></div>
+      <div class="ti-div"></div>
+      <div class="ti-stat"><div class="ti-num">${t.minWords}+</div><div class="ti-key">${lang==='ko'?'최소 단어':'Min Words'}</div></div>
+      <div class="ti-div"></div>
+      <p class="ti-desc">${lang==='ko'?t.descKo:t.descEn}</p>
+    </div>
+    <div class="ti-tip">${lang==='ko'?t.tipKo:t.tipEn}</div>`;
+}
+
+function resetContent(){
+  document.getElementById('content-area').innerHTML='';
+  document.getElementById('ai-score-section').style.display='none';
+  document.getElementById('action-btns').style.display='none';
+  clearInterval(writingTimer);
+}
+
+async function generate(){
+  if(isLoading) return;
+  isLoading=true; resetContent();
+  const t=TASKS[currentTask];
+  document.getElementById('loading-overlay').style.display='block';
+  document.getElementById('loading-text').innerHTML=lang==='ko'
+    ?`🤖 TOEFL <strong>${t.ko}</strong> 과제를 생성하고 있습니다...`
+    :`🤖 Generating TOEFL <strong>${t.en}</strong> task...`;
+  document.getElementById('gen-btn').disabled=true;
+
+  const prompts={
+    integrated:lang==='ko'
+      ?`TOEFL 통합형 쓰기 과제를 생성하세요.
+JSON만: {"taskType":"Task 1 — Integrated Writing","topic":"주제","reading":{"title":"제목","text":"3개 포인트를 포함한 학술 지문 (250~300단어, 영어)","points":["포인트1","포인트2","포인트3"]},"lecture":[{"speaker":"Professor","text":"강의 내용 (각 포인트에 반론 제시, 영어, 16~20줄)"}],"question":"Summarize the points made in the lecture, being sure to explain how they cast doubt on specific points made in the reading passage.","tip":"팁(한국어)"}`
+      :`Generate a TOEFL Integrated Writing task.
+JSON only: {"taskType":"Task 1 — Integrated Writing","topic":"topic","reading":{"title":"title","text":"academic passage with 3 clear points (250-300 words)","points":["point 1","point 2","point 3"]},"lecture":[{"speaker":"Professor","text":"lecture that challenges each reading point (16-20 lines)"}],"question":"Summarize the points made in the lecture, being sure to explain how they cast doubt on specific points made in the reading passage.","tip":"structure strategy tip"}`,
+    discussion:lang==='ko'
+      ?`TOEFL 학문적 토론 과제를 생성하세요.
+JSON만: {"taskType":"Task 2 — Academic Discussion","question":"교수의 토론 질문 (영어)","professor":{"name":"Professor Chen","post":"교수 질문 (영어, 2~3 문장)"},"students":[{"name":"Maria","post":"학생1 의견 (영어, 3~4 문장)"},{"name":"Tom","post":"학생2 의견 (영어, 3~4 문장)"}],"tip":"팁(한국어)"}`
+      :`Generate a TOEFL Academic Discussion task.
+JSON only: {"taskType":"Task 2 — Academic Discussion","question":"discussion question","professor":{"name":"Professor Chen","post":"professor's question prompt (2-3 sentences)"},"students":[{"name":"Maria","post":"student 1 opinion (3-4 sentences)"},{"name":"Tom","post":"student 2 opinion (3-4 sentences)"}],"tip":"strategy tip"}`
+  };
+
+  try{
+    const resp=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:3000,messages:[{role:'user',content:prompts[currentTask]}]})
+    });
+    const d=await resp.json();
+    if(d.error) throw new Error(d.error.message);
+    taskData=JSON.parse(d.content[0].text.replace(/```json|```/g,'').trim());
+    document.getElementById('loading-overlay').style.display='none';
+    renderContent(taskData);
+  }catch(e){
+    document.getElementById('loading-overlay').style.display='none';
+    alert((lang==='ko'?'생성 오류: ':'Error: ')+e.message);
+    console.error(e);
+  }
+  isLoading=false; document.getElementById('gen-btn').disabled=false;
+}
+
+function renderContent(data){
+  const t=TASKS[currentTask];
+  let html='';
+
+  if(currentTask==='integrated'){
+    // Reading + Lecture side by side, then editor
+    html+=`<div class="task-layout">
+      <div class="source-box">
+        <div class="source-header">
+          <div class="source-title">📄 ${lang==='ko'?'읽기 자료 (3분 후 사라짐)':'Reading Passage (available 3 min)'}</div>
+          <div class="source-badge">${data.topic||''}</div>
+        </div>
+        <div class="source-body"><div class="source-text">${(data.reading?.text||'').replace(/\n/g,'<br>')}</div></div>
+      </div>
+      <div class="source-box">
+        <div class="source-header"><div class="source-title">🎧 ${lang==='ko'?'강의 듣기':'Lecture'}</div></div>
+        <div class="source-body">
+          <div class="audio-cue">
+            <button class="ac-play" onclick="playLecture()" id="ac-play-btn">▶</button>
+            <div class="ac-info">
+              <div class="ac-title">${lang==='ko'?'재생 버튼을 눌러 강의를 들으세요':'Press play to listen to the lecture'}</div>
+              <div class="ac-desc" id="ac-desc">${lang==='ko'?'강의는 지문의 각 포인트에 반론을 제시합니다':'The lecture challenges each point in the reading'}</div>
+            </div>
+          </div>
+          <div style="font-size:12px;color:var(--text-muted);line-height:1.7;">${(data.lecture||[]).map(l=>`<strong>${l.speaker}:</strong> ${l.text}`).join('<br><br>')}</div>
+        </div>
+      </div>
+    </div>`;
+  } else {
+    // Discussion thread
+    html+=`<div class="source-box" style="margin-bottom:14px;">
+      <div class="source-header"><div class="source-title">💬 ${lang==='ko'?'토론 주제':'Discussion Prompt'}</div></div>
+      <div class="source-body">
+        <div class="discussion-thread">
+          <div class="dt-post">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+              <div class="dt-avatar">👨‍🏫</div>
+              <div><div class="dt-name">${data.professor?.name||'Professor'}</div><div class="dt-role">${lang==='ko'?'교수':'Professor'}</div></div>
+            </div>
+            <div class="dt-text">${data.professor?.post||''}</div>
+          </div>
+          ${(data.students||[]).map((s,i)=>`<div class="dt-post">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+              <div class="dt-avatar" style="background:${i===0?'#2952a3':'#993556'};">${s.name?.[0]||'S'}</div>
+              <div><div class="dt-name">${s.name||'Student'}</div><div class="dt-role">${lang==='ko'?'학생':'Student'}</div></div>
+            </div>
+            <div class="dt-text">${s.post||''}</div>
+          </div>`).join('')}
+        </div>
+      </div>
+    </div>`;
+  }
+
+  // Question
+  html+=`<div class="question-box"><div class="qb-label">${lang==='ko'?'질문':'WRITING PROMPT'}</div><div class="qb-text">${data.question||''}</div></div>`;
+
+  // Editor
+  const timeLabel=`${Math.floor(t.timeSec/60)}:00`;
+  html+=`<div class="editor-section" style="margin-bottom:14px;">
+    <div class="editor-header">
+      <div class="editor-title">✍️ ${lang==='ko'?'답안 작성':'Your Response'}</div>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div style="font-size:12px;font-weight:600;color:var(--tfl-mid);" id="timer-display">${timeLabel}</div>
+        <div class="word-count low" id="word-count">0 ${lang==='ko'?'단어':'words'}</div>
+      </div>
+    </div>
+    <div class="timer-bar"><div class="timer-fill" id="timer-fill" style="width:100%"></div></div>
+    <textarea id="essay-textarea" placeholder="${lang==='ko'?`여기에 답안을 작성하세요. 최소 ${t.minWords}단어.`:`Write your response here. Minimum ${t.minWords} words.`}" oninput="updateWordCount()"></textarea>
+  </div>`;
+
+  if(data.tip){
+    html+=`<div style="padding:10px 12px;background:var(--tfl-light);border-radius:8px;font-size:12px;color:var(--tfl-mid);margin-bottom:14px;line-height:1.55;">💡 ${data.tip}</div>`;
+  }
+
+  html+=`<button class="submit-btn" id="submit-btn" onclick="submitForScoring()" disabled data-en="🤖 Submit for AI Scoring" data-ko="🤖 AI 채점 제출">${lang==='ko'?'🤖 AI 채점 제출':'🤖 Submit for AI Scoring'}</button>`;
+
+  document.getElementById('content-area').innerHTML=html;
+  startWritingTimer(t.timeSec);
+}
+
+function getEngVoices(){return speechSynthesis.getVoices().filter(v=>v.lang.startsWith('en'));}
+function playLecture(){
+  const btn=document.getElementById('ac-play-btn');
+  const desc=document.getElementById('ac-desc');
+  if(btn) btn.textContent='⏹';
+  if(desc) desc.textContent=lang==='ko'?'재생 중...':'Playing...';
+  const lines=taskData?.lecture||[];
+  const eng=getEngVoices();
+  const mal=eng.find(v=>/(Daniel|Alex|Fred|Tom|David)/i.test(v.name))||eng[0];
+  let idx=0;
+  function next(){
+    if(idx>=lines.length){if(btn)btn.textContent='▶';if(desc)desc.textContent=lang==='ko'?'완료 ✓':'Done ✓';return;}
+    const utt=new SpeechSynthesisUtterance(lines[idx].text);
+    utt.lang='en-US'; utt.rate=0.95;
+    if(mal) utt.voice=mal;
+    utt.onend=()=>{idx++;setTimeout(next,200);};
+    utt.onerror=()=>{idx++;setTimeout(next,100);};
+    speechSynthesis.speak(utt); idx++;
+  }
+  speechSynthesis.cancel(); idx=0; next();
+}
+
+function startWritingTimer(sec){
+  clearInterval(writingTimer);
+  timeLeft=sec;
+  updateTimerDisplay();
+  writingTimer=setInterval(()=>{
+    timeLeft--;
+    updateTimerDisplay();
+    const pct=timeLeft/sec*100;
+    const fill=document.getElementById('timer-fill');
+    if(fill){fill.style.width=pct+'%';fill.classList.toggle('urgent',timeLeft<=120);}
+    if(timeLeft<=0){clearInterval(writingTimer);autoSubmit();}
+  },1000);
+}
+
+function updateTimerDisplay(){
+  const m=Math.floor(timeLeft/60);
+  const s=timeLeft%60;
+  const el=document.getElementById('timer-display');
+  if(el){
+    el.textContent=`${m}:${s.toString().padStart(2,'0')}`;
+    el.style.color=timeLeft<=120?'#e24b4a':'var(--tfl-mid)';
+  }
+}
+
+function updateWordCount(){
+  const ta=document.getElementById('essay-textarea');
+  const btn=document.getElementById('submit-btn');
+  const wc=document.getElementById('word-count');
+  if(!ta) return;
+  const count=(ta.value.trim().split(/\s+/).filter(w=>w).length)||0;
+  const t=TASKS[currentTask];
+  if(wc){
+    wc.textContent=`${count} ${lang==='ko'?'단어':'words'}`;
+    wc.className=count>=t.minWords?'word-count good':'word-count low';
+  }
+  if(btn) btn.disabled=count<t.minWords;
+}
+
+function autoSubmit(){
+  const btn=document.getElementById('submit-btn');
+  if(btn&&!btn.disabled) submitForScoring();
+}
+
+async function submitForScoring(){
+  if(isLoading) return;
+  const ta=document.getElementById('essay-textarea');
+  if(!ta) return;
+  const essay=ta.value.trim();
+  if(!essay){alert(lang==='ko'?'답안을 먼저 작성해 주세요.':'Please write your response first.');return;}
+  isLoading=true;
+  clearInterval(writingTimer);
+  const btn=document.getElementById('submit-btn');
+  if(btn){btn.disabled=true;btn.textContent=lang==='ko'?'🤖 채점 중...':'🤖 Scoring...';}
+  const t=TASKS[currentTask];
+
+  const prompt=lang==='ko'
+    ?`당신은 TOEFL Writing 전문 채점관입니다.
+
+과제 유형: ${t.ko}
+과제 내용: ${taskData?.question||''}
+학습자 답안: "${essay}"
+
+다음 3가지 항목을 각각 0~5점으로 채점하고 한국어로 구체적 피드백을 주세요:
+1. ${t.rubric?.[0]||'Content'}: 내용의 정확성, 관련성
+2. ${t.rubric?.[1]||'Organization'}: 구조, 논리적 흐름
+3. ${t.rubric?.[2]||'Language'}: 문법, 어휘, 문장 다양성
+
+JSON만 반환:
+{"dim1":{"score":4,"feedback":"피드백"},"dim2":{"score":4,"feedback":"피드백"},"dim3":{"score":4,"feedback":"피드백"},"overall":{"score":4,"summary":"종합 평가"},"revised":"첫 문단 개선 예시(영어)","suggestions":["개선점1","개선점2","개선점3"]}`
+    :`You are an expert TOEFL Writing rater.
+
+Task Type: ${t.en}
+Prompt: ${taskData?.question||''}
+Student Essay: "${essay}"
+
+Score each dimension 0–5 with specific feedback:
+1. ${t.rubric?.[0]||'Content'}: accuracy, relevance to prompt
+2. ${t.rubric?.[1]||'Organization'}: structure, logical flow, transitions
+3. ${t.rubric?.[2]||'Language'}: grammar, vocabulary range, sentence variety
+
+Return JSON only:
+{"dim1":{"score":4,"feedback":"specific feedback"},"dim2":{"score":4,"feedback":"specific feedback"},"dim3":{"score":4,"feedback":"specific feedback"},"overall":{"score":4,"summary":"holistic evaluation"},"revised":"improved version of the first paragraph","suggestions":["improvement 1","improvement 2","improvement 3"]}`;
+
+  try{
+    const resp=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:1200,messages:[{role:'user',content:prompt}]})
+    });
+    const d=await resp.json();
+    if(d.error) throw new Error(d.error.message);
+    const scoring=JSON.parse(d.content[0].text.replace(/```json|```/g,'').trim());
+    renderScoring(scoring,t);
+  }catch(e){
+    alert((lang==='ko'?'채점 오류: ':'Scoring error: ')+e.message);
+    console.error(e);
+    if(btn){btn.disabled=false;btn.textContent=lang==='ko'?'🤖 AI 채점 다시 시도':'🤖 Retry AI Scoring';}
+  }
+  isLoading=false;
+}
+
+function renderScoring(s,t){
+  const dimLabels=[t.rubric?.[0]||'Content',t.rubric?.[1]||'Organization',t.rubric?.[2]||'Language'];
+  const dims=['dim1','dim2','dim3'];
+  const grid=dims.map((k,i)=>`
+    <div class="sg-cell">
+      <div class="sg-score">${s[k]?.score??'—'}</div>
+      <div class="sg-max">/ 5</div>
+      <div class="sg-label">${dimLabels[i]}</div>
+    </div>`).join('')+`
+    <div class="sg-cell" style="background:var(--tfl-light);">
+      <div class="sg-score" style="color:var(--tfl-mid);">${s.overall?.score??'—'}</div>
+      <div class="sg-max" style="color:var(--tfl-mid);">/ 5</div>
+      <div class="sg-label" style="color:var(--tfl-mid);font-weight:600;">${lang==='ko'?'종합':'Overall'}</div>
+    </div>`;
+  const feedback=dims.map((k,i)=>
+    `<div style="margin-bottom:10px;"><strong>${dimLabels[i]}:</strong> ${s[k]?.feedback||''}</div>`).join('');
+  const suggestions=(s.suggestions||[]).map(sg=>`<div style="font-size:12px;color:var(--text-muted);padding:6px 10px;background:var(--bg);border-radius:7px;margin-bottom:5px;border-left:3px solid var(--tfl-mid);">→ ${sg}</div>`).join('');
+  document.getElementById('ass-body').innerHTML=`
+    <div class="score-grid" style="grid-template-columns:repeat(4,1fr);">${grid}</div>
+    <div class="ai-feedback">${s.overall?.summary||''}<br><br>${feedback}</div>
+    ${s.revised?`<div style="margin-bottom:12px;"><div style="font-size:11px;font-weight:700;color:var(--tfl-mid);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">${lang==='ko'?'첫 문단 개선 예시':'Improved First Paragraph'}</div><div class="revised-box">${s.revised}</div></div>`:''}
+    ${suggestions?`<div><div style="font-size:11px;font-weight:700;color:var(--tfl-mid);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">${lang==='ko'?'개선 제안':'Suggestions'}</div>${suggestions}</div>`:''}`;
+  document.getElementById('ai-score-section').style.display='block';
+  document.getElementById('action-btns').style.display='flex';
+  document.getElementById('submit-btn').style.display='none';
+  document.getElementById('ai-score-section').scrollIntoView({behavior:'smooth'});
+}
+
+(function(){
+  let saved; try{saved=localStorage.getItem('lw-lang');}catch(e){}
+  setLang(saved||((navigator.language||'').startsWith('ko')?'ko':'en'));
+  try{apiKey=sessionStorage.getItem('lw-api-key')||'';}catch(e){}
+  if(apiKey){
+    document.getElementById('api-setup').style.display='none';
+    document.getElementById('main-content').style.display='block';
+    renderTaskInfo();
+  }
+  if(speechSynthesis.getVoices().length===0) speechSynthesis.onvoiceschanged=()=>{};
+})();
+</script>
+</body>
+</html>
