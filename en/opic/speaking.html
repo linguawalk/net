@@ -140,6 +140,7 @@
   .rec-btn.done{background:var(--teal);box-shadow:0 6px 24px rgba(29,158,117,0.3);}
   .rec-btn:disabled{opacity:.6;cursor:not-allowed;}
   @keyframes recPulse{0%,100%{box-shadow:0 6px 24px rgba(226,75,74,0.3)}50%{box-shadow:0 6px 44px rgba(226,75,74,0.6)}}
+  @keyframes wav{from{transform:scaleY(0.4)}to{transform:scaleY(1)}}
   .rec-status{font-size:14px;font-weight:600;color:var(--text-muted);}
   .rec-status.ready{color:var(--op-mid);}
   .rec-status.recording{color:var(--rec);}
@@ -375,6 +376,22 @@
       <div class="qd-topic" id="qd-topic"></div>
     </div>
     <div class="qd-body">
+
+      <!-- Question TTS Player -->
+      <div id="q-tts-bar" style="display:none;margin-bottom:14px;padding:12px 16px;background:var(--op-dark);border-radius:10px;display:flex;align-items:center;gap:12px;">
+        <div id="q-tts-wave" style="display:flex;align-items:center;gap:3px;flex-shrink:0;">
+          <span style="display:inline-block;width:3px;border-radius:2px;background:#b06aee;height:8px;animation:wav 0.7s 0s infinite alternate;"></span>
+          <span style="display:inline-block;width:3px;border-radius:2px;background:#b06aee;height:16px;animation:wav 0.7s 0.1s infinite alternate;"></span>
+          <span style="display:inline-block;width:3px;border-radius:2px;background:#b06aee;height:10px;animation:wav 0.7s 0.2s infinite alternate;"></span>
+          <span style="display:inline-block;width:3px;border-radius:2px;background:#b06aee;height:18px;animation:wav 0.7s 0.15s infinite alternate;"></span>
+          <span style="display:inline-block;width:3px;border-radius:2px;background:#b06aee;height:8px;animation:wav 0.7s 0.05s infinite alternate;"></span>
+        </div>
+        <div style="flex:1;">
+          <div id="q-tts-status" style="font-size:13px;font-weight:600;color:#fff;"></div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.5);margin-top:2px;" data-en="Recording will start automatically after the question." data-ko="문제 낭독이 끝나면 자동으로 녹음이 시작됩니다.">Recording starts automatically after the question.</div>
+        </div>
+        <button onclick="replayQuestion()" style="padding:6px 12px;border-radius:8px;background:rgba(255,255,255,0.12);border:0.5px solid rgba(255,255,255,0.2);color:#fff;font-size:12px;font-family:inherit;cursor:pointer;flex-shrink:0;" data-en="🔄 Replay" data-ko="🔄 다시 듣기">🔄 Replay</button>
+      </div>
 
       <!-- Question -->
       <div class="q-box">
@@ -637,11 +654,15 @@ function renderQuestion(data){
   document.getElementById('st-fill').style.width='100%';
   document.getElementById('st-label').textContent=lang==='ko'?`답변 시간 (${totalTime}초)`:`Response Time (${totalTime}s)`;
 
-  // Reset record state
+  // Reset record state — lock button until TTS finishes
   resetRecord();
+  lockRecordUntilTTS();
 
   document.getElementById('q-display').style.display='block';
   document.getElementById('q-display').scrollIntoView({behavior:'smooth'});
+
+  // Auto-play question via TTS (like real OPIc)
+  setTimeout(()=>readQuestion(data.question||'', true), 600);
 }
 
 // ════════════════════════════════════════════
@@ -658,14 +679,110 @@ function speakPhrase(phrase){
 }
 
 // ════════════════════════════════════════════
-//  RECORDING
+//  QUESTION TTS (auto-read like real OPIc)
 // ════════════════════════════════════════════
+function getExaminerVoice(){
+  const all=speechSynthesis.getVoices();
+  const eng=all.filter(v=>v.lang.startsWith('en'));
+  // Prefer female voice for examiner (OPIc uses a female AI voice)
+  return eng.find(v=>/(Samantha|Karen|Moira|Victoria|Fiona|Tessa|Zira)/i.test(v.name))
+    ||eng.find(v=>v.default)||eng[0]||null;
+}
+
+function readQuestion(text, autoStartRecording){
+  if(!text) return;
+  speechSynthesis.cancel();
+
+  // Show TTS bar
+  const bar=document.getElementById('q-tts-bar');
+  const status=document.getElementById('q-tts-status');
+  if(bar) bar.style.display='flex';
+  if(status) status.textContent=lang==='ko'?'🔊 문제를 읽고 있습니다...':'🔊 Reading question...';
+
+  const utt=new SpeechSynthesisUtterance(text);
+  utt.lang='en-US';
+  utt.rate=0.82;   // slightly slower — clear for test-takers
+  utt.pitch=1.05;
+  const v=getExaminerVoice();
+  if(v) utt.voice=v;
+
+  utt.onstart=()=>{
+    const wave=document.getElementById('q-tts-wave');
+    if(wave) wave.style.display='flex';
+  };
+
+  utt.onend=()=>{
+    finishTTSRead(autoStartRecording);
+  };
+  utt.onerror=()=>{
+    finishTTSRead(autoStartRecording);
+  };
+
+  speechSynthesis.speak(utt);
+}
+
+function finishTTSRead(autoStart){
+  const bar=document.getElementById('q-tts-bar');
+  const status=document.getElementById('q-tts-status');
+  const wave=document.getElementById('q-tts-wave');
+  if(wave) wave.style.display='none';
+  if(status) status.textContent=lang==='ko'?'✓ 문제 낭독 완료 — 녹음 버튼을 눌러 시작하세요':'✓ Question read — press the button to record';
+
+  // Unlock record button
+  unlockRecord();
+
+  if(autoStart){
+    // Brief pause then show "ready" state clearly
+    const st=document.getElementById('rec-status');
+    if(st){
+      st.textContent=lang==='ko'?'▶ 준비 완료 — 버튼을 눌러 답변을 시작하세요':'▶ Ready — press the button to start your answer';
+      st.className='rec-status ready';
+    }
+    // Flash the record button to draw attention
+    const btn=document.getElementById('rec-btn');
+    if(btn){
+      btn.style.transform='scale(1.12)';
+      setTimeout(()=>{btn.style.transform='';},400);
+    }
+  }
+}
+
+function lockRecordUntilTTS(){
+  // Disable record button while TTS is playing
+  const btn=document.getElementById('rec-btn');
+  const st=document.getElementById('rec-status');
+  if(btn){btn.disabled=true;btn.className='rec-btn ready';btn.style.opacity='0.45';}
+  if(st){
+    st.textContent=lang==='ko'?'🔊 문제를 듣는 중... (자동 낭독)':'🔊 Listening to question... (auto-read)';
+    st.className='rec-status';
+  }
+}
+
+function unlockRecord(){
+  const btn=document.getElementById('rec-btn');
+  if(btn){btn.disabled=false;btn.className='rec-btn ready';btn.style.opacity='';}
+}
+
+function replayQuestion(){
+  if(!taskData?.question) return;
+  // If currently recording, stop first
+  if(phase==='speaking') stopSpeaking();
+  resetRecord();
+  lockRecordUntilTTS();
+  readQuestion(taskData.question, false);
+}
+
+
 function resetRecord(){
   clearInterval(speakTimer); speakTimer=null; phase='idle';
   stopMic(); stopSpeechRec(); transcript='';
   isRecording=false;
+  speechSynthesis.cancel();
+  // Hide TTS bar
+  const bar=document.getElementById('q-tts-bar');
+  if(bar) bar.style.display='none';
   const btn=document.getElementById('rec-btn');
-  if(btn){btn.textContent='🎤';btn.className='rec-btn ready';btn.disabled=false;}
+  if(btn){btn.textContent='🎤';btn.className='rec-btn ready';btn.disabled=false;btn.style.opacity='';}
   const st=document.getElementById('rec-status');
   if(st){st.textContent=lang==='ko'?'버튼을 눌러 녹음 시작':'Press to start recording';st.className='rec-status ready';}
   document.getElementById('transcript-box').classList.remove('show');
