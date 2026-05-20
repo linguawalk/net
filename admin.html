@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LinguaWalk — Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --navy:#1C2B45;--navy2:#0e1f38;--navy3:#162238;
+  --teal:#2A7F6F;--teal-mid:#1D9E75;--teal-light:#e1f5ee;
+  --bg:#F0EFEb;--white:#fff;
+  --text:#1C2B45;--text-muted:#5a6a82;--text-light:#94a3b8;
+  --border:rgba(28,43,69,0.1);--border-md:rgba(28,43,69,0.15);
+  --toeic:#b07010;--toeic-light:#faeeda;
+  --toefl:#2952a3;--toefl-light:#e5edf8;
+  --ielts:#7a1535;--ielts-light:#f7eef1;
+  --opic:#5b2d8e;--opic-light:#f0eaf8;
+  --red:#e24b4a;--red-light:#fcebeb;
+  --orange:#f97316;--orange-light:#fff7ed;
+  --shadow-sm:0 1px 4px rgba(0,0,0,0.07);
+  --shadow-md:0 4px 16px rgba(0,0,0,0.1);
+  --r:10px;--r-lg:14px;--r-xl:18px;
+}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;}
+
+/* ── TOP NAV ── */
+.top-nav{background:var(--navy2);height:52px;display:flex;align-items:center;padding:0 24px;gap:16px;border-bottom:0.5px solid rgba(255,255,255,0.06);flex-shrink:0;}
+.tn-brand{display:flex;align-items:center;gap:9px;text-decoration:none;}
+.tn-lm{width:30px;height:30px;background:var(--teal);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;}
+.tn-text{font-size:14px;font-weight:600;color:#fff;}
+.tn-sep{width:0.5px;height:18px;background:rgba(255,255,255,0.15);}
+.tn-badge{font-size:11px;font-weight:700;padding:3px 10px;border-radius:10px;background:rgba(239,68,68,0.2);color:#fca5a5;border:0.5px solid rgba(239,68,68,0.3);}
+.tn-right{margin-left:auto;display:flex;align-items:center;gap:10px;}
+.tn-date{font-size:12px;color:rgba(255,255,255,0.45);}
+.tn-user{font-size:13px;color:rgba(255,255,255,0.7);font-weight:500;}
+.tn-out{font-size:12px;color:rgba(255,255,255,0.4);background:none;border:none;cursor:pointer;font-family:inherit;padding:5px 8px;border-radius:6px;transition:all 0.2s;}
+.tn-out:hover{background:rgba(255,255,255,0.08);color:#fff;}
+
+/* ── APP SHELL ── */
+.shell{display:flex;flex:1;overflow:hidden;}
+
+/* ── SIDEBAR ── */
+.sidebar{width:220px;background:var(--navy3);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto;}
+.snav-group{padding:16px 10px 6px;}
+.snav-group-label{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.3);padding:0 10px;margin-bottom:4px;}
+.snav-item{display:flex;align-items:center;gap:9px;padding:9px 12px;border-radius:8px;font-size:13px;font-weight:500;color:rgba(255,255,255,0.55);cursor:pointer;transition:all 0.2s;margin-bottom:1px;}
+.snav-item:hover{background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.85);}
+.snav-item.act{background:rgba(29,158,117,0.18);color:#4cd4a0;}
+.snav-icon{font-size:15px;width:18px;text-align:center;flex-shrink:0;}
+.snav-badge{margin-left:auto;font-size:10px;font-weight:700;padding:1px 7px;border-radius:8px;background:var(--red);color:#fff;}
+
+/* ── MAIN ── */
+.main{flex:1;overflow-y:auto;padding:28px 28px 80px;}
+.page-section{display:none;}
+.page-section.act{display:block;}
+.page-title{font-family:'DM Serif Display',serif;font-size:22px;color:var(--text);margin-bottom:4px;font-weight:400;}
+.page-sub{font-size:13px;color:var(--text-muted);margin-bottom:24px;}
+
+/* ── KPI ROW ── */
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px;}
+.kpi-card{background:var(--white);border:0.5px solid var(--border);border-radius:var(--r-xl);padding:18px 20px;box-shadow:var(--shadow-sm);}
+.kpi-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--text-light);margin-bottom:8px;}
+.kpi-num{font-family:'DM Serif Display',serif;font-size:32px;line-height:1;margin-bottom:6px;}
+.kpi-change{font-size:11px;font-weight:600;}
+.kpi-up{color:var(--teal-mid);}
+.kpi-down{color:var(--red);}
+
+/* ── CARD ── */
+.card{background:var(--white);border:0.5px solid var(--border);border-radius:var(--r-xl);overflow:hidden;margin-bottom:20px;box-shadow:var(--shadow-sm);}
+.card-head{padding:13px 18px;border-bottom:0.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+.card-title{font-size:13px;font-weight:600;color:var(--text);}
+.card-body{padding:16px 18px;}
+
+/* ── REVENUE CHART (CSS bars) ── */
+.rev-chart{display:flex;align-items:flex-end;gap:8px;height:120px;padding:0 4px;}
+.rev-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;}
+.rev-bar{width:100%;border-radius:5px 5px 0 0;background:linear-gradient(to top,var(--teal),var(--teal-mid));transition:height 0.5s;min-height:4px;}
+.rev-bar.dim{background:rgba(29,158,117,0.25);}
+.rev-label{font-size:10px;color:var(--text-light);white-space:nowrap;}
+.rev-val{font-size:10px;font-weight:700;color:var(--teal-mid);}
+
+/* ── SUBSCRIPTION BREAKDOWN ── */
+.sub-breakdown{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+.sb-item{background:var(--bg);border-radius:var(--r-lg);padding:14px;text-align:center;}
+.sb-icon{font-size:24px;margin-bottom:6px;}
+.sb-name{font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px;}
+.sb-count{font-family:'DM Serif Display',serif;font-size:26px;line-height:1;margin-bottom:2px;}
+.sb-rev{font-size:11px;color:var(--text-light);}
+
+/* ── TABLE ── */
+.data-table{width:100%;border-collapse:collapse;}
+.data-table th{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--text-light);padding:8px 12px;text-align:left;border-bottom:0.5px solid var(--border);background:var(--bg);}
+.data-table td{font-size:13px;padding:11px 12px;border-bottom:0.5px solid var(--border);color:var(--text);vertical-align:middle;}
+.data-table tr:last-child td{border-bottom:none;}
+.data-table tr:hover td{background:rgba(28,43,69,0.02);}
+.td-name{font-weight:600;}
+.td-email{color:var(--text-muted);}
+.status-badge{font-size:10px;font-weight:700;padding:2px 9px;border-radius:8px;}
+.st-active{background:var(--teal-light);color:var(--teal-mid);}
+.st-inactive{background:var(--bg);color:var(--text-light);border:0.5px solid var(--border-md);}
+.st-trial{background:var(--orange-light);color:var(--orange);}
+.st-cancelled{background:var(--red-light);color:var(--red);}
+.plan-tags{display:flex;gap:4px;flex-wrap:wrap;}
+.plan-tag{font-size:10px;padding:2px 7px;border-radius:6px;font-weight:600;}
+.pt-toeic{background:var(--toeic-light);color:var(--toeic);}
+.pt-toefl{background:var(--toefl-light);color:var(--toefl);}
+.pt-ielts{background:var(--ielts-light);color:var(--ielts);}
+.pt-opic{background:var(--opic-light);color:var(--opic);}
+.action-btn{font-size:11px;font-weight:600;padding:4px 10px;border-radius:7px;border:0.5px solid var(--border-md);background:transparent;color:var(--text-muted);cursor:pointer;font-family:inherit;transition:all 0.2s;margin-right:4px;}
+.action-btn:hover{border-color:var(--navy);color:var(--text);}
+.action-btn.danger:hover{border-color:var(--red);color:var(--red);background:var(--red-light);}
+
+/* ── SEARCH / FILTER ROW ── */
+.filter-row{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;}
+.search-input{flex:1;min-width:180px;padding:8px 14px;border:0.5px solid var(--border-md);border-radius:var(--r);font-size:13px;font-family:inherit;color:var(--text);background:var(--white);outline:none;}
+.search-input:focus{border-color:var(--teal-mid);}
+.filter-select{padding:8px 12px;border:0.5px solid var(--border-md);border-radius:var(--r);font-size:13px;font-family:inherit;color:var(--text);background:var(--white);outline:none;cursor:pointer;}
+.filter-btn{padding:8px 16px;border-radius:var(--r);font-size:13px;font-weight:600;border:none;background:var(--teal-mid);color:#fff;cursor:pointer;font-family:inherit;}
+
+/* ── NOTICE EDITOR ── */
+.notice-form{display:flex;flex-direction:column;gap:12px;}
+.form-input{width:100%;padding:10px 14px;border:0.5px solid var(--border-md);border-radius:var(--r);font-size:13px;font-family:inherit;color:var(--text);background:var(--bg);outline:none;transition:border-color 0.2s;}
+.form-input:focus{border-color:var(--teal-mid);background:var(--white);}
+.form-textarea{width:100%;padding:12px 14px;border:0.5px solid var(--border-md);border-radius:var(--r);font-size:13px;font-family:inherit;color:var(--text);background:var(--bg);outline:none;resize:vertical;min-height:100px;line-height:1.6;}
+.form-textarea:focus{border-color:var(--teal-mid);background:var(--white);}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.btn{padding:10px 18px;border-radius:var(--r);font-size:13px;font-weight:600;border:none;cursor:pointer;font-family:inherit;transition:all 0.2s;}
+.btn-primary{background:var(--teal-mid);color:#fff;}
+.btn-primary:hover{background:var(--teal);}
+.btn-outline{background:transparent;border:0.5px solid var(--border-md);color:var(--text-muted);}
+.btn-danger{background:transparent;border:0.5px solid rgba(226,75,74,0.3);color:var(--red);}
+
+/* ── FEEDBACK ITEMS ── */
+.feedback-list{display:flex;flex-direction:column;gap:10px;}
+.fb-item{background:var(--bg);border-radius:var(--r-lg);padding:14px 16px;border:0.5px solid var(--border);}
+.fb-top{display:flex;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap;}
+.fb-type{font-size:10px;font-weight:700;padding:2px 9px;border-radius:8px;}
+.ft-suggestion{background:#fff7ed;color:var(--orange);}
+.ft-bug{background:var(--red-light);color:var(--red);}
+.ft-content{background:var(--toefl-light);color:var(--toefl);}
+.ft-question{background:var(--opic-light);color:var(--opic);}
+.fb-user{font-size:12px;color:var(--text-muted);}
+.fb-date{font-size:11px;color:var(--text-light);margin-left:auto;}
+.fb-subject{font-size:13px;font-weight:600;margin-bottom:4px;}
+.fb-msg{font-size:12px;color:var(--text-muted);line-height:1.55;}
+.fb-stars{font-size:13px;margin-top:6px;}
+.fb-reply{margin-top:10px;padding-top:10px;border-top:0.5px solid var(--border);display:flex;gap:8px;}
+.fb-reply input{flex:1;padding:7px 12px;border:0.5px solid var(--border-md);border-radius:8px;font-size:12px;font-family:inherit;background:var(--white);outline:none;}
+.fb-reply button{padding:7px 14px;border-radius:8px;background:var(--teal-mid);color:#fff;border:none;cursor:pointer;font-size:12px;font-weight:600;font-family:inherit;}
+
+/* ── PAYMENT TABLE ── */
+.pay-refund-btn{font-size:11px;padding:3px 9px;border-radius:7px;border:0.5px solid rgba(226,75,74,0.3);color:var(--red);background:transparent;cursor:pointer;font-family:inherit;}
+.pay-refund-btn:hover{background:var(--red-light);}
+
+/* ── ALERT ── */
+.alert{padding:12px 16px;border-radius:var(--r-lg);margin-bottom:16px;font-size:13px;display:flex;align-items:flex-start;gap:10px;}
+.alert-warn{background:var(--orange-light);border:0.5px solid rgba(249,115,22,0.25);color:#9a3412;}
+.alert-info{background:var(--toefl-light);border:0.5px solid rgba(41,82,163,0.2);color:var(--toefl);}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.fade-in{animation:fadeUp 0.3s ease forwards;}
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<div class="top-nav">
+  <a href="index.html" class="tn-brand">
+    <div class="tn-lm">LW</div>
+    <span class="tn-text">LinguaWalk</span>
+  </a>
+  <div class="tn-sep"></div>
+  <span class="tn-badge">🔒 ADMIN</span>
+  <div class="tn-right">
+    <span class="tn-date" id="today-date"></span>
+    <span class="tn-user">관리자</span>
+    <button class="tn-out" onclick="alert('로그아웃')">로그아웃</button>
+  </div>
+</div>
+
+<div class="shell">
+
+  <!-- ══ SIDEBAR ══ -->
+  <aside class="sidebar">
+    <div class="snav-group">
+      <div class="snav-group-label">OVERVIEW</div>
+      <div class="snav-item act" onclick="showPage('dashboard',this)">
+        <span class="snav-icon">📊</span>Dashboard
+      </div>
+    </div>
+    <div class="snav-group">
+      <div class="snav-group-label">MEMBERS</div>
+      <div class="snav-item" onclick="showPage('members',this)">
+        <span class="snav-icon">👥</span>회원 관리
+        <span class="snav-badge">247</span>
+      </div>
+      <div class="snav-item" onclick="showPage('subscriptions',this)">
+        <span class="snav-icon">💳</span>구독 / 결제
+      </div>
+    </div>
+    <div class="snav-group">
+      <div class="snav-group-label">COMMUNICATION</div>
+      <div class="snav-item" onclick="showPage('notices',this)">
+        <span class="snav-icon">📢</span>공지사항
+      </div>
+      <div class="snav-item" onclick="showPage('feedback',this)">
+        <span class="snav-icon">✉️</span>문의 / 피드백
+        <span class="snav-badge">5</span>
+      </div>
+      <div class="snav-item" onclick="showPage('email',this)">
+        <span class="snav-icon">📧</span>이메일 발송
+      </div>
+    </div>
+    <div class="snav-group">
+      <div class="snav-group-label">SETTINGS</div>
+      <div class="snav-item" onclick="showPage('pricing',this)">
+        <span class="snav-icon">💰</span>가격 관리
+      </div>
+      <div class="snav-item" onclick="showPage('settings',this)">
+        <span class="snav-icon">⚙️</span>시스템 설정
+      </div>
+    </div>
+  </aside>
+
+  <!-- ══ MAIN ══ -->
+  <main class="main">
+
+    <!-- ─── DASHBOARD ─── -->
+    <div class="page-section act fade-in" id="page-dashboard">
+      <div class="page-title">Dashboard</div>
+      <div class="page-sub">LinguaWalk 전체 현황 — <span id="dash-date"></span></div>
+
+      <!-- KPI -->
+      <div class="kpi-row">
+        <div class="kpi-card">
+          <div class="kpi-label">전체 회원</div>
+          <div class="kpi-num" style="color:var(--navy);">247</div>
+          <div class="kpi-change kpi-up">↑ +12 이번 주</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">구독 회원</div>
+          <div class="kpi-num" style="color:var(--teal-mid);">183</div>
+          <div class="kpi-change kpi-up">↑ 74% 전환율</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">월 매출 (MRR)</div>
+          <div class="kpi-num" style="color:var(--toeic);">₩2.4M</div>
+          <div class="kpi-change kpi-up">↑ +18% 전월비</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">오늘 신규 가입</div>
+          <div class="kpi-num" style="color:var(--toefl);">8</div>
+          <div class="kpi-change kpi-down">↓ -2 전일비</div>
+        </div>
+      </div>
+
+      <!-- Revenue chart -->
+      <div class="card">
+        <div class="card-head">
+          <span class="card-title">월별 매출 추이</span>
+          <span style="font-size:12px;color:var(--text-light);">최근 8개월</span>
+        </div>
+        <div class="card-body">
+          <div class="rev-chart" id="rev-chart"></div>
+        </div>
+      </div>
+
+      <!-- Subscription breakdown -->
+      <div class="card">
+        <div class="card-head"><span class="card-title">시험별 구독 현황</span></div>
+        <div class="card-body">
+          <div class="sub-breakdown">
+            <div class="sb-item">
+              <div class="sb-icon">🏆</div>
+              <div class="sb-name">TOEIC</div>
+              <div class="sb-count" style="color:var(--toeic);">94</div>
+              <div class="sb-rev">₩1,213,800/월</div>
+            </div>
+            <div class="sb-item">
+              <div class="sb-icon">🎓</div>
+              <div class="sb-name">TOEFL</div>
+              <div class="sb-count" style="color:var(--toefl);">41</div>
+              <div class="sb-rev">₩528,900/월</div>
+            </div>
+            <div class="sb-item">
+              <div class="sb-icon">🌍</div>
+              <div class="sb-name">IELTS</div>
+              <div class="sb-count" style="color:var(--ielts);">35</div>
+              <div class="sb-rev">₩451,500/월</div>
+            </div>
+            <div class="sb-item">
+              <div class="sb-icon">🎤</div>
+              <div class="sb-name">OPIc</div>
+              <div class="sb-count" style="color:var(--opic);">13</div>
+              <div class="sb-rev">₩167,700/월</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent signups -->
+      <div class="card">
+        <div class="card-head">
+          <span class="card-title">최근 가입 회원</span>
+          <span style="font-size:12px;color:var(--teal-mid);cursor:pointer;" onclick="showPage('members',document.querySelector('.snav-item:nth-child(2))'))">전체 보기 →</span>
+        </div>
+        <div class="card-body" style="padding:0;">
+          <table class="data-table">
+            <thead><tr>
+              <th>이름</th><th>이메일</th><th>가입일</th><th>플랜</th><th>상태</th>
+            </tr></thead>
+            <tbody>
+              <tr><td class="td-name">이지현</td><td class="td-email">jihyun@naver.com</td><td>2026.05.20</td><td><div class="plan-tags"><span class="plan-tag pt-toeic">TOEIC</span></div></td><td><span class="status-badge st-trial">체험</span></td></tr>
+              <tr><td class="td-name">박준혁</td><td class="td-email">junhyuk@kakao.com</td><td>2026.05.20</td><td><div class="plan-tags"><span class="plan-tag pt-ielts">IELTS</span></div></td><td><span class="status-badge st-active">구독중</span></td></tr>
+              <tr><td class="td-name">최수민</td><td class="td-email">sumin@gmail.com</td><td>2026.05.19</td><td><div class="plan-tags"><span class="plan-tag pt-toeic">TOEIC</span><span class="plan-tag pt-toefl">TOEFL</span></div></td><td><span class="status-badge st-active">구독중</span></td></tr>
+              <tr><td class="td-name">김태양</td><td class="td-email">taeyang@gmail.com</td><td>2026.05.19</td><td><div class="plan-tags">—</div></td><td><span class="status-badge st-inactive">무료</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── MEMBERS ─── -->
+    <div class="page-section fade-in" id="page-members">
+      <div class="page-title">회원 관리</div>
+      <div class="page-sub">전체 회원 조회, 검색, 구독 상태 관리</div>
+
+      <div class="filter-row">
+        <input type="text" class="search-input" placeholder="이름, 이메일 검색...">
+        <select class="filter-select">
+          <option>전체 상태</option>
+          <option>구독중</option>
+          <option>체험중</option>
+          <option>무료</option>
+          <option>해지</option>
+        </select>
+        <select class="filter-select">
+          <option>전체 플랜</option>
+          <option>TOEIC</option>
+          <option>TOEFL</option>
+          <option>IELTS</option>
+          <option>OPIc</option>
+        </select>
+        <button class="filter-btn">검색</button>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <span class="card-title">회원 목록 <span style="font-weight:400;color:var(--text-light);">(247명)</span></span>
+          <button class="btn btn-outline" style="font-size:12px;padding:6px 12px;">CSV 내보내기</button>
+        </div>
+        <div class="card-body" style="padding:0;">
+          <table class="data-table">
+            <thead><tr>
+              <th>이름</th><th>이메일</th><th>가입일</th><th>플랜</th><th>상태</th><th>마지막 학습</th><th>관리</th>
+            </tr></thead>
+            <tbody>
+              <tr>
+                <td class="td-name">김민준</td>
+                <td class="td-email">minjun@email.com</td>
+                <td>2026.03.10</td>
+                <td><div class="plan-tags"><span class="plan-tag pt-toeic">TOEIC</span><span class="plan-tag pt-ielts">IELTS</span></div></td>
+                <td><span class="status-badge st-active">구독중</span></td>
+                <td>오늘</td>
+                <td><button class="action-btn">상세</button><button class="action-btn danger">정지</button></td>
+              </tr>
+              <tr>
+                <td class="td-name">이지현</td>
+                <td class="td-email">jihyun@naver.com</td>
+                <td>2026.05.20</td>
+                <td><div class="plan-tags"><span class="plan-tag pt-toeic">TOEIC</span></div></td>
+                <td><span class="status-badge st-trial">체험</span></td>
+                <td>오늘</td>
+                <td><button class="action-btn">상세</button><button class="action-btn danger">정지</button></td>
+              </tr>
+              <tr>
+                <td class="td-name">박준혁</td>
+                <td class="td-email">junhyuk@kakao.com</td>
+                <td>2026.05.20</td>
+                <td><div class="plan-tags"><span class="plan-tag pt-ielts">IELTS</span></div></td>
+                <td><span class="status-badge st-active">구독중</span></td>
+                <td>어제</td>
+                <td><button class="action-btn">상세</button><button class="action-btn danger">정지</button></td>
+              </tr>
+              <tr>
+                <td class="td-name">최수민</td>
+                <td class="td-email">sumin@gmail.com</td>
+                <td>2026.05.19</td>
+                <td><div class="plan-tags"><span class="plan-tag pt-toeic">TOEIC</span><span class="plan-tag pt-toefl">TOEFL</span></div></td>
+                <td><span class="status-badge st-active">구독중</span></td>
+                <td>2일 전</td>
+                <td><button class="action-btn">상세</button><button class="action-btn danger">정지</button></td>
+              </tr>
+              <tr>
+                <td class="td-name">정우성</td>
+                <td class="td-email">woo@naver.com</td>
+                <td>2026.04.02</td>
+                <td><div class="plan-tags"><span class="plan-tag pt-opic">OPIc</span></div></td>
+                <td><span class="status-badge st-cancelled">해지</span></td>
+                <td>12일 전</td>
+                <td><button class="action-btn">상세</button><button class="action-btn">복구</button></td>
+              </tr>
+              <tr>
+                <td class="td-name">김태양</td>
+                <td class="td-email">taeyang@gmail.com</td>
+                <td>2026.05.19</td>
+                <td><div class="plan-tags">—</div></td>
+                <td><span class="status-badge st-inactive">무료</span></td>
+                <td>5일 전</td>
+                <td><button class="action-btn">상세</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── SUBSCRIPTIONS ─── -->
+    <div class="page-section fade-in" id="page-subscriptions">
+      <div class="page-title">구독 / 결제 관리</div>
+      <div class="page-sub">전체 결제 내역 및 환불 처리</div>
+
+      <div class="alert alert-info">
+        💳 이번 달 예상 매출: <strong>₩2,362,200</strong> | 환불 처리 대기: <strong>2건</strong>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <span class="card-title">전체 결제 내역</span>
+          <button class="btn btn-outline" style="font-size:12px;padding:6px 12px;">CSV 내보내기</button>
+        </div>
+        <div class="card-body" style="padding:0;">
+          <table class="data-table">
+            <thead><tr>
+              <th>결제일</th><th>회원</th><th>플랜</th><th>금액</th><th>결제수단</th><th>상태</th><th>관리</th>
+            </tr></thead>
+            <tbody>
+              <tr><td>2026.05.20</td><td class="td-name">이지현</td><td><span class="plan-tag pt-toeic">TOEIC</span></td><td>₩12,900</td><td>카카오페이</td><td><span class="status-badge st-active">완료</span></td><td><button class="pay-refund-btn">환불</button></td></tr>
+              <tr><td>2026.05.20</td><td class="td-name">박준혁</td><td><span class="plan-tag pt-ielts">IELTS</span></td><td>₩12,900</td><td>네이버페이</td><td><span class="status-badge st-active">완료</span></td><td><button class="pay-refund-btn">환불</button></td></tr>
+              <tr><td>2026.05.15</td><td class="td-name">김민준</td><td><span class="plan-tag pt-toeic">TOEIC</span></td><td>₩12,900</td><td>카카오페이</td><td><span class="status-badge st-active">완료</span></td><td><button class="pay-refund-btn">환불</button></td></tr>
+              <tr><td>2026.05.15</td><td class="td-name">김민준</td><td><span class="plan-tag pt-ielts">IELTS</span></td><td>₩12,900</td><td>카카오페이</td><td><span class="status-badge st-active">완료</span></td><td><button class="pay-refund-btn">환불</button></td></tr>
+              <tr><td>2026.05.12</td><td class="td-name">정우성</td><td><span class="plan-tag pt-opic">OPIc</span></td><td>₩12,900</td><td>신용카드</td><td><span class="status-badge st-cancelled">환불</span></td><td>—</td></tr>
+              <tr><td>2026.05.10</td><td class="td-name">최수민</td><td><span class="plan-tag pt-toefl">TOEFL</span></td><td>₩12,900</td><td>신용카드</td><td><span class="status-badge st-active">완료</span></td><td><button class="pay-refund-btn">환불</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── NOTICES ─── -->
+    <div class="page-section fade-in" id="page-notices">
+      <div class="page-title">공지사항 관리</div>
+      <div class="page-sub">학습자에게 공지할 내용을 작성하고 관리하세요.</div>
+
+      <div class="card">
+        <div class="card-head"><span class="card-title">새 공지 작성</span></div>
+        <div class="card-body">
+          <div class="notice-form">
+            <div class="form-row">
+              <div>
+                <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--text-light);margin-bottom:5px;">제목</div>
+                <input type="text" class="form-input" placeholder="공지 제목을 입력하세요">
+              </div>
+              <div>
+                <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--text-light);margin-bottom:5px;">대상</div>
+                <select class="form-input">
+                  <option>전체 회원</option>
+                  <option>TOEIC 구독자</option>
+                  <option>TOEFL 구독자</option>
+                  <option>IELTS 구독자</option>
+                  <option>OPIc 구독자</option>
+                </select>
+              </div>
+            </div>
+            <div>
+              <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--text-light);margin-bottom:5px;">내용</div>
+              <textarea class="form-textarea" placeholder="공지 내용을 입력하세요..."></textarea>
+            </div>
+            <div style="display:flex;gap:10px;">
+              <button class="btn btn-primary">📢 공지 발행</button>
+              <button class="btn btn-outline">미리보기</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><span class="card-title">발행된 공지</span></div>
+        <div class="card-body" style="padding:0;">
+          <table class="data-table">
+            <thead><tr><th>제목</th><th>대상</th><th>작성일</th><th>조회수</th><th>관리</th></tr></thead>
+            <tbody>
+              <tr><td class="td-name">IELTS Writing Task 1 차트 기능 업데이트</td><td>전체</td><td>2026.05.20</td><td>142</td><td><button class="action-btn">수정</button><button class="action-btn danger">삭제</button></td></tr>
+              <tr><td class="td-name">OPIc TTS 자동 낭독 기능 추가</td><td>OPIc 구독자</td><td>2026.05.18</td><td>89</td><td><button class="action-btn">수정</button><button class="action-btn danger">삭제</button></td></tr>
+              <tr><td class="td-name">서비스 이용약관 업데이트 안내</td><td>전체</td><td>2026.05.10</td><td>215</td><td><button class="action-btn">수정</button><button class="action-btn danger">삭제</button></td></tr>
+              <tr><td class="td-name">TOEIC 모의고사 기능 오픈</td><td>TOEIC 구독자</td><td>2026.05.01</td><td>178</td><td><button class="action-btn">수정</button><button class="action-btn danger">삭제</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── FEEDBACK ─── -->
+    <div class="page-section fade-in" id="page-feedback">
+      <div class="page-title">문의 / 피드백</div>
+      <div class="page-sub">학습자들의 의견과 문의를 확인하고 답변하세요.</div>
+
+      <div class="alert alert-warn">
+        ⚠️ 미답변 문의 <strong>5건</strong>이 있습니다. 빠른 답변을 권장합니다.
+      </div>
+
+      <div class="card">
+        <div class="card-body">
+          <div class="feedback-list">
+            <div class="fb-item">
+              <div class="fb-top">
+                <span class="fb-type ft-bug">🐛 버그 신고</span>
+                <span class="fb-user">김민준</span>
+                <span class="fb-date">2026.05.20</span>
+              </div>
+              <div class="fb-subject">IELTS Writing 차트가 가끔 안 나옵니다</div>
+              <div class="fb-msg">Mixed (Bar + Line) 차트 선택 시 간헐적으로 빈 화면이 표시됩니다. Chart.js 로딩 타이밍 문제인 것 같습니다.</div>
+              <div class="fb-stars">⭐⭐⭐☆☆</div>
+              <div class="fb-reply">
+                <input type="text" placeholder="답변을 입력하세요...">
+                <button>답변 전송</button>
+              </div>
+            </div>
+            <div class="fb-item">
+              <div class="fb-top">
+                <span class="fb-type ft-suggestion">💡 제안</span>
+                <span class="fb-user">이지현</span>
+                <span class="fb-date">2026.05.19</span>
+              </div>
+              <div class="fb-subject">TOEIC 파트별 통계가 있으면 좋겠어요</div>
+              <div class="fb-msg">어떤 파트가 약한지 한눈에 볼 수 있는 레이더 차트나 약점 분석 기능이 있으면 좋을 것 같아요.</div>
+              <div class="fb-stars">⭐⭐⭐⭐⭐</div>
+              <div class="fb-reply">
+                <input type="text" placeholder="답변을 입력하세요...">
+                <button>답변 전송</button>
+              </div>
+            </div>
+            <div class="fb-item">
+              <div class="fb-top">
+                <span class="fb-type ft-content">📚 콘텐츠 요청</span>
+                <span class="fb-user">박준혁</span>
+                <span class="fb-date">2026.05.18</span>
+              </div>
+              <div class="fb-subject">IELTS Academic Word List 어휘 학습 추가 요청</div>
+              <div class="fb-msg">AWL(Academic Word List) 기반의 어휘 학습 콘텐츠가 있으면 IELTS Reading 점수 향상에 도움이 될 것 같습니다.</div>
+              <div class="fb-stars">⭐⭐⭐⭐☆</div>
+              <div class="fb-reply">
+                <input type="text" placeholder="답변을 입력하세요...">
+                <button>답변 전송</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── EMAIL ─── -->
+    <div class="page-section fade-in" id="page-email">
+      <div class="page-title">이메일 발송</div>
+      <div class="page-sub">특정 그룹에게 이메일을 발송합니다.</div>
+
+      <div class="card">
+        <div class="card-head"><span class="card-title">이메일 작성</span></div>
+        <div class="card-body">
+          <div style="display:flex;flex-direction:column;gap:14px;">
+            <div>
+              <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--text-light);margin-bottom:5px;">수신 대상</div>
+              <select class="form-input">
+                <option>전체 회원 (247명)</option>
+                <option>구독 회원 전체 (183명)</option>
+                <option>TOEIC 구독자 (94명)</option>
+                <option>TOEFL 구독자 (41명)</option>
+                <option>IELTS 구독자 (35명)</option>
+                <option>OPIc 구독자 (13명)</option>
+                <option>무료 회원 (64명)</option>
+                <option>최근 30일 미접속 (38명)</option>
+              </select>
+            </div>
+            <div>
+              <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--text-light);margin-bottom:5px;">제목</div>
+              <input type="text" class="form-input" placeholder="이메일 제목">
+            </div>
+            <div>
+              <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--text-light);margin-bottom:5px;">내용</div>
+              <textarea class="form-textarea" style="min-height:160px;" placeholder="이메일 본문을 입력하세요..."></textarea>
+            </div>
+            <div style="display:flex;gap:10px;">
+              <button class="btn btn-primary">📧 이메일 발송</button>
+              <button class="btn btn-outline">테스트 발송</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── PRICING ─── -->
+    <div class="page-section fade-in" id="page-pricing">
+      <div class="page-title">가격 관리</div>
+      <div class="page-sub">시험별 구독 가격을 설정합니다.</div>
+
+      <div class="card">
+        <div class="card-head"><span class="card-title">시험별 월정액 가격</span></div>
+        <div class="card-body">
+          <div style="display:flex;flex-direction:column;gap:14px;">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+              <div style="background:var(--bg);border-radius:var(--r-lg);padding:16px;">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+                  <span style="font-size:20px;">🏆</span>
+                  <span style="font-weight:600;">TOEIC</span>
+                </div>
+                <input type="text" class="form-input" value="12900" style="font-size:16px;font-weight:600;">
+                <div style="font-size:11px;color:var(--text-light);margin-top:4px;">현재 구독자: 94명</div>
+              </div>
+              <div style="background:var(--bg);border-radius:var(--r-lg);padding:16px;">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+                  <span style="font-size:20px;">🎓</span>
+                  <span style="font-weight:600;">TOEFL</span>
+                </div>
+                <input type="text" class="form-input" value="12900" style="font-size:16px;font-weight:600;">
+                <div style="font-size:11px;color:var(--text-light);margin-top:4px;">현재 구독자: 41명</div>
+              </div>
+              <div style="background:var(--bg);border-radius:var(--r-lg);padding:16px;">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+                  <span style="font-size:20px;">🌍</span>
+                  <span style="font-weight:600;">IELTS</span>
+                </div>
+                <input type="text" class="form-input" value="12900" style="font-size:16px;font-weight:600;">
+                <div style="font-size:11px;color:var(--text-light);margin-top:4px;">현재 구독자: 35명</div>
+              </div>
+              <div style="background:var(--bg);border-radius:var(--r-lg);padding:16px;">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+                  <span style="font-size:20px;">🎤</span>
+                  <span style="font-weight:600;">OPIc</span>
+                </div>
+                <input type="text" class="form-input" value="12900" style="font-size:16px;font-weight:600;">
+                <div style="font-size:11px;color:var(--text-light);margin-top:4px;">현재 구독자: 13명</div>
+              </div>
+            </div>
+            <button class="btn btn-primary" style="align-self:flex-start;">가격 저장</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── SETTINGS ─── -->
+    <div class="page-section fade-in" id="page-settings">
+      <div class="page-title">시스템 설정</div>
+      <div class="page-sub">서비스 전반 설정을 관리합니다.</div>
+
+      <div class="card">
+        <div class="card-head"><span class="card-title">서비스 기본 정보</span></div>
+        <div class="card-body">
+          <div style="display:flex;flex-direction:column;gap:14px;">
+            <div class="form-row">
+              <div>
+                <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--text-light);margin-bottom:5px;">서비스명</div>
+                <input type="text" class="form-input" value="LinguaWalk">
+              </div>
+              <div>
+                <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--text-light);margin-bottom:5px;">도메인</div>
+                <input type="text" class="form-input" value="linguawalk.net">
+              </div>
+            </div>
+            <div>
+              <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--text-light);margin-bottom:5px;">운영자 이메일</div>
+              <input type="email" class="form-input" value="admin@linguawalk.net">
+            </div>
+            <div>
+              <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--text-light);margin-bottom:5px;">사업자 등록번호</div>
+              <input type="text" class="form-input" placeholder="000-00-00000">
+            </div>
+            <button class="btn btn-primary" style="align-self:flex-start;">저장</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><span class="card-title">무료 체험 설정</span></div>
+        <div class="card-body">
+          <div style="display:flex;flex-direction:column;gap:14px;">
+            <div class="form-row">
+              <div>
+                <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--text-light);margin-bottom:5px;">체험 기간</div>
+                <select class="form-input">
+                  <option>7일</option>
+                  <option selected>14일</option>
+                  <option>30일</option>
+                </select>
+              </div>
+              <div>
+                <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--text-light);margin-bottom:5px;">체험 대상 시험</div>
+                <select class="form-input">
+                  <option>TOEIC만</option>
+                  <option selected>전체 시험</option>
+                </select>
+              </div>
+            </div>
+            <button class="btn btn-primary" style="align-self:flex-start;">저장</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+function showPage(id, navEl){
+  document.querySelectorAll('.page-section').forEach(p=>p.classList.remove('act'));
+  document.querySelectorAll('.snav-item').forEach(n=>n.classList.remove('act'));
+  document.getElementById('page-'+id).classList.add('act');
+  if(navEl) navEl.classList.add('act');
+}
+
+// Revenue chart
+function buildRevChart(){
+  const wrap=document.getElementById('rev-chart');
+  if(!wrap) return;
+  const data=[
+    {m:'10월',v:820,dim:true},{m:'11월',v:950,dim:true},{m:'12월',v:1100,dim:true},
+    {m:'1월',v:1350,dim:true},{m:'2월',v:1580,dim:true},{m:'3월',v:1820,dim:true},
+    {m:'4월',v:2050,dim:true},{m:'5월',v:2400,dim:false}
+  ];
+  const max=Math.max(...data.map(d=>d.v));
+  data.forEach(d=>{
+    const col=document.createElement('div');
+    col.className='rev-bar-wrap';
+    const pct=Math.round(d.v/max*100);
+    col.innerHTML=`<div class="rev-val">₩${(d.v/100).toFixed(1)}M</div>
+      <div class="rev-bar${d.dim?' dim':''}" style="height:${pct}%"></div>
+      <div class="rev-label">${d.m}</div>`;
+    wrap.appendChild(col);
+  });
+}
+
+// Date
+function setDates(){
+  const now=new Date();
+  const fmt=now.toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric',weekday:'long'});
+  const el=document.getElementById('today-date');
+  const el2=document.getElementById('dash-date');
+  if(el) el.textContent=fmt;
+  if(el2) el2.textContent=fmt;
+}
+
+(function(){
+  buildRevChart();
+  setDates();
+})();
+</script>
+</body>
+</html>
