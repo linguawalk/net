@@ -300,7 +300,7 @@ nav{
     <a href="opic/index.html" class="nav-link" data-en="OPIc" data-ko="OPIc">OPIc</a>
     <a href="test.html" class="nav-link" data-en="Level Test" data-ko="레벨 테스트">Level Test</a>
   </div>
-  <a href="login.html" class="nav-signin" style="text-decoration:none;" data-en="Sign in" data-ko="로그인">Sign in</a>
+  <a href="../login.html" class="nav-signin" style="text-decoration:none;" data-en="Sign in" data-ko="로그인">Sign in</a>
   <div class="lang-sw">
     <button class="lbtn act" onclick="setLang('en')" id="btn-en">EN</button>
     <button class="lbtn" onclick="setLang('ko')" id="btn-ko">한국어</button>
@@ -631,7 +631,7 @@ function setLang(l){
     var btn = document.querySelector('.nav-signin');
     if(btn){
       btn.textContent = user.name || '마이페이지';
-      btn.href = user.role==='admin' ? 'admin.html' : 'mypage.html';
+      btn.href = user.role==='admin' ? '../admin.html' : '../mypage.html';
     }
   }
 })();
