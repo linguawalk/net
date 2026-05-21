@@ -314,6 +314,11 @@ const DEMO_ACCOUNTS = [
   }
 ];
 
+/* ── URL 해시로 탭 자동 선택 ── */
+(function(){
+  if(location.hash === '#signup') switchTab('signup');
+})();
+
 /* ── 이미 로그인된 경우 리다이렉트 ── */
 (function(){
   const user = getUser();
