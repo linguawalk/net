@@ -175,8 +175,8 @@
     <a href="#languages" class="nav-link" data-en="Languages" data-ko="언어 선택">Languages</a>
     <a href="#features" class="nav-link" data-en="Features" data-ko="기능 소개">Features</a>
     <a href="#pricing" class="nav-link" data-en="Pricing" data-ko="요금제">Pricing</a>
-    <a href="#" class="nav-link" data-en="Sign in" data-ko="로그인">Sign in</a>
-    <a href="#" class="nav-cta" data-en="Start for free" data-ko="무료 시작">Start for free</a>
+    <a href="login.html" class="nav-link" data-en="Sign in" data-ko="로그인">Sign in</a>
+    <a href="login.html#signup" class="nav-cta" data-en="Start for free" data-ko="무료 시작">Start for free</a>
   </div>
 </nav>
 
@@ -291,7 +291,7 @@
           <li><span class="pf-check">✓</span><span data-en="Level Test" data-ko="Level Test 응시">Level Test</span></li>
           <li><span class="pf-check">✓</span><span data-en="Progress saved (sign-up required)" data-ko="학습 기록 저장 (회원가입 시)">Progress saved (sign-up)</span></li>
         </ul>
-        <button class="plan-cta" data-en="Get started free" data-ko="무료로 시작">Get started free</button>
+        <a href="login.html#signup" class="plan-cta" style="text-decoration:none;display:inline-block;" data-en="Get started free" data-ko="무료로 시작">Get started free</a>
       </div>
       <div class="plan-card featured reveal">
         <div class="plan-badge" data-en="Most popular" data-ko="가장 인기">Most popular</div>
@@ -307,7 +307,7 @@
           <li><span class="pf-check">✓</span><span data-en="Writing A1–C2 + AI Tutor" data-ko="Writing A1~C2 + AI 튜터">Writing A1–C2 + AI Tutor</span></li>
           <li><span class="pf-check">✓</span><span data-en="Exam Prep included" data-ko="Exam Prep 포함">Exam Prep included</span></li>
         </ul>
-        <button class="plan-cta" data-en="Start Pro" data-ko="Pro 시작하기">Start Pro</button>
+        <a href="login.html#signup" class="plan-cta" style="text-decoration:none;display:inline-block;" data-en="Start Pro" data-ko="Pro 시작하기">Start Pro</a>
       </div>
       <div class="plan-card reveal">
         <div class="plan-name">AI Speaking</div>
@@ -411,6 +411,28 @@
       if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth' }); }
     });
   });
+</script>
+
+<script>
+// 로그인 상태 반영
+(function(){
+  var user;
+  try{ user = JSON.parse(localStorage.getItem('lw-user')); }catch(e){}
+  if(user){
+    // Sign in 링크를 이름으로 교체
+    var signIn = document.querySelector('a[href="login.html"]');
+    if(signIn){
+      signIn.textContent = user.name || user.email;
+      signIn.href = user.role==='admin' ? 'admin.html' : 'mypage.html';
+    }
+    // 무료 시작 → 마이페이지
+    var cta = document.querySelector('a[href="login.html#signup"].nav-cta');
+    if(cta){
+      cta.textContent = user.role==='ko' ? '내 학습' : 'My Learning';
+      cta.href = 'mypage.html';
+    }
+  }
+})();
 </script>
 </body>
 </html>
