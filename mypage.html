@@ -286,6 +286,10 @@ nav{background:var(--navy2);height:56px;display:flex;align-items:center;padding:
   });
 })();
 </script>
+<script>
+  // ── Vercel API 설정 ──
+  const API_URL = '/api/send-email';
+</script>
 </head>
 <body>
 
@@ -739,6 +743,9 @@ nav{background:var(--navy2);height:56px;display:flex;align-items:center;padding:
       <div class="sec-title" data-en="Send Feedback" data-ko="의견 보내기">Send Feedback</div>
       <div class="sec-sub" data-en="Your feedback helps us improve LinguaWalk for everyone." data-ko="여러분의 의견이 LinguaWalk를 더 좋게 만듭니다.">Your feedback helps us improve LinguaWalk for everyone.</div>
       <div class="feedback-card">
+        <!-- 전송 결과 메시지 -->
+        <div id="fb-result" style="display:none;padding:11px 14px;border-radius:9px;margin-bottom:14px;font-size:13px;font-weight:500;"></div>
+
         <div class="form-group">
           <label class="form-label" data-en="Type" data-ko="유형">Type</label>
           <div class="feedback-types">
@@ -760,13 +767,13 @@ nav{background:var(--navy2);height:56px;display:flex;align-items:center;padding:
         </div>
         <div class="form-group">
           <label class="form-label" data-en="Subject" data-ko="제목">Subject</label>
-          <input type="text" class="form-input" placeholder="e.g. TOEIC Part 3 question quality">
+          <input type="text" id="fb-subject" class="form-input" placeholder="e.g. TOEIC Part 3 question quality">
         </div>
         <div class="form-group">
           <label class="form-label" data-en="Message" data-ko="내용">Message</label>
-          <textarea class="form-textarea" placeholder="Tell us what you think..."></textarea>
+          <textarea id="fb-message" class="form-textarea" placeholder="Tell us what you think..."></textarea>
         </div>
-        <button class="btn btn-primary" style="width:100%;padding:13px;" data-en="📨 Send Feedback" data-ko="📨 의견 보내기">📨 Send Feedback</button>
+        <button id="fb-send-btn" class="btn btn-primary" style="width:100%;padding:13px;" onclick="sendFeedback()" data-en="📨 Send Feedback" data-ko="📨 의견 보내기">📨 의견 보내기</button>
       </div>
     </div>
 
@@ -920,6 +927,81 @@ function setRating(n){
   document.querySelectorAll('.star-btn').forEach((b,i)=>{
     b.classList.toggle('lit',i<n);
   });
+}
+
+// ── FEEDBACK SEND (EmailJS) ──
+let currentRating = 4;
+let currentFType = '💡 Suggestion';
+
+function setRating(n){
+  currentRating = n;
+  document.querySelectorAll('.star-btn').forEach((b,i)=>{
+    b.classList.toggle('lit', i < n);
+  });
+}
+
+function selectFType(btn){
+  document.querySelectorAll('.ftype-btn').forEach(b=>b.classList.remove('act'));
+  btn.classList.add('act');
+  currentFType = btn.textContent.trim();
+}
+
+async function sendFeedback(){
+  const user = JSON.parse(localStorage.getItem('lw-user') || '{}');
+  const subject = document.getElementById('fb-subject').value.trim();
+  const message = document.getElementById('fb-message').value.trim();
+  const btn = document.getElementById('fb-send-btn');
+
+  if(!subject){ showFbResult('error', '제목을 입력해 주세요.'); return; }
+  if(!message){ showFbResult('error', '내용을 입력해 주세요.'); return; }
+
+  btn.disabled = true;
+  btn.textContent = '전송 중...';
+
+  try {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type:          'feedback',
+        user_name:     user.name  || '비회원',
+        user_email:    user.email || 'unknown',
+        feedback_type: currentFType,
+        rating:        currentRating,
+        subject:       subject,
+        message:       message
+      })
+    });
+    const data = await res.json();
+    if(res.ok){
+      showFbResult('success', '✓ 의견이 전송되었습니다. 소중한 피드백 감사합니다!');
+      document.getElementById('fb-subject').value = '';
+      document.getElementById('fb-message').value = '';
+    } else {
+      showFbResult('error', data.error || '전송에 실패했습니다.');
+    }
+  } catch(err) {
+    console.error('API error:', err);
+    showFbResult('error', '전송에 실패했습니다. 잠시 후 다시 시도해 주세요.');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '📨 의견 보내기';
+  }
+}
+
+function showFbResult(type, msg){
+  const el = document.getElementById('fb-result');
+  el.style.display = 'block';
+  if(type === 'success'){
+    el.style.background = 'var(--teal-light)';
+    el.style.color = 'var(--teal-mid)';
+    el.style.border = '0.5px solid rgba(29,158,117,0.25)';
+  } else {
+    el.style.background = 'var(--red-light)';
+    el.style.color = 'var(--red)';
+    el.style.border = '0.5px solid rgba(226,75,74,0.25)';
+  }
+  el.textContent = msg;
 }
 
 // ── INIT ──
