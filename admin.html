@@ -176,6 +176,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   }
 })();
 </script>
+<script>
+  const API_URL = '/api/send-email';
+</script>
 </head>
 <body>
 
@@ -528,7 +531,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
       <div class="card">
         <div class="card-body">
           <div class="feedback-list">
-            <div class="fb-item">
+            <div class="fb-item" id="fbi-1">
               <div class="fb-top">
                 <span class="fb-type ft-bug">🐛 버그 신고</span>
                 <span class="fb-user">김민준</span>
@@ -537,12 +540,16 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
               <div class="fb-subject">IELTS Writing 차트가 가끔 안 나옵니다</div>
               <div class="fb-msg">Mixed (Bar + Line) 차트 선택 시 간헐적으로 빈 화면이 표시됩니다. Chart.js 로딩 타이밍 문제인 것 같습니다.</div>
               <div class="fb-stars">⭐⭐⭐☆☆</div>
+              <div id="fb-result-1" style="display:none;padding:8px 12px;border-radius:8px;font-size:12px;margin-top:8px;"></div>
               <div class="fb-reply">
-                <input type="text" placeholder="답변을 입력하세요...">
-                <button>답변 전송</button>
+                <input type="text" id="fb-reply-1" placeholder="답변을 입력하세요..."
+                  data-user="김민준" data-email="minjun@email.com"
+                  data-subject="IELTS Writing 차트가 가끔 안 나옵니다"
+                  data-original="Mixed (Bar + Line) 차트 선택 시 간헐적으로 빈 화면이 표시됩니다.">
+                <button onclick="sendReply(1)">답변 전송</button>
               </div>
             </div>
-            <div class="fb-item">
+            <div class="fb-item" id="fbi-2">
               <div class="fb-top">
                 <span class="fb-type ft-suggestion">💡 제안</span>
                 <span class="fb-user">이지현</span>
@@ -551,12 +558,16 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
               <div class="fb-subject">TOEIC 파트별 통계가 있으면 좋겠어요</div>
               <div class="fb-msg">어떤 파트가 약한지 한눈에 볼 수 있는 레이더 차트나 약점 분석 기능이 있으면 좋을 것 같아요.</div>
               <div class="fb-stars">⭐⭐⭐⭐⭐</div>
+              <div id="fb-result-2" style="display:none;padding:8px 12px;border-radius:8px;font-size:12px;margin-top:8px;"></div>
               <div class="fb-reply">
-                <input type="text" placeholder="답변을 입력하세요...">
-                <button>답변 전송</button>
+                <input type="text" id="fb-reply-2" placeholder="답변을 입력하세요..."
+                  data-user="이지현" data-email="jihyun@naver.com"
+                  data-subject="TOEIC 파트별 통계가 있으면 좋겠어요"
+                  data-original="어떤 파트가 약한지 한눈에 볼 수 있는 레이더 차트나 약점 분석 기능이 있으면 좋을 것 같아요.">
+                <button onclick="sendReply(2)">답변 전송</button>
               </div>
             </div>
-            <div class="fb-item">
+            <div class="fb-item" id="fbi-3">
               <div class="fb-top">
                 <span class="fb-type ft-content">📚 콘텐츠 요청</span>
                 <span class="fb-user">박준혁</span>
@@ -565,9 +576,13 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
               <div class="fb-subject">IELTS Academic Word List 어휘 학습 추가 요청</div>
               <div class="fb-msg">AWL(Academic Word List) 기반의 어휘 학습 콘텐츠가 있으면 IELTS Reading 점수 향상에 도움이 될 것 같습니다.</div>
               <div class="fb-stars">⭐⭐⭐⭐☆</div>
+              <div id="fb-result-3" style="display:none;padding:8px 12px;border-radius:8px;font-size:12px;margin-top:8px;"></div>
               <div class="fb-reply">
-                <input type="text" placeholder="답변을 입력하세요...">
-                <button>답변 전송</button>
+                <input type="text" id="fb-reply-3" placeholder="답변을 입력하세요..."
+                  data-user="박준혁" data-email="junhyuk@kakao.com"
+                  data-subject="IELTS Academic Word List 어휘 학습 추가 요청"
+                  data-original="AWL 기반의 어휘 학습 콘텐츠가 있으면 IELTS Reading 점수 향상에 도움이 될 것 같습니다.">
+                <button onclick="sendReply(3)">답변 전송</button>
               </div>
             </div>
           </div>
@@ -578,6 +593,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
     <!-- ─── EMAIL ─── -->
     <div class="page-section fade-in" id="page-email">
       <div class="page-title">이메일 발송</div>
+      <div id="email-result" style="display:none;padding:12px 16px;border-radius:10px;margin-bottom:16px;font-size:13px;font-weight:500;"></div>
       <div class="page-sub">특정 그룹에게 이메일을 발송합니다.</div>
 
       <div class="card">
@@ -606,8 +622,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
               <textarea class="form-textarea" style="min-height:160px;" placeholder="이메일 본문을 입력하세요..."></textarea>
             </div>
             <div style="display:flex;gap:10px;">
-              <button class="btn btn-primary">📧 이메일 발송</button>
-              <button class="btn btn-outline">테스트 발송</button>
+              <button class="btn btn-primary" onclick="sendBulkEmail()">📧 이메일 발송</button>
+              <button class="btn btn-outline" onclick="sendTestEmail()">테스트 발송</button>
             </div>
           </div>
         </div>
@@ -768,6 +784,130 @@ function setDates(){
   buildRevChart();
   setDates();
 })();
+
+// ── EmailJS: 답변 전송 ──
+async function sendReply(idx){
+  const input   = document.getElementById('fb-reply-'+idx);
+  const resultEl= document.getElementById('fb-result-'+idx);
+  const replyMsg= input.value.trim();
+  if(!replyMsg){ alert('답변 내용을 입력하세요.'); return; }
+
+  const btn = input.nextElementSibling;
+  btn.disabled = true;
+  btn.textContent = '전송 중...';
+
+  try {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type:             'reply',
+        to_email:         input.dataset.email,
+        user_name:        input.dataset.user,
+        subject:          input.dataset.subject,
+        original_message: input.dataset.original,
+        reply_message:    replyMsg
+      })
+    });
+    const data = await res.json();
+    resultEl.style.display = 'block';
+    if(res.ok){
+      resultEl.style.background = '#e1f5ee';
+      resultEl.style.color = '#1D9E75';
+      resultEl.textContent = '✓ ' + input.dataset.user + '님께 답변이 전송되었습니다.';
+      input.value = '';
+      input.disabled = true;
+      btn.textContent = '전송 완료';
+    } else {
+      resultEl.style.background = '#fcebeb';
+      resultEl.style.color = '#e24b4a';
+      resultEl.textContent = '✗ ' + (data.error || '전송 실패');
+      btn.disabled = false;
+      btn.textContent = '답변 전송';
+    }
+  } catch(err){
+    resultEl.style.display = 'block';
+    resultEl.style.background = '#fcebeb';
+    resultEl.style.color = '#e24b4a';
+    resultEl.textContent = '✗ 전송 실패. 다시 시도해 주세요.';
+    btn.disabled = false;
+    btn.textContent = '답변 전송';
+  }
+}
+
+// ── EmailJS: 이메일 발송 (관리자 → 회원) ──
+async function sendBulkEmail(){
+  const target  = document.querySelector('#page-email select').value;
+  const subject = document.querySelector('#page-email input[type="text"]').value.trim();
+  const body    = document.querySelector('#page-email textarea').value.trim();
+  const resultEl= document.getElementById('email-result');
+
+  if(!subject){ alert('이메일 제목을 입력하세요.'); return; }
+  if(!body)   { alert('이메일 내용을 입력하세요.'); return; }
+
+  const btn = document.querySelector('#page-email .btn-primary');
+  btn.disabled = true;
+  btn.textContent = '발송 중...';
+
+  try {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type:     'bulk',
+        to_email: 'admin@linguawalk.net',
+        subject:  '[' + target + '] ' + subject,
+        message:  body,
+        target:   target
+      })
+    });
+    const data = await res.json();
+    resultEl.style.display = 'block';
+    if(res.ok){
+      resultEl.style.background = '#e1f5ee';
+      resultEl.style.border = '0.5px solid rgba(29,158,117,0.25)';
+      resultEl.style.color = '#1D9E75';
+      resultEl.textContent = '✓ 이메일이 발송되었습니다. (대상: ' + target + ')';
+    } else {
+      resultEl.style.background = '#fcebeb';
+      resultEl.style.color = '#e24b4a';
+      resultEl.textContent = '✗ ' + (data.error || '발송 실패');
+    }
+  } catch(err){
+    resultEl.style.display = 'block';
+    resultEl.style.background = '#fcebeb';
+    resultEl.style.color = '#e24b4a';
+    resultEl.textContent = '✗ 발송 실패. 다시 시도해 주세요.';
+  } finally {
+    btn.textContent = '📧 이메일 발송';
+    btn.disabled = false;
+  }
+}
+
+async function sendTestEmail(){
+  const subject = document.querySelector('#page-email input[type="text"]').value.trim() || '테스트 이메일';
+  const body    = document.querySelector('#page-email textarea').value.trim() || '테스트 내용입니다.';
+
+  try {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type:     'bulk',
+        to_email: 'admin@linguawalk.net',
+        subject:  '[테스트] ' + subject,
+        message:  '(테스트 발송)
+
+' + body,
+        target:   '관리자'
+      })
+    });
+    if(res.ok) alert('✓ 테스트 이메일이 admin@linguawalk.net 으로 발송되었습니다.');
+    else alert('✗ 발송 실패');
+  } catch(err){
+    alert('✗ 발송 실패: ' + err.message);
+  }
+}
 </script>
 </body>
 </html>
