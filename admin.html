@@ -164,17 +164,49 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 .fade-in{animation:fadeUp 0.3s ease forwards;}
 </style>
-<script>
-// ── AUTH GUARD (admin only) ──
-(function(){
-  var user;
-  try{ user = JSON.parse(localStorage.getItem('lw-user')); }catch(e){}
-  if(!user){ location.href='login.html'; return; }
-  if(user.role !== 'admin'){
-    alert('관리자만 접근할 수 있습니다.');
-    location.href='mypage.html'; return;
-  }
-})();
+<!-- Firebase Auth Guard (Admin) -->
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
+  import { getAuth, onAuthStateChanged, signOut }
+    from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
+  import { getFirestore, doc, getDoc }
+    from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+
+  const app  = initializeApp({
+    apiKey:"AIzaSyB3OWQRy6AgDSrtjDXBclFxfV4mqhzWp-w",
+    authDomain:"linguawalk.firebaseapp.com",
+    projectId:"linguawalk",
+    storageBucket:"linguawalk.firebasestorage.app",
+    messagingSenderId:"558390764757",
+    appId:"1:558390764757:web:e6b26210045669dc686e5c"
+  });
+  const auth = getAuth(app);
+  const db   = getFirestore(app);
+
+  onAuthStateChanged(auth, async (user) => {
+    if(!user){
+      const local = JSON.parse(localStorage.getItem('lw-user') || 'null');
+      if(!local || local.role !== 'admin'){
+        location.href='login.html'; return;
+      }
+      return;
+    }
+    const snap = await getDoc(doc(db, 'users', user.uid));
+    const data = snap.exists() ? snap.data() : { role:'user' };
+    if(data.role !== 'admin'){
+      alert('관리자만 접근할 수 있습니다.');
+      location.href='mypage.html'; return;
+    }
+    localStorage.setItem('lw-user', JSON.stringify({
+      uid:user.uid, email:user.email,
+      name:data.name||user.email, role:'admin', plan:'admin'
+    }));
+    window._signOut = async () => {
+      await signOut(auth);
+      localStorage.removeItem('lw-user');
+      location.href='login.html';
+    };
+  });
 </script>
 <script>
   const API_URL = '/api/send-email';
@@ -193,7 +225,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   <div class="tn-right">
     <span class="tn-date" id="today-date"></span>
     <span class="tn-user">관리자</span>
-    <button class="tn-out" onclick="localStorage.removeItem('lw-user');location.href='login.html'">로그아웃</button>
+    <button class="tn-out" onclick="window._signOut ? window._signOut() : (localStorage.removeItem('lw-user'), location.href='login.html')">로그아웃</button>
   </div>
 </div>
 
