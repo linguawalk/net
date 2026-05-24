@@ -446,6 +446,34 @@ const PARTS={
 };
 
 let apiKey='', unsplashKey='';
+
+// Part 1 다양한 장소/상황 목록
+const PART1_SCENES = [
+  {keyword:'airport terminal gate', scene:'airport'},
+  {keyword:'restaurant kitchen chef', scene:'restaurant'},
+  {keyword:'hospital corridor nurse', scene:'hospital'},
+  {keyword:'library books reading', scene:'library'},
+  {keyword:'construction site workers', scene:'construction'},
+  {keyword:'grocery store shopping', scene:'store'},
+  {keyword:'park bench outdoor', scene:'park'},
+  {keyword:'train station platform', scene:'train station'},
+  {keyword:'conference room meeting', scene:'conference room'},
+  {keyword:'factory production line', scene:'factory'},
+  {keyword:'street market vendor', scene:'market'},
+  {keyword:'hotel lobby reception', scene:'hotel'},
+  {keyword:'laboratory scientist', scene:'laboratory'},
+  {keyword:'warehouse storage boxes', scene:'warehouse'},
+  {keyword:'cafe barista coffee', scene:'cafe'},
+  {keyword:'office desk computer', scene:'office'},
+  {keyword:'classroom students teacher', scene:'classroom'},
+  {keyword:'parking lot cars', scene:'parking lot'},
+  {keyword:'museum gallery artwork', scene:'museum'},
+  {keyword:'sports field athletes', scene:'sports field'},
+];
+function getRandomScene(){
+  return PART1_SCENES[Math.floor(Math.random()*PART1_SCENES.length)];
+}
+
 let currentPart='p1';
 let currentContent=null, messages=[], isLoading=false, currentPracticeData=[];
 let isPlaying=false, scriptVisible=false;
@@ -615,11 +643,14 @@ ${isP3?'8-12 dialogue lines':'8-14 monologue lines'}, ${qCount} questions. Authe
 
 // ── Part 1 ──
 async function genPart1(diff){
+  const scene = getRandomScene();
   const prompt=lang==='ko'
-    ?`TOEIC Part 1 사진 묘사 문제. 난이도: ${diff}. JSON만:
-{"imageKeyword":"영어 2단어 Unsplash 키워드","situation":"사진 상황(한국어 1문장)","options":[{"text":"정확한 묘사(정답)","correct":true},{"text":"오답1","correct":false},{"text":"오답2","correct":false},{"text":"오답3","correct":false}],"tip":"전략 팁(한국어)"}`
-    :`TOEIC Part 1 Photographs question. Difficulty: ${diff}. JSON only:
-{"imageKeyword":"2-word Unsplash keyword","situation":"brief scene description","options":[{"text":"accurate description (CORRECT)","correct":true},{"text":"wrong option","correct":false},{"text":"wrong option","correct":false},{"text":"wrong option","correct":false}],"tip":"Part 1 strategy tip"}`;
+    ?`TOEIC Part 1 사진 묘사 문제. 난이도: ${diff}. 장소: ${scene.scene}. JSON만:
+{"imageKeyword":"${scene.keyword}","situation":"${scene.scene} 관련 사진 상황(한국어 1문장)","options":[{"text":"정확한 묘사(정답)","correct":true},{"text":"오답1","correct":false},{"text":"오답2","correct":false},{"text":"오답3","correct":false}],"tip":"전략 팁(한국어)"}
+반드시 ${scene.scene} 장소에 맞는 문제를 만들어주세요.`
+    :`TOEIC Part 1 Photographs question. Difficulty: ${diff}. Scene: ${scene.scene}. JSON only:
+{"imageKeyword":"${scene.keyword}","situation":"${scene.scene} scene description","options":[{"text":"accurate description (CORRECT)","correct":true},{"text":"wrong option","correct":false},{"text":"wrong option","correct":false},{"text":"wrong option","correct":false}],"tip":"Part 1 strategy tip"}
+IMPORTANT: Create a question specifically about a ${scene.scene} scene.`;
   try{
     const raw=await callAPI(prompt,600);
     const p1=JSON.parse(raw.replace(/```json|```/g,'').trim());
@@ -645,7 +676,7 @@ function renderPart1(p1,diff){
   totalCorrect=0; answeredCount=0;
 
   // Load real photo (no API key required via Unsplash Source)
-  loadScenePhoto(p1.imageKeyword||'office workplace', p1.situation||'');
+  loadScenePhoto(p1.imageKeyword||scene.keyword, p1.situation||scene.scene);
 
   document.getElementById('badge-type').textContent='TOEIC · Part 1';
   document.getElementById('badge-level').textContent=diff;
@@ -988,22 +1019,28 @@ function loadScenePhoto(keyword, situation){
 
 async function fetchUnsplashPhoto(keyword){
   try{
-    // Vercel 프록시를 통해 Unsplash 사진 검색
     const r=await fetch(`/api/unsplash?query=${encodeURIComponent(keyword)}&count=5&orientation=landscape`);
+    if(!r.ok) throw new Error('Unsplash API error');
     const d=await r.json();
-    if(Array.isArray(d)&&d.length>0){
-      const pick=d[Math.floor(Math.random()*d.length)];
-      return pick.urls.regular;
+    // /api/unsplash 는 배열 반환
+    const arr = Array.isArray(d) ? d : (d.results || []);
+    if(arr.length>0){
+      const pick=arr[Math.floor(Math.random()*arr.length)];
+      return pick?.urls?.regular || pick?.urls?.small || null;
     }
-    // Fallback: 첫 번째 키워드로 재시도
+    // 첫 번째 키워드로 재시도
     const kw=keyword.split(' ')[0];
-    if(kw!==keyword){
+    if(kw && kw!==keyword){
       const r2=await fetch(`/api/unsplash?query=${encodeURIComponent(kw)}&count=5&orientation=landscape`);
       const d2=await r2.json();
-      if(Array.isArray(d2)&&d2.length>0) return d2[Math.floor(Math.random()*d2.length)].urls.regular;
+      const arr2 = Array.isArray(d2) ? d2 : (d2.results || []);
+      if(arr2.length>0){
+        const pick2=arr2[Math.floor(Math.random()*arr2.length)];
+        return pick2?.urls?.regular || pick2?.urls?.small || null;
+      }
     }
     return null;
-  }catch(e){return null;}
+  }catch(e){console.error('Photo error:',e);return null;}
 }
 
 function showPhotoFallback(situation){
