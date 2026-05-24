@@ -414,9 +414,9 @@ function saveApiKey(){
 //  API CALL
 // ════════════════════════════════════════════════
 async function callAPI(prompt,maxTokens){
-  const r=await fetch('https://api.anthropic.com/v1/messages',{
+  const r=await fetch('/api/claude',{
     method:'POST',
-    headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+    headers:{'Content-Type':'application/json','anthropic-version':'2023-06-01',},
     body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:maxTokens||2000,messages:[{role:'user',content:prompt}]})
   });
   const d=await r.json();
@@ -831,12 +831,12 @@ async function loadPhoto(keyword,caption){
   }
   try{
     const page=Math.floor(Math.random()*3)+1;
-    const r=await fetch(`https://api.unsplash.com/search/photos?query=${encodeURIComponent(keyword)}&per_page=20&page=${page}&orientation=landscape&content_filter=high`,{headers:{'Authorization':'Client-ID '+unsplashKey}});
+    const r=await fetch(`https://api.unsplash.com/search/photos?query=${encodeURIComponent(keyword)}&per_page=20&page=${page}&orientation=landscape&content_filter=high`,{headers:{+unsplashKey}});
     const d=await r.json();
     let url=null;
     if(d.results?.length) url=d.results[Math.floor(Math.random()*Math.min(d.results.length,10))].urls.regular;
     else{
-      const r2=await fetch(`https://api.unsplash.com/search/photos?query=${encodeURIComponent(keyword.split(' ')[0])}&per_page=10&orientation=landscape`,{headers:{'Authorization':'Client-ID '+unsplashKey}});
+      const r2=await fetch(`https://api.unsplash.com/search/photos?query=${encodeURIComponent(keyword.split(' ')[0])}&per_page=10&orientation=landscape`,{headers:{+unsplashKey}});
       const d2=await r2.json();
       if(d2.results?.length) url=d2.results[0].urls.regular;
     }
@@ -928,8 +928,8 @@ function resetTest(){
   let saved; try{saved=localStorage.getItem('lw-lang');}catch(e){}
   setLang(saved||((navigator.language||'').startsWith('ko')?'ko':'en'));
   try{
-    apiKey=sessionStorage.getItem('lw-api-key')||'';
-    unsplashKey=sessionStorage.getItem('lw-unsplash-key')||'';
+    apiKey='vercel-proxy'||'';
+    unsplashKey='vercel-proxy'||'';
   }catch(e){}
   if(apiKey){
     document.getElementById('api-setup').style.display='none';
