@@ -222,7 +222,7 @@
 </nav>
 
 <!-- API SETUP -->
-<div class="api-setup fade-in" id="api-setup">
+<div class="api-setup fade-in" id="api-setup"style="display:none;">
   <div class="api-icon">🎧</div>
   <div class="api-title" data-en="TOEIC Listening" data-ko="TOEIC 듣기">TOEIC Listening</div>
   <div class="api-desc" data-en="Enter your API keys to activate AI-powered TOEIC listening content and scene images." data-ko="API 키를 입력하면 AI TOEIC 듣기 콘텐츠와 장면 이미지가 활성화됩니다.">Enter your API keys to start.</div>
@@ -243,7 +243,7 @@
 </div>
 
 <!-- MAIN -->
-<div class="main fade-in" id="main-content">
+<div class="main fade-in" id="main-content"style="display:block;">
 
   <div class="hero">
     <div class="hero-tag">🎧 TOEIC · LISTENING COMPREHENSION (LC)</div>
@@ -1044,8 +1044,8 @@ async function callAPI(prompt, maxTokens){
 (function(){
   let saved; try{saved=localStorage.getItem('lw-lang');}catch(e){}
   setLang(saved||((navigator.language||'').startsWith('ko')?'ko':'en'));
-  try{apiKey='vercel-proxy'||'';unsplashKey='vercel-proxy'||'';}catch(e){}
-  if(apiKey){
+  apiKey='vercel-proxy'; unsplashKey='vercel-proxy';
+  {
     document.getElementById('api-setup').style.display='none';
     document.getElementById('main-content').style.display='block';
     loadVoices(); renderPartInfo();
