@@ -443,9 +443,9 @@ function doneLoading(){ document.getElementById('loading-overlay').style.display
 function errAlert(e){ doneLoading(); alert(lang==='ko'?'생성 오류: '+e.message:'Error: '+e.message); console.error(e); }
 
 async function callAPI(prompt,maxTokens){
-  const r=await fetch('https://api.anthropic.com/v1/messages',{
+  const r=await fetch('/api/claude',{
     method:'POST',
-    headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+    headers:{'Content-Type':'application/json','anthropic-version':'2023-06-01',},
     body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:maxTokens||2000,messages:[{role:'user',content:prompt}]})
   });
   const d=await r.json();
@@ -755,8 +755,8 @@ async function sendMessage(){
     ?`당신은 TOEIC 읽기 전문 튜터입니다. 현재: ${p.ko}. 한국어로 간결하게 답하세요.`
     :`You are a TOEIC Reading expert tutor. Current part: ${p.en}. Be concise and helpful.`;
   try{
-    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',
-      headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+    const r=await fetch('/api/claude',{method:'POST',
+      headers:{'Content-Type':'application/json','anthropic-version':'2023-06-01',},
       body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:500,system:sys,messages:messages.slice(-6)})});
     const d=await r.json(); removeTyping(tid);
     if(d.content?.[0]){const rep=d.content[0].text;messages.push({role:'assistant',content:rep});addMsg('ai',rep);}
@@ -782,7 +782,7 @@ function removeTyping(id){const e=document.getElementById(id);if(e)e.remove();}
 (function(){
   let saved; try{saved=localStorage.getItem('lw-lang');}catch(e){}
   setLang(saved||((navigator.language||'').startsWith('ko')?'ko':'en'));
-  try{apiKey=sessionStorage.getItem('lw-api-key')||'';}catch(e){}
+  try{apiKey='vercel-proxy'||'';}catch(e){}
   if(apiKey){
     document.getElementById('api-setup').style.display='none';
     document.getElementById('main-content').style.display='block';
