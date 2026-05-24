@@ -362,6 +362,19 @@
 //  STATE
 // ════════════════════════════════════════════════
 let lang='en', apiKey='', unsplashKey='';
+
+const PART1_SCENES = [
+  'airport terminal gate','restaurant kitchen chef','hospital corridor nurse',
+  'library books reading','construction site workers','grocery store shopping',
+  'park bench outdoor','train station platform','conference room meeting',
+  'factory production line','street market vendor','hotel lobby reception',
+  'laboratory scientist','warehouse storage boxes','cafe barista coffee',
+  'office desk computer','classroom students teacher','parking lot cars',
+  'museum gallery artwork','sports field athletes','beach shoreline',
+  'subway metro train','pharmacy drugstore','gym fitness exercise'
+];
+function getRandScene(){ return PART1_SCENES[Math.floor(Math.random()*PART1_SCENES.length)]; }
+
 let diff='Medium', speechRate=0.9, answerTimeSec=30;
 
 // Flat question list built after generation
@@ -449,9 +462,11 @@ async function startGeneration(){
   try{
     // Part 1
     setStep('p1','active',lang==='ko'?'6문항 생성 중...':'Generating 6 questions...');
+    const scenes6=[getRandScene(),getRandScene(),getRandScene(),getRandScene(),getRandScene(),getRandScene()];
     const p1=await callAPI(`Generate 6 TOEIC Part 1 Photographs questions. Difficulty:${diff}.
-JSON array of 6: [{"imageKeyword":"2-word Unsplash keyword","scene":"brief photo description","options":["(A) statement","(B) statement","(C) statement","(D) statement"],"answer":0,"explanation":"why correct"}]
-answer 0-indexed. Wrong options plausible. JSON only.`,2000);
+Use EXACTLY these 6 different scenes (one per question): ${scenes6.join(' | ')}.
+JSON array of 6: [{"imageKeyword":"exact scene keyword from list above","scene":"brief photo description","options":["(A) statement","(B) statement","(C) statement","(D) statement"],"answer":0,"explanation":"why correct"}]
+CRITICAL: Each question MUST be about a DIFFERENT location/scene. answer is 0-indexed. JSON only.`,2000);
     testData.p1=Array.isArray(p1)?p1:(p1.questions||[]);
     setStep('p1','done',`✓ ${testData.p1.length}q`); setProgress(10);
 
@@ -824,35 +839,41 @@ function updateTimerBar(left,total){
 
 // ── Photo loader ──
 async function loadPhoto(keyword,caption){
-  if(!unsplashKey){
-    const skel=document.getElementById('qphoto-skel');
-    if(skel) skel.innerHTML=`<div style="text-align:center;padding:20px;"><div style="font-size:36px;">📷</div><div style="font-size:12px;color:#b0a090;margin-top:8px;font-family:DM Sans,sans-serif;">${caption}</div></div>`;
-    return;
-  }
   try{
-    const page=Math.floor(Math.random()*3)+1;
+    const kw = keyword||'office workplace';
     const r=await fetch(`/api/unsplash?query=${encodeURIComponent(kw)}&count=5&orientation=landscape`);
+    if(!r.ok) throw new Error('API error');
     const d=await r.json();
+    const arr=Array.isArray(d)?d:(d.results||[]);
     let url=null;
-    if(d.results?.length) url=d.results[Math.floor(Math.random()*Math.min(d.results.length,10))].urls.regular;
-    else{
-      const r2=await fetch(`/api/unsplash?query=${encodeURIComponent(kw)}&count=5&orientation=landscape`);
+    if(arr.length>0){
+      const pick=arr[Math.floor(Math.random()*arr.length)];
+      url=pick?.urls?.regular||pick?.urls?.small||null;
+    }
+    if(!url){
+      // 첫 번째 단어로 재시도
+      const kw2=kw.split(' ')[0];
+      const r2=await fetch(`/api/unsplash?query=${encodeURIComponent(kw2)}&count=5&orientation=landscape`);
       const d2=await r2.json();
-      if(d2.results?.length) url=d2.results[0].urls.regular;
+      const arr2=Array.isArray(d2)?d2:(d2.results||[]);
+      if(arr2.length>0) url=arr2[0]?.urls?.regular||null;
     }
     if(url){
       const img=document.getElementById('qphoto-img');
       const skel=document.getElementById('qphoto-skel');
       const cap=document.getElementById('qphoto-cap');
       if(img){
-        img.onload=()=>{if(skel)skel.style.display='none';img.style.display='block';if(cap)cap.style.display='block';};
+        img.onload=()=>{if(skel)skel.style.display='none';img.style.display='block';if(cap&&caption)cap.style.display='block';};
+        img.onerror=()=>showPhotoPlaceholder(caption);
         img.src=url;
       }
-    } else {
-      const skel=document.getElementById('qphoto-skel');
-      if(skel) skel.innerHTML=`<div style="text-align:center;padding:20px;"><div style="font-size:36px;">📷</div><div style="font-size:12px;color:#b0a090;margin-top:8px;font-family:DM Sans,sans-serif;">${caption}</div></div>`;
-    }
-  }catch(e){console.warn('Photo load failed',e);}
+    } else { showPhotoPlaceholder(caption); }
+  }catch(e){console.warn('Photo error:',e);showPhotoPlaceholder(caption);}
+}
+
+function showPhotoPlaceholder(caption){
+  const skel=document.getElementById('qphoto-skel');
+  if(skel) skel.innerHTML=`<div style="text-align:center;padding:24px;"><div style="font-size:48px;opacity:0.4;">📷</div><div style="font-size:12px;color:#b0a090;margin-top:8px;font-family:DM Sans,sans-serif;">${caption||'Scene'}</div></div>`;
 }
 
 // ════════════════════════════════════════════════
