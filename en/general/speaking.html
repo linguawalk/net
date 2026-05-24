@@ -8,1191 +8,371 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
-  :root {
-    --navy:#1C2B45; --teal:#2A7F6F; --teal-light:#E1F5EE; --teal-mid:#1D9E75;
-    --bg:#F8F7F4; --white:#fff; --text:#1C2B45; --text-muted:#5a6a82; --text-light:#94a3b8;
-    --border:rgba(28,43,69,0.1); --border-md:rgba(28,43,69,0.18);
-    --speak:#993556; --speak-light:#fbeaf0;
-  }
-  body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
-
-  nav { background:rgba(28,43,69,0.97); height:56px; display:flex; align-items:center; padding:0 5%; border-bottom:0.5px solid rgba(255,255,255,0.08); position:sticky; top:0; z-index:100; }
-  .nav-logo { display:flex; align-items:center; gap:8px; text-decoration:none; }
-  .nav-lm { width:28px; height:28px; background:var(--teal); border-radius:7px; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:#fff; }
-  .nav-lt { font-size:16px; font-weight:600; color:#fff; }
-  .nav-sep { width:1px; height:18px; background:rgba(255,255,255,0.15); margin:0 12px; }
-  .nav-page { font-size:13px; color:rgba(255,255,255,0.6); }
-  .nav-space { flex:1; }
-  .lang-sw { display:flex; background:rgba(255,255,255,0.08); border-radius:7px; padding:2px; gap:2px; }
-  .lbtn { padding:4px 10px; border-radius:5px; font-size:11px; font-weight:500; border:none; background:transparent; color:rgba(255,255,255,0.5); cursor:pointer; font-family:inherit; transition:all 0.2s; }
-  .lbtn.act { background:var(--teal); color:#fff; }
-  .nav-back { font-size:13px; color:rgba(255,255,255,0.6); text-decoration:none; padding:6px 10px; border-radius:7px; margin-right:6px; }
-  .nav-back:hover { background:rgba(255,255,255,0.08); color:#fff; }
-
-  /* API */
-  .api-setup { max-width:520px; margin:60px auto; padding:32px; background:var(--white); border-radius:16px; border:0.5px solid var(--border-md); text-align:center; }
-  .api-icon { font-size:48px; margin-bottom:16px; }
-  .api-title { font-family:'DM Serif Display',serif; font-size:24px; color:var(--navy); margin-bottom:8px; }
-  .api-desc { font-size:14px; color:var(--text-muted); line-height:1.6; margin-bottom:24px; }
-  .api-input-wrap { display:flex; gap:8px; margin-bottom:12px; }
-  .api-input { flex:1; padding:10px 14px; border:0.5px solid var(--border-md); border-radius:8px; font-size:13px; font-family:monospace; color:var(--text); background:var(--bg); outline:none; }
-  .api-input:focus { border-color:var(--teal); }
-  .api-btn { padding:10px 18px; border-radius:8px; font-size:13px; font-weight:500; background:var(--teal); color:#fff; border:none; cursor:pointer; font-family:inherit; }
-  .api-note { font-size:11px; color:var(--text-light); }
-
-  .main { max-width:820px; margin:0 auto; padding:28px 5% 80px; display:none; }
-
-  /* HERO */
-  .hero { background:linear-gradient(135deg,#3d0d1f 0%,#993556 100%); border-radius:14px; padding:24px 28px; margin-bottom:20px; position:relative; overflow:hidden; }
-  .hero::before { content:''; position:absolute; right:-20px; top:-20px; width:160px; height:160px; border-radius:50%; background:rgba(255,255,255,0.07); pointer-events:none; }
-  .hero-tag { font-size:11px; font-weight:600; letter-spacing:1px; text-transform:uppercase; color:#fca5c0; margin-bottom:6px; }
-  .hero-title { font-family:'DM Serif Display',serif; font-size:clamp(22px,4vw,32px); color:#fff; margin-bottom:6px; }
-  .hero-desc { font-size:13px; color:rgba(255,255,255,0.65); line-height:1.6; }
-  .hero-badges { display:flex; gap:8px; margin-top:14px; flex-wrap:wrap; }
-  .hero-badge { font-size:11px; padding:3px 12px; border-radius:20px; background:rgba(255,255,255,0.15); color:rgba(255,255,255,0.85); border:0.5px solid rgba(255,255,255,0.2); }
-
-  /* EXAM TABS */
-  .exam-tabs { display:flex; gap:0; background:var(--white); border:0.5px solid var(--border); border-radius:14px; padding:4px; margin-bottom:16px; overflow-x:auto; }
-  .exam-tab { flex:1; padding:10px 14px; border-radius:10px; font-size:13px; font-weight:500; cursor:pointer; border:none; background:transparent; color:var(--text-muted); font-family:inherit; transition:all 0.2s; white-space:nowrap; text-align:center; min-width:80px; }
-  .exam-tab:hover { color:var(--speak); }
-  .exam-tab.act { background:var(--speak); color:#fff; }
-
-  /* TOPIC GRID */
-  .topic-section { background:var(--white); border:0.5px solid var(--border); border-radius:14px; padding:16px 18px; margin-bottom:16px; }
-  .ts-label { font-size:11px; font-weight:600; letter-spacing:.8px; text-transform:uppercase; color:var(--text-light); margin-bottom:10px; }
-  .topic-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:8px; }
-  .topic-card { padding:12px 14px; border-radius:10px; border:0.5px solid var(--border-md); background:transparent; cursor:pointer; font-family:inherit; transition:all 0.2s; text-align:left; }
-  .topic-card:hover { border-color:var(--speak); background:var(--speak-light); }
-  .topic-card.act { background:var(--speak); border-color:var(--speak); color:#fff; }
-  .tc-name { font-size:13px; font-weight:500; margin-bottom:3px; }
-  .tc-desc { font-size:11px; color:var(--text-muted); line-height:1.4; }
-  .topic-card.act .tc-desc { color:rgba(255,255,255,0.75); }
-  .tc-icons { font-size:12px; margin-top:5px; }
-
-  /* FORMAT INFO */
-  .format-info { background:var(--speak-light); border:0.5px solid rgba(153,53,86,0.2); border-radius:10px; padding:12px 16px; margin-bottom:16px; font-size:12px; color:var(--speak); line-height:1.6; }
-  .fi-title { font-weight:600; margin-bottom:4px; font-size:13px; }
-
-  /* SETTINGS */
-  .settings-row { display:flex; gap:10px; margin-bottom:16px; flex-wrap:wrap; }
-  .setting-item { background:var(--white); border:0.5px solid var(--border); border-radius:10px; padding:12px 16px; flex:1; min-width:130px; }
-  .si-label { font-size:10px; font-weight:600; letter-spacing:.5px; text-transform:uppercase; color:var(--text-light); margin-bottom:6px; }
-  .si-select { width:100%; border:none; background:transparent; font-size:13px; font-weight:500; color:var(--text); font-family:inherit; cursor:pointer; outline:none; }
-
-  /* LOADING */
-  .loading-overlay { padding:48px; text-align:center; background:var(--white); border:0.5px solid var(--border); border-radius:14px; margin-bottom:20px; }
-  .loading-spinner { width:44px; height:44px; border:3px solid var(--border); border-top-color:var(--speak); border-radius:50%; animation:spin 0.8s linear infinite; margin:0 auto 16px; }
-  @keyframes spin { to{transform:rotate(360deg)} }
-  .loading-text { font-size:14px; color:var(--text-muted); line-height:1.6; }
-
-  /* TASK CARD */
-  .task-card { background:var(--white); border:0.5px solid var(--border); border-radius:14px; overflow:hidden; margin-bottom:16px; }
-  .task-header { padding:14px 18px; background:var(--speak-light); border-bottom:0.5px solid var(--border); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; }
-  .task-title { font-size:14px; font-weight:600; color:var(--speak); }
-  .task-badges { display:flex; gap:6px; }
-  .t-badge { font-size:10px; padding:2px 8px; border-radius:10px; font-weight:500; }
-  .tb-type { background:rgba(153,53,86,0.15); color:var(--speak); }
-  .tb-time { background:var(--teal-light); color:var(--teal); }
-  .task-body { padding:20px; }
-
-  /* SCENE IMAGE */
-  .scene-img { width:100%; max-height:220px; object-fit:cover; border-radius:10px; margin-bottom:16px; display:none; background:var(--bg); }
-  .scene-img.show { display:block; }
-
-  /* LISTENING PROMPT (TTS) */
-  .listen-prompt { background:var(--bg); border-radius:10px; padding:14px 16px; margin-bottom:14px; border:0.5px solid var(--border); }
-  .lp-label { font-size:11px; font-weight:600; color:var(--text-muted); letter-spacing:.5px; text-transform:uppercase; margin-bottom:8px; display:flex; align-items:center; gap:6px; }
-  .lp-text { font-size:13px; color:var(--text); line-height:1.7; margin-bottom:10px; font-style:italic; }
-  .lp-play { display:flex; align-items:center; gap:8px; }
-  .lp-btn { padding:6px 16px; border-radius:8px; font-size:12px; font-weight:500; border:none; cursor:pointer; font-family:inherit; transition:all 0.2s; display:flex; align-items:center; gap:5px; }
-  .lp-btn.play { background:var(--speak); color:#fff; }
-  .lp-btn.play:hover { background:#7a2940; }
-  .lp-btn.stop { background:var(--bg); color:var(--text-muted); border:0.5px solid var(--border-md); }
-  .lp-status { font-size:12px; color:var(--text-muted); }
-
-  /* READING PASSAGE (for TOEFL integrated) */
-  .reading-prompt { background:var(--bg); border-radius:10px; padding:14px 16px; margin-bottom:14px; border:0.5px solid var(--border); }
-  .rp-label { font-size:11px; font-weight:600; color:#185fa5; letter-spacing:.5px; text-transform:uppercase; margin-bottom:8px; }
-  .rp-text { font-size:13px; color:var(--text); line-height:1.8; font-family:'Georgia',serif; }
-
-  /* TASK PROMPT */
-  .task-prompt { background:var(--speak-light); border-radius:10px; padding:16px; margin-bottom:14px; border:0.5px solid rgba(153,53,86,0.2); }
-  .tp-label { font-size:11px; font-weight:600; color:var(--speak); letter-spacing:.5px; text-transform:uppercase; margin-bottom:8px; }
-  .tp-q { font-size:15px; font-weight:500; color:var(--text); line-height:1.6; margin-bottom:10px; }
-  .tp-tips { font-size:12px; color:var(--text-muted); line-height:1.6; }
-  .tp-tip-item { display:flex; align-items:flex-start; gap:6px; margin-bottom:4px; }
-
-  /* TIMER */
-  .prep-timer { display:flex; align-items:center; gap:12px; padding:12px 16px; background:var(--bg); border-radius:10px; margin-bottom:14px; border:0.5px solid var(--border); }
-  .pt-label { font-size:12px; color:var(--text-muted); }
-  .pt-time { font-family:'DM Serif Display',serif; font-size:28px; color:var(--navy); min-width:60px; }
-  .pt-time.warn { color:#e24b4a; }
-  .pt-bar { flex:1; height:6px; background:var(--border-md); border-radius:6px; overflow:hidden; }
-  .pt-fill { height:100%; background:var(--speak); border-radius:6px; transition:width 0.5s; }
-  .pt-btn { padding:7px 16px; border-radius:8px; font-size:12px; font-weight:500; border:none; cursor:pointer; font-family:inherit; transition:all 0.2s; }
-  .pt-btn.start { background:var(--teal); color:#fff; }
-  .pt-btn.start:hover { background:var(--teal-mid); }
-  .pt-btn.skip { background:var(--bg); color:var(--text-muted); border:0.5px solid var(--border-md); }
-
-  /* RECORDER */
-  .recorder-section { border:2px dashed var(--border-md); border-radius:12px; padding:20px; text-align:center; margin-bottom:14px; transition:all 0.2s; }
-  .recorder-section.active { border-color:var(--speak); border-style:solid; background:var(--speak-light); }
-  .rec-icon { font-size:40px; margin-bottom:10px; }
-  .rec-status { font-size:14px; font-weight:500; color:var(--text-muted); margin-bottom:14px; }
-  .rec-status.recording { color:var(--speak); }
-  .rec-controls { display:flex; justify-content:center; gap:10px; flex-wrap:wrap; }
-  .rec-btn { padding:10px 24px; border-radius:10px; font-size:14px; font-weight:500; border:none; cursor:pointer; font-family:inherit; transition:all 0.2s; display:flex; align-items:center; gap:7px; }
-  .rec-btn.record { background:var(--speak); color:#fff; }
-  .rec-btn.record:hover { background:#7a2940; }
-  .rec-btn.record.recording { background:#e24b4a; animation:pulse 1.5s infinite; }
-  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.7} }
-  .rec-btn.submit { background:var(--navy); color:#fff; }
-  .rec-btn.submit:hover { background:#243455; }
-  .rec-btn.submit:disabled { background:var(--border-md); cursor:not-allowed; }
-  .rec-wave { display:none; justify-content:center; align-items:flex-end; gap:3px; height:30px; margin:10px 0; }
-  .rec-wave.show { display:flex; }
-  .rec-wave span { width:4px; border-radius:2px; background:var(--speak); animation:wav 0.6s infinite; }
-  .rec-wave span:nth-child(1){height:10px;animation-delay:0s}
-  .rec-wave span:nth-child(2){height:20px;animation-delay:0.1s}
-  .rec-wave span:nth-child(3){height:28px;animation-delay:0.2s}
-  .rec-wave span:nth-child(4){height:18px;animation-delay:0.15s}
-  .rec-wave span:nth-child(5){height:12px;animation-delay:0.05s}
-  @keyframes wav { 0%,100%{transform:scaleY(0.5)} 50%{transform:scaleY(1)} }
-
-  /* TRANSCRIPT */
-  .transcript-box { background:var(--bg); border-radius:10px; padding:14px; margin-bottom:14px; border:0.5px solid var(--border); display:none; }
-  .transcript-box.show { display:block; }
-  .tb-label { font-size:11px; font-weight:600; color:var(--text-light); letter-spacing:.5px; text-transform:uppercase; margin-bottom:8px; }
-  .tb-text { font-size:13px; color:var(--text); line-height:1.7; }
-
-  /* AI FEEDBACK */
-  .feedback-section { background:var(--white); border:0.5px solid var(--border); border-radius:14px; padding:18px; margin-bottom:16px; display:none; }
-  .feedback-section.show { display:block; }
-  .fb-header { display:flex; align-items:center; gap:8px; margin-bottom:14px; }
-  .fb-avatar { width:32px; height:32px; border-radius:50%; background:var(--speak); display:flex; align-items:center; justify-content:center; font-size:15px; }
-  .fb-title { font-size:14px; font-weight:600; color:var(--speak); }
-  .fb-scores { display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:8px; margin-bottom:14px; }
-  .fb-score { background:var(--bg); border-radius:10px; padding:12px; text-align:center; }
-  .fb-score-val { font-size:22px; font-weight:600; color:var(--speak); margin-bottom:3px; }
-  .fb-score-lbl { font-size:11px; color:var(--text-muted); }
-  .fb-comment { font-size:13px; color:var(--text); line-height:1.7; margin-bottom:14px; padding:12px 14px; background:var(--bg); border-radius:8px; }
-  .fb-model { background:var(--teal-light); border-radius:10px; padding:14px; }
-  .fb-model-label { font-size:11px; font-weight:600; color:var(--teal); letter-spacing:.5px; text-transform:uppercase; margin-bottom:8px; }
-  .fb-model-text { font-size:13px; color:var(--text); line-height:1.8; font-style:italic; }
-
-  /* ACTION BTNS */
-  .action-btns { display:flex; gap:10px; margin-top:16px; }
-  .act-btn { flex:1; padding:12px; border-radius:10px; font-size:13px; font-weight:500; cursor:pointer; font-family:inherit; border:0.5px solid var(--border-md); background:var(--white); color:var(--text); transition:all 0.2s; text-decoration:none; text-align:center; display:block; }
-  .act-btn:hover { background:var(--bg); }
-  .act-btn.primary { background:var(--speak); color:#fff; border-color:var(--speak); }
-  .act-btn.primary:hover { background:#7a2940; }
-
-  /* AI TUTOR */
-  .tutor-section { background:var(--white); border:0.5px solid var(--border); border-radius:14px; margin-bottom:20px; overflow:hidden; }
-  .tutor-header { display:flex; align-items:center; gap:10px; padding:14px 18px; border-bottom:0.5px solid var(--border); background:var(--speak-light); }
-  .tutor-avatar { width:32px; height:32px; border-radius:50%; background:var(--speak); display:flex; align-items:center; justify-content:center; font-size:15px; flex-shrink:0; }
-  .tutor-name { font-size:13px; font-weight:600; color:var(--speak); }
-  .tutor-status { font-size:11px; color:var(--text-muted); }
-  .tutor-messages { padding:16px 18px; min-height:80px; max-height:260px; overflow-y:auto; display:flex; flex-direction:column; gap:12px; }
-  .msg { display:flex; gap:10px; align-items:flex-start; }
-  .msg.user { flex-direction:row-reverse; }
-  .msg-av { width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; flex-shrink:0; margin-top:2px; }
-  .msg-av.ai { background:var(--speak); color:#fff; }
-  .msg-av.user { background:var(--navy); color:#fff; }
-  .msg-bub { max-width:78%; padding:10px 14px; border-radius:12px; font-size:13px; line-height:1.6; }
-  .msg.ai .msg-bub { background:var(--bg); color:var(--text); border-radius:4px 12px 12px 12px; }
-  .msg.user .msg-bub { background:var(--navy); color:#fff; border-radius:12px 4px 12px 12px; }
-  .typing { display:flex; gap:4px; align-items:center; padding:10px 14px; background:var(--bg); border-radius:4px 12px 12px 12px; width:fit-content; }
-  .typing span { width:6px; height:6px; border-radius:50%; background:var(--text-light); animation:bounce 1.2s infinite; }
-  .typing span:nth-child(2){animation-delay:0.2s} .typing span:nth-child(3){animation-delay:0.4s}
-  @keyframes bounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-6px)} }
-  .quick-wrap { padding:0 18px 12px; display:flex; gap:6px; flex-wrap:wrap; }
-  .quick-btn { padding:5px 12px; border-radius:16px; font-size:12px; border:0.5px solid var(--border-md); background:transparent; color:var(--text-muted); cursor:pointer; font-family:inherit; transition:all 0.2s; }
-  .quick-btn:hover { border-color:var(--speak); color:var(--speak); background:var(--speak-light); }
-  .tutor-input-wrap { display:flex; gap:8px; padding:12px 18px; border-top:0.5px solid var(--border); }
-  .tutor-input { flex:1; padding:9px 14px; border:0.5px solid var(--border-md); border-radius:8px; font-size:13px; font-family:inherit; color:var(--text); background:var(--bg); outline:none; }
-  .tutor-input:focus { border-color:var(--speak); }
-  .send-btn { width:36px; height:36px; border-radius:8px; background:var(--speak); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#fff; font-size:16px; flex-shrink:0; }
-  .send-btn:hover { background:#7a2940; }
-  .send-btn:disabled { background:var(--border-md); cursor:not-allowed; }
-
-  @keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
-  .fade-in { animation:fadeUp 0.4s ease forwards; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --navy:#1C2B45;--teal:#2A7F6F;--teal-mid:#1D9E75;--teal-light:#e1f5ee;
+  --pink:#db2777;--pink-light:#fce7f3;
+  --bg:#F8F7F4;--white:#fff;--text:#1C2B45;--text-muted:#5a6a82;--text-light:#94a3b8;
+  --border:rgba(28,43,69,0.1);--border-md:rgba(28,43,69,0.18);
+  --green:#16a34a;--green-light:#dcfce7;
+  --red:#e24b4a;--red-light:#fee2e2;
+}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+nav{background:rgba(28,43,69,0.97);height:56px;display:flex;align-items:center;padding:0 5%;border-bottom:0.5px solid rgba(255,255,255,0.08);position:sticky;top:0;z-index:100;}
+.nav-logo{display:flex;align-items:center;gap:8px;text-decoration:none;}
+.nav-lm{width:28px;height:28px;background:var(--teal);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;}
+.nav-lt{font-size:16px;font-weight:600;color:#fff;}
+.nav-sep{width:1px;height:18px;background:rgba(255,255,255,0.15);margin:0 12px;}
+.nav-page{font-size:13px;color:rgba(255,255,255,0.6);}
+.nav-space{flex:1;}
+.nav-back{font-size:13px;color:rgba(255,255,255,0.6);text-decoration:none;padding:6px 10px;border-radius:7px;transition:all 0.2s;}
+.nav-back:hover{background:rgba(255,255,255,0.08);color:#fff;}
+.lang-sw{display:flex;background:rgba(255,255,255,0.08);border-radius:7px;padding:2px;gap:2px;margin-left:8px;}
+.lbtn{padding:4px 10px;border-radius:5px;font-size:11px;font-weight:500;border:none;background:transparent;color:rgba(255,255,255,0.5);cursor:pointer;font-family:inherit;transition:all 0.2s;}
+.lbtn.act{background:var(--teal-mid);color:#fff;}
+.main{max-width:860px;margin:0 auto;padding:28px 5% 80px;}
+.hero{background:linear-gradient(135deg,#831843 0%,var(--pink) 100%);border-radius:14px;padding:24px 28px;margin-bottom:20px;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;right:-20px;top:-20px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,0.07);pointer-events:none;}
+.hero-tag{font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.6);margin-bottom:6px;}
+.hero-title{font-family:'DM Serif Display',serif;font-size:clamp(22px,4vw,30px);color:#fff;margin-bottom:6px;}
+.hero-desc{font-size:13px;color:rgba(255,255,255,0.65);line-height:1.6;}
+.hero-badges{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;}
+.hero-badge{font-size:11px;padding:3px 12px;border-radius:20px;background:rgba(255,255,255,0.12);color:rgba(255,255,255,0.85);border:0.5px solid rgba(255,255,255,0.2);}
+.hero-badge.free{background:rgba(255,255,255,0.25);font-weight:700;}
+.settings-row{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;}
+.setting-item{background:var(--white);border:0.5px solid var(--border);border-radius:10px;padding:12px 16px;flex:1;min-width:130px;}
+.si-label{font-size:10px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--text-light);margin-bottom:6px;}
+.si-select{width:100%;border:none;background:transparent;font-size:13px;font-weight:500;color:var(--text);font-family:inherit;cursor:pointer;outline:none;}
+.gen-btn{width:100%;padding:14px;border-radius:10px;font-size:15px;font-weight:600;background:var(--pink);color:#fff;border:none;cursor:pointer;font-family:inherit;transition:all 0.2s;margin-bottom:20px;}
+.gen-btn:hover{background:#be185d;}
+.gen-btn:disabled{opacity:.5;cursor:not-allowed;}
+.card{background:var(--white);border:0.5px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:16px;}
+.card-head{padding:14px 18px;border-bottom:0.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.card-title{font-size:14px;font-weight:600;color:var(--text);}
+.card-body{padding:18px;}
+/* Question Card */
+.q-display{background:linear-gradient(135deg,#831843,var(--pink));border-radius:14px;padding:24px;text-align:center;margin-bottom:16px;}
+.qd-label{font-size:11px;color:rgba(255,255,255,0.6);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;}
+.qd-question{font-family:'DM Serif Display',serif;font-size:clamp(18px,3vw,24px);color:#fff;line-height:1.4;margin-bottom:12px;}
+.qd-tips{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
+.qd-tip{font-size:11px;padding:3px 10px;border-radius:12px;background:rgba(255,255,255,0.15);color:rgba(255,255,255,0.85);}
+/* Timer */
+.timer-bar{background:var(--white);border:0.5px solid var(--border);border-radius:10px;padding:14px 18px;margin-bottom:16px;display:flex;align-items:center;gap:14px;}
+.timer-num{font-family:'DM Serif Display',serif;font-size:32px;color:var(--pink);width:60px;text-align:center;flex-shrink:0;}
+.timer-label{font-size:12px;color:var(--text-muted);}
+.timer-prog{flex:1;height:6px;background:var(--bg);border-radius:10px;overflow:hidden;}
+.timer-fill{height:100%;background:linear-gradient(90deg,var(--pink),#f472b6);border-radius:10px;transition:width 1s linear;}
+/* Record */
+.record-area{text-align:center;padding:24px;background:var(--white);border:0.5px solid var(--border);border-radius:14px;margin-bottom:16px;}
+.rec-btn{width:80px;height:80px;border-radius:50%;border:none;font-size:32px;cursor:pointer;transition:all 0.2s;margin-bottom:12px;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;}
+.rec-btn.idle{background:var(--pink-light);color:var(--pink);}
+.rec-btn.recording{background:var(--red);color:#fff;animation:pulse 1s infinite;}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
+.rec-status{font-size:14px;color:var(--text-muted);margin-bottom:8px;}
+.rec-transcript{font-size:13px;color:var(--text);background:var(--bg);padding:10px 14px;border-radius:8px;min-height:40px;text-align:left;line-height:1.6;}
+/* Sample Answer */
+.sample-box{background:var(--pink-light);border:0.5px solid rgba(219,39,119,0.2);border-radius:10px;padding:14px;margin-top:12px;}
+.sb-title{font-size:12px;font-weight:700;color:var(--pink);margin-bottom:8px;}
+.sb-text{font-size:14px;color:var(--text);line-height:1.7;}
+/* Feedback */
+.feedback-card{background:var(--white);border:0.5px solid var(--border);border-radius:14px;padding:18px;display:none;}
+.fc-score{display:flex;gap:16px;margin-bottom:16px;flex-wrap:wrap;}
+.fc-score-item{flex:1;min-width:100px;text-align:center;background:var(--bg);border-radius:10px;padding:12px;}
+.fc-score-num{font-family:'DM Serif Display',serif;font-size:26px;color:var(--pink);line-height:1;}
+.fc-score-label{font-size:10px;color:var(--text-light);text-transform:uppercase;letter-spacing:.3px;margin-top:2px;}
+.fc-section{margin-bottom:12px;}
+.fc-section-title{font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px;}
+.fc-text{font-size:13px;color:var(--text);line-height:1.6;background:var(--bg);padding:10px 12px;border-radius:8px;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.fade-in{animation:fadeUp 0.3s ease forwards;}
 </style>
 </head>
 <body>
-
 <nav>
-  <a href="/" class="nav-logo"><div class="nav-lm">LW</div><span class="nav-lt">LinguaWalk</span></a>
+  <a href="../index.html" class="nav-logo">
+    <div class="nav-lm">LW</div>
+    <span class="nav-lt">LinguaWalk</span>
+  </a>
   <div class="nav-sep"></div>
-  <span class="nav-page">🗣️ Speaking</span>
+  <span class="nav-page" data-en="General · Speaking" data-ko="General · 말하기">General · Speaking</span>
   <div class="nav-space"></div>
-  <a href="../general/index.html" class="nav-back" data-en="← General" data-ko="← 일반 영어">← General</a>
+  <a href="../index.html" class="nav-back" data-en="← English" data-ko="← 영어">← English</a>
   <div class="lang-sw">
     <button class="lbtn act" onclick="setLang('en')" id="btn-en">EN</button>
     <button class="lbtn" onclick="setLang('ko')" id="btn-ko">한국어</button>
   </div>
 </nav>
 
-<div class="api-setup fade-in" id="api-setup">
-  <div class="api-icon">🗣️</div>
-  <div class="api-title" data-en="Speaking Practice" data-ko="말하기 연습">Speaking Practice</div>
-  <div class="api-desc" data-en="Enter your Anthropic API key to activate AI speaking tasks and feedback." data-ko="Anthropic API 키를 입력하면 AI 말하기 과제와 피드백이 활성화됩니다.">Enter your API key to start.</div>
-  <div class="api-input-wrap">
-    <input type="password" class="api-input" id="api-key-input" placeholder="sk-ant-api03-...">
-    <button class="api-btn" onclick="saveApiKey()" data-en="Connect" data-ko="연결">Connect</button>
-  </div>
-  <div class="api-note" data-en="🔒 Stored in your browser only." data-ko="🔒 브라우저에만 저장됩니다.">🔒 Stored in your browser only.</div>
-</div>
-
-<div class="main fade-in" id="main-content">
-
-  <div class="hero">
-    <div class="hero-tag">🗣️ SPEAKING</div>
-    <h1 class="hero-title" data-en="Speak & Get AI Feedback" data-ko="말하고 AI 피드백 받기">Speak & Get AI Feedback</h1>
-    <p class="hero-desc" data-en="Real exam-format speaking tasks. Record your answer, get scored on content, fluency, and grammar." data-ko="실제 시험 형식의 말하기 과제. 답변을 녹음하면 내용·유창성·문법 점수와 피드백을 받습니다.">Exam-style speaking with AI evaluation.</p>
+<div class="main">
+  <div class="hero fade-in">
+    <div class="hero-tag">GENERAL ENGLISH</div>
+    <div class="hero-title" data-en="🗣 Speaking" data-ko="🗣 말하기">🗣 Speaking</div>
+    <div class="hero-desc" data-en="Practice speaking with AI-generated questions. Record your answer and get instant AI feedback on fluency, vocabulary, and grammar." data-ko="AI가 생성한 질문으로 말하기를 연습하세요. 답변을 녹음하고 유창성, 어휘, 문법에 대한 AI 피드백을 받으세요.">Practice speaking and get AI feedback on fluency, vocabulary, and grammar.</div>
     <div class="hero-badges">
-      <span class="hero-badge">TOEIC Speaking</span>
-      <span class="hero-badge">IELTS Speaking</span>
-      <span class="hero-badge">TOEFL Speaking</span>
-      <span class="hero-badge">OPIc</span>
-      <span class="hero-badge">🎤 Voice Record</span>
-      <span class="hero-badge">🤖 AI Score</span>
+      <span class="hero-badge free">✓ 100% Free</span>
+      <span class="hero-badge">A1 → C2</span>
+      <span class="hero-badge">🎙 Voice Record</span>
+      <span class="hero-badge">AI Feedback</span>
     </div>
   </div>
 
-  <!-- Exam Tabs -->
-  <div class="exam-tabs">
-    
-    
-    
-    
-  </div>
-
-  <!-- Topic Grid -->
-  <div class="topic-section">
-    <div class="ts-label" data-en="Select a part" data-ko="파트 선택">Select a part</div>
-    <div class="topic-grid" id="topic-grid"></div>
-  </div>
-
-  <!-- Format Info -->
-  <div class="format-info" id="format-info">
-    <div class="fi-title" id="fi-title"></div>
-    <div id="fi-desc"></div>
-  </div>
-
-  <!-- Settings -->
-  <div class="settings-row">
+  <div class="settings-row fade-in">
     <div class="setting-item">
       <div class="si-label" data-en="Level" data-ko="레벨">Level</div>
-      <select class="si-select" id="level-select" onchange="if(!checkLevelLock(this.value)) this.value='A1'">
-        <option value="A1" selected>A1 — Free</option>
-        <option value="A2">A2 — Free</option>
-        <option value="B1">B1 — 🔒 Pro</option>
-        <option value="B2">B2 — 🔒 Pro</option>
-        <option value="C1">C1 — 🔒 Pro</option>
-        <option value="C2">C2 — 🔒 Pro</option>
+      <select class="si-select" id="sel-level">
+        <option value="A1">A1 — Beginner</option>
+        <option value="A2">A2 — Elementary</option>
+        <option value="B1" selected>B1 — Intermediate</option>
+        <option value="B2">B2 — Upper-Intermediate</option>
+        <option value="C1">C1 — Advanced</option>
+        <option value="C2">C2 — Mastery</option>
       </select>
     </div>
     <div class="setting-item">
-      <div class="si-label" data-en="Prep Time" data-ko="준비 시간">Prep Time</div>
-      <select class="si-select" id="prep-time">
-        <option value="0" data-en="No prep time" data-ko="준비 없음">No prep</option>
-        <option value="30" data-en="30 seconds" data-ko="30초">30 sec</option>
-        <option value="45" selected data-en="45 seconds" data-ko="45초">45 sec</option>
-        <option value="60" data-en="1 minute" data-ko="1분">1 min</option>
+      <div class="si-label" data-en="Type" data-ko="유형">Type</div>
+      <select class="si-select" id="sel-type">
+        <option value="personal opinion">Personal Opinion</option>
+        <option value="description">Description</option>
+        <option value="discussion">Discussion</option>
+        <option value="problem solving">Problem Solving</option>
+        <option value="storytelling">Storytelling</option>
       </select>
     </div>
     <div class="setting-item">
-      <div class="si-label" data-en="Answer Time" data-ko="답변 시간">Answer Time</div>
-      <select class="si-select" id="ans-time">
-        <option value="30" data-en="30 seconds" data-ko="30초">30 sec</option>
-        <option value="45" data-en="45 seconds" data-ko="45초">45 sec</option>
-        <option value="60" selected data-en="1 minute" data-ko="1분">1 min</option>
-        <option value="120" data-en="2 minutes" data-ko="2분">2 min</option>
+      <div class="si-label" data-en="Time" data-ko="시간">Time</div>
+      <select class="si-select" id="sel-time">
+        <option value="30">30 seconds</option>
+        <option value="60" selected>1 minute</option>
+        <option value="90">1.5 minutes</option>
+        <option value="120">2 minutes</option>
       </select>
     </div>
   </div>
 
-  <button class="act-btn primary" id="gen-btn" onclick="generateTask()" style="width:100%;padding:14px;font-size:15px;margin-bottom:20px;">
-    🤖 <span data-en="Generate Speaking Task" data-ko="말하기 과제 생성">Generate Speaking Task</span>
+  <button class="gen-btn fade-in" id="gen-btn" onclick="generate()">
+    🤖 <span data-en="Generate Speaking Question" data-ko="말하기 질문 생성">Generate Speaking Question</span>
   </button>
 
-  <div class="loading-overlay" id="loading-overlay" style="display:none;">
-    <div class="loading-spinner"></div>
-    <div class="loading-text" id="loading-text"></div>
-  </div>
-
-  <!-- Task Area -->
-  <div id="task-area"></div>
-
-  <!-- AI Tutor -->
-  <div class="tutor-section" id="tutor-section" style="display:none;">
-    <div class="tutor-header">
-      <div class="tutor-avatar">🤖</div>
-      <div><div class="tutor-name">AI Tutor</div><div class="tutor-status" id="tutor-status">Ready</div></div>
-    </div>
-    <div class="tutor-messages" id="tutor-messages"></div>
-    <div class="quick-wrap" id="quick-questions"></div>
-    <div class="tutor-input-wrap">
-      <input type="text" class="tutor-input" id="user-input"
-        placeholder="Ask about speaking tips..."
-        onkeydown="if(event.key==='Enter') sendMessage();">
-      <button class="send-btn" id="send-btn" onclick="sendMessage()">➤</button>
-    </div>
-  </div>
-
+  <div id="content-area"></div>
 </div>
 
 <script>
-let lang='en';
+let lang=localStorage.getItem('lw-lang')||'ko';
+let currentQ=null;
+let mediaRecorder=null;
+let audioChunks=[];
+let transcript='';
+let timerInterval=null;
+let timeLeft=60;
+
 function setLang(l){
   lang=l;
-  document.documentElement.lang=l==='ko'?'ko':'en';
-  document.querySelectorAll('[data-en][data-ko]').forEach(el=>{
-    const t=l==='ko'?el.getAttribute('data-ko'):el.getAttribute('data-en');
-    if(t) el.innerHTML=t;
-  });
-  const inp=document.getElementById('user-input');
-  if(inp) inp.placeholder=l==='ko'?'말하기 팁을 질문하세요...':'Ask about speaking tips...';
+  document.querySelectorAll('[data-en][data-ko]').forEach(el=>el.innerHTML=l==='ko'?el.dataset.ko:el.dataset.en);
   document.getElementById('btn-en').classList.toggle('act',l==='en');
   document.getElementById('btn-ko').classList.toggle('act',l==='ko');
-  if(typeof EXAM_TYPES!=='undefined'){renderTopics();updateFormatInfo();}
-  try{localStorage.setItem('lw-lang',l);}catch(e){}
+  localStorage.setItem('lw-lang',l);
 }
+setLang(lang);
 
-const EXAM_TYPES={
-  toeic:{
-    topics:[
-      {id:'ts1', en:'Part 1 — Read Aloud',          ko:'Part 1 — 소리 내어 읽기',
-       desc_en:'Read a text passage aloud',           desc_ko:'지문을 소리 내어 읽기',
-       icons:'📝🔊', format:'read_aloud', prepSec:45, ansSec:45,
-       info_en:'📝 TOEIC Speaking Part 1: Read a short passage aloud. You are scored on pronunciation, intonation, and stress. Prep: 45 sec / Read: 45 sec.',
-       info_ko:'📝 TOEIC Speaking Part 1: 짧은 지문을 소리 내어 읽습니다. 발음, 억양, 강세로 평가합니다. 준비: 45초 / 읽기: 45초.'},
-      {id:'ts2', en:'Part 2 — Describe a Picture',  ko:'Part 2 — 사진 묘사',
-       desc_en:'Describe what you see in the photo', desc_ko:'사진에서 보이는 것을 묘사',
-       icons:'🖼🔊', format:'describe_picture', prepSec:30, ansSec:45,
-       info_en:'📝 TOEIC Speaking Part 2: Describe a photograph in as much detail as possible. Prep: 30 sec / Speak: 45 sec.',
-       info_ko:'📝 TOEIC Speaking Part 2: 사진을 최대한 자세히 묘사합니다. 준비: 30초 / 말하기: 45초.'},
-      {id:'ts3', en:'Part 3 — Respond to Questions',ko:'Part 3 — 질문에 답하기',
-       desc_en:'Answer 3 questions about a topic',   desc_ko:'주제에 관한 3가지 질문 답변',
-       icons:'📝🎤', format:'respond_questions', prepSec:0, ansSec:30,
-       info_en:'📝 TOEIC Speaking Part 3: Answer 3 questions about a given topic. No prep time. Q1: 15 sec, Q2: 15 sec, Q3: 30 sec.',
-       info_ko:'📝 TOEIC Speaking Part 3: 주어진 주제에 관한 3가지 질문에 답합니다. 준비 없음. Q1: 15초, Q2: 15초, Q3: 30초.'},
-      {id:'ts4', en:'Part 4 — Express an Opinion',  ko:'Part 4 — 의견 제시',
-       desc_en:'Give your opinion on a topic',       desc_ko:'주제에 대한 의견 제시',
-       icons:'📝🎤', format:'express_opinion', prepSec:45, ansSec:60,
-       info_en:'📝 TOEIC Speaking Part 4: Express and support your opinion on a given topic. Prep: 45 sec / Speak: 60 sec.',
-       info_ko:'📝 TOEIC Speaking Part 4: 주어진 주제에 대한 의견을 제시하고 뒷받침합니다. 준비: 45초 / 말하기: 60초.'},
-    ]
-  },
-  ielts:{
-    topics:[
-      {id:'il1', en:'Part 1 — Personal Interview',  ko:'Part 1 — 개인 인터뷰',
-       desc_en:'Questions about yourself & daily life',desc_ko:'개인 생활에 관한 질문',
-       icons:'📝🎤', format:'interview', prepSec:0, ansSec:60,
-       info_en:'📝 IELTS Speaking Part 1: The examiner asks about familiar topics (home, work, hobbies). 4–5 minutes. Answer naturally.',
-       info_ko:'📝 IELTS Speaking Part 1: 친숙한 주제(집, 직장, 취미)에 관한 질문. 4~5분. 자연스럽게 답하세요.'},
-      {id:'il2', en:'Part 2 — Long Turn (Cue Card)', ko:'Part 2 — Long Turn (Cue Card)',
-       desc_en:'2-min speech from a cue card topic', desc_ko:'Cue Card 주제로 2분 스피치',
-       icons:'📋🎤', format:'cue_card', prepSec:60, ansSec:120,
-       info_en:'📝 IELTS Speaking Part 2: Speak for 1–2 minutes about a topic on a cue card. You have 1 minute to prepare and take notes.',
-       info_ko:'📝 IELTS Speaking Part 2: Cue Card의 주제로 1~2분간 말합니다. 1분 준비 시간 동안 메모할 수 있습니다.'},
-      {id:'il3', en:'Part 3 — Discussion',          ko:'Part 3 — 심층 토론',
-       desc_en:'Abstract discussion related to Part 2',desc_ko:'Part 2 주제 관련 심층 토론',
-       icons:'💬🎤', format:'discussion', prepSec:0, ansSec:90,
-       info_en:'📝 IELTS Speaking Part 3: Abstract discussion questions related to the Part 2 topic. 4–5 minutes. Give extended answers.',
-       info_ko:'📝 IELTS Speaking Part 3: Part 2 주제와 관련된 추상적인 토론 질문. 4~5분. 상세한 답변을 하세요.'},
-    ]
-  },
-  toefl:{
-    topics:[
-      {id:'tf1', en:'Task 1 — Independent',         ko:'Task 1 — Independent',
-       desc_en:'Express & support your opinion',     desc_ko:'의견을 표현하고 뒷받침',
-       icons:'📝🎤', format:'independent', prepSec:15, ansSec:45,
-       info_en:'📝 TOEFL Speaking Task 1: Express your opinion on a familiar topic. Prep: 15 sec / Speak: 45 sec. Use specific reasons and examples.',
-       info_ko:'📝 TOEFL Speaking Task 1: 친숙한 주제에 대한 의견 표현. 준비: 15초 / 말하기: 45초. 구체적인 이유와 예시를 사용하세요.'},
-      {id:'tf2', en:'Task 2 — Campus (Read+Listen)',ko:'Task 2 — Campus (읽기+듣기)',
-       desc_en:'Read a notice, listen, then summarize',desc_ko:'공지 읽기 + 대화 듣기 후 요약',
-       icons:'📝🔊🎤', format:'integrated_campus', prepSec:30, ansSec:60,
-       info_en:'📝 TOEFL Speaking Task 2: Read a campus announcement (45 sec), then listen to two students discuss it. Summarize the announcement and the speakers\' opinions. Prep: 30 sec / Speak: 60 sec.',
-       info_ko:'📝 TOEFL Speaking Task 2: 캠퍼스 공지 읽기(45초) → 두 학생 대화 듣기 → 요약. 준비: 30초 / 말하기: 60초.'},
-      {id:'tf3', en:'Task 3 — Academic (Read+Listen)',ko:'Task 3 — Academic (읽기+듣기)',
-       desc_en:'Read a concept, listen to lecture, summarize',desc_ko:'개념 읽기 + 강의 듣기 후 요약',
-       icons:'📝🔊🎤', format:'integrated_academic', prepSec:30, ansSec:60,
-       info_en:'📝 TOEFL Speaking Task 3: Read an academic definition (45 sec), then listen to a professor explain with examples. Summarize how the lecture relates to the reading. Prep: 30 sec / Speak: 60 sec.',
-       info_ko:'📝 TOEFL Speaking Task 3: 학술 개념 읽기(45초) → 교수 강의 듣기 → 요약. 준비: 30초 / 말하기: 60초.'},
-      {id:'tf4', en:'Task 4 — Academic Lecture',    ko:'Task 4 — 학술 강의',
-       desc_en:'Listen to a lecture, then summarize',desc_ko:'강의 듣고 핵심 내용 요약',
-       icons:'🔊🎤', format:'lecture_summary', prepSec:20, ansSec:60,
-       info_en:'📝 TOEFL Speaking Task 4: Listen to part of an academic lecture. Summarize the main points using key details. Prep: 20 sec / Speak: 60 sec.',
-       info_ko:'📝 TOEFL Speaking Task 4: 학술 강의 일부 듣기 → 핵심 내용 요약. 준비: 20초 / 말하기: 60초.'},
-    ]
-  },
-  general:{
-    topics:[
-      {id:'g1', en:'Daily Conversation',    ko:'일상 대화',
-       desc_en:'Everyday topics and situations',desc_ko:'일상적인 주제와 상황',
-       icons:'💬🎤', format:'interview', prepSec:0, ansSec:60,
-       info_en:'📝 General Speaking: Practice everyday English conversations on familiar topics.',
-       info_ko:'📝 일반 말하기: 친숙한 주제로 일상 영어 대화를 연습합니다.'},
-      {id:'g2', en:'Opinion & Discussion',  ko:'의견 & 토론',
-       desc_en:'Express and support your opinion',desc_ko:'의견을 표현하고 뒷받침',
-       icons:'🗣️🎤', format:'express_opinion', prepSec:30, ansSec:60,
-       info_en:'📝 General Speaking: State your opinion clearly and support it with reasons.',
-       info_ko:'📝 일반 말하기: 의견을 명확하게 표현하고 이유로 뒷받침하세요.'},
-      {id:'g3', en:'Describe a Picture',    ko:'그림/사진 묘사',
-       desc_en:'Describe what you see in detail',desc_ko:'보이는 것을 자세히 묘사',
-       icons:'🖼🎤', format:'describe_picture', prepSec:30, ansSec:45,
-       info_en:'📝 General Speaking: Describe a scene or photo using rich vocabulary.',
-       info_ko:'📝 일반 말하기: 풍부한 어휘로 장면이나 사진을 묘사하세요.'},
-      {id:'g4', en:'Story Telling',         ko:'이야기 말하기',
-       desc_en:'Narrate a past experience',  desc_ko:'과거 경험을 이야기로',
-       icons:'📖🎤', format:'opic_past', prepSec:0, ansSec:90,
-       info_en:'📝 General Speaking: Tell a story about a past experience in detail.',
-       info_ko:'📝 일반 말하기: 과거 경험을 자세히 이야기하세요.'},
-    ]
-  },
-  opic:{
-    topics:[
-      {id:'op1', en:'Self Introduction & Survey',   ko:'자기소개 & 설문',
-       desc_en:'Introduce yourself based on survey', desc_ko:'설문 기반 자기소개',
-       icons:'📝🎤', format:'opic_intro', prepSec:0, ansSec:90,
-       info_en:'📝 OPIc: Introduce yourself. Describe your background, job/study, hobbies, and interests based on the background survey.',
-       info_ko:'📝 OPIc: 자기소개. 배경 설문을 바탕으로 배경, 직업/학업, 취미, 관심사를 설명합니다.'},
-      {id:'op2', en:'Describe a Place/Person',      ko:'장소/사람 묘사',
-       desc_en:'Describe in detail',                desc_ko:'자세하게 묘사하기',
-       icons:'📝🎤', format:'opic_describe', prepSec:0, ansSec:90,
-       info_en:'📝 OPIc: Describe a familiar place or person in detail. Use sensory details and specific characteristics.',
-       info_ko:'📝 OPIc: 친숙한 장소나 사람을 자세히 묘사합니다. 감각적 세부사항과 구체적 특징을 사용하세요.'},
-      {id:'op3', en:'Past Experience',              ko:'과거 경험',
-       desc_en:'Tell a story about a past event',   desc_ko:'과거 사건에 대한 이야기',
-       icons:'📝🎤', format:'opic_past', prepSec:0, ansSec:90,
-       info_en:'📝 OPIc: Narrate a memorable past experience in detail. Include when, where, who, what happened, and how you felt.',
-       info_ko:'📝 OPIc: 기억에 남는 과거 경험을 자세히 이야기합니다. 언제, 어디서, 누구와, 무슨 일이, 어떻게 느꼈는지 포함.'},
-      {id:'op4', en:'Role Play',                   ko:'롤플레이',
-       desc_en:'Act out a real-life situation',     desc_ko:'실제 상황 역할극',
-       icons:'💬🎤', format:'opic_roleplay', prepSec:0, ansSec:90,
-       info_en:'📝 OPIc Role Play: You are given a real-life situation and must play your role. Ask questions, make requests, or solve a problem.',
-       info_ko:'📝 OPIc 롤플레이: 실제 상황이 주어지고 역할을 수행합니다. 질문하거나 요청하거나 문제를 해결하세요.'},
-      {id:'op5', en:'Compare Past & Present',      ko:'과거 & 현재 비교',
-       desc_en:'Compare how things have changed',  desc_ko:'변화를 비교해서 설명',
-       icons:'📝🎤', format:'opic_compare', prepSec:0, ansSec:90,
-       info_en:'📝 OPIc: Compare how something (e.g. technology, lifestyle, habits) has changed from the past to the present.',
-       info_ko:'📝 OPIc: 기술, 생활 방식, 습관 등이 과거와 현재 어떻게 변했는지 비교해서 설명합니다.'},
-    ]
-  }
-};
+async function generate(){
+  const level=document.getElementById('sel-level').value;
+  const type=document.getElementById('sel-type').value;
+  const time=document.getElementById('sel-time').value;
+  const btn=document.getElementById('gen-btn');
+  btn.disabled=true;
+  btn.innerHTML='⏳ <span>'+(lang==='ko'?'생성 중...':'Generating...')+'</span>';
+  document.getElementById('content-area').innerHTML='';
 
-let apiKey='', currentExam='general', currentTopicId='g1';
-let messages=[], isLoading=false;
-let recognition=null, isRecording=false;
-let currentTask=null, userTranscript='';
-let prepTimerInterval=null, ansTimerInterval=null;
-let prepPhase=false, ansPhase=false;
-
-let unsplashKey='';
-
-function saveApiKey(){
-  const key=document.getElementById('api-key-input').value.trim();
-  if(!key.startsWith('sk-ant-')){alert('Anthropic API key must start with sk-ant-');return;}
-  const uKeyEl=document.getElementById('unsplash-key-input');
-  const uKey=uKeyEl?uKeyEl.value.trim():'';
-  try{
-    sessionStorage.setItem('lw-api-key',key);
-    if(uKey) sessionStorage.setItem('lw-unsplash-key',uKey);
-  }catch(e){}
-  apiKey=key; unsplashKey=uKey;
-  document.getElementById('api-setup').style.display='none';
-  document.getElementById('main-content').style.display='block';
-  renderTopics(); updateFormatInfo();
-}
-
-function selectExam(id,el){
-  currentExam=id;
-  document.querySelectorAll('.exam-tab').forEach(t=>t.classList.remove('act'));
-  el.classList.add('act');
-  currentTopicId=EXAM_TYPES[id].topics[0].id;
-  renderTopics(); updateFormatInfo(); resetTask();
-}
-
-function renderTopics(){
-  const topics=EXAM_TYPES[currentExam].topics;
-  if(!topics.find(t=>t.id===currentTopicId)) currentTopicId=topics[0].id;
-  document.getElementById('topic-grid').innerHTML=topics.map(t=>{
-    const name=lang==='ko'?t.ko:t.en;
-    const desc=lang==='ko'?t.desc_ko:t.desc_en;
-    return `<div class="topic-card ${t.id===currentTopicId?'act':''}" onclick="selectTopic('${t.id}')">
-      <div class="tc-name">${name}</div>
-      <div class="tc-desc">${desc}</div>
-      <div class="tc-icons">${t.icons}</div>
-    </div>`;
-  }).join('');
-}
-
-function selectTopic(id){
-  currentTopicId=id;
-  renderTopics(); updateFormatInfo(); resetTask();
-}
-
-function getCurrentTopic(){
-  return EXAM_TYPES[currentExam].topics.find(t=>t.id===currentTopicId);
-}
-
-function updateFormatInfo(){
-  const topic=getCurrentTopic(); if(!topic) return;
-  document.getElementById('fi-title').textContent=lang==='ko'?topic.ko:topic.en;
-  document.getElementById('fi-desc').textContent=lang==='ko'?topic.info_ko:topic.info_en;
-  // Sync timer defaults from topic
-  document.getElementById('prep-time').value=topic.prepSec||0;
-  document.getElementById('ans-time').value=topic.ansSec||60;
-}
-
-function resetTask(){
-  document.getElementById('task-area').innerHTML='';
-  document.getElementById('tutor-section').style.display='none';
-  stopAllTimers(); stopRecording();
-}
-
-// ── GENERATE ──
-async function generateTask(){
-  if(isLoading) return;
-  isLoading=true; resetTask();
-  const topic=getCurrentTopic();
-  const topicName=lang==='ko'?topic.ko:topic.en;
-  const level=document.getElementById('level-select').value;
-  const examLabel={toeic:'TOEIC Speaking',ielts:'IELTS Speaking',toefl:'TOEFL Speaking',opic:'OPIc',general:'General Speaking'}[currentExam]||'General Speaking';
-
-  document.getElementById('loading-overlay').style.display='block';
-  document.getElementById('loading-text').innerHTML=lang==='ko'
-    ?`🤖 <strong>${examLabel} — ${topicName}</strong> 과제를 생성하고 있습니다...`
-    :`🤖 Generating <strong>${examLabel} — ${topicName}</strong> task...`;
-  document.getElementById('gen-btn').disabled=true;
-
-  const fmt=topic.format;
-  let prompt='';
-
-  if(fmt==='read_aloud'){
-    prompt=lang==='ko'
-      ?`TOEIC Speaking Part 1 소리 내어 읽기 지문을 생성해주세요. 레벨: ${level}.
-JSON: {"title":"지문 제목","passage":"영어 지문 (3~4문장, 자연스러운 영어)","tip":"발음 팁(한국어)"}
-JSON만 반환하세요.`
-      :`Generate a TOEIC Speaking Part 1 Read Aloud passage. Level: ${level}.
-JSON only: {"title":"passage title","passage":"English passage (3-4 sentences, natural English)","tip":"pronunciation tip"}`;
-  }
-  else if(fmt==='describe_picture'){
-    prompt=lang==='ko'
-      ?`TOEIC Speaking Part 2 사진 묘사 과제를 생성해주세요. 레벨: ${level}.
-JSON: {"imageKeyword":"Unsplash 이미지 검색 키워드 (영어 2단어)","situation":"사진 상황 설명 (한국어)","keyPoints":["묘사해야 할 핵심 포인트 (한국어)"],"modelAnswer":"모범 답변 (영어 5~6문장)","tip":"묘사 팁(한국어)"}
-JSON만 반환하세요.`
-      :`Generate a TOEIC Speaking Part 2 Describe a Picture task. Level: ${level}.
-JSON only: {"imageKeyword":"2-word Unsplash search keyword","situation":"brief photo situation description","keyPoints":["key points to describe"],"modelAnswer":"model answer (5-6 English sentences)","tip":"description tip"}`;
-  }
-  else if(fmt==='respond_questions'){
-    prompt=lang==='ko'
-      ?`TOEIC Speaking Part 3 질문에 답하기 과제를 생성해주세요. 레벨: ${level}.
-JSON: {"topic":"주제 (한국어)","questions":[{"q":"영어 질문","ansSec":15,"tip":"답변 팁","model":"모범 답변 (영어 1~2문장)"}],"tip":"전략 팁(한국어)"}
-질문 3개 (처음 2개는 15초, 마지막은 30초). JSON만 반환하세요.`
-      :`Generate a TOEIC Speaking Part 3 Respond to Questions task. Level: ${level}.
-JSON only: {"topic":"topic description","questions":[{"q":"English question","ansSec":15,"tip":"answer tip","model":"model answer (1-2 sentences)"}],"tip":"strategy tip"}
-3 questions (first 2: 15 sec, last: 30 sec). JSON only.`;
-  }
-  else if(fmt==='express_opinion'||fmt==='independent'){
-    prompt=lang==='ko'
-      ?`${examLabel} 의견 표현 과제를 생성해주세요. 레벨: ${level}.
-JSON: {"question":"의견을 구해야 하는 영어 질문","outline":["서론 팁","본론 포인트1","본론 포인트2","결론 팁"],"modelAnswer":"모범 답변 (영어 6~8문장)","tip":"의견 표현 전략(한국어)"}
-JSON만 반환하세요.`
-      :`Generate a ${examLabel} express opinion task. Level: ${level}.
-JSON only: {"question":"English question asking for an opinion","outline":["intro tip","body point 1","body point 2","conclusion tip"],"modelAnswer":"model answer (6-8 English sentences)","tip":"strategy tip"}`;
-  }
-  else if(fmt==='cue_card'){
-    prompt=lang==='ko'
-      ?`IELTS Speaking Part 2 Cue Card 과제를 생성해주세요. 레벨: ${level}.
-JSON: {"topic":"주제 (영어)","bullet1":"• 설명해야 할 항목 1 (영어)","bullet2":"• 설명해야 할 항목 2 (영어)","bullet3":"• 설명해야 할 항목 3 (영어)","endQ":"마지막 질문 (영어)","modelAnswer":"모범 답변 (영어 8~10문장)","tip":"스피치 구성 팁(한국어)"}
-JSON만 반환하세요.`
-      :`Generate an IELTS Speaking Part 2 Cue Card task. Level: ${level}.
-JSON only: {"topic":"topic title in English","bullet1":"• first bullet point","bullet2":"• second bullet point","bullet3":"• third bullet point","endQ":"and explain...","modelAnswer":"model answer (8-10 English sentences)","tip":"speech structure tip"}`;
-  }
-  else if(fmt==='interview'||fmt==='discussion'){
-    const partLabel=fmt==='interview'?'Part 1':'Part 3';
-    prompt=lang==='ko'
-      ?`IELTS Speaking ${partLabel} 인터뷰/토론 과제를 생성해주세요. 레벨: ${level}.
-JSON: {"topic":"주제","questions":[{"q":"영어 질문","model":"모범 답변 (영어 2~3문장)","tip":"팁"}],"tip":"전략(한국어)"}
-질문 3~4개. JSON만 반환하세요.`
-      :`Generate an IELTS Speaking ${partLabel} interview/discussion task. Level: ${level}.
-JSON only: {"topic":"topic","questions":[{"q":"English question","model":"model answer (2-3 sentences)","tip":"tip"}],"tip":"strategy tip"}
-3-4 questions. JSON only.`;
-  }
-  else if(fmt==='integrated_campus'||fmt==='integrated_academic'){
-    const taskType=fmt==='integrated_campus'?'Task 2 Campus':'Task 3 Academic';
-    prompt=lang==='ko'
-      ?`TOEFL Speaking ${taskType} 통합형 과제를 생성해주세요. 레벨: ${level}.
-JSON: {"readingTitle":"읽기 제목","readingText":"영어 읽기 지문 (100~120단어)","listeningScript":"듣기 스크립트 (영어, 2명 대화 or 교수 강의, 120~150단어)","speakingTask":"말하기 과제 설명 (한국어)","modelAnswer":"모범 답변 (영어 6~8문장)","tip":"전략(한국어)"}
-JSON만 반환하세요.`
-      :`Generate a TOEFL Speaking ${taskType} integrated task. Level: ${level}.
-JSON only: {"readingTitle":"reading title","readingText":"English reading passage (100-120 words)","listeningScript":"listening script (English, 120-150 words)","speakingTask":"speaking task description","modelAnswer":"model answer (6-8 English sentences)","tip":"strategy tip"}`;
-  }
-  else if(fmt==='lecture_summary'){
-    prompt=lang==='ko'
-      ?`TOEFL Speaking Task 4 학술 강의 요약 과제를 생성해주세요. 레벨: ${level}.
-JSON: {"lectureTitle":"강의 제목","lectureScript":"영어 강의 스크립트 (150~180단어)","speakingTask":"요약 과제 설명 (한국어)","modelAnswer":"모범 답변 (영어 6~8문장)","tip":"요약 전략(한국어)"}
-JSON만 반환하세요.`
-      :`Generate a TOEFL Speaking Task 4 academic lecture summary task. Level: ${level}.
-JSON only: {"lectureTitle":"lecture title","lectureScript":"English lecture script (150-180 words)","speakingTask":"summarize task description","modelAnswer":"model answer (6-8 English sentences)","tip":"summary strategy tip"}`;
-  }
-  else {
-    // OPIc formats
-    const opicType={'opic_intro':'자기소개','opic_describe':'묘사','opic_past':'과거경험','opic_roleplay':'롤플레이','opic_compare':'비교'}[fmt]||'말하기';
-    prompt=lang==='ko'
-      ?`OPIc ${opicType} 과제를 생성해주세요. 레벨: ${level}.
-JSON: {"question":"OPIc 영어 질문","situation":"상황 설명 (한국어, 롤플레이인 경우)","outline":["답변 구성 팁 (한국어)"],"modelAnswer":"모범 답변 (영어 6~8문장)","tip":"OPIc 전략(한국어)"}
-JSON만 반환하세요.`
-      :`Generate an OPIc ${opicType} speaking task. Level: ${level}.
-JSON only: {"question":"OPIc English question","situation":"situation description (for role play)","outline":["answer structure tips"],"modelAnswer":"model answer (6-8 English sentences)","tip":"OPIc strategy tip"}`;
-  }
-
-  try{
-    const resp=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',
-      headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
-      body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:2000,messages:[{role:'user',content:prompt}]})
-    });
-    const data=await resp.json();
-    currentTask=JSON.parse(data.content[0].text.replace(/```json|```/g,'').trim());
-    document.getElementById('loading-overlay').style.display='none';
-    renderTask(topic, currentTask);
-    // Load image after render (describe_picture)
-    if(topic.format==='describe_picture' && unsplashKey){
-      fetchUnsplashImage(currentTask.imageKeyword||'office people').then(url=>{
-        const el=document.getElementById('scene-img');
-        if(el&&url){el.src=url;el.classList.add('show');}
-        const ph=document.getElementById('scene-img-placeholder');
-        if(ph) ph.style.display='none';
-      });
-    }
-    initTutor(topic);
-  }catch(e){
-    document.getElementById('loading-overlay').style.display='none';
-    alert(lang==='ko'?'과제 생성 오류입니다.':'Error generating task.');
-    console.error(e);
-  }
-  isLoading=false;
-  document.getElementById('gen-btn').disabled=false;
-}
-
-// ── RENDER TASK ──
-function renderTask(topic, task){
-  const fmt=topic.format;
-  const examLabel={toeic:'TOEIC Speaking',ielts:'IELTS Speaking',toefl:'TOEFL Speaking',opic:'OPIc',general:'General Speaking'}[currentExam]||'General Speaking';
-  const topicName=lang==='ko'?topic.ko:topic.en;
-  const prepSec=parseInt(document.getElementById('prep-time').value);
-  const ansSec=parseInt(document.getElementById('ans-time').value);
-
-  let html='';
-
-  if(fmt==='read_aloud'){
-    html=`
-      <div class="task-card">
-        <div class="task-header">
-          <div class="task-title">${examLabel} — ${topicName}</div>
-          <div class="task-badges"><span class="t-badge tb-type">📝 Read Aloud</span><span class="t-badge tb-time">45 sec</span></div>
-        </div>
-        <div class="task-body">
-          <div class="task-prompt">
-            <div class="tp-label" data-en="PASSAGE — Read this aloud" data-ko="지문 — 소리 내어 읽으세요">PASSAGE</div>
-            <div class="tp-q" style="font-family:'Georgia',serif;font-size:16px;line-height:1.9;">${task.passage}</div>
-          </div>
-          <div class="task-prompt" style="background:var(--teal-light);border-color:rgba(42,127,111,0.2);">
-            <div class="tp-label" style="color:var(--teal);">💡 TIP</div>
-            <div class="tp-tips">${task.tip}</div>
-          </div>
-          ${renderRecorder(ansSec,'read_aloud')}
-        </div>
-      </div>`;
-  }
-  else if(fmt==='describe_picture'){
-    html=`
-      <div class="task-card">
-        <div class="task-header">
-          <div class="task-title">${examLabel} — ${topicName}</div>
-          <div class="task-badges"><span class="t-badge tb-type">🖼 Describe</span><span class="t-badge tb-time">${ansSec} sec</span></div>
-        </div>
-        <div class="task-body">
-          <div id="scene-img-placeholder" style="width:100%;height:200px;background:var(--bg);border-radius:10px;margin-bottom:16px;display:flex;align-items:center;justify-content:center;border:0.5px solid var(--border);"><div style="text-align:center;color:var(--text-light);"><div style="font-size:32px;margin-bottom:8px;">🖼</div><div style="font-size:13px;">${lang==='ko'?'사진 로딩 중...':'Loading photo...'}</div></div></div>
-          <img class="scene-img" id="scene-img" alt="Describe this photo">
-          <div class="task-prompt">
-            <div class="tp-label" data-en="KEY POINTS TO COVER" data-ko="묘사해야 할 핵심 포인트">KEY POINTS</div>
-            <div class="tp-tips">${(task.keyPoints||[]).map(p=>`<div class="tp-tip-item">• ${p}</div>`).join('')}</div>
-          </div>
-          ${prepSec>0?renderPrepTimer(prepSec):''}
-          ${renderRecorder(ansSec,'describe_picture')}
-        </div>
-      </div>`;
-  }
-  else if(fmt==='respond_questions'){
-    const qs=task.questions||[];
-    html=`
-      <div class="task-card">
-        <div class="task-header">
-          <div class="task-title">${examLabel} — ${topicName}</div>
-          <div class="task-badges"><span class="t-badge tb-type">📝 Q&A</span></div>
-        </div>
-        <div class="task-body">
-          <div class="task-prompt">
-            <div class="tp-label">TOPIC</div>
-            <div class="tp-q">${task.topic}</div>
-          </div>
-          ${qs.map((q,i)=>`
-            <div class="task-prompt" style="margin-top:12px;" id="rq-${i}">
-              <div class="tp-label">${lang==='ko'?`질문 ${i+1} (${q.ansSec}초)`:`Question ${i+1} (${q.ansSec} sec)`}</div>
-              <div class="tp-q">${q.q}</div>
-              <div class="tp-tips">💡 ${q.tip}</div>
-              ${renderRecorder(q.ansSec,'respond_q_'+i,i>0)}
-              <details style="margin-top:8px;"><summary style="font-size:12px;color:var(--text-muted);cursor:pointer;">📖 ${lang==='ko'?'모범 답변 보기':'View model answer'}</summary>
-                <div style="margin-top:6px;padding:8px 12px;background:var(--bg);border-radius:7px;font-size:12px;color:var(--text-muted);font-style:italic;">${q.model}</div>
-              </details>
-            </div>`).join('')}
-          <div class="task-prompt" style="margin-top:12px;background:var(--teal-light);border-color:rgba(42,127,111,0.2);">
-            <div class="tp-label" style="color:var(--teal);">💡 ${lang==='ko'?'전략':'Strategy'}</div>
-            <div class="tp-tips">${task.tip}</div>
-          </div>
-        </div>
-      </div>`;
-  }
-  else if(fmt==='cue_card'){
-    html=`
-      <div class="task-card">
-        <div class="task-header">
-          <div class="task-title">${examLabel} — ${topicName}</div>
-          <div class="task-badges"><span class="t-badge tb-type">📋 Cue Card</span><span class="t-badge tb-time">2 min</span></div>
-        </div>
-        <div class="task-body">
-          <div class="task-prompt" style="border:1px solid var(--speak);border-radius:10px;padding:20px;">
-            <div class="tp-label">${lang==='ko'?'주제':'TOPIC'}</div>
-            <div class="tp-q" style="font-size:16px;font-weight:600;margin-bottom:12px;">${task.topic}</div>
-            <div style="font-size:13px;color:var(--text);line-height:1.8;">
-              ${task.bullet1}<br>${task.bullet2}<br>${task.bullet3}
-              <div style="margin-top:8px;font-style:italic;">${task.endQ}</div>
-            </div>
-          </div>
-          <div style="margin-top:12px;font-size:12px;color:var(--text-muted);">
-            💡 ${task.tip}
-          </div>
-          ${renderPrepTimer(prepSec)}
-          ${renderRecorder(ansSec,'cue_card')}
-        </div>
-      </div>`;
-  }
-  else if(fmt==='integrated_campus'||fmt==='integrated_academic'){
-    html=`
-      <div class="task-card">
-        <div class="task-header">
-          <div class="task-title">${examLabel} — ${topicName}</div>
-          <div class="task-badges"><span class="t-badge tb-type">📝+🔊 Integrated</span><span class="t-badge tb-time">${ansSec} sec</span></div>
-        </div>
-        <div class="task-body">
-          <div class="reading-prompt">
-            <div class="rp-label">📖 ${lang==='ko'?'읽기 (45초)':'READING (45 sec)'} — ${task.readingTitle}</div>
-            <div class="rp-text">${task.readingText}</div>
-          </div>
-          <div class="listen-prompt">
-            <div class="lp-label">🔊 ${lang==='ko'?'듣기':'LISTENING'}</div>
-            <div class="lp-text">${task.listeningScript}</div>
-            <div class="lp-play">
-              <button class="lp-btn play" onclick="playTTS('${escStr(task.listeningScript)}',this)" id="lp-play-btn">▶ ${lang==='ko'?'재생':'Play'}</button>
-              <button class="lp-btn stop" onclick="stopTTS()" style="display:none" id="lp-stop-btn">⏹ ${lang==='ko'?'중지':'Stop'}</button>
-              <span class="lp-status" id="lp-status"></span>
-            </div>
-          </div>
-          <div class="task-prompt">
-            <div class="tp-label">🎤 ${lang==='ko'?'말하기 과제':'SPEAKING TASK'}</div>
-            <div class="tp-q">${task.speakingTask||task.question}</div>
-          </div>
-          ${renderPrepTimer(prepSec)}
-          ${renderRecorder(ansSec,'integrated')}
-        </div>
-      </div>`;
-  }
-  else if(fmt==='lecture_summary'){
-    html=`
-      <div class="task-card">
-        <div class="task-header">
-          <div class="task-title">${examLabel} — ${topicName}</div>
-          <div class="task-badges"><span class="t-badge tb-type">🔊 Lecture</span><span class="t-badge tb-time">${ansSec} sec</span></div>
-        </div>
-        <div class="task-body">
-          <div class="listen-prompt">
-            <div class="lp-label">🔊 ${lang==='ko'?'강의 듣기':'LECTURE'} — ${task.lectureTitle}</div>
-            <div class="lp-text">${task.lectureScript}</div>
-            <div class="lp-play">
-              <button class="lp-btn play" onclick="playTTS('${escStr(task.lectureScript)}',this)" id="lp-play-btn">▶ ${lang==='ko'?'재생':'Play'}</button>
-              <button class="lp-btn stop" onclick="stopTTS()" style="display:none" id="lp-stop-btn">⏹ ${lang==='ko'?'중지':'Stop'}</button>
-              <span class="lp-status" id="lp-status"></span>
-            </div>
-          </div>
-          <div class="task-prompt">
-            <div class="tp-label">🎤 ${lang==='ko'?'말하기 과제':'SPEAKING TASK'}</div>
-            <div class="tp-q">${task.speakingTask}</div>
-          </div>
-          ${renderPrepTimer(prepSec)}
-          ${renderRecorder(ansSec,'lecture')}
-        </div>
-      </div>`;
-  }
-  else {
-    // Generic: interview, discussion, independent, opic formats
-    const isQList=task.questions&&task.questions.length;
-    html=`
-      <div class="task-card">
-        <div class="task-header">
-          <div class="task-title">${examLabel} — ${topicName}</div>
-          <div class="task-badges"><span class="t-badge tb-type">🎤 Speaking</span><span class="t-badge tb-time">${ansSec} sec</span></div>
-        </div>
-        <div class="task-body">
-          ${task.situation?`<div class="task-prompt" style="background:#faeeda;border-color:rgba(186,117,23,0.25);">
-            <div class="tp-label" style="color:#854f0b;">📋 ${lang==='ko'?'상황':'SITUATION'}</div>
-            <div class="tp-q">${task.situation}</div>
-          </div>`:''}
-          ${isQList
-            ? task.questions.map((q,i)=>`
-              <div class="task-prompt" style="margin-top:12px;">
-                <div class="tp-label">${lang==='ko'?`질문 ${i+1}`:`Question ${i+1}`}</div>
-                <div class="tp-q">${q.q}</div>
-                <div class="tp-tips">💡 ${q.tip||''}</div>
-                ${renderRecorder(ansSec,'generic_'+i,i>0)}
-                <details style="margin-top:8px;"><summary style="font-size:12px;color:var(--text-muted);cursor:pointer;">📖 ${lang==='ko'?'모범 답변':'Model answer'}</summary>
-                  <div style="margin-top:6px;padding:8px 12px;background:var(--bg);border-radius:7px;font-size:12px;color:var(--text-muted);font-style:italic;">${q.model}</div>
-                </details>
-              </div>`).join('')
-            : `<div class="task-prompt">
-                <div class="tp-label">🎤 ${lang==='ko'?'질문':'QUESTION'}</div>
-                <div class="tp-q">${task.question||task.topic}</div>
-                ${(task.outline||[]).length?`<div class="tp-tips" style="margin-top:10px;">${task.outline.map(o=>`<div class="tp-tip-item">• ${o}</div>`).join('')}</div>`:''}
-              </div>
-              ${prepSec>0?renderPrepTimer(prepSec):''}
-              ${renderRecorder(ansSec,'generic')}`}
-          <div class="task-prompt" style="margin-top:12px;background:var(--teal-light);border-color:rgba(42,127,111,0.2);">
-            <div class="tp-label" style="color:var(--teal);">💡 ${lang==='ko'?'전략':'Strategy'}</div>
-            <div class="tp-tips">${task.tip||''}</div>
-          </div>
-          ${!isQList?`<details style="margin-top:12px;"><summary style="font-size:13px;color:var(--speak);cursor:pointer;font-weight:500;">📖 ${lang==='ko'?'모범 답변 보기':'View model answer'}</summary>
-            <div style="margin-top:8px;padding:14px;background:var(--bg);border-radius:10px;font-size:13px;color:var(--text-muted);line-height:1.8;font-style:italic;">${task.modelAnswer||''}</div>
-          </details>`:''}
-        </div>
-      </div>`;
-  }
-
-  document.getElementById('task-area').innerHTML=html;
-}
-
-function renderPrepTimer(secs){
-  if(!secs) return '';
-  return `<div class="prep-timer" id="prep-timer">
-    <div class="pt-label" data-en="Prep Time" data-ko="준비 시간">${lang==='ko'?'준비 시간':'Prep Time'}</div>
-    <div class="pt-time" id="pt-display">${formatTime(secs)}</div>
-    <div class="pt-bar"><div class="pt-fill" id="pt-fill" style="width:100%"></div></div>
-    <button class="pt-btn start" onclick="startPrepTimer(${secs})" id="pt-start-btn">▶ ${lang==='ko'?'시작':'Start'}</button>
-  </div>`;
-}
-
-function renderRecorder(secs, id, collapsed=false){
-  return `<div class="recorder-section" id="rec-${id}" style="${collapsed?'opacity:0.5;pointer-events:none;':''}">
-    <div class="rec-icon">🎤</div>
-    <div class="rec-status" id="rec-status-${id}">${lang==='ko'?'녹음 준비 완료. 버튼을 눌러 시작하세요.':'Ready to record. Press the button to start.'}</div>
-    <div class="rec-wave" id="rec-wave-${id}"><span></span><span></span><span></span><span></span><span></span></div>
-    <div class="rec-controls">
-      <button class="rec-btn record" id="rec-btn-${id}" onclick="toggleRecording('${id}',${secs})">🎤 ${lang==='ko'?'녹음 시작':'Start Recording'}</button>
-      <button class="rec-btn submit" id="sub-btn-${id}" onclick="submitAnswer('${id}')" disabled>${lang==='ko'?'✓ 제출 & AI 피드백':'✓ Submit & AI Feedback'}</button>
-    </div>
-    <div class="transcript-box" id="trans-${id}">
-      <div class="tb-label">${lang==='ko'?'내 답변 (음성 인식)':'My Answer (Voice Recognition)'}</div>
-      <div class="tb-text" id="trans-text-${id}"></div>
-    </div>
-    <div class="feedback-section" id="fb-${id}"></div>
-  </div>`;
-}
-
-function escStr(s){ return s.replace(/'/g,"\\'").replace(/\n/g,' ').substring(0,500); }
-
-// ── TIMERS ──
-function stopAllTimers(){
-  if(prepTimerInterval){clearInterval(prepTimerInterval);prepTimerInterval=null;}
-  if(ansTimerInterval){clearInterval(ansTimerInterval);ansTimerInterval=null;}
-}
-
-function startPrepTimer(totalSec){
-  const btn=document.getElementById('pt-start-btn');
-  if(btn) btn.style.display='none';
-  let remaining=totalSec;
-  const display=document.getElementById('pt-display');
-  const fill=document.getElementById('pt-fill');
-  if(display) display.textContent=formatTime(remaining);
-  prepTimerInterval=setInterval(()=>{
-    remaining--;
-    if(display){display.textContent=formatTime(remaining);if(remaining<=10) display.classList.add('warn');}
-    if(fill) fill.style.width=(remaining/totalSec*100)+'%';
-    if(remaining<=0){
-      clearInterval(prepTimerInterval);
-      if(display) display.textContent='0:00';
-      alert(lang==='ko'?'준비 시간 종료! 지금 말하세요.':'Prep time over! Start speaking now.');
-    }
-  },1000);
-}
-function formatTime(s){return `${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`;}
-
-// ── TTS ──
-function playTTS(text, btn){
-  if(!('speechSynthesis' in window)){alert('TTS not supported. Use Chrome.');return;}
-  speechSynthesis.cancel();
-  const utt=new SpeechSynthesisUtterance(text);
-  utt.lang='en-US'; utt.rate=0.9;
-  const voices=speechSynthesis.getVoices();
-  const v=voices.find(v=>v.lang.startsWith('en-US'))||voices.find(v=>v.lang.startsWith('en'));
-  if(v) utt.voice=v;
-  const playBtn=document.getElementById('lp-play-btn');
-  const stopBtn=document.getElementById('lp-stop-btn');
-  const status=document.getElementById('lp-status');
-  if(playBtn) playBtn.style.display='none';
-  if(stopBtn) stopBtn.style.display='flex';
-  if(status) status.textContent=lang==='ko'?'재생 중...':'Playing...';
-  utt.onend=utt.onerror=()=>{
-    if(playBtn) playBtn.style.display='flex';
-    if(stopBtn) stopBtn.style.display='none';
-    if(status) status.textContent=lang==='ko'?'재생 완료':'Done';
-  };
-  speechSynthesis.speak(utt);
-}
-function stopTTS(){
-  speechSynthesis.cancel();
-  const playBtn=document.getElementById('lp-play-btn');
-  const stopBtn=document.getElementById('lp-stop-btn');
-  if(playBtn) playBtn.style.display='flex';
-  if(stopBtn) stopBtn.style.display='none';
-}
-
-// ── STT ──
-let currentRecId='', transcripts={};
-function toggleRecording(id, maxSec){
-  if(currentRecId===id&&isRecording){stopRecording();return;}
-  if(isRecording) stopRecording();
-  const SpeechRec=window.SpeechRecognition||window.webkitSpeechRecognition;
-  if(!SpeechRec){alert(lang==='ko'?'음성 인식을 지원하지 않습니다. Chrome을 사용해 주세요.':'Speech recognition not supported. Please use Chrome.');return;}
-  currentRecId=id;
-  transcripts[id]='';
-  recognition=new SpeechRec();
-  recognition.lang='en-US'; recognition.continuous=true; recognition.interimResults=true;
-  const btn=document.getElementById(`rec-btn-${id}`);
-  const statusEl=document.getElementById(`rec-status-${id}`);
-  const wave=document.getElementById(`rec-wave-${id}`);
-  const recBox=document.getElementById(`rec-${id}`);
-  recognition.onstart=()=>{
-    isRecording=true;
-    if(btn){btn.classList.add('recording');btn.innerHTML=`⏹ ${lang==='ko'?'녹음 중... (클릭하여 중지)':'Recording... (click to stop)'}`;}
-    if(statusEl) statusEl.classList.add('recording');
-    if(statusEl) statusEl.textContent=lang==='ko'?'녹음 중... 영어로 말하세요.':'Recording... speak in English.';
-    if(wave) wave.classList.add('show');
-    if(recBox) recBox.classList.add('active');
-    // Auto stop
-    ansTimerInterval=setTimeout(()=>stopRecording(),maxSec*1000);
-  };
-  recognition.onresult=(e)=>{
-    let t='';
-    for(let i=e.resultIndex;i<e.results.length;i++) t+=e.results[i][0].transcript;
-    transcripts[id]=t;
-    const transEl=document.getElementById(`trans-text-${id}`);
-    const transBox=document.getElementById(`trans-${id}`);
-    if(transEl) transEl.textContent=t;
-    if(transBox) transBox.classList.add('show');
-    const subBtn=document.getElementById(`sub-btn-${id}`);
-    if(subBtn) subBtn.disabled=false;
-  };
-  recognition.onend=()=>{
-    isRecording=false; currentRecId='';
-    if(btn){btn.classList.remove('recording');btn.innerHTML=`🎤 ${lang==='ko'?'다시 녹음':'Record Again'}`;}
-    if(statusEl){statusEl.classList.remove('recording');statusEl.textContent=lang==='ko'?'녹음 완료. 제출하거나 다시 녹음하세요.':'Done. Submit or record again.';}
-    if(wave) wave.classList.remove('show');
-    if(recBox) recBox.classList.remove('active');
-    if(ansTimerInterval){clearTimeout(ansTimerInterval);ansTimerInterval=null;}
-  };
-  recognition.onerror=(e)=>{
-    if(e.error==='not-allowed') alert(lang==='ko'?'마이크 권한을 허용해 주세요.':'Please allow microphone access.');
-    stopRecording();
-  };
-  recognition.start();
-}
-
-function stopRecording(){
-  if(recognition){try{recognition.stop();}catch(e){}}
-  isRecording=false;
-}
-
-// ── SUBMIT & FEEDBACK ──
-async function submitAnswer(id){
-  const transcript=transcripts[id]||'';
-  if(!transcript.trim()){alert(lang==='ko'?'먼저 답변을 녹음해 주세요.':'Please record your answer first.');return;}
-  const topic=getCurrentTopic();
-  const examLabel={toeic:'TOEIC Speaking',ielts:'IELTS Speaking',toefl:'TOEFL Speaking',opic:'OPIc',general:'General Speaking'}[currentExam]||'General Speaking';
-  const fbSection=document.getElementById(`fb-${id}`);
-  if(!fbSection) return;
-  fbSection.innerHTML=`<div style="padding:14px;text-align:center;color:var(--text-muted);font-size:13px;">🤖 ${lang==='ko'?'AI가 평가하고 있습니다...':'AI is evaluating your answer...'}</div>`;
-  fbSection.classList.add('show');
-  const subBtn=document.getElementById(`sub-btn-${id}`);
-  if(subBtn){subBtn.disabled=true;subBtn.textContent=lang==='ko'?'⏳ 평가 중...':'⏳ Evaluating...';}
-
-  const taskContext=currentTask?JSON.stringify(currentTask).substring(0,500):'';
-  const prompt=lang==='ko'
-    ?`${examLabel} "${lang==='ko'?topic.ko:topic.en}" 말하기 답변을 평가해주세요.
-과제 내용: ${taskContext}
-학습자 답변: "${transcript}"
-다음 JSON 형식으로 평가해주세요:
+  const prompt=`Create a ${level} level English speaking question of type "${type}".
+Return ONLY valid JSON, no markdown:
 {
-  "content_score": 1~10,
-  "fluency_score": 1~10,
-  "grammar_score": 1~10,
-  "overall": "종합 평가 (한국어, 2~3문장)",
-  "strengths": "잘한 점 (한국어)",
-  "improvements": "개선할 점 (한국어)",
-  "model_note": "모범 답변과의 비교 (한국어)"
-}
-JSON만 반환하세요.`
-    :`Evaluate this ${examLabel} speaking response.
-Task: ${taskContext}
-Student answer: "${transcript}"
-Return ONLY this JSON:
-{
-  "content_score": 1-10,
-  "fluency_score": 1-10,
-  "grammar_score": 1-10,
-  "overall": "overall evaluation (2-3 sentences)",
-  "strengths": "what was done well",
-  "improvements": "what to improve",
-  "model_note": "comparison with ideal answer"
+  "question": "The speaking question (1-2 sentences)",
+  "tips": ["tip 1", "tip 2", "tip 3"],
+  "sample_answer": "A model answer appropriate for ${level} level (${Math.round(parseInt(time)/3)} words)",
+  "key_phrases": ["useful phrase 1", "useful phrase 2", "useful phrase 3"],
+  "preparation_time": 15
 }`;
 
-  try{
-    const resp=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',
-      headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
-      body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:800,messages:[{role:'user',content:prompt}]})
-    });
-    const data=await resp.json();
-    const fb=JSON.parse(data.content[0].text.replace(/```json|```/g,'').trim());
-    const model=currentTask?.modelAnswer||currentTask?.questions?.find(q=>q.model)?.model||'';
-    fbSection.innerHTML=`
-      <div class="fb-header"><div class="fb-avatar">🤖</div><div class="fb-title">AI ${lang==='ko'?'평가 결과':'Evaluation'}</div></div>
-      <div class="fb-scores">
-        <div class="fb-score"><div class="fb-score-val">${fb.content_score}/10</div><div class="fb-score-lbl">${lang==='ko'?'내용':'Content'}</div></div>
-        <div class="fb-score"><div class="fb-score-val">${fb.fluency_score}/10</div><div class="fb-score-lbl">${lang==='ko'?'유창성':'Fluency'}</div></div>
-        <div class="fb-score"><div class="fb-score-val">${fb.grammar_score}/10</div><div class="fb-score-lbl">${lang==='ko'?'문법':'Grammar'}</div></div>
-        <div class="fb-score"><div class="fb-score-val">${Math.round((fb.content_score+fb.fluency_score+fb.grammar_score)/3*10)/10}/10</div><div class="fb-score-lbl">${lang==='ko'?'종합':'Overall'}</div></div>
+  try {
+    const res=await fetch('/api/claude',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:800,messages:[{role:'user',content:prompt}]})});
+    const data=await res.json();
+    const text=data.content[0].text;
+    currentQ=JSON.parse(text.replace(/```json|```/g,'').trim());
+    timeLeft=parseInt(time);
+    renderSpeaking();
+  } catch(e){
+    document.getElementById('content-area').innerHTML=`<div style="text-align:center;padding:24px;color:var(--red);">❌ ${lang==='ko'?'생성 실패':'Generation failed'}</div>`;
+  }
+  btn.disabled=false;
+  btn.innerHTML='🔄 <span>'+(lang==='ko'?'새 질문':'New Question')+'</span>';
+}
+
+function renderSpeaking(){
+  const q=currentQ;
+  const area=document.getElementById('content-area');
+  area.innerHTML=`
+    <div class="q-display fade-in">
+      <div class="qd-label">${lang==='ko'?'말하기 질문':'Speaking Question'}</div>
+      <div class="qd-question">${q.question}</div>
+      <div class="qd-tips">
+        ${q.tips.map(t=>`<span class="qd-tip">💡 ${t}</span>`).join('')}
       </div>
-      <div class="fb-comment">${fb.overall}<br><br>✅ <strong>${lang==='ko'?'잘한 점':'Strengths'}:</strong> ${fb.strengths}<br><br>📈 <strong>${lang==='ko'?'개선점':'Improve'}:</strong> ${fb.improvements}</div>
-      ${model?`<div class="fb-model"><div class="fb-model-label">📖 ${lang==='ko'?'모범 답변':'Model Answer'}</div><div class="fb-model-text">${model}</div></div>`:''}
-      <div style="margin-top:12px;">
-        <button class="act-btn primary" onclick="generateTask()" style="padding:10px;">${lang==='ko'?'🔄 새 과제':'🔄 New Task'}</button>
-      </div>`;
-  }catch(e){
-    fbSection.innerHTML=`<div style="padding:14px;color:#a32d2d;">${lang==='ko'?'평가 오류입니다. 다시 시도해 주세요.':'Evaluation error. Please try again.'}</div>`;
-  }
-  if(subBtn){subBtn.disabled=false;subBtn.textContent=lang==='ko'?'✓ 다시 제출':'✓ Submit Again';}
+    </div>
+
+    <div class="timer-bar fade-in">
+      <div class="timer-num" id="timer-num">${timeLeft}</div>
+      <div style="flex:1;">
+        <div class="timer-label">${lang==='ko'?'남은 시간':'Time remaining'}</div>
+        <div class="timer-prog"><div class="timer-fill" id="timer-fill" style="width:100%"></div></div>
+      </div>
+    </div>
+
+    <div class="record-area fade-in">
+      <button class="rec-btn idle" id="rec-btn" onclick="toggleRecord()">🎙</button>
+      <div class="rec-status" id="rec-status">${lang==='ko'?'버튼을 눌러 녹음 시작':'Press to start recording'}</div>
+      <div class="rec-transcript" id="rec-transcript">${lang==='ko'?'(음성이 여기에 표시됩니다)':'(Your speech will appear here)'}</div>
+      <button onclick="submitSpeech()" style="margin-top:12px;padding:10px 24px;border-radius:8px;background:var(--pink);color:#fff;border:none;cursor:pointer;font-size:13px;font-weight:600;font-family:inherit;">${lang==='ko'?'✓ 제출하고 AI 피드백 받기':'✓ Submit & Get AI Feedback'}</button>
+    </div>
+
+    <div class="card fade-in">
+      <div class="card-head">
+        <span class="card-title">${lang==='ko'?'참고 표현':'Useful Phrases'}</span>
+        <button onclick="toggleSample()" style="font-size:12px;color:var(--pink);background:none;border:none;cursor:pointer;font-family:inherit;font-weight:600;">${lang==='ko'?'모범 답안 보기':'Show Sample Answer'}</button>
+      </div>
+      <div class="card-body">
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;">
+          ${q.key_phrases.map(p=>`<span style="font-size:12px;padding:4px 10px;border-radius:8px;background:var(--pink-light);color:var(--pink);">${p}</span>`).join('')}
+        </div>
+        <div class="sample-box" id="sample-box" style="display:none;">
+          <div class="sb-title">📝 ${lang==='ko'?'모범 답안':'Sample Answer'}</div>
+          <div class="sb-text">${q.sample_answer}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="feedback-card fade-in" id="feedback-card"></div>`;
 }
 
-// ── AI TUTOR ──
-function initTutor(topic){
-  messages=[];
-  document.getElementById('tutor-messages').innerHTML='';
-  const examLabel={toeic:'TOEIC Speaking',ielts:'IELTS Speaking',toefl:'TOEFL Speaking',opic:'OPIc',general:'General Speaking'}[currentExam]||'General Speaking';
-  const intro=lang==='ko'
-    ?`안녕하세요! 👋 **${examLabel} — ${lang==='ko'?topic.ko:topic.en}** 준비가 되었습니다.\n\n🎤 녹음 버튼을 눌러 답변하고 AI 피드백을 받으세요. 궁금한 점이 있으면 언제든 질문하세요!`
-    :`Hi! 👋 **${examLabel} — ${topic.en}** task is ready.\n\nPress 🎤 to record your answer and get AI feedback. Ask me anything about speaking strategies!`;
-  addMsg('ai',intro);
-  const qs=lang==='ko'
-    ?['답변 구조 팁','자주 쓰는 표현','이 유형 전략','모범 답변 예시']
-    :['Answer structure tips','Useful expressions','Strategy for this type','Example phrases'];
-  document.getElementById('quick-questions').innerHTML=qs.map(q=>`<button class="quick-btn" onclick="askQ(this)">${q}</button>`).join('');
-  document.getElementById('tutor-section').style.display='block';
+function toggleSample(){
+  const s=document.getElementById('sample-box');
+  s.style.display=s.style.display==='none'?'block':'none';
 }
 
-function askQ(btn){document.getElementById('user-input').value=btn.textContent;sendMessage();}
-async function sendMessage(){
-  if(isLoading) return;
-  const inp=document.getElementById('user-input');
-  const text=inp.value.trim(); if(!text) return;
-  inp.value=''; addMsg('user',text);
-  messages.push({role:'user',content:text});
-  isLoading=true; document.getElementById('send-btn').disabled=true;
-  document.getElementById('tutor-status').textContent=lang==='ko'?'답변 작성 중...':'Typing...';
-  const tid=showTyping();
-  const topic=getCurrentTopic();
-  const examLabel={toeic:'TOEIC Speaking',ielts:'IELTS Speaking',toefl:'TOEFL Speaking',opic:'OPIc',general:'General Speaking'}[currentExam]||'General Speaking';
-  const sys=lang==='ko'
-    ?`당신은 친절한 ${examLabel} 말하기 튜터입니다. 현재 "${lang==='ko'?topic.ko:topic.en}" 파트를 연습 중입니다. 한국어로 실용적인 조언을 간결하게 하세요.`
-    :`You are a helpful ${examLabel} speaking tutor. Student is practicing "${topic.en}". Give concise, practical speaking advice.`;
-  try{
-    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:500,system:sys,messages:messages.slice(-6)})});
-    const d=await r.json(); removeTyping(tid);
-    if(d.content?.[0]){const rep=d.content[0].text;messages.push({role:'assistant',content:rep});addMsg('ai',rep);}
-  }catch(e){removeTyping(tid);addMsg('ai','⚠️ Error');}
-  isLoading=false; document.getElementById('send-btn').disabled=false;
-  document.getElementById('tutor-status').textContent=lang==='ko'?'도움 준비 완료':'Ready to help';
+function toggleRecord(){
+  if(!mediaRecorder||mediaRecorder.state==='inactive') startRecord();
+  else stopRecord();
 }
-function addMsg(role,text){
-  const wrap=document.getElementById('tutor-messages');
-  const d=document.createElement('div'); d.className=`msg ${role}`;
-  const fmt=text.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\*(.*?)\*/g,'<em>$1</em>').replace(/\n/g,'<br>');
-  d.innerHTML=`<div class="msg-av ${role}">${role==='ai'?'🤖':'👤'}</div><div class="msg-bub">${fmt}</div>`;
-  wrap.appendChild(d); wrap.scrollTop=wrap.scrollHeight;
-}
-function showTyping(){
-  const wrap=document.getElementById('tutor-messages');
-  const id='t'+Date.now(); const d=document.createElement('div'); d.className='msg ai'; d.id=id;
-  d.innerHTML=`<div class="msg-av ai">🤖</div><div class="typing"><span></span><span></span><span></span></div>`;
-  wrap.appendChild(d); wrap.scrollTop=wrap.scrollHeight; return id;
-}
-function removeTyping(id){const e=document.getElementById(id);if(e)e.remove();}
 
-// -- Unsplash Image --
-async function fetchUnsplashImage(keyword){
-  if(!unsplashKey) return null;
-  try{
-    const page=Math.floor(Math.random()*3)+1;
-    const resp=await fetch('https://api.unsplash.com/search/photos?query='+encodeURIComponent(keyword)+'&per_page=30&page='+page+'&orientation=landscape',{
-      headers:{'Authorization':'Client-ID '+unsplashKey}
-    });
-    const data=await resp.json();
-    if(data.results&&data.results.length>0){
-      const randomIdx=Math.floor(Math.random()*data.results.length);
-      return data.results[randomIdx].urls.regular;
+async function startRecord(){
+  try {
+    const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+    mediaRecorder=new MediaRecorder(stream);
+    audioChunks=[];
+    transcript='';
+    const recBtn=document.getElementById('rec-btn');
+    const status=document.getElementById('rec-status');
+    recBtn.className='rec-btn recording';
+    recBtn.textContent='⏹';
+    status.textContent=lang==='ko'?'녹음 중... (다시 클릭하여 정지)':'Recording... (click to stop)';
+
+    // Speech recognition
+    if('webkitSpeechRecognition' in window || 'SpeechRecognition' in window){
+      const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+      const rec=new SR();
+      rec.lang='en-US';
+      rec.continuous=true;
+      rec.interimResults=true;
+      rec.onresult=e=>{
+        let t='';
+        for(let i=0;i<e.results.length;i++) t+=e.results[i][0].transcript+' ';
+        transcript=t;
+        document.getElementById('rec-transcript').textContent=t;
+      };
+      rec.start();
+      window._speechRec=rec;
     }
-    return null;
-  }catch(e){return null;}
+
+    // Timer
+    const total=timeLeft;
+    let elapsed=0;
+    timerInterval=setInterval(()=>{
+      elapsed++;
+      const rem=total-elapsed;
+      const el=document.getElementById('timer-num');
+      const fill=document.getElementById('timer-fill');
+      if(el) el.textContent=rem;
+      if(fill) fill.style.width=`${(rem/total)*100}%`;
+      if(rem<=0){stopRecord();clearInterval(timerInterval);}
+    },1000);
+
+    mediaRecorder.start();
+  } catch(e){
+    alert(lang==='ko'?'마이크 접근 권한이 필요합니다.':'Microphone access required.');
+  }
 }
 
-(function(){
-  let saved; try{saved=localStorage.getItem('lw-lang');}catch(e){}
-  setLang(saved||((navigator.language||'').startsWith('ko')?'ko':'en'));
-  try{
-    apiKey=sessionStorage.getItem('lw-api-key')||'';
-    unsplashKey=sessionStorage.getItem('lw-unsplash-key')||'';
-  }catch(e){}
-  if(apiKey){
-    document.getElementById('api-setup').style.display='none';
-    document.getElementById('main-content').style.display='block';
-    renderTopics(); updateFormatInfo();
-  }
-})();
-
-// ── Level Lock (General: A1/A2 free, B1-C2 Pro) ──
-function checkLevelLock(level){
-  const freeL=['A1','A2'];
-  if(!freeL.includes(level)){
-    alert(lang==='ko'?'이 레벨은 Pro 플랜이 필요합니다. 곧 오픈 예정입니다!':'This level requires a Pro plan. Coming soon!');
-    return false;
-  }
-  return true;
+function stopRecord(){
+  if(mediaRecorder&&mediaRecorder.state!=='inactive'){mediaRecorder.stop();mediaRecorder.stream.getTracks().forEach(t=>t.stop());}
+  if(window._speechRec){try{window._speechRec.stop();}catch(e){}}
+  clearInterval(timerInterval);
+  const recBtn=document.getElementById('rec-btn');
+  const status=document.getElementById('rec-status');
+  if(recBtn){recBtn.className='rec-btn idle';recBtn.textContent='🔄';}
+  if(status) status.textContent=lang==='ko'?'녹음 완료. 제출하거나 다시 녹음하세요.':'Recording done. Submit or record again.';
 }
 
+async function submitSpeech(){
+  if(!transcript&&!document.getElementById('rec-transcript').textContent.includes('음성')) {
+    transcript=document.getElementById('rec-transcript').textContent;
+  }
+  if(!transcript||transcript.trim().length<5){
+    alert(lang==='ko'?'먼저 답변을 녹음해 주세요.':'Please record your answer first.');
+    return;
+  }
+  const fc=document.getElementById('feedback-card');
+  fc.style.display='block';
+  fc.innerHTML=`<div style="text-align:center;padding:24px;"><div style="font-size:24px;margin-bottom:8px;">⏳</div><div>${lang==='ko'?'AI 피드백 생성 중...':'Generating AI feedback...'}</div></div>`;
+
+  const prompt=`You are an English speaking coach. Evaluate this student's spoken response.
+
+Question: "${currentQ.question}"
+Student's answer: "${transcript}"
+Student's level: ${document.getElementById('sel-level').value}
+
+Return ONLY valid JSON, no markdown:
+{
+  "overall_score": 7,
+  "fluency_score": 7,
+  "vocabulary_score": 7,
+  "grammar_score": 7,
+  "content_score": 7,
+  "strengths": "What the student did well",
+  "improvements": "What needs improvement",
+  "corrected_version": "Improved version of their answer",
+  "korean_feedback": "한국어로 전반적인 피드백"
+}
+Scores are out of 10. Be encouraging and constructive.`;
+
+  try {
+    const res=await fetch('/api/claude',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:800,messages:[{role:'user',content:prompt}]})});
+    const data=await res.json();
+    const fb=JSON.parse(data.content[0].text.replace(/```json|```/g,'').trim());
+    fc.innerHTML=`
+      <div class="fc-score">
+        <div class="fc-score-item"><div class="fc-score-num">${fb.overall_score}</div><div class="fc-score-label">Overall</div></div>
+        <div class="fc-score-item"><div class="fc-score-num">${fb.fluency_score}</div><div class="fc-score-label">Fluency</div></div>
+        <div class="fc-score-item"><div class="fc-score-num">${fb.vocabulary_score}</div><div class="fc-score-label">Vocabulary</div></div>
+        <div class="fc-score-item"><div class="fc-score-num">${fb.grammar_score}</div><div class="fc-score-label">Grammar</div></div>
+        <div class="fc-score-item"><div class="fc-score-num">${fb.content_score}</div><div class="fc-score-label">Content</div></div>
+      </div>
+      ${fb.korean_feedback?`<div class="fc-section"><div class="fc-section-title">🇰🇷 ${lang==='ko'?'전반적 피드백':'Overall Feedback'}</div><div class="fc-text">${fb.korean_feedback}</div></div>`:''}
+      <div class="fc-section"><div class="fc-section-title">✓ ${lang==='ko'?'잘한 점':'Strengths'}</div><div class="fc-text">${fb.strengths}</div></div>
+      <div class="fc-section"><div class="fc-section-title">📈 ${lang==='ko'?'개선할 점':'Areas to Improve'}</div><div class="fc-text">${fb.improvements}</div></div>
+      <div class="fc-section"><div class="fc-section-title">📝 ${lang==='ko'?'개선된 답변':'Improved Version'}</div><div class="fc-text">${fb.corrected_version}</div></div>`;
+  } catch(e){
+    fc.innerHTML=`<div style="padding:16px;color:var(--red);">❌ ${lang==='ko'?'피드백 생성 실패':'Feedback generation failed'}</div>`;
+  }
+}
 </script>
 </body>
 </html>
