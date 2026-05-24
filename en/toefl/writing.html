@@ -313,9 +313,9 @@ JSON only: {"taskType":"Task 2 — Academic Discussion","question":"discussion q
   };
 
   try{
-    const resp=await fetch('https://api.anthropic.com/v1/messages',{
+    const resp=await fetch('/api/claude',{
       method:'POST',
-      headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      headers:{'Content-Type':'application/json','anthropic-version':'2023-06-01',},
       body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:3000,messages:[{role:'user',content:prompts[currentTask]}]})
     });
     const d=await resp.json();
@@ -517,9 +517,9 @@ Return JSON only:
 {"dim1":{"score":4,"feedback":"specific feedback"},"dim2":{"score":4,"feedback":"specific feedback"},"dim3":{"score":4,"feedback":"specific feedback"},"overall":{"score":4,"summary":"holistic evaluation"},"revised":"improved version of the first paragraph","suggestions":["improvement 1","improvement 2","improvement 3"]}`;
 
   try{
-    const resp=await fetch('https://api.anthropic.com/v1/messages',{
+    const resp=await fetch('/api/claude',{
       method:'POST',
-      headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      headers:{'Content-Type':'application/json','anthropic-version':'2023-06-01',},
       body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:1200,messages:[{role:'user',content:prompt}]})
     });
     const d=await resp.json();
@@ -565,7 +565,7 @@ function renderScoring(s,t){
 (function(){
   let saved; try{saved=localStorage.getItem('lw-lang');}catch(e){}
   setLang(saved||((navigator.language||'').startsWith('ko')?'ko':'en'));
-  try{apiKey=sessionStorage.getItem('lw-api-key')||'';}catch(e){}
+  try{apiKey='vercel-proxy'||'';}catch(e){}
   if(apiKey){
     document.getElementById('api-setup').style.display='none';
     document.getElementById('main-content').style.display='block';
