@@ -607,9 +607,9 @@ Return JSON only:
 JSON only.`;
 
   try{
-    const resp=await fetch('https://api.anthropic.com/v1/messages',{
+    const resp=await fetch('/api/claude',{
       method:'POST',
-      headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      headers:{'Content-Type':'application/json','anthropic-version':'2023-06-01',},
       body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:800,messages:[{role:'user',content:prompt}]})
     });
     const d=await resp.json();
@@ -911,9 +911,9 @@ Return JSON only:
 {"grade":"IM2","content":{"score":72,"feedback":"feedback on task completion and content relevance"},"fluency":{"score":68,"feedback":"feedback on delivery and flow"},"vocabulary":{"score":65,"feedback":"feedback on vocabulary range and accuracy"},"grammar":{"score":70,"feedback":"feedback on grammatical accuracy and range"},"overall":"2-3 sentence holistic evaluation","sampleAnswer":"First 3 sentences of a model answer for this question","improvements":["specific improvement 1","specific improvement 2","specific improvement 3"]}`;
 
   try{
-    const resp=await fetch('https://api.anthropic.com/v1/messages',{
+    const resp=await fetch('/api/claude',{
       method:'POST',
-      headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      headers:{'Content-Type':'application/json','anthropic-version':'2023-06-01',},
       body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:1000,messages:[{role:'user',content:prompt}]})
     });
     const d=await resp.json();
@@ -988,7 +988,7 @@ function gradeValue(g){return GRADE_ORDER.indexOf(g);}
 (function(){
   let saved; try{saved=localStorage.getItem('lw-lang');}catch(e){}
   setLang(saved||((navigator.language||'').startsWith('ko')?'ko':'en'));
-  try{apiKey=sessionStorage.getItem('lw-api-key')||'';}catch(e){}
+  try{apiKey='vercel-proxy'||'';}catch(e){}
   if(apiKey){
     document.getElementById('api-setup').style.display='none';
     document.getElementById('main-content').style.display='block';
