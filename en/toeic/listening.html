@@ -226,7 +226,7 @@
 </nav>
 
 <!-- API SETUP -->
-<div class="api-setup fade-in" id="api-setup">
+<div class="api-setup fade-in" id="api-setup" style="display:none">
   <div class="api-icon">🎧</div>
   <div class="api-title" data-en="TOEIC Listening" data-ko="TOEIC 듣기">TOEIC Listening</div>
   <div class="api-desc" data-en="Enter your API key to activate AI-powered TOEIC listening content." data-ko="API 키를 입력하면 AI TOEIC 듣기 콘텐츠가 활성화됩니다.">Enter your API key to start.</div>
@@ -241,7 +241,7 @@
 </div>
 
 <!-- MAIN -->
-<div class="main fade-in" id="main-content">
+<div class="main fade-in" id="main-content" style="display:block">
 
   <div class="hero">
     <div class="hero-tag">🎧 TOEIC · LISTENING COMPREHENSION (LC)</div>
@@ -406,27 +406,13 @@ let currentSpeed = 1.0;
 
 // ── Init ──────────────────────────────────────────────────────────────────
 (function init() {
-  try {
-    const k = sessionStorage.getItem('lw-api-key');
-    if (k) { apiKey = k; showMain(); }
-    const l = localStorage.getItem('lw-lang');
-    if (l) setLang(l);
-  } catch(e) {}
+  apiKey = 'vercel-proxy';
+  try { const l = localStorage.getItem('lw-lang'); if (l) setLang(l); } catch(e) {}
   renderPartInfo();
 })();
 
-function saveApiKey() {
-  const key = document.getElementById('api-key-input').value.trim();
-  if (!key.startsWith('sk-ant-')) { alert('Anthropic API key must start with sk-ant-'); return; }
-  try { sessionStorage.setItem('lw-api-key', key); } catch(e) {}
-  apiKey = key;
-  showMain();
-}
-function showMain() {
-  document.getElementById('api-setup').style.display = 'none';
-  document.getElementById('main-content').style.display = 'block';
-  renderPartInfo();
-}
+function saveApiKey() {}
+function showMain() {}
 
 // ── Part Selection ────────────────────────────────────────────────────────
 function selectPart(id, btn) {
@@ -493,10 +479,10 @@ async function generateContent() {
   const prompt = buildPrompt(currentPart, diff, qCount);
 
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    const res = await fetch('/api/claude', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
-      body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 3000, messages: [{ role: 'user', content: prompt }] })
+      headers: { 'Content-Type': 'application/json', 'anthropic-version': '2023-06-01' },
+      body: JSON.stringify({ model: 'claude-sonnet-4-5', max_tokens: 3000, messages: [{ role: 'user', content: prompt }] })
     });
     const data = await res.json();
     const raw = data.content?.[0]?.text || '';
@@ -1123,10 +1109,10 @@ async function sendMessage() {
   document.getElementById('tutor-messages').appendChild(typing);
   try {
     const context = `TOEIC Listening content: ${JSON.stringify(currentData).slice(0,1500)}`;
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    const res = await fetch('/api/claude', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
-      body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 600, messages: [
+      headers: { 'Content-Type': 'application/json', 'anthropic-version': '2023-06-01' },
+      body: JSON.stringify({ model: 'claude-sonnet-4-5', max_tokens: 600, messages: [
         { role: 'user', content: `${context}\n\nStudent (${lang==='ko'?'Korean':'English'}): ${text}` }
       ]})
     });
