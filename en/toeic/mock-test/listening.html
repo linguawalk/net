@@ -1,700 +1,989 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TOEIC 모의고사 – Listening Part 1 | LinguaWalk</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LinguaWalk — TOEIC Mock Test — Listening (LC)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --navy:#1C2B45; --teal:#2A7F6F; --teal-light:#E1F5EE; --teal-mid:#1D9E75;
+    --bg:#F8F7F4; --white:#fff; --text:#1C2B45; --text-muted:#5a6a82; --text-light:#94a3b8;
+    --border:rgba(28,43,69,0.1); --border-md:rgba(28,43,69,0.18);
+    --toeic:#ba7517; --toeic-light:#faeeda; --toeic-dark:#3d1f00;
+  }
+  body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
 
-  <style>
-    :root {
-      --navy:   #1C2B45;
-      --teal:   #2A7F6F;
-      --toeic:  #ba7517;
-      --white:  #ffffff;
-      --bg:     #f0f3f8;
-      --card:   #ffffff;
-      --border: #dde3ee;
-      --text:   #1a202c;
-      --muted:  #64748b;
-      --danger: #e53e3e;
-      --radius: 14px;
-      --shadow: 0 4px 20px rgba(28,43,69,.10);
-    }
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  nav { background:rgba(28,43,69,0.97); height:56px; display:flex; align-items:center; padding:0 5%; border-bottom:0.5px solid rgba(255,255,255,0.08); position:sticky; top:0; z-index:100; }
+  .nav-logo { display:flex; align-items:center; gap:8px; text-decoration:none; }
+  .nav-lm { width:28px; height:28px; background:var(--teal); border-radius:7px; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:#fff; }
+  .nav-lt { font-size:16px; font-weight:600; color:#fff; }
+  .nav-sep { width:1px; height:18px; background:rgba(255,255,255,0.15); margin:0 12px; }
+  .nav-page { font-size:13px; color:rgba(255,255,255,0.6); }
+  .nav-space { flex:1; }
+  .nav-back { font-size:13px; color:rgba(255,255,255,0.6); text-decoration:none; padding:6px 10px; border-radius:7px; margin-right:6px; transition:all 0.2s; }
+  .nav-back:hover { background:rgba(255,255,255,0.08); color:#fff; }
+  .lang-sw { display:flex; background:rgba(255,255,255,0.08); border-radius:7px; padding:2px; gap:2px; }
+  .lbtn { padding:4px 10px; border-radius:5px; font-size:11px; font-weight:500; border:none; background:transparent; color:rgba(255,255,255,0.5); cursor:pointer; font-family:inherit; transition:all 0.2s; }
+  .lbtn.act { background:var(--teal); color:#fff; }
 
-    body {
-      font-family: 'DM Sans', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-    }
+  /* API SETUP */
+  .api-setup { max-width:520px; margin:60px auto; padding:32px; background:var(--white); border-radius:16px; border:0.5px solid var(--border-md); text-align:center; }
+  .api-icon { font-size:48px; margin-bottom:16px; }
+  .api-title { font-family:'DM Serif Display',serif; font-size:24px; color:var(--navy); margin-bottom:8px; }
+  .api-desc { font-size:14px; color:var(--text-muted); line-height:1.6; margin-bottom:24px; }
+  .api-input-wrap { display:flex; gap:8px; margin-bottom:12px; }
+  .api-input { flex:1; padding:10px 14px; border:0.5px solid var(--border-md); border-radius:8px; font-size:13px; font-family:monospace; color:var(--text); background:var(--bg); outline:none; }
+  .api-input:focus { border-color:var(--teal); }
+  .api-btn { padding:10px 18px; border-radius:8px; font-size:13px; font-weight:500; background:var(--teal); color:#fff; border:none; cursor:pointer; font-family:inherit; }
+  .api-note { font-size:11px; color:var(--text-light); margin-top:10px; }
 
-    /* ── 헤더 ───────────────────────────────────── */
-    header {
-      background: var(--navy);
-      padding: 0 24px;
-      height: 60px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 200;
-    }
-    .logo {
-      font-family: 'DM Serif Display', serif;
-      color: var(--white);
-      font-size: 1.25rem;
-      text-decoration: none;
-    }
-    .logo span { color: var(--teal); }
+  /* MAIN */
+  .main { max-width:900px; margin:0 auto; padding:28px 5% 80px; display:none; }
 
-    /* 시험 정보 바 */
-    .exam-bar {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      font-size: .82rem;
-      color: rgba(255,255,255,.7);
-    }
-    .exam-badge {
-      background: var(--toeic);
-      color: var(--white);
-      font-weight: 700;
-      padding: 4px 12px;
-      border-radius: 999px;
-      font-size: .72rem;
-      letter-spacing: .06em;
-    }
-    .timer {
-      font-size: .95rem;
-      font-weight: 700;
-      color: var(--white);
-      font-variant-numeric: tabular-nums;
-    }
-    .timer.warn { color: #fc8181; }
+  /* HERO */
+  .hero { background:linear-gradient(135deg,var(--toeic-dark) 0%,var(--toeic) 100%); border-radius:14px; padding:28px 32px; margin-bottom:24px; position:relative; overflow:hidden; }
+  .hero::before { content:''; position:absolute; right:-30px; top:-30px; width:200px; height:200px; border-radius:50%; background:rgba(255,255,255,0.06); pointer-events:none; }
+  .hero-tag { font-size:11px; font-weight:600; letter-spacing:1px; text-transform:uppercase; color:#fcd34d; margin-bottom:8px; }
+  .hero-title { font-family:'DM Serif Display',serif; font-size:clamp(24px,4vw,36px); color:#fff; margin-bottom:6px; }
+  .hero-desc { font-size:13px; color:rgba(255,255,255,0.65); line-height:1.6; max-width:500px; }
+  .hero-stats { display:flex; gap:24px; margin-top:18px; flex-wrap:wrap; }
+  .hs { text-align:center; }
+  .hs-num { font-family:'DM Serif Display',serif; font-size:28px; color:#fcd34d; line-height:1; }
+  .hs-label { font-size:11px; color:rgba(255,255,255,0.55); margin-top:2px; text-transform:uppercase; letter-spacing:.5px; }
 
-    /* ── 진행 바 ────────────────────────────────── */
-    .progress-track {
-      height: 4px;
-      background: rgba(255,255,255,.15);
-      position: relative;
-    }
-    .progress-fill {
-      height: 100%;
-      background: var(--toeic);
-      transition: width .4s ease;
-    }
+  /* SETUP CARD */
+  .setup-card { background:var(--white); border:0.5px solid var(--border); border-radius:14px; padding:22px; margin-bottom:20px; }
+  .sc-title { font-size:13px; font-weight:600; margin-bottom:14px; display:flex; align-items:center; gap:8px; }
+  .sc-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; margin-bottom:16px; }
+  .sc-item { background:var(--bg); border:0.5px solid var(--border); border-radius:10px; padding:12px 14px; }
+  .sc-label { font-size:10px; font-weight:600; letter-spacing:.5px; text-transform:uppercase; color:var(--text-light); margin-bottom:6px; }
+  .sc-select { width:100%; border:none; background:transparent; font-size:13px; font-weight:500; color:var(--text); font-family:inherit; cursor:pointer; outline:none; }
+  .part-breakdown { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px; }
+  .pb-item { flex:1; min-width:100px; padding:10px 12px; border-radius:10px; border:0.5px solid var(--border); background:var(--bg); text-align:center; }
+  .pb-part { font-size:10px; font-weight:600; color:var(--text-light); text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px; }
+  .pb-count { font-family:'DM Serif Display',serif; font-size:20px; color:var(--toeic); }
+  .pb-type { font-size:11px; color:var(--text-muted); margin-top:2px; }
 
-    /* ── 메인 레이아웃 ──────────────────────────── */
-    main {
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 28px 20px 48px;
-    }
+  /* PROGRESS */
+  .gen-progress { background:var(--white); border:0.5px solid var(--border); border-radius:14px; padding:24px; margin-bottom:20px; display:none; }
+  .gp-title { font-size:14px; font-weight:600; margin-bottom:14px; text-align:center; }
+  .gp-steps { display:flex; flex-direction:column; gap:10px; }
+  .gp-step { display:flex; align-items:center; gap:12px; padding:10px 14px; border-radius:10px; background:var(--bg); border:0.5px solid var(--border); }
+  .gp-icon { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0; background:var(--border); }
+  .gp-step.done .gp-icon { background:#eaf3de; }
+  .gp-step.active .gp-icon { background:var(--toeic-light); animation:pulse 1s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.6} }
+  .gp-text { font-size:13px; font-weight:500; }
+  .gp-sub { font-size:11px; color:var(--text-muted); margin-top:2px; }
+  .gp-bar-wrap { margin-top:16px; }
+  .gp-bar { height:8px; background:var(--bg); border-radius:8px; overflow:hidden; border:0.5px solid var(--border); }
+  .gp-fill { height:100%; background:linear-gradient(90deg,var(--toeic-dark),var(--toeic)); border-radius:8px; transition:width 0.5s ease; }
+  .gp-pct { text-align:center; font-size:13px; font-weight:600; color:var(--toeic); margin-top:8px; }
 
-    /* ── 시작 화면 ──────────────────────────────── */
-    #startScreen {
-      text-align: center;
-      padding: 60px 20px;
-    }
-    .start-icon {
-      width: 72px;
-      height: 72px;
-      background: var(--toeic);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 24px;
-    }
-    .start-icon svg { width: 36px; height: 36px; color: var(--white); }
-    .start-title {
-      font-family: 'DM Serif Display', serif;
-      font-size: 2rem;
-      color: var(--navy);
-      margin-bottom: 10px;
-    }
-    .start-desc {
-      color: var(--muted);
-      font-size: .95rem;
-      max-width: 480px;
-      margin: 0 auto 36px;
-      line-height: 1.6;
-    }
-    .start-info {
-      display: flex;
-      justify-content: center;
-      gap: 32px;
-      margin-bottom: 36px;
-      flex-wrap: wrap;
-    }
-    .info-item { text-align: center; }
-    .info-num {
-      font-family: 'DM Serif Display', serif;
-      font-size: 1.8rem;
-      color: var(--toeic);
-    }
-    .info-label { font-size: .78rem; color: var(--muted); margin-top: 2px; }
+  /* TEST AREA */
+  .test-area { display:none; }
+  .test-header { background:var(--white); border:0.5px solid var(--border); border-radius:14px; padding:14px 20px; margin-bottom:16px; display:flex; align-items:center; gap:16px; flex-wrap:wrap; position:sticky; top:57px; z-index:50; }
+  .th-badge { padding:4px 12px; border-radius:20px; font-size:11px; font-weight:600; background:var(--toeic-light); color:var(--toeic); }
+  .th-timer { font-family:'DM Serif Display',serif; font-size:22px; color:var(--navy); min-width:56px; }
+  .th-timer.warning { color:#e24b4a; }
+  .th-progress { flex:1; min-width:120px; }
+  .th-prog-label { font-size:11px; color:var(--text-muted); margin-bottom:4px; display:flex; justify-content:space-between; }
+  .th-prog-bar { height:6px; background:var(--bg); border-radius:6px; overflow:hidden; }
+  .th-prog-fill { height:100%; background:linear-gradient(90deg,var(--toeic-dark),var(--toeic)); border-radius:6px; transition:width 0.3s; }
+  .th-submit { padding:8px 18px; border-radius:8px; background:var(--toeic); color:#fff; border:none; font-family:inherit; font-size:13px; font-weight:600; cursor:pointer; white-space:nowrap; }
+  .th-submit:hover { background:#9a6010; }
 
-    /* ── 문제 화면 ──────────────────────────────── */
-    #examScreen { display: none; }
+  /* PART SECTIONS */
+  .part-section { background:var(--white); border:0.5px solid var(--border); border-radius:14px; margin-bottom:16px; overflow:hidden; }
+  .ps-header { padding:14px 18px; background:var(--toeic-light); border-bottom:0.5px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+  .ps-title { font-size:14px; font-weight:600; color:var(--toeic); }
+  .ps-range { font-size:11px; color:var(--text-muted); }
+  .ps-body { padding:18px; }
 
-    .q-counter {
-      font-size: .82rem;
-      color: var(--muted);
-      margin-bottom: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .q-counter strong { color: var(--navy); }
+  /* AUDIO PLAYER (compact) */
+  .audio-row { display:flex; align-items:center; gap:10px; padding:10px 14px; background:var(--bg); border-radius:10px; margin-bottom:12px; border:0.5px solid var(--border); }
+  .ar-play { width:36px; height:36px; border-radius:50%; background:var(--toeic); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:all 0.2s; }
+  .ar-play:hover { background:#9a6010; }
+  .ar-play svg { width:14px; height:14px; color:#fff; }
+  .ar-track { flex:1; }
+  .ar-label { font-size:11px; color:var(--text-muted); margin-bottom:4px; }
+  .ar-bar { height:4px; background:var(--border); border-radius:4px; overflow:hidden; }
+  .ar-fill { height:100%; background:var(--toeic); border-radius:4px; width:0%; transition:width 0.2s; }
+  .ar-speed { padding:3px 8px; border-radius:6px; background:transparent; border:0.5px solid var(--border-md); cursor:pointer; font-size:10px; font-weight:600; color:var(--text-muted); font-family:inherit; }
+  .ar-speed.active { background:var(--toeic-light); color:var(--toeic); border-color:var(--toeic); }
 
-    .question-card {
-      background: var(--card);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      overflow: hidden;
-      margin-bottom: 20px;
-    }
+  /* IMAGE */
+  .img-wrapper { position:relative; width:100%; aspect-ratio:16/9; background:#dde3ee; border-radius:10px; overflow:hidden; margin-bottom:14px; }
+  .img-wrapper img { width:100%; height:100%; object-fit:cover; display:block; }
+  .img-loading { position:absolute; inset:0; background:rgba(28,43,69,0.55); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; color:#fff; font-size:12px; transition:opacity 0.3s; }
+  .img-loading.hidden { opacity:0; pointer-events:none; }
+  .img-spin { width:32px; height:32px; border:2.5px solid rgba(255,255,255,0.25); border-top-color:#fff; border-radius:50%; animation:spin 0.8s linear infinite; }
+  @keyframes spin { to{transform:rotate(360deg)} }
 
-    /* 이미지 */
-    .img-wrapper {
-      position: relative;
-      width: 100%;
-      aspect-ratio: 16/9;
-      background: #dde3ee;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-    }
-    .img-wrapper img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
+  /* SCRIPT */
+  .script-block { background:var(--bg); border-radius:10px; padding:14px 16px; margin-bottom:12px; border:0.5px solid var(--border); max-height:180px; overflow-y:auto; }
+  .script-block.hidden-script { display:none; }
+  .sb-line { display:flex; gap:8px; padding:5px 8px; border-radius:6px; cursor:pointer; transition:background 0.15s; }
+  .sb-line:hover { background:rgba(186,117,23,0.08); }
+  .sb-line.speaking { background:var(--toeic-light); }
+  .sb-speaker { font-size:10px; font-weight:700; color:var(--toeic); min-width:48px; padding-top:2px; text-transform:uppercase; }
+  .sb-text { font-size:12px; color:var(--text); line-height:1.6; flex:1; }
 
-    /* 로딩 오버레이 */
-    .img-overlay {
-      position: absolute;
-      inset: 0;
-      background: rgba(28,43,69,.6);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 14px;
-      color: var(--white);
-      font-size: .85rem;
-      transition: opacity .3s;
-    }
-    .img-overlay.hidden { opacity: 0; pointer-events: none; }
-    .spinner {
-      width: 40px;
-      height: 40px;
-      border: 3px solid rgba(255,255,255,.3);
-      border-top-color: #fff;
-      border-radius: 50%;
-      animation: spin .8s linear infinite;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
+  /* QUESTIONS */
+  .q-item { margin-bottom:12px; padding:14px; background:var(--bg); border-radius:10px; }
+  .q-item:last-child { margin-bottom:0; }
+  .q-num { font-size:10px; font-weight:700; color:var(--toeic); letter-spacing:.5px; text-transform:uppercase; margin-bottom:6px; }
+  .q-text { font-size:13px; font-weight:500; color:var(--text); margin-bottom:10px; line-height:1.5; }
+  .q-opts { display:flex; flex-direction:column; gap:6px; }
+  .q-opt { padding:8px 12px; border-radius:8px; border:1.5px solid var(--border-md); background:var(--white); cursor:pointer; font-size:12px; color:var(--text); transition:all 0.15s; text-align:left; font-family:inherit; display:flex; align-items:center; gap:8px; }
+  .q-opt:hover:not(:disabled) { border-color:var(--toeic); background:var(--toeic-light); }
+  .q-opt.selected { border-color:var(--toeic); background:var(--toeic-light); }
+  .q-opt.correct { border-color:var(--teal-mid); background:#eaf3de; color:#3b6d11; font-weight:500; }
+  .q-opt.wrong { border-color:#e24b4a; background:#fcebeb; color:#a32d2d; }
+  .q-opt-ltr { width:22px; height:22px; border-radius:50%; background:var(--bg); display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:600; color:var(--text-muted); flex-shrink:0; border:0.5px solid var(--border); }
+  .q-opt.selected .q-opt-ltr { background:var(--toeic); color:#fff; border-color:var(--toeic); }
+  .q-opt.correct .q-opt-ltr { background:var(--teal-mid); color:#fff; border-color:var(--teal-mid); }
+  .q-opt.wrong .q-opt-ltr { background:#e24b4a; color:#fff; border-color:#e24b4a; }
 
-    /* 에러 */
-    .img-error {
-      position: absolute;
-      inset: 0;
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      color: var(--muted);
-      font-size: .82rem;
-    }
-    .img-error svg { width: 40px; height: 40px; opacity: .35; }
+  /* RESULTS */
+  .results-area { display:none; }
+  .result-hero { background:linear-gradient(135deg,var(--toeic-dark),var(--toeic)); border-radius:14px; padding:32px; text-align:center; margin-bottom:20px; color:#fff; }
+  .rh-label { font-size:13px; opacity:.7; margin-bottom:8px; }
+  .rh-score { font-family:'DM Serif Display',serif; font-size:64px; line-height:1; margin-bottom:4px; }
+  .rh-max { font-size:14px; opacity:.6; margin-bottom:16px; }
+  .rh-pct { font-size:18px; font-weight:600; color:#fcd34d; }
+  .rh-msg { font-size:13px; opacity:.8; margin-top:8px; }
+  .result-breakdown { background:var(--white); border:0.5px solid var(--border); border-radius:14px; padding:20px; margin-bottom:20px; }
+  .rb-title { font-size:13px; font-weight:600; margin-bottom:14px; }
+  .rb-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
+  .rb-cell { background:var(--bg); border-radius:10px; padding:12px; text-align:center; }
+  .rb-num { font-family:'DM Serif Display',serif; font-size:22px; color:var(--toeic); line-height:1; margin-bottom:3px; }
+  .rb-label { font-size:11px; color:var(--text-muted); }
+  .rb-sub { font-size:11px; color:var(--text-light); margin-top:2px; }
 
-    /* Q 번호 배지 */
-    .q-badge {
-      position: absolute;
-      top: 12px;
-      left: 12px;
-      background: var(--toeic);
-      color: var(--white);
-      font-weight: 700;
-      font-size: .75rem;
-      padding: 4px 10px;
-      border-radius: 6px;
-    }
+  .btn-primary { padding:13px 24px; border-radius:10px; background:var(--toeic); color:#fff; border:none; font-family:inherit; font-size:14px; font-weight:600; cursor:pointer; transition:all 0.2s; width:100%; }
+  .btn-primary:hover { background:#9a6010; }
+  .btn-primary:disabled { opacity:.5; cursor:not-allowed; }
+  .btn-secondary { padding:12px 20px; border-radius:10px; background:var(--white); color:var(--text); border:0.5px solid var(--border-md); font-family:inherit; font-size:13px; font-weight:500; cursor:pointer; transition:all 0.2s; }
+  .btn-secondary:hover { background:var(--bg); }
 
-    /* 선택지 */
-    .card-body { padding: 20px 24px 24px; }
-    .choices { list-style: none; display: flex; flex-direction: column; gap: 10px; }
-    .choice {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 13px 16px;
-      border: 2px solid var(--border);
-      border-radius: 10px;
-      cursor: pointer;
-      transition: border-color .15s, background .15s;
-      font-size: .9rem;
-    }
-    .choice:hover:not(.locked) { border-color: var(--toeic); background: #fffbf5; }
-    .choice.selected  { border-color: var(--toeic); background: #fff8f0; }
-    .choice.correct   { border-color: var(--teal);  background: #f0faf8; }
-    .choice.wrong     { border-color: var(--danger); background: #fff5f5; }
-    .choice.locked    { cursor: default; }
-    .choice-letter {
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      background: var(--bg);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      font-size: .8rem;
-      flex-shrink: 0;
-    }
-
-    /* 내비게이션 */
-    .nav-row {
-      display: flex;
-      gap: 12px;
-      justify-content: space-between;
-      flex-wrap: wrap;
-    }
-    .btn {
-      padding: 11px 28px;
-      border-radius: 9px;
-      border: none;
-      font-family: 'DM Sans', sans-serif;
-      font-size: .9rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: opacity .2s, transform .1s;
-    }
-    .btn:active { transform: scale(.97); }
-    .btn-primary { background: var(--toeic); color: var(--white); }
-    .btn-navy    { background: var(--navy);  color: var(--white); }
-    .btn-outline { background: transparent; border: 2px solid var(--navy); color: var(--navy); }
-    .btn:disabled { opacity: .4; cursor: not-allowed; }
-
-    /* ── 결과 화면 ──────────────────────────────── */
-    #resultScreen {
-      display: none;
-      text-align: center;
-      padding: 40px 20px;
-    }
-    .result-circle {
-      width: 130px;
-      height: 130px;
-      border-radius: 50%;
-      border: 6px solid var(--toeic);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 28px;
-    }
-    .result-score { font-size: 2.4rem; font-weight: 700; color: var(--toeic); line-height: 1; }
-    .result-total { font-size: .82rem; color: var(--muted); }
-    .result-title {
-      font-family: 'DM Serif Display', serif;
-      font-size: 1.6rem;
-      color: var(--navy);
-      margin-bottom: 8px;
-    }
-    .result-msg { color: var(--muted); margin-bottom: 32px; font-size: .9rem; }
-
-    .result-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-      gap: 16px;
-      max-width: 480px;
-      margin: 0 auto 36px;
-    }
-    .result-stat {
-      background: var(--card);
-      border-radius: 10px;
-      padding: 16px 12px;
-      box-shadow: var(--shadow);
-    }
-    .result-stat-num { font-size: 1.5rem; font-weight: 700; color: var(--navy); }
-    .result-stat-label { font-size: .75rem; color: var(--muted); margin-top: 4px; }
-
-    /* 상태 바 */
-    .status-bar {
-      text-align: center;
-      font-size: .8rem;
-      color: var(--muted);
-      min-height: 20px;
-      margin-bottom: 12px;
-    }
-  </style>
+  @keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+  .fade-in { animation:fadeUp 0.4s ease forwards; }
+  @media(max-width:600px){ .rb-grid{grid-template-columns:1fr 1fr}; .hero-stats{gap:16px}; }
+</style>
 </head>
 <body>
 
-<header>
-  <a href="/index.html" class="logo">Lingua<span>Walk</span></a>
-  <div class="exam-bar">
-    <span class="exam-badge">TOEIC MOCK TEST</span>
-    <span>Listening · Part 1</span>
-    <span class="timer" id="timerDisplay">20:00</span>
+<nav>
+  <a href="/en/index.html" class="nav-logo">
+    <div class="nav-lm">LW</div>
+    <span class="nav-lt">LinguaWalk</span>
+  </a>
+  <div class="nav-sep"></div>
+  <span class="nav-page">🎧 TOEIC LC Mock Test</span>
+  <div class="nav-space"></div>
+  <a href="index.html" class="nav-back" data-en="← Mock Tests" data-ko="← 모의테스트">← Mock Tests</a>
+  <div class="lang-sw">
+    <button class="lbtn act" onclick="setLang('en')" id="btn-en">EN</button>
+    <button class="lbtn" onclick="setLang('ko')" id="btn-ko">한국어</button>
   </div>
-</header>
+</nav>
 
-<div class="progress-track">
-  <div class="progress-fill" id="progressFill" style="width:0%"></div>
+<!-- API SETUP -->
+<div class="api-setup fade-in" id="api-setup">
+  <div class="api-icon">🎧</div>
+  <div class="api-title" data-en="TOEIC LC Mock Test" data-ko="TOEIC 듣기 모의테스트">TOEIC LC Mock Test</div>
+  <div class="api-desc" data-en="Enter your API key to generate a full TOEIC Listening mock test." data-ko="API 키를 입력하여 TOEIC 듣기 완전 모의테스트를 시작하세요.">Enter your API key.</div>
+  <div style="text-align:left;margin-bottom:16px;">
+    <div style="font-size:11px;font-weight:600;color:var(--text-muted);margin-bottom:4px;">🤖 Anthropic API Key</div>
+    <div class="api-input-wrap" style="margin-bottom:0;">
+      <input type="password" class="api-input" id="api-key-input" placeholder="sk-ant-api03-...">
+    </div>
+  </div>
+  <button class="api-btn" onclick="saveApiKey()" style="width:100%;padding:11px;">Connect</button>
+  <p class="api-note">🔒 Stored in browser only.</p>
 </div>
 
-<main>
+<!-- MAIN -->
+<div class="main fade-in" id="main-content">
 
-  <!-- ── 시작 화면 ── -->
-  <section id="startScreen">
-    <div class="start-icon">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <polygon points="5 3 19 12 5 21 5 3"/>
-      </svg>
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-tag">🎧 TOEIC LISTENING COMPREHENSION — FULL MOCK TEST</div>
+    <h1 class="hero-title" data-en="Listening Full Mock Test" data-ko="듣기 완전 모의테스트">Listening Full Mock Test</h1>
+    <p class="hero-desc" data-en="AI generates all 100 LC questions across Part 1–4. Audio playback for all items — experience the real test." data-ko="AI가 Part 1~4 전체 100문항을 생성합니다. 실제 시험처럼 오디오로 진행하세요."></p>
+    <div class="hero-stats">
+      <div class="hs"><div class="hs-num">100</div><div class="hs-label" data-en="Questions" data-ko="문항">Questions</div></div>
+      <div class="hs"><div class="hs-num">45'</div><div class="hs-label" data-en="Time Limit" data-ko="제한 시간">Time Limit</div></div>
+      <div class="hs"><div class="hs-num">495</div><div class="hs-label" data-en="Max Score" data-ko="만점">Max Score</div></div>
+      <div class="hs"><div class="hs-num">4</div><div class="hs-label" data-en="Parts" data-ko="파트">Parts</div></div>
     </div>
-    <h1 class="start-title">TOEIC Listening<br>Part 1 모의고사</h1>
-    <p class="start-desc">
-      AI가 실제 시험 수준의 사진을 생성합니다.<br>
-      각 사진을 보고 올바른 묘사를 고르세요.
-    </p>
-    <div class="start-info">
-      <div class="info-item"><div class="info-num">6</div><div class="info-label">문항</div></div>
-      <div class="info-item"><div class="info-num">20</div><div class="info-label">분</div></div>
-      <div class="info-item"><div class="info-num">4</div><div class="info-label">선택지</div></div>
-    </div>
-    <button class="btn btn-primary" onclick="startExam()">시험 시작</button>
-  </section>
+  </div>
 
-  <!-- ── 시험 화면 ── -->
-  <section id="examScreen">
-    <div class="q-counter">
-      <span>문제 <strong id="qNum">1</strong> / <strong id="qTotal">6</strong></span>
-      <span id="qStatus"></span>
+  <!-- SETUP CARD -->
+  <div class="setup-card" id="setup-card">
+    <div class="sc-title">⚙️ <span data-en="Test Configuration" data-ko="테스트 설정">Test Configuration</span></div>
+    <div class="sc-grid">
+      <div class="sc-item">
+        <div class="sc-label" data-en="Difficulty" data-ko="난이도">Difficulty</div>
+        <select class="sc-select" id="diff-select">
+          <option value="Easy" data-en="Easy" data-ko="쉬움">Easy</option>
+          <option value="Medium" selected data-en="Medium" data-ko="보통">Medium</option>
+          <option value="Hard" data-en="Hard" data-ko="어려움">Hard</option>
+        </select>
+      </div>
+      <div class="sc-item">
+        <div class="sc-label" data-en="Time Limit" data-ko="제한 시간">Time Limit</div>
+        <select class="sc-select" id="time-select">
+          <option value="2700" data-en="45 min (Real)" data-ko="45분 (실제)">45 min</option>
+          <option value="3600" data-en="60 min (Extended)" data-ko="60분 (연장)">60 min</option>
+          <option value="0" data-en="No Limit" data-ko="제한 없음">No Limit</option>
+        </select>
+      </div>
+      <div class="sc-item">
+        <div class="sc-label" data-en="Mode" data-ko="모드">Mode</div>
+        <select class="sc-select" id="mode-select">
+          <option value="exam" data-en="Exam Mode" data-ko="시험 모드">Exam Mode</option>
+          <option value="study" data-en="Study Mode" data-ko="학습 모드">Study Mode</option>
+        </select>
+      </div>
+      <div class="sc-item">
+        <div class="sc-label" data-en="Voice Speed" data-ko="음성 속도">Voice Speed</div>
+        <select class="sc-select" id="speed-select">
+          <option value="0.8" data-en="Slow (0.8x)" data-ko="느리게">Slow</option>
+          <option value="1.0" selected data-en="Normal (1.0x)" data-ko="보통">Normal</option>
+          <option value="1.2" data-en="Fast (1.2x)" data-ko="빠르게">Fast</option>
+        </select>
+      </div>
     </div>
+    <div class="sc-title" style="margin-bottom:10px;" data-en="Question Distribution (real test format):" data-ko="문제 배분 (실제 시험 형식):">Question Distribution:</div>
+    <div class="part-breakdown">
+      <div class="pb-item"><div class="pb-part">PART 1</div><div class="pb-count">6</div><div class="pb-type" data-en="Photographs" data-ko="사진 묘사">Photographs</div></div>
+      <div class="pb-item"><div class="pb-part">PART 2</div><div class="pb-count">25</div><div class="pb-type" data-en="Q&amp;A" data-ko="질의응답">Q&A</div></div>
+      <div class="pb-item"><div class="pb-part">PART 3</div><div class="pb-count">39</div><div class="pb-type" data-en="Conversations" data-ko="대화 (13세트)">Conversations</div></div>
+      <div class="pb-item"><div class="pb-part">PART 4</div><div class="pb-count">30</div><div class="pb-type" data-en="Talks (10 sets)" data-ko="담화 (10세트)">Talks</div></div>
+    </div>
+    <button class="btn-primary" id="gen-btn" onclick="generateMockTest()">
+      🎧 <span data-en="Generate Full Mock Test" data-ko="전체 모의테스트 생성">Generate Full Mock Test</span>
+    </button>
+  </div>
 
-    <div class="question-card" id="questionCard">
-      <div class="img-wrapper" id="imgWrapper">
-        <img id="questionImg" src="" alt="" />
-        <span class="q-badge" id="qBadge">Q1</span>
-        <div class="img-overlay" id="imgOverlay">
-          <div class="spinner"></div>
-          <span id="genStatus">AI 이미지 생성 중…</span>
+  <!-- GENERATION PROGRESS -->
+  <div class="gen-progress" id="gen-progress">
+    <div class="gp-title" data-en="🤖 Generating Listening Content..." data-ko="🤖 듣기 콘텐츠 생성 중...">Generating...</div>
+    <div class="gp-steps" id="gp-steps"></div>
+    <div class="gp-bar-wrap">
+      <div class="gp-bar"><div class="gp-fill" id="gp-fill" style="width:0%"></div></div>
+      <div class="gp-pct" id="gp-pct">0%</div>
+    </div>
+  </div>
+
+  <!-- TEST AREA -->
+  <div class="test-area" id="test-area">
+    <div class="test-header">
+      <span class="th-badge">🎧 LC Mock Test</span>
+      <div class="th-timer" id="th-timer">45:00</div>
+      <div class="th-progress">
+        <div class="th-prog-label">
+          <span data-en="Progress" data-ko="진행">Progress</span>
+          <span id="th-prog-text">0 / 100</span>
         </div>
-        <div class="img-error" id="imgError">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <rect x="3" y="3" width="18" height="18" rx="2"/>
-            <path d="M9 9l6 6M15 9l-6 6"/>
-          </svg>
-          <span>이미지 생성 실패</span>
-        </div>
+        <div class="th-prog-bar"><div class="th-prog-fill" id="th-prog-fill" style="width:0%"></div></div>
       </div>
-
-      <div class="card-body">
-        <ul class="choices" id="choicesList"></ul>
-      </div>
+      <button class="th-submit" onclick="submitTest()" data-en="Submit Test" data-ko="시험 제출">Submit Test</button>
     </div>
+    <div id="test-content"></div>
+  </div>
 
-    <div class="status-bar" id="statusBar"></div>
+  <!-- RESULTS -->
+  <div class="results-area" id="results-area">
+    <div class="result-hero">
+      <div class="rh-label" data-en="Your Score" data-ko="내 점수">Your Score</div>
+      <div class="rh-score" id="rh-score">0</div>
+      <div class="rh-max" data-en="out of 100" data-ko="/ 100">out of 100</div>
+      <div class="rh-pct" id="rh-pct">0%</div>
+      <div class="rh-msg" id="rh-msg"></div>
+    </div>
+    <div class="result-breakdown">
+      <div class="rb-title" data-en="📊 Part Breakdown" data-ko="📊 파트별 결과">Part Breakdown</div>
+      <div class="rb-grid" id="rb-grid"></div>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+      <button class="btn-primary" onclick="restartTest()" style="flex:1" data-en="🔄 New Mock Test" data-ko="🔄 새 모의테스트">New Mock Test</button>
+      <button class="btn-secondary" onclick="reviewAnswers()" style="flex:1" data-en="📝 Review Answers" data-ko="📝 답안 검토">Review Answers</button>
+    </div>
+  </div>
 
-    <div class="nav-row">
-      <button class="btn btn-outline" id="prevBtn" onclick="navigate(-1)" disabled>← 이전</button>
-      <button class="btn btn-primary" id="nextBtn" onclick="navigate(1)">다음 →</button>
-    </div>
-  </section>
-
-  <!-- ── 결과 화면 ── -->
-  <section id="resultScreen">
-    <div class="result-circle">
-      <div class="result-score" id="resultScore">0</div>
-      <div class="result-total" id="resultTotal">/ 6</div>
-    </div>
-    <h2 class="result-title" id="resultTitle">결과</h2>
-    <p class="result-msg" id="resultMsg"></p>
-    <div class="result-grid">
-      <div class="result-stat">
-        <div class="result-stat-num" id="statCorrect">0</div>
-        <div class="result-stat-label">정답</div>
-      </div>
-      <div class="result-stat">
-        <div class="result-stat-num" id="statWrong">0</div>
-        <div class="result-stat-label">오답</div>
-      </div>
-      <div class="result-stat">
-        <div class="result-stat-num" id="statSkipped">0</div>
-        <div class="result-stat-label">미응답</div>
-      </div>
-      <div class="result-stat">
-        <div class="result-stat-num" id="statTime">—</div>
-        <div class="result-stat-label">소요 시간</div>
-      </div>
-    </div>
-    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
-      <button class="btn btn-primary" onclick="restartExam()">다시 풀기</button>
-      <button class="btn btn-navy"    onclick="location.href='/toeic/listening.html'">학습 모드</button>
-    </div>
-  </section>
-
-</main>
+</div>
 
 <script>
-// ── 문제 세트 ────────────────────────────────────────────────────────────────
-const ALL_QUESTIONS = [
-  {
-    imagePrompt: 'man sitting at office desk working on laptop, modern office, natural daylight',
-    choices: ['The man is typing on a keyboard.', 'The man is talking on the phone.', 'The man is reading a newspaper.', 'The man is standing near a window.'],
-    answer: 0,
-  },
-  {
-    imagePrompt: 'woman arranging colorful flowers in a glass vase on a wooden table, bright kitchen, daylight',
-    choices: ['A woman is watering some plants.', 'A woman is arranging flowers in a vase.', 'A woman is setting the table for dinner.', 'A woman is cleaning the kitchen counter.'],
-    answer: 1,
-  },
-  {
-    imagePrompt: 'people standing at urban bus stop on a city street, daytime, buildings in background, realistic photo',
-    choices: ['Some people are getting off a bus.', 'A crowd is crossing the street.', 'People are waiting at a bus stop.', 'Passengers are boarding a train.'],
-    answer: 2,
-  },
-  {
-    imagePrompt: 'professional chef cooking on a stainless steel stove in a busy restaurant kitchen, steam rising',
-    choices: ['The chef is washing dishes.', 'The chef is serving food to customers.', 'The chef is cutting vegetables on a board.', 'The chef is cooking on a stove.'],
-    answer: 3,
-  },
-  {
-    imagePrompt: 'rows of books neatly stacked on wooden shelves in a quiet library, warm lighting',
-    choices: ['Books are stacked on shelves.', 'A librarian is checking out books.', 'Students are reading at desks.', 'Magazines are displayed on a rack.'],
-    answer: 0,
-  },
-  {
-    imagePrompt: 'workers in hard hats at an outdoor construction site, clear sky, machinery in background',
-    choices: ['Workers are repairing a road.', 'Workers are eating lunch outdoors.', 'Workers are wearing safety helmets at a construction site.', 'Workers are unloading boxes from a truck.'],
-    answer: 2,
-  },
-];
-
-const TOTAL_TIME = 20 * 60; // 20분 (초)
-const LETTERS = ['A', 'B', 'C', 'D'];
-
-// ── 상태 ────────────────────────────────────────────────────────────────────
-let questions = [];
-let currentIdx = 0;
-let userAnswers = [];
-let timerInterval = null;
-let secondsLeft = TOTAL_TIME;
-let startTimestamp = null;
-let imageCache = {};
-
-// ── 시험 시작 ────────────────────────────────────────────────────────────────
-function startExam() {
-  // 문제 섞기
-  questions = [...ALL_QUESTIONS].sort(() => Math.random() - .5).slice(0, 6);
-  userAnswers = new Array(questions.length).fill(null);
-  currentIdx = 0;
-  secondsLeft = TOTAL_TIME;
-  startTimestamp = Date.now();
-
-  document.getElementById('startScreen').style.display = 'none';
-  document.getElementById('examScreen').style.display = 'block';
-  document.getElementById('qTotal').textContent = questions.length;
-
-  startTimer();
-  renderQuestion();
-
-  // 첫 3문제 미리 생성
-  questions.slice(0, 3).forEach(q => prefetchImage(q));
+// ── Language ──────────────────────────────────────────────────────────────
+let lang = 'en';
+function setLang(l) {
+  lang = l;
+  document.querySelectorAll('[data-en][data-ko]').forEach(el => {
+    const t = l==='ko' ? el.getAttribute('data-ko') : el.getAttribute('data-en');
+    if (t) el.innerHTML = t;
+  });
+  document.getElementById('btn-en').classList.toggle('act', l==='en');
+  document.getElementById('btn-ko').classList.toggle('act', l==='ko');
+  try { localStorage.setItem('lw-lang', l); } catch(e) {}
 }
 
-// ── 타이머 ───────────────────────────────────────────────────────────────────
+// ── State ─────────────────────────────────────────────────────────────────
+let apiKey = '', testData = null, userAnswers = {}, isGenerating = false;
+let timerInterval = null, secondsLeft = 2700, startTime = null;
+let currentSpeed = 1.0;
+let isStudyMode = false;
+let imageCache = {};
+let isPlaying = false;
+
+// Gen steps definition
+const GEN_STEPS = [
+  { icon:'📸', en:'Generating Part 1 — Photographs (6)', ko:'Part 1 생성 — 사진 묘사 (6문항)' },
+  { icon:'💬', en:'Generating Part 2 — Q&A (25)', ko:'Part 2 생성 — 질의응답 (25문항)' },
+  { icon:'🗣️', en:'Generating Part 3 — Conversations (13 sets)', ko:'Part 3 생성 — 대화 (13세트)' },
+  { icon:'📢', en:'Generating Part 4 — Talks (10 sets)', ko:'Part 4 생성 — 담화 (10세트)' },
+];
+
+// ── Init ──────────────────────────────────────────────────────────────────
+(function init() {
+  try {
+    const k = sessionStorage.getItem('lw-api-key');
+    if (k) { apiKey = k; showMain(); }
+    const l = localStorage.getItem('lw-lang');
+    if (l) setLang(l);
+  } catch(e) {}
+})();
+
+function saveApiKey() {
+  const key = document.getElementById('api-key-input').value.trim();
+  if (!key.startsWith('sk-ant-')) { alert('Key must start with sk-ant-'); return; }
+  try { sessionStorage.setItem('lw-api-key', key); } catch(e) {}
+  apiKey = key; showMain();
+}
+function showMain() {
+  document.getElementById('api-setup').style.display = 'none';
+  document.getElementById('main-content').style.display = 'block';
+}
+
+// ── Generate Full Mock Test ───────────────────────────────────────────────
+async function generateMockTest() {
+  if (isGenerating) return;
+  isGenerating = true;
+  const diff = document.getElementById('diff-select').value;
+  currentSpeed = parseFloat(document.getElementById('speed-select').value);
+  isStudyMode = document.getElementById('mode-select').value === 'study';
+  const timeVal = parseInt(document.getElementById('time-select').value);
+  secondsLeft = timeVal || 99999;
+
+  document.getElementById('setup-card').style.display = 'none';
+  const prog = document.getElementById('gen-progress');
+  prog.style.display = 'block';
+
+  // Step UI 초기화
+  const stepsEl = document.getElementById('gp-steps');
+  stepsEl.innerHTML = GEN_STEPS.map((s, i) => `
+    <div class="gp-step" id="step-${i}">
+      <div class="gp-icon" id="step-icon-${i}">⏳</div>
+      <div><div class="gp-text" id="step-text-${i}">${lang==='ko'?s.ko:s.en}</div>
+      <div class="gp-sub" id="step-sub-${i}" data-en="Waiting..." data-ko="대기 중...">Waiting...</div></div>
+    </div>`).join('');
+
+  testData = { p1: null, p2: null, p3: null, p4: null };
+
+  try {
+    // Part 1
+    setStep(0, 'active');
+    testData.p1 = await genPart1(diff);
+    setStep(0, 'done', '✅'); setProgress(25);
+
+    // Part 2
+    setStep(1, 'active');
+    testData.p2 = await genPart2(diff);
+    setStep(1, 'done', '✅'); setProgress(50);
+
+    // Part 3
+    setStep(2, 'active');
+    testData.p3 = await genPart3(diff);
+    setStep(2, 'done', '✅'); setProgress(75);
+
+    // Part 4
+    setStep(3, 'active');
+    testData.p4 = await genPart4(diff);
+    setStep(3, 'done', '✅'); setProgress(100);
+
+    await new Promise(r => setTimeout(r, 400));
+    prog.style.display = 'none';
+    renderTest();
+
+  } catch(e) {
+    prog.style.display = 'none';
+    document.getElementById('setup-card').style.display = 'block';
+    document.getElementById('gen-btn').disabled = false;
+    alert(lang==='ko' ? '생성 실패. 다시 시도해주세요.' : 'Generation failed. Please try again.');
+  }
+  isGenerating = false;
+}
+
+function setStep(i, state, iconText) {
+  const step = document.getElementById(`step-${i}`);
+  const icon = document.getElementById(`step-icon-${i}`);
+  const sub = document.getElementById(`step-sub-${i}`);
+  step.className = 'gp-step ' + state;
+  if (iconText) icon.textContent = iconText;
+  else icon.textContent = GEN_STEPS[i].icon;
+  sub.textContent = state === 'active' ? (lang==='ko'?'생성 중...':'Generating...') : state === 'done' ? (lang==='ko'?'완료':'Done') : 'Waiting...';
+}
+function setProgress(pct) {
+  document.getElementById('gp-fill').style.width = pct + '%';
+  document.getElementById('gp-pct').textContent = pct + '%';
+}
+
+// ── API Calls ─────────────────────────────────────────────────────────────
+async function callAPI(prompt) {
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
+    body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 3000, messages: [{ role: 'user', content: prompt }] })
+  });
+  const d = await res.json();
+  const raw = d.content?.[0]?.text || '';
+  return JSON.parse(raw.replace(/```json|```/g, '').trim());
+}
+
+async function genPart1(diff) {
+  return callAPI(`Generate 6 TOEIC Part 1 questions, difficulty: ${diff}.
+Return ONLY JSON: {"items":[{"id":1,"imagePrompt":"vivid realistic photo scene for Stability AI","audioScript":"A man is sitting at a desk.","choices":["(A)...","(B)...","(C)...","(D)..."],"answer":0,"explanation":"..."}]}`);
+}
+async function genPart2(diff) {
+  return callAPI(`Generate 25 TOEIC Part 2 Q&A, difficulty: ${diff}.
+Return ONLY JSON: {"items":[{"id":1,"question":"Where is the conference room?","choices":["(A)...","(B)...","(C)..."],"answer":0,"explanation":"..."}]}`);
+}
+async function genPart3(diff) {
+  return callAPI(`Generate 13 TOEIC Part 3 conversation sets, difficulty: ${diff}. Each has dialogue (3–5 lines) + 3 questions.
+Return ONLY JSON: {"sets":[{"id":1,"context":"Two colleagues...","dialogue":[{"speaker":"Man","line":"..."},{"speaker":"Woman","line":"..."}],"questions":[{"id":1,"text":"...","choices":["(A)...","(B)...","(C)...","(D)..."],"answer":0,"explanation":"..."}]}]}`);
+}
+async function genPart4(diff) {
+  return callAPI(`Generate 10 TOEIC Part 4 talk sets, difficulty: ${diff}. Each has a monologue (3–6 sentences) + 3 questions.
+Return ONLY JSON: {"sets":[{"id":1,"talkType":"Announcement","script":"Attention all...","questions":[{"id":1,"text":"...","choices":["(A)...","(B)...","(C)...","(D)..."],"answer":0,"explanation":"..."}]}]}`);
+}
+
+// ── Render Test ───────────────────────────────────────────────────────────
+function renderTest() {
+  const area = document.getElementById('test-area');
+  const content = document.getElementById('test-content');
+  content.innerHTML = '';
+
+  // Part 1
+  const p1Section = createPartSection('📸 Part 1 — Photographs', 'Q1–6');
+  testData.p1.items.forEach((item, i) => {
+    const qNum = i + 1;
+    p1Section.querySelector('.ps-body').appendChild(renderP1Q(item, qNum));
+    generateImage(item, qNum);
+  });
+  content.appendChild(p1Section);
+
+  // Part 2
+  const p2Section = createPartSection('💬 Part 2 — Question-Response', 'Q7–31');
+  testData.p2.items.forEach((item, i) => {
+    p2Section.querySelector('.ps-body').appendChild(renderP2Q(item, i + 7));
+  });
+  content.appendChild(p2Section);
+
+  // Part 3
+  const p3Section = createPartSection('🗣️ Part 3 — Conversations', 'Q32–70');
+  let p3qNum = 32;
+  testData.p3.sets.forEach(set => {
+    p3Section.querySelector('.ps-body').appendChild(renderSetBlock(set, p3qNum, 'p3'));
+    p3qNum += 3;
+  });
+  content.appendChild(p3Section);
+
+  // Part 4
+  const p4Section = createPartSection('📢 Part 4 — Talks', 'Q71–100');
+  let p4qNum = 71;
+  testData.p4.sets.forEach(set => {
+    p4Section.querySelector('.ps-body').appendChild(renderSetBlock(set, p4qNum, 'p4'));
+    p4qNum += 3;
+  });
+  content.appendChild(p4Section);
+
+  area.style.display = 'block';
+  startTimer();
+  updateProgress();
+}
+
+function createPartSection(title, range) {
+  const sec = document.createElement('div');
+  sec.className = 'part-section';
+  sec.innerHTML = `
+    <div class="ps-header">
+      <div class="ps-title">${title}</div>
+      <div class="ps-range">${range}</div>
+    </div>
+    <div class="ps-body"></div>`;
+  return sec;
+}
+
+// Part 1 Question
+function renderP1Q(item, qNum) {
+  const div = document.createElement('div');
+  div.className = 'q-item';
+  div.id = `q-${qNum}`;
+  div.innerHTML = `
+    <div class="img-wrapper" id="img-w-${qNum}">
+      <img id="img-${qNum}" src="" style="display:none" alt=""/>
+      <div class="img-loading" id="img-l-${qNum}">
+        <div class="img-spin"></div>
+        <span style="font-size:11px">${lang==='ko'?'이미지 생성 중…':'Generating image…'}</span>
+      </div>
+    </div>
+    <div class="audio-row">
+      <button class="ar-play" id="ap-${qNum}" onclick="playAudio('p1',${qNum})">
+        <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      </button>
+      <div class="ar-track">
+        <div class="ar-label">Q${qNum} · ${lang==='ko'?'음성 재생':'Play Audio'}</div>
+        <div class="ar-bar"><div class="ar-fill" id="af-${qNum}"></div></div>
+      </div>
+      <button class="ar-speed" id="as-${qNum}" onclick="cycleAudioSpeed(${qNum})">${currentSpeed}x</button>
+    </div>
+    <div class="q-num">Q${qNum}</div>
+    <div class="q-opts" id="opts-${qNum}">
+      ${item.choices.map((c, i) => `
+        <button class="q-opt" onclick="selectAnswer(${qNum},${i},${item.answer},this,'${escQ(item.explanation)}')">
+          <span class="q-opt-ltr">${String.fromCharCode(65+i)}</span><span>${c}</span>
+        </button>`).join('')}
+    </div>`;
+  return div;
+}
+
+// Part 2 Question
+function renderP2Q(item, qNum) {
+  const div = document.createElement('div');
+  div.className = 'q-item';
+  div.id = `q-${qNum}`;
+  div.innerHTML = `
+    <div class="audio-row">
+      <button class="ar-play" id="ap-${qNum}" onclick="playAudio('p2',${qNum})">
+        <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      </button>
+      <div class="ar-track">
+        <div class="ar-label">Q${qNum} · ${lang==='ko'?'질문을 들으세요':'Listen to the question'}</div>
+        <div class="ar-bar"><div class="ar-fill" id="af-${qNum}"></div></div>
+      </div>
+      <button class="ar-speed" id="as-${qNum}" onclick="cycleAudioSpeed(${qNum})">${currentSpeed}x</button>
+    </div>
+    <div class="q-num">Q${qNum}</div>
+    <div class="q-opts" id="opts-${qNum}">
+      ${item.choices.map((c, i) => `
+        <button class="q-opt" onclick="selectAnswer(${qNum},${i},${item.answer},this,'${escQ(item.explanation)}')">
+          <span class="q-opt-ltr">${String.fromCharCode(65+i)}</span><span>${c}</span>
+        </button>`).join('')}
+    </div>`;
+  return div;
+}
+
+// Part 3/4 Set
+function renderSetBlock(set, startQNum, partKey) {
+  const isP3 = partKey === 'p3';
+  const div = document.createElement('div');
+  div.style.marginBottom = '16px';
+
+  const scriptHtml = isP3 && set.dialogue
+    ? set.dialogue.map((line, i) => `
+        <div class="sb-line" id="sb-${set.id}-${i}" onclick="playLineFrom('${set.id}','${partKey}',${i})">
+          <span class="sb-speaker">${line.speaker}</span>
+          <span class="sb-text">${line.line}</span>
+        </div>`).join('')
+    : `<div class="sb-line" id="sb-${set.id}-0">
+        <span class="sb-speaker">${set.talkType||'Narrator'}</span>
+        <span class="sb-text">${set.script||''}</span>
+      </div>`;
+
+  const qHtml = set.questions.map((q, i) => {
+    const qNum = startQNum + i;
+    return `
+      <div class="q-item" id="q-${qNum}">
+        <div class="q-num">Q${qNum}</div>
+        <div class="q-text">${q.text}</div>
+        <div class="q-opts" id="opts-${qNum}">
+          ${q.choices.map((c, ci) => `
+            <button class="q-opt" onclick="selectAnswer(${qNum},${ci},${q.answer},this,'${escQ(q.explanation)}')">
+              <span class="q-opt-ltr">${String.fromCharCode(65+ci)}</span><span>${c}</span>
+            </button>`).join('')}
+        </div>
+      </div>`;
+  }).join('');
+
+  div.innerHTML = `
+    <div class="audio-row">
+      <button class="ar-play" id="ap-s-${set.id}" onclick="playSetAudio('${set.id}','${partKey}')">
+        <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      </button>
+      <div class="ar-track">
+        <div class="ar-label">${isP3?'🗣️ Conversation':'📢 ' + (set.talkType||'Talk')} ${set.id}</div>
+        <div class="ar-bar"><div class="ar-fill" id="af-s-${set.id}"></div></div>
+      </div>
+      <button class="ar-speed" id="as-s-${set.id}" onclick="cycleSetSpd('${set.id}')">${currentSpeed}x</button>
+    </div>
+    <div class="script-block ${isStudyMode?'':'hidden-script'}" id="script-${set.id}">${scriptHtml}</div>
+    ${qHtml}`;
+
+  // Study mode: toggle script button
+  if (!isStudyMode) {
+    const toggleBtn = document.createElement('button');
+    toggleBtn.style.cssText = 'font-size:11px;color:var(--text-muted);background:none;border:none;cursor:pointer;padding:4px 0;margin-bottom:10px;';
+    toggleBtn.textContent = lang==='ko'?'📄 스크립트 보기':'📄 Show Script';
+    toggleBtn.onclick = () => {
+      const sc = document.getElementById(`script-${set.id}`);
+      sc.classList.toggle('hidden-script');
+      toggleBtn.textContent = sc.classList.contains('hidden-script') ? (lang==='ko'?'📄 스크립트 보기':'📄 Show Script') : (lang==='ko'?'🙈 스크립트 숨기기':'🙈 Hide Script');
+    };
+    div.insertBefore(toggleBtn, div.querySelector('.script-block'));
+  }
+  return div;
+}
+
+function escQ(s) { return (s||'').replace(/'/g,"&#39;").replace(/"/g,'&quot;').slice(0,200); }
+
+// ── Answer Selection ──────────────────────────────────────────────────────
+function selectAnswer(qNum, idx, answer, btn, explanation) {
+  const opts = document.getElementById(`opts-${qNum}`)?.querySelectorAll('.q-opt');
+  if (!opts) return;
+
+  // Exam mode: allow change until submitted
+  if (!isStudyMode) {
+    opts.forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    userAnswers[qNum] = idx;
+  } else {
+    // Study mode: immediate feedback
+    if (userAnswers[qNum] !== undefined) return;
+    userAnswers[qNum] = idx;
+    opts.forEach(b => { b.classList.remove('selected'); b.disabled = true; });
+    opts[answer].classList.add('correct');
+    if (idx !== answer) btn.classList.add('wrong');
+    // Show explanation
+    const exp = document.createElement('div');
+    exp.style.cssText = 'margin-top:8px;font-size:11px;padding:8px 12px;border-radius:7px;line-height:1.5;';
+    exp.style.background = idx===answer ? '#eaf3de' : '#fcebeb';
+    exp.style.color = idx===answer ? '#3b6d11' : '#a32d2d';
+    exp.textContent = explanation;
+    document.getElementById(`q-${qNum}`)?.appendChild(exp);
+  }
+  updateProgress();
+}
+
+// ── Audio ─────────────────────────────────────────────────────────────────
+const SPEED_CYCLE = [0.7, 0.8, 1.0, 1.2, 1.5];
+let currentUtterance = null;
+
+function stopTTS() {
+  if (window.speechSynthesis) window.speechSynthesis.cancel();
+  isPlaying = false;
+  currentUtterance = null;
+}
+
+function speak(text, onEnd, speed, speaker) {
+  stopTTS();
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.lang = 'en-US';
+  utter.rate = speed || currentSpeed;
+  const voices = window.speechSynthesis.getVoices();
+  const enVoices = voices.filter(v => v.lang.startsWith('en'));
+  if (speaker === 'female') {
+    const fv = enVoices.find(v => v.name.includes('Female') || v.name.includes('Samantha') || v.name.includes('Victoria') || v.name.includes('Karen'));
+    if (fv) utter.voice = fv;
+    else if (enVoices.length > 1) utter.voice = enVoices[1];
+  } else if (speaker === 'male') {
+    const mv = enVoices.find(v => v.name.includes('Male') || v.name.includes('Daniel') || v.name.includes('David'));
+    if (mv) utter.voice = mv;
+    else if (enVoices.length) utter.voice = enVoices[0];
+  } else if (enVoices.length) {
+    utter.voice = enVoices[0];
+  }
+  utter.onend = onEnd || null;
+  currentUtterance = utter;
+  isPlaying = true;
+  window.speechSynthesis.speak(utter);
+}
+
+function getQNum2Item(qNum) {
+  // Part 1: Q1-6
+  if (qNum <= 6) {
+    const idx = qNum - 1;
+    return { type: 'p1', item: testData.p1.items[idx] };
+  }
+  // Part 2: Q7-31
+  if (qNum <= 31) {
+    const idx = qNum - 7;
+    return { type: 'p2', item: testData.p2.items[idx] };
+  }
+  return null;
+}
+
+function playAudio(partKey, qNum) {
+  const btn = document.getElementById(`ap-${qNum}`);
+  const fill = document.getElementById(`af-${qNum}`);
+  const speed = parseFloat(document.getElementById(`as-${qNum}`)?.textContent) || currentSpeed;
+
+  let text = '';
+  if (partKey === 'p1') {
+    const item = testData.p1.items[qNum - 1];
+    text = item?.audioScript || '';
+  } else if (partKey === 'p2') {
+    const item = testData.p2.items[qNum - 7];
+    text = item?.question || '';
+  }
+  if (!text) return;
+
+  if (btn) btn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
+  const totalLen = text.length;
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.lang = 'en-US'; utter.rate = speed;
+  const voices = window.speechSynthesis.getVoices();
+  const enVoice = voices.find(v => v.lang.startsWith('en-US')) || voices.find(v => v.lang.startsWith('en'));
+  if (enVoice) utter.voice = enVoice;
+  utter.onboundary = (e) => { if(e.name==='word'&&fill) fill.style.width = Math.min(100,(e.charIndex/totalLen)*100)+'%'; };
+  utter.onend = () => {
+    if(btn) btn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
+    if(fill) fill.style.width = '100%';
+    isPlaying = false;
+  };
+  stopTTS();
+  currentUtterance = utter;
+  isPlaying = true;
+  window.speechSynthesis.speak(utter);
+}
+
+function playSetAudio(setId, partKey) {
+  const set = partKey === 'p3'
+    ? testData.p3.sets.find(s => s.id == setId)
+    : testData.p4.sets.find(s => s.id == setId);
+  if (!set) return;
+  const fill = document.getElementById(`af-s-${setId}`);
+  const btn = document.getElementById(`ap-s-${setId}`);
+  const speed = parseFloat(document.getElementById(`as-s-${setId}`)?.textContent) || currentSpeed;
+  stopTTS();
+
+  if (set.dialogue) {
+    playDialogueSeq(set, 0, speed, fill, btn);
+  } else {
+    if(btn) btn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
+    highlightSb(setId, 0);
+    const utter = new SpeechSynthesisUtterance(set.script || '');
+    utter.lang = 'en-US'; utter.rate = speed;
+    const voices = window.speechSynthesis.getVoices();
+    const enVoice = voices.find(v => v.lang.startsWith('en-US')) || voices.find(v => v.lang.startsWith('en'));
+    if (enVoice) utter.voice = enVoice;
+    const totalLen = (set.script||'').length;
+    utter.onboundary = (e) => { if(e.name==='word'&&fill) fill.style.width = Math.min(100,(e.charIndex/totalLen)*100)+'%'; };
+    utter.onend = () => {
+      if(btn) btn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
+      if(fill) fill.style.width = '100%';
+      unhighlightSb(setId, 0);
+      isPlaying = false;
+    };
+    stopTTS();
+    currentUtterance = utter;
+    isPlaying = true;
+    window.speechSynthesis.speak(utter);
+  }
+}
+
+function playDialogueSeq(set, lineIdx, speed, fill, btn) {
+  if (lineIdx >= set.dialogue.length) {
+    if(btn) btn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
+    if(fill) fill.style.width = '100%';
+    unhighlightSb(set.id, lineIdx - 1);
+    isPlaying = false;
+    return;
+  }
+  if (lineIdx === 0 && btn) btn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
+  unhighlightSb(set.id, lineIdx - 1);
+  highlightSb(set.id, lineIdx);
+  if(fill) fill.style.width = (lineIdx / set.dialogue.length * 100) + '%';
+
+  const line = set.dialogue[lineIdx];
+  const utter = new SpeechSynthesisUtterance(line.line);
+  utter.lang = 'en-US'; utter.rate = speed;
+  const voices = window.speechSynthesis.getVoices();
+  const enVoices = voices.filter(v => v.lang.startsWith('en'));
+  if (line.speaker === 'Woman') {
+    const fv = enVoices.find(v => v.name.includes('Female') || v.name.includes('Samantha') || v.name.includes('Karen'));
+    if (fv) utter.voice = fv;
+    else if (enVoices.length > 1) utter.voice = enVoices[1];
+  } else if (enVoices.length) {
+    utter.voice = enVoices[0];
+  }
+  utter.onend = () => {
+    if (isPlaying) playDialogueSeq(set, lineIdx + 1, speed, fill, btn);
+  };
+  currentUtterance = utter;
+  isPlaying = true;
+  window.speechSynthesis.speak(utter);
+}
+
+function playLineFrom(setId, partKey, lineIdx) {
+  const set = partKey === 'p3'
+    ? testData.p3.sets.find(s => s.id == setId)
+    : testData.p4.sets.find(s => s.id == setId);
+  if (!set || !set.dialogue) return;
+  stopTTS();
+  const fill = document.getElementById(`af-s-${setId}`);
+  const btn = document.getElementById(`ap-s-${setId}`);
+  const speed = parseFloat(document.getElementById(`as-s-${setId}`)?.textContent) || currentSpeed;
+  playDialogueSeq(set, lineIdx, speed, fill, btn);
+}
+
+function highlightSb(setId, i) { document.getElementById(`sb-${setId}-${i}`)?.classList.add('speaking'); }
+function unhighlightSb(setId, i) { document.getElementById(`sb-${setId}-${i}`)?.classList.remove('speaking'); }
+
+function cycleAudioSpeed(qNum) {
+  const btn = document.getElementById(`as-${qNum}`);
+  if (!btn) return;
+  const cur = parseFloat(btn.textContent);
+  const idx = SPEED_CYCLE.indexOf(cur);
+  btn.textContent = SPEED_CYCLE[(idx + 1) % SPEED_CYCLE.length] + 'x';
+}
+function cycleSetSpd(setId) {
+  const btn = document.getElementById(`as-s-${setId}`);
+  if (!btn) return;
+  const cur = parseFloat(btn.textContent);
+  const idx = SPEED_CYCLE.indexOf(cur);
+  btn.textContent = SPEED_CYCLE[(idx + 1) % SPEED_CYCLE.length] + 'x';
+}
+
+// ── Image Generation ──────────────────────────────────────────────────────
+async function generateImage(item, qNum) {
+  const key = item.imagePrompt;
+  if (imageCache[key]) { showImg(qNum, imageCache[key]); return; }
+  try {
+    const res = await fetch('/api/generate-image', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ prompt: item.imagePrompt, style: 'photographic', aspectRatio: '16:9' })
+    });
+    const d = await res.json();
+    if (!d.imageUrl) throw new Error('no url');
+    imageCache[key] = d.imageUrl;
+    showImg(qNum, d.imageUrl);
+  } catch(e) {
+    const l = document.getElementById(`img-l-${qNum}`);
+    if (l) { l.innerHTML = '<span style="font-size:11px;color:rgba(255,255,255,0.6)">Image unavailable</span>'; }
+  }
+}
+function showImg(qNum, url) {
+  const img = document.getElementById(`img-${qNum}`);
+  const loading = document.getElementById(`img-l-${qNum}`);
+  if (!img) return;
+  img.onload = () => { img.style.display='block'; if(loading) loading.classList.add('hidden'); };
+  img.src = url;
+}
+
+// ── Timer ─────────────────────────────────────────────────────────────────
 function startTimer() {
+  if (secondsLeft >= 99999) { document.getElementById('th-timer').textContent = '∞'; return; }
   updateTimerDisplay();
   timerInterval = setInterval(() => {
     secondsLeft--;
     updateTimerDisplay();
-    if (secondsLeft <= 0) {
-      clearInterval(timerInterval);
-      finishExam();
-    }
+    if (secondsLeft <= 0) { clearInterval(timerInterval); submitTest(); }
   }, 1000);
 }
-
 function updateTimerDisplay() {
   const m = String(Math.floor(secondsLeft / 60)).padStart(2, '0');
   const s = String(secondsLeft % 60).padStart(2, '0');
-  const el = document.getElementById('timerDisplay');
+  const el = document.getElementById('th-timer');
   el.textContent = `${m}:${s}`;
-  el.classList.toggle('warn', secondsLeft <= 60);
+  el.classList.toggle('warning', secondsLeft <= 120);
 }
 
-// ── 문제 렌더링 ───────────────────────────────────────────────────────────────
-function renderQuestion() {
-  const q = questions[currentIdx];
-  const n = currentIdx + 1;
-
-  document.getElementById('qNum').textContent = n;
-  document.getElementById('qBadge').textContent = `Q${n}`;
-  document.getElementById('progressFill').style.width =
-    `${((currentIdx) / questions.length) * 100}%`;
-
-  // 버튼
-  document.getElementById('prevBtn').disabled = currentIdx === 0;
-  document.getElementById('nextBtn').textContent =
-    currentIdx === questions.length - 1 ? '제출 →' : '다음 →';
-
-  // 선택지
-  const list = document.getElementById('choicesList');
-  list.innerHTML = '';
-  const saved = userAnswers[currentIdx];
-  q.choices.forEach((text, i) => {
-    const li = document.createElement('li');
-    li.className = 'choice' + (saved === i ? ' selected' : '');
-    li.innerHTML = `<span class="choice-letter">${LETTERS[i]}</span><span>${text}</span>`;
-    li.addEventListener('click', () => selectChoice(i));
-    list.appendChild(li);
-  });
-
-  updateQStatus();
-
-  // 이미지
-  generateImage(q);
-
-  // 다음 문제 미리 로드
-  if (currentIdx + 1 < questions.length) prefetchImage(questions[currentIdx + 1]);
+// ── Progress ──────────────────────────────────────────────────────────────
+function updateProgress() {
+  const total = 100;
+  const answered = Object.keys(userAnswers).length;
+  document.getElementById('th-prog-text').textContent = `${answered} / ${total}`;
+  document.getElementById('th-prog-fill').style.width = (answered / total * 100) + '%';
 }
 
-function updateQStatus() {
-  const answered = userAnswers.filter(a => a !== null).length;
-  document.getElementById('qStatus').textContent = `답변 ${answered}/${questions.length}`;
-}
-
-// ── 선택지 선택 ──────────────────────────────────────────────────────────────
-function selectChoice(idx) {
-  userAnswers[currentIdx] = idx;
-  const all = document.getElementById('choicesList').querySelectorAll('.choice');
-  all.forEach((el, i) => {
-    el.classList.toggle('selected', i === idx);
-  });
-  updateQStatus();
-}
-
-// ── 내비게이션 ───────────────────────────────────────────────────────────────
-function navigate(dir) {
-  const next = currentIdx + dir;
-  if (next < 0) return;
-  if (next >= questions.length) {
-    finishExam();
-    return;
-  }
-  currentIdx = next;
-  renderQuestion();
-}
-
-// ── 시험 종료 ────────────────────────────────────────────────────────────────
-function finishExam() {
+// ── Submit & Results ──────────────────────────────────────────────────────
+function submitTest() {
   clearInterval(timerInterval);
+  stopTTS();
 
-  const correct  = questions.filter((q, i) => userAnswers[i] === q.answer).length;
-  const wrong    = questions.filter((q, i) => userAnswers[i] !== null && userAnswers[i] !== q.answer).length;
-  const skipped  = questions.filter((q, i) => userAnswers[i] === null).length;
-  const elapsed  = Math.round((Date.now() - startTimestamp) / 1000);
-  const em = String(Math.floor(elapsed / 60)).padStart(2, '0');
-  const es = String(elapsed % 60).padStart(2, '0');
+  // Calculate scores by part
+  let p1c=0, p2c=0, p3c=0, p4c=0;
+  testData.p1.items.forEach((item, i) => { const qn=i+1; if(userAnswers[qn]===item.answer) p1c++; });
+  testData.p2.items.forEach((item, i) => { const qn=i+7; if(userAnswers[qn]===item.answer) p2c++; });
+  let p3qn=32; testData.p3.sets.forEach(set => { set.questions.forEach((q,i)=>{ if(userAnswers[p3qn+i]===q.answer) p3c++; }); p3qn+=3; });
+  let p4qn=71; testData.p4.sets.forEach(set => { set.questions.forEach((q,i)=>{ if(userAnswers[p4qn+i]===q.answer) p4c++; }); p4qn+=3; });
+  const total = p1c + p2c + p3c + p4c;
+  const pct = Math.round(total / 100 * 100);
 
-  document.getElementById('examScreen').style.display = 'none';
-  document.getElementById('resultScreen').style.display = 'block';
+  document.getElementById('test-area').style.display = 'none';
+  const results = document.getElementById('results-area');
+  results.style.display = 'block';
+  document.getElementById('rh-score').textContent = total;
+  document.getElementById('rh-pct').textContent = pct + '%';
+  document.getElementById('rh-msg').textContent = pct>=80?(lang==='ko'?'훌륭합니다! 🎉':'Excellent! 🎉'):pct>=60?(lang==='ko'?'잘 했어요! 👍':'Good job! 👍'):(lang==='ko'?'더 연습이 필요해요 💪':'Keep practicing! 💪');
 
-  document.getElementById('resultScore').textContent = correct;
-  document.getElementById('resultTotal').textContent = `/ ${questions.length}`;
-  document.getElementById('statCorrect').textContent = correct;
-  document.getElementById('statWrong').textContent   = wrong;
-  document.getElementById('statSkipped').textContent = skipped;
-  document.getElementById('statTime').textContent    = `${em}:${es}`;
-
-  const pct = Math.round((correct / questions.length) * 100);
-  document.getElementById('resultTitle').textContent =
-    pct >= 80 ? '훌륭해요! 🎉' : pct >= 50 ? '잘 했어요! 👍' : '더 연습해봐요 💪';
-  document.getElementById('resultMsg').textContent =
-    `정답률 ${pct}% · ${questions.length}문제 중 ${correct}문제 정답`;
-
-  document.getElementById('progressFill').style.width = '100%';
+  document.getElementById('rb-grid').innerHTML = `
+    <div class="rb-cell"><div class="rb-num">${p1c}/6</div><div class="rb-label">Part 1</div><div class="rb-sub">${Math.round(p1c/6*100)}%</div></div>
+    <div class="rb-cell"><div class="rb-num">${p2c}/25</div><div class="rb-label">Part 2</div><div class="rb-sub">${Math.round(p2c/25*100)}%</div></div>
+    <div class="rb-cell"><div class="rb-num">${p3c}/39</div><div class="rb-label">Part 3</div><div class="rb-sub">${Math.round(p3c/39*100)}%</div></div>
+    <div class="rb-cell"><div class="rb-num">${p4c}/30</div><div class="rb-label">Part 4</div><div class="rb-sub">${Math.round(p4c/30*100)}%</div></div>`;
+  results.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-function restartExam() {
-  document.getElementById('resultScreen').style.display = 'none';
-  document.getElementById('startScreen').style.display  = 'block';
+function restartTest() {
+  stopTTS();
+  testData = null; userAnswers = {}; isGenerating = false;
+  document.getElementById('results-area').style.display = 'none';
+  document.getElementById('test-area').style.display = 'none';
+  document.getElementById('setup-card').style.display = 'block';
+  document.getElementById('gen-btn').disabled = false;
 }
 
-// ── Stability AI 이미지 생성 ─────────────────────────────────────────────────
-async function generateImage(q) {
-  const key = q.imagePrompt;
+function reviewAnswers() {
+  // Re-show test area with answers revealed
+  document.getElementById('results-area').style.display = 'none';
+  document.getElementById('test-area').style.display = 'block';
 
-  if (imageCache[key]) {
-    showImage(imageCache[key]);
-    return;
+  // Reveal all answers
+  function revealOpts(opts, userAns, correctAns, explanation) {
+    if (userAns === undefined) return;
+    opts.forEach(b => { b.disabled = true; b.classList.remove('selected'); });
+    if (opts[correctAns]) opts[correctAns].classList.add('correct');
+    if (userAns !== correctAns && opts[userAns]) opts[userAns].classList.add('wrong');
   }
 
-  // 로딩 상태
-  document.getElementById('questionImg').src = '';
-  document.getElementById('imgError').style.display = 'none';
-  document.getElementById('imgOverlay').classList.remove('hidden');
-  document.getElementById('genStatus').textContent = 'AI 이미지 생성 중…';
-  document.getElementById('statusBar').textContent = '';
-
-  try {
-    const res = await fetch('/api/generate-image', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        prompt: q.imagePrompt,
-        style: 'photographic',
-        aspectRatio: '16:9',
-      }),
-    });
-
-    const data = await res.json();
-    if (!res.ok || !data.imageUrl) throw new Error(data.error || 'failed');
-
-    imageCache[key] = data.imageUrl;
-    showImage(data.imageUrl);
-
-  } catch (err) {
-    document.getElementById('imgOverlay').classList.add('hidden');
-    const errEl = document.getElementById('imgError');
-    errEl.style.display = 'flex';
-    document.getElementById('statusBar').textContent =
-      '⚠️ 이미지 생성 실패 — 다음 문제로 진행할 수 있습니다.';
-  }
-}
-
-function showImage(dataUrl) {
-  const img = document.getElementById('questionImg');
-  img.onload = () => {
-    document.getElementById('imgOverlay').classList.add('hidden');
-    document.getElementById('imgError').style.display = 'none';
-  };
-  img.src = dataUrl;
-}
-
-async function prefetchImage(q) {
-  if (imageCache[q.imagePrompt]) return;
-  try {
-    const res = await fetch('/api/generate-image', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ prompt: q.imagePrompt, style: 'photographic', aspectRatio: '16:9' }),
-    });
-    const data = await res.json();
-    if (data.imageUrl) imageCache[q.imagePrompt] = data.imageUrl;
-  } catch (_) { /* silent prefetch failure */ }
+  testData.p1.items.forEach((item, i) => {
+    const opts = document.getElementById(`opts-${i+1}`)?.querySelectorAll('.q-opt');
+    if (opts) revealOpts(Array.from(opts), userAnswers[i+1], item.answer, item.explanation);
+  });
+  testData.p2.items.forEach((item, i) => {
+    const opts = document.getElementById(`opts-${i+7}`)?.querySelectorAll('.q-opt');
+    if (opts) revealOpts(Array.from(opts), userAnswers[i+7], item.answer, item.explanation);
+  });
+  let p3qn=32; testData.p3.sets.forEach(set => {
+    set.questions.forEach((q, i) => {
+      const opts = document.getElementById(`opts-${p3qn+i}`)?.querySelectorAll('.q-opt');
+      if (opts) revealOpts(Array.from(opts), userAnswers[p3qn+i], q.answer, q.explanation);
+    }); p3qn+=3;
+  });
+  let p4qn=71; testData.p4.sets.forEach(set => {
+    set.questions.forEach((q, i) => {
+      const opts = document.getElementById(`opts-${p4qn+i}`)?.querySelectorAll('.q-opt');
+      if (opts) revealOpts(Array.from(opts), userAnswers[p4qn+i], q.answer, q.explanation);
+    }); p4qn+=3;
+  });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 </script>
 </body>
