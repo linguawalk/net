@@ -1,523 +1,1145 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TOEIC Listening – Part 1 | LinguaWalk</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LinguaWalk — TOEIC — Listening</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --navy:#1C2B45; --teal:#2A7F6F; --teal-light:#E1F5EE; --teal-mid:#1D9E75;
+    --bg:#F8F7F4; --white:#fff; --text:#1C2B45; --text-muted:#5a6a82; --text-light:#94a3b8;
+    --border:rgba(28,43,69,0.1); --border-md:rgba(28,43,69,0.18);
+    --toeic:#ba7517; --toeic-light:#faeeda; --toeic-dark:#3d1f00;
+  }
+  body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
 
-  <style>
-    /* ── 디자인 토큰 ────────────────────────────── */
-    :root {
-      --navy:   #1C2B45;
-      --teal:   #2A7F6F;
-      --toeic:  #ba7517;
-      --white:  #ffffff;
-      --bg:     #f5f7fa;
-      --card:   #ffffff;
-      --border: #e2e8f0;
-      --text:   #1a202c;
-      --muted:  #64748b;
-      --radius: 12px;
-      --shadow: 0 2px 16px rgba(28,43,69,.08);
-    }
+  nav { background:rgba(28,43,69,0.97); height:56px; display:flex; align-items:center; padding:0 5%; border-bottom:0.5px solid rgba(255,255,255,0.08); position:sticky; top:0; z-index:100; }
+  .nav-logo { display:flex; align-items:center; gap:8px; text-decoration:none; }
+  .nav-lm { width:28px; height:28px; background:var(--teal); border-radius:7px; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:#fff; }
+  .nav-lt { font-size:16px; font-weight:600; color:#fff; }
+  .nav-sep { width:1px; height:18px; background:rgba(255,255,255,0.15); margin:0 12px; }
+  .nav-page { font-size:13px; color:rgba(255,255,255,0.6); }
+  .nav-space { flex:1; }
+  .lang-sw { display:flex; background:rgba(255,255,255,0.08); border-radius:7px; padding:2px; gap:2px; }
+  .lbtn { padding:4px 10px; border-radius:5px; font-size:11px; font-weight:500; border:none; background:transparent; color:rgba(255,255,255,0.5); cursor:pointer; font-family:inherit; transition:all 0.2s; }
+  .lbtn.act { background:var(--teal); color:#fff; }
+  .nav-back { font-size:13px; color:rgba(255,255,255,0.6); text-decoration:none; padding:6px 10px; border-radius:7px; margin-right:6px; transition:all 0.2s; }
+  .nav-back:hover { background:rgba(255,255,255,0.08); color:#fff; }
 
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  /* API SETUP */
+  .api-setup { max-width:520px; margin:60px auto; padding:32px; background:var(--white); border-radius:16px; border:0.5px solid var(--border-md); text-align:center; }
+  .api-icon { font-size:48px; margin-bottom:16px; }
+  .api-title { font-family:'DM Serif Display',serif; font-size:24px; color:var(--navy); margin-bottom:8px; }
+  .api-desc { font-size:14px; color:var(--text-muted); line-height:1.6; margin-bottom:24px; }
+  .api-input-wrap { display:flex; gap:8px; margin-bottom:12px; }
+  .api-input { flex:1; padding:10px 14px; border:0.5px solid var(--border-md); border-radius:8px; font-size:13px; font-family:monospace; color:var(--text); background:var(--bg); outline:none; }
+  .api-input:focus { border-color:var(--teal); }
+  .api-btn { padding:10px 18px; border-radius:8px; font-size:13px; font-weight:500; background:var(--teal); color:#fff; border:none; cursor:pointer; font-family:inherit; }
+  .api-note { font-size:11px; color:var(--text-light); }
 
-    body {
-      font-family: 'DM Sans', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-    }
+  .main { max-width:820px; margin:0 auto; padding:28px 5% 80px; display:none; }
 
-    /* ── 헤더 ───────────────────────────────────── */
-    header {
-      background: var(--navy);
-      padding: 0 24px;
-      height: 60px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-    .logo {
-      font-family: 'DM Serif Display', serif;
-      color: var(--white);
-      font-size: 1.3rem;
-      text-decoration: none;
-    }
-    .logo span { color: var(--teal); }
-    .badge {
-      background: var(--toeic);
-      color: var(--white);
-      font-size: .75rem;
-      font-weight: 700;
-      padding: 4px 12px;
-      border-radius: 999px;
-      letter-spacing: .04em;
-    }
+  /* HERO */
+  .hero { background:linear-gradient(135deg,#3d1f00 0%,#ba7517 100%); border-radius:14px; padding:24px 28px; margin-bottom:20px; position:relative; overflow:hidden; }
+  .hero::before { content:''; position:absolute; right:-20px; top:-20px; width:160px; height:160px; border-radius:50%; background:rgba(255,255,255,0.07); pointer-events:none; }
+  .hero-tag { font-size:11px; font-weight:600; letter-spacing:1px; text-transform:uppercase; color:#fcd34d; margin-bottom:6px; }
+  .hero-title { font-family:'DM Serif Display',serif; font-size:clamp(22px,4vw,32px); color:#fff; margin-bottom:6px; }
+  .hero-desc { font-size:13px; color:rgba(255,255,255,0.65); line-height:1.6; }
+  .hero-badges { display:flex; gap:8px; margin-top:14px; flex-wrap:wrap; }
+  .hero-badge { font-size:11px; padding:3px 12px; border-radius:20px; background:rgba(255,255,255,0.15); color:rgba(255,255,255,0.85); border:0.5px solid rgba(255,255,255,0.2); }
 
-    /* ── 메인 ───────────────────────────────────── */
-    main {
-      max-width: 900px;
-      margin: 32px auto;
-      padding: 0 20px;
-    }
+  /* PART TABS */
+  .part-tabs { display:flex; gap:0; background:var(--white); border:0.5px solid var(--border); border-radius:14px; padding:4px; margin-bottom:16px; overflow-x:auto; }
+  .part-tab { flex:1; padding:10px 14px; border-radius:10px; font-size:13px; font-weight:500; cursor:pointer; border:none; background:transparent; color:var(--text-muted); font-family:inherit; transition:all 0.2s; white-space:nowrap; text-align:center; }
+  .part-tab:hover { color:var(--toeic); }
+  .part-tab.act { background:var(--toeic); color:#fff; }
 
-    .page-title {
-      font-family: 'DM Serif Display', serif;
-      font-size: 1.8rem;
-      color: var(--navy);
-      margin-bottom: 4px;
-    }
-    .page-sub {
-      color: var(--muted);
-      font-size: .9rem;
-      margin-bottom: 28px;
-    }
+  /* PART INFO */
+  .part-info { background:var(--white); border:0.5px solid var(--border); border-radius:14px; padding:16px 18px; margin-bottom:16px; }
+  .pi-row { display:flex; gap:16px; align-items:center; flex-wrap:wrap; margin-bottom:10px; }
+  .pi-stat { text-align:center; flex-shrink:0; }
+  .pi-num { font-family:'DM Serif Display',serif; font-size:22px; color:var(--toeic); line-height:1; }
+  .pi-key { font-size:10px; color:var(--text-light); text-transform:uppercase; letter-spacing:.4px; margin-top:2px; }
+  .pi-divider { width:1px; height:36px; background:var(--border); flex-shrink:0; }
+  .pi-desc { font-size:12px; color:var(--text-muted); line-height:1.65; flex:1; min-width:180px; }
+  .pi-tip { display:flex; align-items:flex-start; gap:8px; padding:10px 12px; background:var(--toeic-light); border-radius:8px; font-size:12px; color:var(--toeic); line-height:1.55; }
 
-    /* ── 카드 ───────────────────────────────────── */
-    .question-card {
-      background: var(--card);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      overflow: hidden;
-      margin-bottom: 28px;
-    }
+  /* SETTINGS */
+  .settings-row { display:flex; gap:10px; margin-bottom:16px; flex-wrap:wrap; }
+  .setting-item { background:var(--white); border:0.5px solid var(--border); border-radius:10px; padding:12px 16px; flex:1; min-width:130px; }
+  .si-label { font-size:10px; font-weight:600; letter-spacing:.5px; text-transform:uppercase; color:var(--text-light); margin-bottom:6px; }
+  .si-select { width:100%; border:none; background:transparent; font-size:13px; font-weight:500; color:var(--text); font-family:inherit; cursor:pointer; outline:none; }
 
-    /* 이미지 영역 */
-    .img-wrapper {
-      position: relative;
-      width: 100%;
-      aspect-ratio: 16/9;
-      background: #e8edf5;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-    }
-    .img-wrapper img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-      transition: opacity .3s;
-    }
-    /* 로딩 오버레이 */
-    .img-overlay {
-      position: absolute;
-      inset: 0;
-      background: rgba(28,43,69,.55);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      color: var(--white);
-      font-size: .85rem;
-      transition: opacity .3s;
-    }
-    .img-overlay.hidden { opacity: 0; pointer-events: none; }
+  /* GENERATE BUTTON */
+  .gen-btn { width:100%; padding:14px; border-radius:10px; background:var(--toeic); color:#fff; border:none; font-family:inherit; font-size:15px; font-weight:600; cursor:pointer; transition:all 0.2s; margin-bottom:20px; display:flex; align-items:center; justify-content:center; gap:8px; }
+  .gen-btn:hover { background:#9a6010; }
+  .gen-btn:disabled { opacity:.5; cursor:not-allowed; }
 
-    .spinner {
-      width: 36px;
-      height: 36px;
-      border: 3px solid rgba(255,255,255,.3);
-      border-top-color: var(--white);
-      border-radius: 50%;
-      animation: spin .8s linear infinite;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
+  /* LOADING */
+  .loading-overlay { padding:48px; text-align:center; background:var(--white); border:0.5px solid var(--border); border-radius:14px; margin-bottom:20px; }
+  .loading-spinner { width:44px; height:44px; border:3px solid var(--border); border-top-color:var(--toeic); border-radius:50%; animation:spin 0.8s linear infinite; margin:0 auto 16px; }
+  @keyframes spin { to{transform:rotate(360deg)} }
+  .loading-text { font-size:14px; color:var(--text-muted); line-height:1.6; }
 
-    /* 재생성 버튼 */
-    .regen-btn {
-      position: absolute;
-      bottom: 12px;
-      right: 12px;
-      background: rgba(28,43,69,.75);
-      color: var(--white);
-      border: none;
-      border-radius: 8px;
-      padding: 6px 14px;
-      font-size: .78rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      backdrop-filter: blur(4px);
-      transition: background .2s;
-    }
-    .regen-btn:hover { background: var(--teal); }
-    .regen-btn svg { width: 14px; height: 14px; }
+  /* ── AUDIO PLAYER ── */
+  .audio-card { background:var(--white); border:0.5px solid var(--border); border-radius:14px; padding:18px 20px; margin-bottom:16px; }
+  .ac-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; flex-wrap:wrap; gap:10px; }
+  .ac-title { font-size:13px; font-weight:600; color:var(--text); display:flex; align-items:center; gap:8px; }
+  .ac-badge { font-size:10px; padding:2px 8px; border-radius:10px; background:var(--toeic-light); color:var(--toeic); font-weight:600; }
+  .ac-note { font-size:11px; color:var(--text-muted); }
 
-    /* 문제 본문 */
-    .card-body { padding: 20px 24px 24px; }
+  /* Part 1,2 단일 오디오 플레이어 */
+  .audio-player { display:flex; align-items:center; gap:12px; padding:14px 16px; background:var(--bg); border-radius:12px; border:0.5px solid var(--border); }
+  .ap-play-btn { width:44px; height:44px; border-radius:50%; background:var(--toeic); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:all 0.2s; }
+  .ap-play-btn:hover { background:#9a6010; transform:scale(1.05); }
+  .ap-play-btn svg { width:18px; height:18px; color:#fff; }
+  .ap-info { flex:1; min-width:0; }
+  .ap-label { font-size:12px; font-weight:500; color:var(--text); margin-bottom:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .ap-track { height:6px; background:var(--border); border-radius:6px; overflow:hidden; cursor:pointer; margin-bottom:4px; }
+  .ap-fill { height:100%; background:linear-gradient(90deg,var(--toeic-dark),var(--toeic)); border-radius:6px; transition:width 0.2s; width:0%; }
+  .ap-time { font-size:10px; color:var(--text-light); display:flex; justify-content:space-between; }
+  .ap-repeat-btn { width:34px; height:34px; border-radius:8px; background:transparent; border:0.5px solid var(--border-md); cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; color:var(--text-muted); font-size:13px; transition:all 0.2s; }
+  .ap-repeat-btn.active { background:var(--toeic-light); color:var(--toeic); border-color:var(--toeic); }
+  .ap-speed-btn { padding:4px 10px; border-radius:8px; background:transparent; border:0.5px solid var(--border-md); cursor:pointer; font-size:11px; font-weight:600; color:var(--text-muted); font-family:inherit; transition:all 0.2s; }
+  .ap-speed-btn.active { background:var(--toeic-light); color:var(--toeic); border-color:var(--toeic); }
 
-    .q-label {
-      font-size: .72rem;
-      font-weight: 700;
-      color: var(--toeic);
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      margin-bottom: 10px;
-    }
+  /* Part 3,4 대화/담화 플레이어 (텍스트 하이라이트 포함) */
+  .script-player { background:var(--bg); border-radius:12px; border:0.5px solid var(--border); overflow:hidden; }
+  .sp-controls { display:flex; align-items:center; gap:10px; padding:12px 14px; background:var(--white); border-bottom:0.5px solid var(--border); }
+  .sp-play-btn { width:38px; height:38px; border-radius:50%; background:var(--toeic); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:all 0.2s; }
+  .sp-play-btn:hover { background:#9a6010; }
+  .sp-play-btn svg { width:16px; height:16px; color:#fff; }
+  .sp-track { flex:1; height:5px; background:var(--border); border-radius:5px; overflow:hidden; }
+  .sp-fill { height:100%; background:linear-gradient(90deg,var(--toeic-dark),var(--toeic)); border-radius:5px; transition:width 0.2s; width:0%; }
+  .sp-time { font-size:11px; color:var(--text-muted); min-width:64px; text-align:right; }
+  .sp-speed { padding:3px 8px; border-radius:6px; background:transparent; border:0.5px solid var(--border-md); cursor:pointer; font-size:10px; font-weight:600; color:var(--text-muted); font-family:inherit; }
+  .sp-speed.active { background:var(--toeic-light); color:var(--toeic); border-color:var(--toeic); }
 
-    /* 선택지 */
-    .choices { list-style: none; display: flex; flex-direction: column; gap: 10px; }
-    .choice {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 12px 16px;
-      border: 2px solid var(--border);
-      border-radius: 10px;
-      cursor: pointer;
-      transition: border-color .2s, background .2s;
-      font-size: .9rem;
-    }
-    .choice:hover { border-color: var(--toeic); background: #fff8f0; }
-    .choice.correct { border-color: var(--teal); background: #f0faf8; }
-    .choice.wrong   { border-color: #e53e3e;     background: #fff5f5; }
-    .choice-letter {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      background: var(--bg);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      font-size: .82rem;
-      flex-shrink: 0;
-    }
+  .script-lines { padding:14px 16px; display:flex; flex-direction:column; gap:8px; max-height:220px; overflow-y:auto; }
+  .script-line { display:flex; gap:10px; align-items:flex-start; padding:6px 10px; border-radius:8px; transition:background 0.2s; cursor:pointer; }
+  .script-line:hover { background:rgba(186,117,23,0.06); }
+  .script-line.speaking { background:var(--toeic-light); }
+  .sl-speaker { font-size:10px; font-weight:700; color:var(--toeic); min-width:52px; padding-top:1px; text-transform:uppercase; letter-spacing:.3px; }
+  .sl-text { font-size:13px; color:var(--text); line-height:1.6; flex:1; }
+  .script-line.speaking .sl-text { color:var(--toeic-dark); font-weight:500; }
 
-    /* 설명 박스 */
-    .explanation {
-      margin-top: 16px;
-      padding: 14px 16px;
-      background: #f0faf8;
-      border-left: 4px solid var(--teal);
-      border-radius: 0 8px 8px 0;
-      font-size: .88rem;
-      color: var(--navy);
-      display: none;
-    }
-    .explanation.show { display: block; }
+  /* PART 1 IMAGE */
+  .img-card { background:var(--white); border:0.5px solid var(--border); border-radius:14px; overflow:hidden; margin-bottom:16px; }
+  .img-wrapper { position:relative; width:100%; aspect-ratio:16/9; background:#dde3ee; overflow:hidden; }
+  .img-wrapper img { width:100%; height:100%; object-fit:cover; display:block; }
+  .img-overlay { position:absolute; inset:0; background:rgba(28,43,69,0.58); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; color:#fff; font-size:13px; transition:opacity 0.3s; }
+  .img-overlay.hidden { opacity:0; pointer-events:none; }
+  .img-spinner { width:38px; height:38px; border:3px solid rgba(255,255,255,0.25); border-top-color:#fff; border-radius:50%; animation:spin 0.8s linear infinite; }
+  .img-error-state { position:absolute; inset:0; display:none; flex-direction:column; align-items:center; justify-content:center; gap:8px; color:var(--text-light); font-size:12px; }
+  .img-error-state svg { width:36px; height:36px; opacity:.3; }
+  .img-caption { padding:10px 16px; background:var(--toeic-light); border-top:0.5px solid var(--border); font-size:12px; color:var(--toeic); display:flex; align-items:center; gap:8px; }
+  .regen-btn { position:absolute; bottom:10px; right:10px; background:rgba(28,43,69,0.75); color:#fff; border:none; border-radius:8px; padding:5px 12px; font-size:11px; cursor:pointer; backdrop-filter:blur(4px); display:flex; align-items:center; gap:5px; transition:background 0.2s; }
+  .regen-btn:hover { background:var(--teal); }
 
-    /* ── 컨트롤 ─────────────────────────────────── */
-    .controls {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-bottom: 32px;
-    }
-    .btn {
-      padding: 10px 22px;
-      border-radius: 8px;
-      border: none;
-      font-family: 'DM Sans', sans-serif;
-      font-size: .88rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: opacity .2s, transform .1s;
-    }
-    .btn:active { transform: scale(.97); }
-    .btn-primary { background: var(--toeic); color: var(--white); }
-    .btn-outline  { background: transparent; border: 2px solid var(--navy); color: var(--navy); }
-    .btn:disabled { opacity: .45; cursor: not-allowed; }
+  /* QUESTIONS */
+  .questions-section { background:var(--white); border:0.5px solid var(--border); border-radius:14px; padding:18px; margin-bottom:16px; }
+  .qs-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+  .qs-title { font-size:13px; font-weight:600; color:var(--text); }
+  .qs-note { font-size:11px; color:var(--text-muted); }
+  .q-item { margin-bottom:14px; padding:14px; background:var(--bg); border-radius:10px; }
+  .q-item:last-child { margin-bottom:0; }
+  .q-num { font-size:10px; font-weight:600; color:var(--toeic); letter-spacing:.5px; text-transform:uppercase; margin-bottom:6px; }
+  .q-text { font-size:14px; font-weight:500; color:var(--text); margin-bottom:10px; line-height:1.5; }
+  .q-opts { display:flex; flex-direction:column; gap:7px; }
+  .q-opt { padding:9px 14px; border-radius:8px; border:1.5px solid var(--border-md); background:var(--white); cursor:pointer; font-size:13px; color:var(--text); transition:all 0.2s; text-align:left; font-family:inherit; display:flex; align-items:center; gap:10px; }
+  .q-opt:hover { border-color:var(--toeic); background:var(--toeic-light); }
+  .q-opt.correct { border-color:var(--teal-mid); background:#eaf3de; color:#3b6d11; font-weight:500; }
+  .q-opt.wrong { border-color:#e24b4a; background:#fcebeb; color:#a32d2d; }
+  .q-opt-ltr { width:24px; height:24px; border-radius:50%; background:var(--bg); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:600; color:var(--text-muted); flex-shrink:0; }
+  .q-opt.correct .q-opt-ltr { background:var(--teal-mid); color:#fff; }
+  .q-opt.wrong .q-opt-ltr { background:#e24b4a; color:#fff; }
+  .q-feedback { margin-top:8px; font-size:12px; padding:8px 12px; border-radius:7px; display:none; line-height:1.5; }
+  .q-feedback.show { display:block; }
+  .q-feedback.correct { background:#eaf3de; color:#3b6d11; }
+  .q-feedback.wrong { background:#fcebeb; color:#a32d2d; }
 
-    /* ── 상태 메시지 ─────────────────────────────── */
-    .status-bar {
-      text-align: center;
-      font-size: .82rem;
-      color: var(--muted);
-      margin-bottom: 16px;
-      min-height: 20px;
-    }
+  /* SCORE */
+  .score-card { background:linear-gradient(135deg,#3d1f00 0%,#ba7517 100%); border-radius:14px; padding:24px; text-align:center; margin-bottom:20px; display:none; }
+  .sc-label { font-size:13px; color:rgba(255,255,255,0.6); margin-bottom:6px; }
+  .sc-score { font-family:'DM Serif Display',serif; font-size:52px; color:#fff; line-height:1; margin-bottom:6px; }
+  .sc-pct { font-size:14px; color:rgba(255,255,255,0.7); margin-bottom:10px; }
+  .sc-msg { font-size:13px; color:#fcd34d; font-weight:500; }
 
-    /* 에러 뱃지 */
-    .img-error {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      color: var(--muted);
-      font-size: .85rem;
-    }
-    .img-error svg { width: 40px; height: 40px; opacity: .4; }
-  </style>
+  /* AI TUTOR */
+  .tutor-section { background:var(--white); border:0.5px solid var(--border); border-radius:14px; margin-bottom:20px; overflow:hidden; }
+  .tutor-header { display:flex; align-items:center; gap:10px; padding:14px 18px; border-bottom:0.5px solid var(--border); background:var(--toeic-light); }
+  .tutor-avatar { width:32px; height:32px; border-radius:50%; background:var(--toeic); display:flex; align-items:center; justify-content:center; font-size:15px; flex-shrink:0; }
+  .tutor-name { font-size:13px; font-weight:600; color:var(--toeic); }
+  .tutor-status { font-size:11px; color:var(--text-muted); }
+  .tutor-messages { padding:16px 18px; min-height:80px; max-height:280px; overflow-y:auto; display:flex; flex-direction:column; gap:12px; }
+  .msg { display:flex; gap:10px; align-items:flex-start; }
+  .msg.user { flex-direction:row-reverse; }
+  .msg-av { width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; flex-shrink:0; margin-top:2px; }
+  .msg-av.ai { background:var(--toeic); color:#fff; }
+  .msg-av.user { background:var(--navy); color:#fff; }
+  .msg-bub { max-width:78%; padding:10px 14px; border-radius:12px; font-size:13px; line-height:1.6; }
+  .msg.ai .msg-bub { background:var(--bg); color:var(--text); border-radius:4px 12px 12px 12px; }
+  .msg.user .msg-bub { background:var(--navy); color:#fff; border-radius:12px 4px 12px 12px; }
+  .typing { display:flex; gap:4px; align-items:center; padding:10px 14px; background:var(--bg); border-radius:4px 12px 12px 12px; width:fit-content; }
+  .typing span { width:6px; height:6px; border-radius:50%; background:var(--text-light); animation:bounce 1.2s infinite; }
+  .typing span:nth-child(2){animation-delay:0.2s} .typing span:nth-child(3){animation-delay:0.4s}
+  @keyframes bounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-6px)} }
+  .quick-wrap { padding:0 18px 12px; display:flex; gap:6px; flex-wrap:wrap; }
+  .quick-btn { padding:5px 12px; border-radius:16px; font-size:12px; border:0.5px solid var(--border-md); background:transparent; color:var(--text-muted); cursor:pointer; font-family:inherit; transition:all 0.2s; }
+  .quick-btn:hover { border-color:var(--toeic); color:var(--toeic); background:var(--toeic-light); }
+  .tutor-input-wrap { display:flex; gap:8px; padding:12px 18px; border-top:0.5px solid var(--border); }
+  .tutor-input { flex:1; padding:9px 14px; border:0.5px solid var(--border-md); border-radius:8px; font-size:13px; font-family:inherit; color:var(--text); background:var(--bg); outline:none; }
+  .tutor-input:focus { border-color:var(--toeic); }
+  .send-btn { width:36px; height:36px; border-radius:8px; background:var(--toeic); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#fff; font-size:16px; flex-shrink:0; }
+  .send-btn:hover { background:#9a6010; }
+  .send-btn:disabled { background:var(--border-md); cursor:not-allowed; }
+
+  .action-btns { display:flex; gap:10px; }
+  .act-btn { flex:1; padding:12px; border-radius:10px; font-size:13px; font-weight:500; cursor:pointer; font-family:inherit; border:0.5px solid var(--border-md); background:var(--white); color:var(--text); transition:all 0.2s; text-decoration:none; text-align:center; display:block; }
+  .act-btn:hover { background:var(--bg); }
+  .act-btn.primary { background:var(--toeic); color:#fff; border-color:var(--toeic); }
+  .act-btn.primary:hover { background:#9a6010; }
+
+  @keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+  .fade-in { animation:fadeUp 0.4s ease forwards; }
+</style>
 </head>
 <body>
 
-<header>
-  <a href="/index.html" class="logo">Lingua<span>Walk</span></a>
-  <span class="badge">TOEIC</span>
-</header>
-
-<main>
-  <h1 class="page-title">TOEIC Listening – Part 1</h1>
-  <p class="page-sub">사진 묘사 (Photographs) · AI가 실제 시험 이미지를 생성합니다</p>
-
-  <div class="controls">
-    <button class="btn btn-primary" id="newQuestionBtn">새 문제 생성</button>
-    <button class="btn btn-outline"  id="showAnswerBtn" disabled>정답 확인</button>
+<nav>
+  <a href="/en/index.html" class="nav-logo">
+    <div class="nav-lm">LW</div>
+    <span class="nav-lt">LinguaWalk</span>
+  </a>
+  <div class="nav-sep"></div>
+  <span class="nav-page">🎧 TOEIC Listening</span>
+  <div class="nav-space"></div>
+  <a href="index.html" class="nav-back" data-en="← TOEIC" data-ko="← TOEIC">← TOEIC</a>
+  <div class="lang-sw">
+    <button class="lbtn act" onclick="setLang('en')" id="btn-en">EN</button>
+    <button class="lbtn" onclick="setLang('ko')" id="btn-ko">한국어</button>
   </div>
+</nav>
 
-  <div class="status-bar" id="statusBar">버튼을 눌러 문제를 시작하세요.</div>
-
-  <div class="question-card" id="questionCard" style="display:none">
-
-    <!-- 이미지 영역 -->
-    <div class="img-wrapper" id="imgWrapper">
-      <img id="questionImg" src="" alt="TOEIC Part 1 사진" />
-
-      <!-- 로딩 오버레이 -->
-      <div class="img-overlay" id="imgOverlay">
-        <div class="spinner"></div>
-        <span>AI 이미지 생성 중…</span>
-      </div>
-
-      <!-- 에러 표시 -->
-      <div class="img-error" id="imgError" style="display:none">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-          <rect x="3" y="3" width="18" height="18" rx="2"/>
-          <path d="M9 9l6 6M15 9l-6 6"/>
-        </svg>
-        <span>이미지 생성 실패 — 재시도 버튼을 눌러주세요</span>
-      </div>
-
-      <!-- 재생성 버튼 -->
-      <button class="regen-btn" id="regenBtn" style="display:none">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M1 4v6h6M23 20v-6h-6"/>
-          <path d="M20.49 9A9 9 0 005.64 5.64L1 10M23 14l-4.64 4.36A9 9 0 013.51 15"/>
-        </svg>
-        이미지 재생성
-      </button>
-    </div>
-
-    <!-- 선택지 -->
-    <div class="card-body">
-      <div class="q-label">Question · Part 1</div>
-      <ul class="choices" id="choicesList"></ul>
-      <div class="explanation" id="explanation"></div>
+<!-- API SETUP -->
+<div class="api-setup fade-in" id="api-setup">
+  <div class="api-icon">🎧</div>
+  <div class="api-title" data-en="TOEIC Listening" data-ko="TOEIC 듣기">TOEIC Listening</div>
+  <div class="api-desc" data-en="Enter your API key to activate AI-powered TOEIC listening content." data-ko="API 키를 입력하면 AI TOEIC 듣기 콘텐츠가 활성화됩니다.">Enter your API key to start.</div>
+  <div style="text-align:left;margin-bottom:16px;">
+    <div style="font-size:11px;font-weight:600;color:var(--text-muted);margin-bottom:4px;">🤖 Anthropic API Key</div>
+    <div class="api-input-wrap" style="margin-bottom:0;">
+      <input type="password" class="api-input" id="api-key-input" placeholder="sk-ant-api03-...">
     </div>
   </div>
-</main>
+  <button class="api-btn" onclick="saveApiKey()" style="width:100%;padding:11px;" data-en="Connect" data-ko="연결">Connect</button>
+  <p class="api-note" style="margin-top:10px;" data-en="🔒 Key stored in your browser only." data-ko="🔒 키는 브라우저에만 저장됩니다.">🔒 Stored in browser only.</p>
+</div>
+
+<!-- MAIN -->
+<div class="main fade-in" id="main-content">
+
+  <div class="hero">
+    <div class="hero-tag">🎧 TOEIC · LISTENING COMPREHENSION (LC)</div>
+    <h1 class="hero-title" data-en="TOEIC Listening Practice" data-ko="TOEIC 듣기 연습">TOEIC Listening Practice</h1>
+    <p class="hero-desc" data-en="AI-generated Part 1–4 content with audio playback. Photographs, Q&A, conversations and talks." data-ko="AI가 생성한 Part 1~4 콘텐츠. 사진 묘사, 질의응답, 대화, 담화를 오디오로 연습하세요."></p>
+    <div class="hero-badges">
+      <span class="hero-badge">Part 1 Photographs</span>
+      <span class="hero-badge">Part 2 Q&amp;A</span>
+      <span class="hero-badge">Part 3 Conversations</span>
+      <span class="hero-badge">Part 4 Talks</span>
+      <span class="hero-badge">🤖 AI Tutor</span>
+    </div>
+  </div>
+
+  <!-- Part Tabs -->
+  <div class="part-tabs">
+    <button class="part-tab act" onclick="selectPart('p1',this)">📸 Part 1</button>
+    <button class="part-tab" onclick="selectPart('p2',this)">💬 Part 2</button>
+    <button class="part-tab" onclick="selectPart('p3',this)">🗣️ Part 3</button>
+    <button class="part-tab" onclick="selectPart('p4',this)">📢 Part 4</button>
+  </div>
+
+  <!-- Part Info -->
+  <div class="part-info" id="part-info-box"></div>
+
+  <!-- Settings -->
+  <div class="settings-row">
+    <div class="setting-item">
+      <div class="si-label" data-en="Difficulty" data-ko="난이도">Difficulty</div>
+      <select class="si-select" id="diff-select">
+        <option value="Easy" data-en="Easy" data-ko="쉬움">Easy</option>
+        <option value="Medium" selected data-en="Medium" data-ko="보통">Medium</option>
+        <option value="Hard" data-en="Hard" data-ko="어려움">Hard</option>
+      </select>
+    </div>
+    <div class="setting-item">
+      <div class="si-label" data-en="Questions" data-ko="문제 수">Questions</div>
+      <select class="si-select" id="q-count">
+        <option value="3">3</option>
+        <option value="5" selected>5</option>
+      </select>
+    </div>
+    <div class="setting-item">
+      <div class="si-label" data-en="Voice Speed" data-ko="음성 속도">Voice Speed</div>
+      <select class="si-select" id="speed-select">
+        <option value="0.8" data-en="Slow (0.8x)" data-ko="느리게 (0.8x)">Slow</option>
+        <option value="1.0" selected data-en="Normal (1.0x)" data-ko="보통 (1.0x)">Normal</option>
+        <option value="1.2" data-en="Fast (1.2x)" data-ko="빠르게 (1.2x)">Fast</option>
+      </select>
+    </div>
+  </div>
+
+  <button class="gen-btn" id="gen-btn" onclick="generateContent()">
+    🤖 <span data-en="Generate TOEIC Listening Content" data-ko="TOEIC 듣기 콘텐츠 생성">Generate TOEIC Listening Content</span>
+  </button>
+
+  <div class="loading-overlay" id="loading-overlay" style="display:none;">
+    <div class="loading-spinner"></div>
+    <div class="loading-text" id="loading-text"></div>
+  </div>
+
+  <!-- Content Area -->
+  <div id="content-area"></div>
+
+  <!-- Score -->
+  <div class="score-card" id="score-card">
+    <div class="sc-label" data-en="Your Score" data-ko="내 점수">Your Score</div>
+    <div class="sc-score" id="sc-score"></div>
+    <div class="sc-pct" id="sc-pct"></div>
+    <div class="sc-msg" id="sc-msg"></div>
+  </div>
+
+  <!-- AI Tutor -->
+  <div class="tutor-section" id="tutor-section" style="display:none;">
+    <div class="tutor-header">
+      <div class="tutor-avatar">🤖</div>
+      <div>
+        <div class="tutor-name">AI Tutor</div>
+        <div class="tutor-status" id="tutor-status" data-en="Ready to help" data-ko="도움 준비 완료">Ready to help</div>
+      </div>
+    </div>
+    <div class="tutor-messages" id="tutor-messages"></div>
+    <div class="quick-wrap" id="quick-questions"></div>
+    <div class="tutor-input-wrap">
+      <input type="text" class="tutor-input" id="user-input" placeholder="Ask about this question..." onkeydown="if(event.key==='Enter') sendMessage();">
+      <button class="send-btn" id="send-btn" onclick="sendMessage()">➤</button>
+    </div>
+  </div>
+
+  <div class="action-btns" id="action-btns" style="display:none;">
+    <button class="act-btn primary" onclick="generateContent()" data-en="🔄 New Content" data-ko="🔄 새 콘텐츠">🔄 New Content</button>
+    <a href="index.html" class="act-btn" data-en="← TOEIC Home" data-ko="← TOEIC 홈">← TOEIC Home</a>
+  </div>
+
+</div>
 
 <script>
-// ── 문제 데이터 ─────────────────────────────────────────────────────────────
-// 실제 서비스에서는 Firestore에서 가져옵니다.
-const QUESTIONS = [
-  {
-    prompt: 'A man is sitting at a desk using a laptop computer in an office',
-    imagePrompt: 'man sitting at office desk working on laptop, modern office, natural light, professional setting',
-    choices: [
-      'The man is typing on a keyboard.',
-      'The man is talking on the phone.',
-      'The man is reading a newspaper.',
-      'The man is standing near a window.',
-    ],
-    answer: 0,
-    explanation: '(A) 남자가 키보드를 타이핑하고 있다는 묘사가 laptop을 사용하는 장면과 일치합니다.',
-  },
-  {
-    prompt: 'A woman is arranging flowers in a vase on a table',
-    imagePrompt: 'woman arranging colorful flowers in a glass vase on a wooden table, bright kitchen, daylight',
-    choices: [
-      'A woman is watering some plants.',
-      'A woman is arranging flowers in a vase.',
-      'A woman is setting the table for dinner.',
-      'A woman is cleaning the kitchen counter.',
-    ],
-    answer: 1,
-    explanation: '(B) 여자가 꽃병에 꽃을 꽂는 장면을 정확히 묘사합니다.',
-  },
-  {
-    prompt: 'People are waiting at a bus stop on a city street',
-    imagePrompt: 'people standing at urban bus stop on a city street, daytime, buildings in background, realistic photo',
-    choices: [
-      'Some people are getting off a bus.',
-      'A crowd is crossing the street.',
-      'People are waiting at a bus stop.',
-      'Passengers are boarding a train.',
-    ],
-    answer: 2,
-    explanation: '(C) 버스 정류장에서 기다리고 있는 사람들을 올바르게 묘사합니다.',
-  },
-  {
-    prompt: 'A chef is cooking in a restaurant kitchen',
-    imagePrompt: 'professional chef cooking on a stainless steel stove in a busy restaurant kitchen, chef uniform, steam rising',
-    choices: [
-      'The chef is washing dishes.',
-      'The chef is serving food to customers.',
-      'The chef is cutting vegetables on a board.',
-      'The chef is cooking on a stove.',
-    ],
-    answer: 3,
-    explanation: '(D) 셰프가 화로에서 요리하는 모습을 정확히 묘사합니다.',
-  },
-  {
-    prompt: 'Books are stacked on shelves in a library',
-    imagePrompt: 'rows of books neatly stacked on wooden shelves in a quiet library, warm lighting, academic setting',
-    choices: [
-      'Books are stacked on shelves.',
-      'A librarian is checking out books.',
-      'Students are reading at desks.',
-      'Magazines are displayed on a rack.',
-    ],
-    answer: 0,
-    explanation: '(A) 책들이 선반에 쌓여 있는 장면을 가장 정확하게 묘사합니다.',
-  },
-];
-
-// ── 상태 ────────────────────────────────────────────────────────────────────
-let currentQ = null;
-let answered = false;
-let imageCache = {}; // prompt → dataURL
-
-// ── DOM 요소 ────────────────────────────────────────────────────────────────
-const newQuestionBtn = document.getElementById('newQuestionBtn');
-const showAnswerBtn  = document.getElementById('showAnswerBtn');
-const statusBar      = document.getElementById('statusBar');
-const questionCard   = document.getElementById('questionCard');
-const imgWrapper     = document.getElementById('imgWrapper');
-const questionImg    = document.getElementById('questionImg');
-const imgOverlay     = document.getElementById('imgOverlay');
-const imgError       = document.getElementById('imgError');
-const regenBtn       = document.getElementById('regenBtn');
-const choicesList    = document.getElementById('choicesList');
-const explanation    = document.getElementById('explanation');
-
-// ── 이벤트 ──────────────────────────────────────────────────────────────────
-newQuestionBtn.addEventListener('click', loadNewQuestion);
-showAnswerBtn.addEventListener('click', revealAnswer);
-regenBtn.addEventListener('click', () => generateImage(currentQ, true));
-
-// ── 문제 로드 ────────────────────────────────────────────────────────────────
-function loadNewQuestion() {
-  // 랜덤 선택 (이전 문제 제외)
-  let pool = QUESTIONS.filter(q => q !== currentQ);
-  currentQ = pool[Math.floor(Math.random() * pool.length)];
-  answered = false;
-
-  questionCard.style.display = 'block';
-  showAnswerBtn.disabled = false;
-  explanation.classList.remove('show');
-  explanation.textContent = '';
-  setStatus('');
-
-  renderChoices();
-  generateImage(currentQ, false);
-}
-
-// ── 선택지 렌더링 ────────────────────────────────────────────────────────────
-function renderChoices() {
-  choicesList.innerHTML = '';
-  const letters = ['A', 'B', 'C', 'D'];
-  currentQ.choices.forEach((text, i) => {
-    const li = document.createElement('li');
-    li.className = 'choice';
-    li.innerHTML = `<span class="choice-letter">${letters[i]}</span><span>${text}</span>`;
-    li.addEventListener('click', () => {
-      if (answered) return;
-      selectChoice(i, li);
-    });
-    choicesList.appendChild(li);
+// ── Language ──────────────────────────────────────────────────────────────
+let lang = 'en';
+function setLang(l) {
+  lang = l;
+  document.querySelectorAll('[data-en][data-ko]').forEach(el => {
+    const t = l === 'ko' ? el.getAttribute('data-ko') : el.getAttribute('data-en');
+    if (t) el.innerHTML = t;
   });
+  document.getElementById('btn-en').classList.toggle('act', l === 'en');
+  document.getElementById('btn-ko').classList.toggle('act', l === 'ko');
+  renderPartInfo();
+  try { localStorage.setItem('lw-lang', l); } catch(e) {}
 }
 
-function selectChoice(idx, el) {
-  answered = true;
-  const all = choicesList.querySelectorAll('.choice');
-  all.forEach(c => c.style.pointerEvents = 'none');
-  el.classList.add(idx === currentQ.answer ? 'correct' : 'wrong');
-  all[currentQ.answer].classList.add('correct');
-  showExplanation();
-}
-
-// ── 정답 표시 ────────────────────────────────────────────────────────────────
-function revealAnswer() {
-  if (answered) return;
-  answered = true;
-  const all = choicesList.querySelectorAll('.choice');
-  all.forEach(c => c.style.pointerEvents = 'none');
-  all[currentQ.answer].classList.add('correct');
-  showAnswerBtn.disabled = true;
-  showExplanation();
-}
-
-function showExplanation() {
-  explanation.textContent = currentQ.explanation;
-  explanation.classList.add('show');
-}
-
-// ── Stability AI 이미지 생성 ─────────────────────────────────────────────────
-async function generateImage(q, forceRegen) {
-  const cacheKey = q.imagePrompt;
-
-  // 캐시 히트
-  if (!forceRegen && imageCache[cacheKey]) {
-    displayImage(imageCache[cacheKey]);
-    return;
+// ── Part Definitions ──────────────────────────────────────────────────────
+const PARTS = {
+  p1: {
+    en: 'Part 1 — Photographs', ko: 'Part 1 — 사진 묘사',
+    qRange: 'Q1–6', total: 6,
+    descEn: 'Look at a photograph and choose the statement that best describes what you see.',
+    descKo: '사진을 보고 가장 잘 묘사하는 문장을 고르세요.',
+    tipEn: '💡 Listen carefully for subject, action, and location. Watch for subtle differences.',
+    tipKo: '💡 주어, 동작, 위치에 집중하세요. 미묘한 차이를 놓치지 마세요.',
+  },
+  p2: {
+    en: 'Part 2 — Question-Response', ko: 'Part 2 — 질의응답',
+    qRange: 'Q7–31', total: 25,
+    descEn: 'Listen to a question and three responses. Choose the best response.',
+    descKo: '질문과 세 가지 응답을 듣고 가장 적절한 응답을 고르세요.',
+    tipEn: '💡 Focus on the question word (Who/What/When/Where/Why/How). Eliminate off-topic answers.',
+    tipKo: '💡 의문사(Who/What/When/Where/Why/How)에 집중하세요. 관련 없는 답변을 제거하세요.',
+  },
+  p3: {
+    en: 'Part 3 — Conversations', ko: 'Part 3 — 짧은 대화',
+    qRange: 'Q32–70', total: 39,
+    descEn: 'Listen to a conversation between two or three people and answer 3 questions.',
+    descKo: '두세 사람의 대화를 듣고 3개의 문제에 답하세요.',
+    tipEn: '💡 Read the questions before listening. Note the topic, speakers\' relationship, and purpose.',
+    tipKo: '💡 듣기 전에 문제를 먼저 읽으세요. 주제, 화자 관계, 목적을 파악하세요.',
+  },
+  p4: {
+    en: 'Part 4 — Talks', ko: 'Part 4 — 짧은 담화',
+    qRange: 'Q71–100', total: 30,
+    descEn: 'Listen to a monologue (announcement, advertisement, voicemail) and answer 3 questions.',
+    descKo: '안내문·광고·메시지 등의 담화를 듣고 3개의 문제에 답하세요.',
+    tipEn: '💡 Identify the type of talk and purpose in the first sentence. Listen for numbers and names.',
+    tipKo: '💡 첫 문장에서 담화 유형과 목적을 파악하세요. 숫자와 이름에 주의하세요.',
   }
+};
 
-  // 로딩 상태
-  questionImg.src = '';
-  imgError.style.display = 'none';
-  regenBtn.style.display = 'none';
-  imgOverlay.classList.remove('hidden');
-  setStatus('🎨 AI가 TOEIC 시험 이미지를 생성하고 있습니다…');
+let apiKey = '';
+let currentPart = 'p1';
+let currentData = null;
+let messages = [], isLoading = false;
+let totalCorrect = 0, answeredCount = 0, totalQuestions = 0;
+let imageCache = {};
+
+// TTS 상태
+let currentUtterance = null;
+let isPlaying = false;
+let ttsQueue = [];
+let ttsQueueIdx = 0;
+let repeatMode = false;
+let currentSpeed = 1.0;
+
+// ── Init ──────────────────────────────────────────────────────────────────
+(function init() {
+  try {
+    const k = sessionStorage.getItem('lw-api-key');
+    if (k) { apiKey = k; showMain(); }
+    const l = localStorage.getItem('lw-lang');
+    if (l) setLang(l);
+  } catch(e) {}
+  renderPartInfo();
+})();
+
+function saveApiKey() {
+  const key = document.getElementById('api-key-input').value.trim();
+  if (!key.startsWith('sk-ant-')) { alert('Anthropic API key must start with sk-ant-'); return; }
+  try { sessionStorage.setItem('lw-api-key', key); } catch(e) {}
+  apiKey = key;
+  showMain();
+}
+function showMain() {
+  document.getElementById('api-setup').style.display = 'none';
+  document.getElementById('main-content').style.display = 'block';
+  renderPartInfo();
+}
+
+// ── Part Selection ────────────────────────────────────────────────────────
+function selectPart(id, btn) {
+  stopTTS();
+  currentPart = id;
+  document.querySelectorAll('.part-tab').forEach(t => t.classList.remove('act'));
+  btn.classList.add('act');
+  renderPartInfo();
+  resetContent();
+  const qSel = document.getElementById('q-count');
+  if (id === 'p1') {
+    qSel.innerHTML = '<option value="3">3</option><option value="5" selected>5</option>';
+    qSel.disabled = false;
+  } else if (id === 'p2') {
+    qSel.innerHTML = '<option value="5" selected>5</option><option value="10">10</option>';
+    qSel.disabled = false;
+  } else {
+    // p3, p4: 1 set = 3 questions
+    qSel.innerHTML = '<option value="1" selected>1 set (3 Q)</option><option value="2">2 sets (6 Q)</option>';
+    qSel.disabled = false;
+  }
+}
+
+function renderPartInfo() {
+  const p = PARTS[currentPart];
+  const box = document.getElementById('part-info-box');
+  if (!box || !p) return;
+  box.innerHTML = `
+    <div class="pi-row">
+      <div class="pi-stat"><div class="pi-num">${p.total}</div><div class="pi-key">${lang==='ko'?'총 문항':'Total'}</div></div>
+      <div class="pi-divider"></div>
+      <div class="pi-stat"><div class="pi-num">${p.qRange}</div><div class="pi-key">${lang==='ko'?'출제 범위':'Range'}</div></div>
+      <div class="pi-divider"></div>
+      <div class="pi-desc">${lang==='ko'?p.descKo:p.descEn}</div>
+    </div>
+    <div class="pi-tip">${lang==='ko'?p.tipKo:p.tipEn}</div>`;
+}
+
+function resetContent() {
+  stopTTS();
+  document.getElementById('content-area').innerHTML = '';
+  document.getElementById('score-card').style.display = 'none';
+  document.getElementById('tutor-section').style.display = 'none';
+  document.getElementById('action-btns').style.display = 'none';
+  totalCorrect = 0; answeredCount = 0; totalQuestions = 0;
+  currentData = null; messages = [];
+}
+
+// ── Generate Content ──────────────────────────────────────────────────────
+async function generateContent() {
+  if (isLoading) return;
+  resetContent();
+  isLoading = true;
+  const genBtn = document.getElementById('gen-btn');
+  genBtn.disabled = true;
+  const diff = document.getElementById('diff-select').value;
+  const qCount = parseInt(document.getElementById('q-count').value);
+  currentSpeed = parseFloat(document.getElementById('speed-select').value);
+
+  document.getElementById('loading-overlay').style.display = 'block';
+  const loadingText = document.getElementById('loading-text');
+  loadingText.textContent = lang === 'ko' ? '🤖 AI가 듣기 문제를 생성하고 있습니다...' : '🤖 AI is generating listening content...';
+
+  const prompt = buildPrompt(currentPart, diff, qCount);
 
   try {
-    const res = await fetch('/api/generate-image', {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        prompt: q.imagePrompt,
-        style: 'photographic',
-        aspectRatio: '16:9',
-      }),
+      headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
+      body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 3000, messages: [{ role: 'user', content: prompt }] })
     });
-
     const data = await res.json();
+    const raw = data.content?.[0]?.text || '';
+    const clean = raw.replace(/```json|```/g, '').trim();
+    currentData = JSON.parse(clean);
+    totalQuestions = countTotalQuestions(currentData);
+    document.getElementById('loading-overlay').style.display = 'none';
+    await renderContent(currentData);
+  } catch(e) {
+    document.getElementById('loading-overlay').style.display = 'none';
+    document.getElementById('content-area').innerHTML = `<div style="padding:24px;text-align:center;color:var(--text-muted)">⚠️ ${lang==='ko'?'콘텐츠 생성 실패. 다시 시도해주세요.':'Failed to generate. Please try again.'}</div>`;
+  }
+  isLoading = false;
+  genBtn.disabled = false;
+}
 
-    if (!res.ok || !data.imageUrl) {
-      throw new Error(data.error || 'Image generation failed');
+function buildPrompt(part, diff, count) {
+  const diffs = { Easy: 'straightforward vocabulary and simple grammar', Medium: 'moderate complexity', Hard: 'sophisticated vocabulary and complex structures' };
+  const d = diffs[diff] || diffs.Medium;
+  const L = lang === 'ko';
+
+  if (part === 'p1') {
+    return `Generate ${count} TOEIC Part 1 (Photograph) listening questions with ${d}.
+Return ONLY valid JSON (no markdown):
+{
+  "part": "Part 1",
+  "items": [
+    {
+      "id": 1,
+      "imagePrompt": "detailed image generation prompt in English for Stability AI — realistic photo scene",
+      "audioScript": "A man is sitting at a desk, looking at a computer screen.",
+      "choices": ["(A) The man is typing on a keyboard.", "(B) The man is talking on the phone.", "(C) The man is reading a document.", "(D) The man is standing by a window."],
+      "answer": 0,
+      "explanation": "${L?'정답 해설 (한국어)':'Explanation of why (A) is correct and others are wrong'}"
     }
+  ]
+}
+Rules: audioScript is what the narrator reads aloud. choices are 4 options. answer is 0-based index. imagePrompt must be vivid, realistic, TOEIC-style scene.`;
+  }
 
-    imageCache[cacheKey] = data.imageUrl;
-    displayImage(data.imageUrl);
-    setStatus('');
+  if (part === 'p2') {
+    return `Generate ${count} TOEIC Part 2 (Question-Response) items with ${d}.
+Return ONLY valid JSON:
+{
+  "part": "Part 2",
+  "items": [
+    {
+      "id": 1,
+      "question": "Where is the nearest coffee shop?",
+      "choices": ["(A) It's on Main Street, next to the bank.", "(B) Yes, I'd like some coffee.", "(C) The coffee was excellent."],
+      "answer": 0,
+      "explanation": "${L?'정답 해설':'Why (A) is correct'}"
+    }
+  ]
+}
+Rules: 3 choices (A/B/C). question is spoken aloud. answer is 0-based index.`;
+  }
 
-  } catch (err) {
-    console.error('Image generation error:', err);
-    imgOverlay.classList.add('hidden');
-    imgError.style.display = 'flex';
-    regenBtn.style.display = 'flex';
-    setStatus('⚠️ 이미지 생성에 실패했습니다. 재시도 버튼을 눌러주세요.');
+  if (part === 'p3') {
+    return `Generate ${count} TOEIC Part 3 (Conversation) set(s) with ${d}. Each set has 1 conversation + 3 questions.
+Return ONLY valid JSON:
+{
+  "part": "Part 3",
+  "sets": [
+    {
+      "id": 1,
+      "context": "A conversation between two colleagues",
+      "dialogue": [
+        {"speaker": "Man", "line": "Did you book the conference room for Friday?"},
+        {"speaker": "Woman", "line": "Yes, I reserved it from 2 to 4 PM."},
+        {"speaker": "Man", "line": "Perfect. I'll send a meeting invite to the team."}
+      ],
+      "questions": [
+        {
+          "id": 1,
+          "text": "What are the speakers discussing?",
+          "choices": ["(A) A conference room booking", "(B) A team dinner", "(C) A project deadline", "(D) A business trip"],
+          "answer": 0,
+          "explanation": "${L?'정답 해설':'Explanation'}"
+        }
+      ]
+    }
+  ]
+}
+Each set must have exactly 3 questions. dialogue must be natural office/daily conversation.`;
+  }
+
+  // p4
+  return `Generate ${count} TOEIC Part 4 (Talk) set(s) with ${d}. Each set has 1 monologue + 3 questions.
+Return ONLY valid JSON:
+{
+  "part": "Part 4",
+  "sets": [
+    {
+      "id": 1,
+      "talkType": "Announcement",
+      "script": "Attention all passengers. The 3:45 train to Central Station has been delayed by approximately 20 minutes due to track maintenance. We apologize for any inconvenience and thank you for your patience.",
+      "questions": [
+        {
+          "id": 1,
+          "text": "What is the announcement about?",
+          "choices": ["(A) A train delay", "(B) A cancelled flight", "(C) A bus schedule change", "(D) A road closure"],
+          "answer": 0,
+          "explanation": "${L?'정답 해설':'Explanation'}"
+        }
+      ]
+    }
+  ]
+}
+talkType examples: Announcement, Advertisement, News Report, Voicemail, Tour Guide, Broadcast. Each set must have exactly 3 questions.`;
+}
+
+function countTotalQuestions(data) {
+  if (!data) return 0;
+  if (data.items) return data.items.length;
+  if (data.sets) return data.sets.reduce((s, set) => s + (set.questions?.length || 0), 0);
+  return 0;
+}
+
+// ── Render Content ────────────────────────────────────────────────────────
+async function renderContent(data) {
+  const area = document.getElementById('content-area');
+  area.innerHTML = '';
+
+  if (data.part === 'Part 1') {
+    for (const item of data.items) {
+      area.appendChild(renderP1Item(item));
+      // AI 이미지 생성
+      generateImage(item);
+    }
+  } else if (data.part === 'Part 2') {
+    area.appendChild(renderP2Block(data.items));
+  } else if (data.part === 'Part 3' || data.part === 'Part 4') {
+    for (const set of data.sets) {
+      area.appendChild(renderConvSet(set, data.part));
+    }
+  }
+
+  initTutorSection(data);
+  document.getElementById('action-btns').style.display = 'flex';
+}
+
+// ── Part 1 Render ─────────────────────────────────────────────────────────
+function renderP1Item(item) {
+  const wrap = document.createElement('div');
+  wrap.id = `p1-item-${item.id}`;
+
+  // 이미지 카드
+  const imgCard = document.createElement('div');
+  imgCard.className = 'img-card';
+  imgCard.innerHTML = `
+    <div class="img-wrapper" id="img-wrap-${item.id}">
+      <img id="img-${item.id}" src="" alt="TOEIC Part 1" style="display:none"/>
+      <div class="img-overlay" id="img-overlay-${item.id}">
+        <div class="img-spinner"></div>
+        <span>${lang==='ko'?'AI 이미지 생성 중…':'Generating AI image…'}</span>
+      </div>
+      <div class="img-error-state" id="img-error-${item.id}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9l6 6M15 9l-6 6"/></svg>
+        <span>${lang==='ko'?'이미지 생성 실패':'Image generation failed'}</span>
+      </div>
+      <button class="regen-btn" id="regen-${item.id}" onclick="generateImage(${JSON.stringify(item).replace(/"/g,'&quot;')}, true)" style="display:none">
+        ↺ ${lang==='ko'?'재생성':'Retry'}
+      </button>
+    </div>
+    <div class="img-caption">📸 ${lang==='ko'?'사진을 보고 올바른 묘사를 고르세요':'Look at the photo and choose the best description'}</div>`;
+
+  // 오디오 플레이어
+  const audioCard = document.createElement('div');
+  audioCard.className = 'audio-card';
+  audioCard.innerHTML = `
+    <div class="ac-header">
+      <div class="ac-title">🎧 <span>Question ${item.id}</span> <span class="ac-badge">Part 1</span></div>
+      <div class="ac-note">${lang==='ko'?'한 번만 들려줍니다. 집중하세요!':'Played once. Stay focused!'}</div>
+    </div>
+    <div class="audio-player">
+      <button class="ap-play-btn" id="play-${item.id}" onclick="playP1Audio(${item.id})">
+        <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      </button>
+      <div class="ap-info">
+        <div class="ap-label">${item.audioScript}</div>
+        <div class="ap-track"><div class="ap-fill" id="fill-${item.id}"></div></div>
+        <div class="ap-time"><span id="cur-${item.id}">0:00</span><span id="dur-${item.id}">—</span></div>
+      </div>
+      <button class="ap-repeat-btn" id="rep-${item.id}" onclick="toggleRepeat(${item.id})" title="Repeat">↻</button>
+      <button class="ap-speed-btn" id="spd-${item.id}" onclick="cycleSpeed(${item.id})">${currentSpeed}x</button>
+    </div>`;
+
+  // 선택지
+  const qSection = document.createElement('div');
+  qSection.className = 'questions-section';
+  qSection.innerHTML = `
+    <div class="qs-header">
+      <div class="qs-title">✏️ ${lang==='ko'?'선택지':'Choices'}</div>
+      <div class="qs-note">${lang==='ko'?'들은 후 선택하세요':'Choose after listening'}</div>
+    </div>
+    <div id="choices-${item.id}">
+      ${item.choices.map((c, i) => `
+        <div class="q-item" style="margin-bottom:8px;padding:10px 14px;background:var(--bg);border-radius:10px;">
+          <button class="q-opt" onclick="selectP1(${item.id}, ${i}, this)" data-idx="${i}">
+            <span class="q-opt-ltr">${String.fromCharCode(65+i)}</span>
+            <span>${c}</span>
+          </button>
+        </div>`).join('')}
+    </div>
+    <div class="q-feedback" id="fb-${item.id}"></div>`;
+
+  wrap.appendChild(imgCard);
+  wrap.appendChild(audioCard);
+  wrap.appendChild(qSection);
+  return wrap;
+}
+
+function selectP1(itemId, idx, btn) {
+  const container = document.getElementById(`choices-${itemId}`);
+  const allBtns = container.querySelectorAll('.q-opt');
+  allBtns.forEach(b => { b.classList.remove('correct','wrong'); b.disabled = true; });
+
+  const item = currentData.items.find(it => it.id === itemId);
+  const correct = item.answer;
+  allBtns[correct].classList.add('correct');
+  if (idx !== correct) btn.classList.add('wrong');
+
+  const fb = document.getElementById(`fb-${itemId}`);
+  fb.textContent = item.explanation;
+  fb.className = 'q-feedback show ' + (idx === correct ? 'correct' : 'wrong');
+
+  answeredCount++;
+  if (idx === correct) totalCorrect++;
+  checkAllAnswered();
+}
+
+// ── Part 2 Render ─────────────────────────────────────────────────────────
+function renderP2Block(items) {
+  const card = document.createElement('div');
+  card.className = 'audio-card';
+  card.style.marginBottom = '16px';
+
+  const listHtml = items.map((item, gi) => `
+    <div class="q-item" id="p2-item-${item.id}" style="margin-bottom:14px;">
+      <div class="q-num">Question ${item.id}</div>
+      <div class="audio-player" style="margin-bottom:10px;">
+        <button class="ap-play-btn" id="play2-${item.id}" onclick="playP2Audio(${item.id})">
+          <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        </button>
+        <div class="ap-info">
+          <div class="ap-label">${lang==='ko'?'질문을 듣고 응답을 고르세요':'Listen and choose the best response'}</div>
+          <div class="ap-track"><div class="ap-fill" id="fill2-${item.id}"></div></div>
+          <div class="ap-time"><span id="cur2-${item.id}">0:00</span><span></span></div>
+        </div>
+        <button class="ap-speed-btn" id="spd2-${item.id}" onclick="cycleSpeed2(${item.id})">${currentSpeed}x</button>
+      </div>
+      <div class="q-opts" id="opts2-${item.id}">
+        ${item.choices.map((c, i) => `
+          <button class="q-opt" onclick="selectP2(${item.id}, ${i}, this)">
+            <span class="q-opt-ltr">${String.fromCharCode(65+i)}</span>
+            <span>${c}</span>
+          </button>`).join('')}
+      </div>
+      <div class="q-feedback" id="fb2-${item.id}"></div>
+    </div>`).join('');
+
+  card.innerHTML = `
+    <div class="ac-header">
+      <div class="ac-title">💬 Part 2 — Question-Response <span class="ac-badge">${items.length} ${lang==='ko'?'문제':'Questions'}</span></div>
+    </div>
+    <div class="questions-section" style="border:none;padding:0;">${listHtml}</div>`;
+  return card;
+}
+
+function selectP2(itemId, idx, btn) {
+  const item = currentData.items.find(it => it.id === itemId);
+  const opts = document.getElementById(`opts2-${itemId}`).querySelectorAll('.q-opt');
+  opts.forEach(b => { b.classList.remove('correct','wrong'); b.disabled = true; });
+  opts[item.answer].classList.add('correct');
+  if (idx !== item.answer) btn.classList.add('wrong');
+  const fb = document.getElementById(`fb2-${itemId}`);
+  fb.textContent = item.explanation;
+  fb.className = 'q-feedback show ' + (idx === item.answer ? 'correct' : 'wrong');
+  answeredCount++;
+  if (idx === item.answer) totalCorrect++;
+  checkAllAnswered();
+}
+
+// ── Part 3 & 4 Render ─────────────────────────────────────────────────────
+function renderConvSet(set, partName) {
+  const isP3 = partName === 'Part 3';
+  const card = document.createElement('div');
+  card.className = 'audio-card';
+  card.style.marginBottom = '16px';
+
+  // 스크립트 라인 HTML
+  let scriptHtml = '';
+  if (isP3 && set.dialogue) {
+    scriptHtml = set.dialogue.map((line, i) => `
+      <div class="script-line" id="sline-${set.id}-${i}" onclick="playLineFrom(${set.id}, ${i})">
+        <span class="sl-speaker">${line.speaker}</span>
+        <span class="sl-text">${line.line}</span>
+      </div>`).join('');
+  } else {
+    scriptHtml = `<div class="script-line" id="sline-${set.id}-0" onclick="playSetAudio(${set.id})">
+      <span class="sl-speaker">${set.talkType || 'Narrator'}</span>
+      <span class="sl-text">${set.script}</span>
+    </div>`;
+  }
+
+  // 질문 HTML
+  const qHtml = set.questions.map(q => `
+    <div class="q-item">
+      <div class="q-num">Q${q.id}</div>
+      <div class="q-text">${q.text}</div>
+      <div class="q-opts" id="qopts-${set.id}-${q.id}">
+        ${q.choices.map((c, i) => `
+          <button class="q-opt" onclick="selectConv('${set.id}','${q.id}',${i},this,${q.answer})">
+            <span class="q-opt-ltr">${String.fromCharCode(65+i)}</span>
+            <span>${c}</span>
+          </button>`).join('')}
+      </div>
+      <div class="q-feedback" id="fbconv-${set.id}-${q.id}"></div>
+    </div>`).join('');
+
+  const setLabel = isP3 ? `${lang==='ko'?'대화':'Conversation'} ${set.id}` : `${set.talkType || 'Talk'} ${set.id}`;
+
+  card.innerHTML = `
+    <div class="ac-header">
+      <div class="ac-title">${isP3?'🗣️':'📢'} ${setLabel} <span class="ac-badge">${partName}</span></div>
+      <div class="ac-note">${lang==='ko'?'스크립트 라인을 클릭하면 해당 부분 재생':'Click a line to play from there'}</div>
+    </div>
+    <div class="script-player">
+      <div class="sp-controls">
+        <button class="sp-play-btn" id="spbtn-${set.id}" onclick="playSetAudio(${set.id})">
+          <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        </button>
+        <div class="sp-track"><div class="sp-fill" id="spfill-${set.id}"></div></div>
+        <span class="sp-time" id="sptime-${set.id}">0:00</span>
+        <button class="sp-speed" id="spspd-${set.id}" onclick="cycleSetSpeed(${set.id})">${currentSpeed}x</button>
+      </div>
+      <div class="script-lines">${scriptHtml}</div>
+    </div>
+    <div class="questions-section" style="border:none;padding:18px 0 0;">${qHtml}</div>`;
+  return card;
+}
+
+function selectConv(setId, qId, idx, btn, answer) {
+  const opts = document.getElementById(`qopts-${setId}-${qId}`).querySelectorAll('.q-opt');
+  opts.forEach(b => { b.classList.remove('correct','wrong'); b.disabled = true; });
+  opts[answer].classList.add('correct');
+  if (idx !== answer) btn.classList.add('wrong');
+
+  // explanation
+  const set = currentData.sets.find(s => s.id == setId);
+  const q = set?.questions.find(q => q.id == qId);
+  const fb = document.getElementById(`fbconv-${setId}-${qId}`);
+  if (fb && q) { fb.textContent = q.explanation; fb.className = 'q-feedback show ' + (idx === answer ? 'correct' : 'wrong'); }
+
+  answeredCount++;
+  if (idx === answer) totalCorrect++;
+  checkAllAnswered();
+}
+
+// ── TTS Audio Functions ───────────────────────────────────────────────────
+function stopTTS() {
+  if (window.speechSynthesis) window.speechSynthesis.cancel();
+  isPlaying = false;
+  currentUtterance = null;
+}
+
+function speak(text, onWord, onEnd, speed) {
+  stopTTS();
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.lang = 'en-US';
+  utter.rate = speed || currentSpeed;
+  utter.pitch = 1.0;
+
+  // 영어 목소리 선택
+  const voices = window.speechSynthesis.getVoices();
+  const enVoice = voices.find(v => v.lang.startsWith('en') && !v.name.includes('Google') && v.localService)
+    || voices.find(v => v.lang.startsWith('en-US'))
+    || voices.find(v => v.lang.startsWith('en'));
+  if (enVoice) utter.voice = enVoice;
+
+  utter.onboundary = onWord || null;
+  utter.onend = onEnd || null;
+  currentUtterance = utter;
+  isPlaying = true;
+  window.speechSynthesis.speak(utter);
+  return utter;
+}
+
+// Part 1 오디오 재생
+function playP1Audio(itemId) {
+  const item = currentData?.items.find(i => i.id === itemId);
+  if (!item) return;
+  const btn = document.getElementById(`play-${itemId}`);
+  const fill = document.getElementById(`fill-${itemId}`);
+
+  stopTTS();
+  btn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
+
+  const speed = parseFloat(document.getElementById(`spd-${itemId}`)?.textContent) || currentSpeed;
+  let charIdx = 0;
+  const totalLen = item.audioScript.length;
+
+  const utter = speak(item.audioScript, (e) => {
+    if (e.name === 'word') {
+      charIdx = e.charIndex;
+      fill.style.width = Math.min(100, (charIdx / totalLen) * 100) + '%';
+    }
+  }, () => {
+    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
+    fill.style.width = '100%';
+    if (document.getElementById(`rep-${itemId}`)?.classList.contains('active')) {
+      setTimeout(() => playP1Audio(itemId), 500);
+    }
+  }, speed);
+}
+
+function toggleRepeat(itemId) {
+  const btn = document.getElementById(`rep-${itemId}`);
+  btn?.classList.toggle('active');
+}
+
+const SPEED_CYCLE = [0.7, 0.8, 1.0, 1.2, 1.5];
+function cycleSpeed(itemId) {
+  const btn = document.getElementById(`spd-${itemId}`);
+  const cur = parseFloat(btn.textContent);
+  const idx = SPEED_CYCLE.indexOf(cur);
+  const next = SPEED_CYCLE[(idx + 1) % SPEED_CYCLE.length];
+  btn.textContent = next + 'x';
+}
+function cycleSpeed2(itemId) {
+  const btn = document.getElementById(`spd2-${itemId}`);
+  const cur = parseFloat(btn.textContent);
+  const idx = SPEED_CYCLE.indexOf(cur);
+  btn.textContent = SPEED_CYCLE[(idx + 1) % SPEED_CYCLE.length] + 'x';
+}
+function cycleSetSpeed(setId) {
+  const btn = document.getElementById(`spspd-${setId}`);
+  const cur = parseFloat(btn.textContent);
+  const idx = SPEED_CYCLE.indexOf(cur);
+  btn.textContent = SPEED_CYCLE[(idx + 1) % SPEED_CYCLE.length] + 'x';
+}
+
+// Part 2 오디오
+function playP2Audio(itemId) {
+  const item = currentData?.items.find(i => i.id === itemId);
+  if (!item) return;
+  const btn = document.getElementById(`play2-${itemId}`);
+  const fill = document.getElementById(`fill2-${itemId}`);
+  stopTTS();
+  btn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
+  const speed = parseFloat(document.getElementById(`spd2-${itemId}`)?.textContent) || currentSpeed;
+  const totalLen = item.question.length;
+  speak(item.question, (e) => {
+    if (e.name === 'word') fill.style.width = Math.min(100, (e.charIndex / totalLen) * 100) + '%';
+  }, () => {
+    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
+    fill.style.width = '100%';
+  }, speed);
+}
+
+// Part 3/4 오디오 — 대화 순서 재생
+function playSetAudio(setId) {
+  const set = currentData?.sets?.find(s => s.id == setId);
+  if (!set) return;
+  const btn = document.getElementById(`spbtn-${setId}`);
+  const fill = document.getElementById(`spfill-${setId}`);
+  stopTTS();
+
+  const speed = parseFloat(document.getElementById(`spspd-${setId}`)?.textContent) || currentSpeed;
+
+  if (set.dialogue) {
+    playDialogueLines(set, 0, speed, fill, btn);
+  } else {
+    // Part 4 단일 스크립트
+    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
+    highlightLine(setId, 0);
+    const totalLen = set.script.length;
+    speak(set.script, (e) => {
+      if (e.name === 'word') fill.style.width = Math.min(100, (e.charIndex / totalLen) * 100) + '%';
+    }, () => {
+      btn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
+      fill.style.width = '100%';
+      unhighlightLine(setId, 0);
+    }, speed);
   }
 }
 
-function displayImage(dataUrl) {
-  questionImg.onload = () => {
-    imgOverlay.classList.add('hidden');
-    imgError.style.display = 'none';
-    regenBtn.style.display = 'flex';
+function playDialogueLines(set, lineIdx, speed, fill, btn) {
+  if (lineIdx >= set.dialogue.length) {
+    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
+    fill.style.width = '100%';
+    unhighlightLine(set.id, lineIdx - 1);
+    return;
+  }
+  if (lineIdx === 0) btn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
+
+  unhighlightLine(set.id, lineIdx - 1);
+  highlightLine(set.id, lineIdx);
+
+  const line = set.dialogue[lineIdx];
+  const prog = lineIdx / set.dialogue.length;
+  fill.style.width = (prog * 100) + '%';
+
+  const utter = new SpeechSynthesisUtterance(line.line);
+  utter.lang = 'en-US';
+  utter.rate = speed;
+  const voices = window.speechSynthesis.getVoices();
+  // 화자별 다른 목소리
+  const maleVoices = voices.filter(v => v.lang.startsWith('en') && (v.name.includes('Male') || v.name.includes('Daniel') || v.name.includes('David')));
+  const femaleVoices = voices.filter(v => v.lang.startsWith('en') && (v.name.includes('Female') || v.name.includes('Samantha') || v.name.includes('Victoria') || v.name.includes('Karen')));
+  const enVoices = voices.filter(v => v.lang.startsWith('en'));
+  if (line.speaker === 'Man' && maleVoices.length) utter.voice = maleVoices[0];
+  else if (line.speaker === 'Woman' && femaleVoices.length) utter.voice = femaleVoices[0];
+  else if (enVoices.length) utter.voice = enVoices[lineIdx % enVoices.length];
+
+  utter.onend = () => {
+    if (isPlaying) playDialogueLines(set, lineIdx + 1, speed, fill, btn);
   };
-  questionImg.src = dataUrl;
+  currentUtterance = utter;
+  isPlaying = true;
+  window.speechSynthesis.speak(utter);
 }
 
-function setStatus(msg) {
-  statusBar.textContent = msg;
+function playLineFrom(setId, lineIdx) {
+  const set = currentData?.sets?.find(s => s.id == setId);
+  if (!set || !set.dialogue) return;
+  stopTTS();
+  const fill = document.getElementById(`spfill-${setId}`);
+  const btn = document.getElementById(`spbtn-${setId}`);
+  const speed = parseFloat(document.getElementById(`spspd-${setId}`)?.textContent) || currentSpeed;
+  playDialogueLines(set, lineIdx, speed, fill, btn);
+}
+
+function highlightLine(setId, lineIdx) {
+  const el = document.getElementById(`sline-${setId}-${lineIdx}`);
+  if (el) el.classList.add('speaking');
+}
+function unhighlightLine(setId, lineIdx) {
+  const el = document.getElementById(`sline-${setId}-${lineIdx}`);
+  if (el) el.classList.remove('speaking');
+}
+
+// ── Image Generation ──────────────────────────────────────────────────────
+async function generateImage(item, forceRegen) {
+  const key = item.imagePrompt;
+  if (!forceRegen && imageCache[key]) { showImg(item.id, imageCache[key]); return; }
+  try {
+    const res = await fetch('/api/generate-image', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt: item.imagePrompt, style: 'photographic', aspectRatio: '16:9' })
+    });
+    const data = await res.json();
+    if (!data.imageUrl) throw new Error('no url');
+    imageCache[key] = data.imageUrl;
+    showImg(item.id, data.imageUrl);
+  } catch(e) {
+    const overlay = document.getElementById(`img-overlay-${item.id}`);
+    const errEl = document.getElementById(`img-error-${item.id}`);
+    const regenBtn = document.getElementById(`regen-${item.id}`);
+    if (overlay) overlay.classList.add('hidden');
+    if (errEl) errEl.style.display = 'flex';
+    if (regenBtn) regenBtn.style.display = 'flex';
+  }
+}
+function showImg(id, url) {
+  const img = document.getElementById(`img-${id}`);
+  const overlay = document.getElementById(`img-overlay-${id}`);
+  const errEl = document.getElementById(`img-error-${id}`);
+  const regenBtn = document.getElementById(`regen-${id}`);
+  if (!img) return;
+  img.onload = () => {
+    img.style.display = 'block';
+    if (overlay) overlay.classList.add('hidden');
+    if (errEl) errEl.style.display = 'none';
+    if (regenBtn) regenBtn.style.display = 'flex';
+  };
+  img.src = url;
+}
+
+// ── Score & Tutor ─────────────────────────────────────────────────────────
+function checkAllAnswered() {
+  if (answeredCount >= totalQuestions) showScore();
+}
+function showScore() {
+  const pct = Math.round((totalCorrect / totalQuestions) * 100);
+  const sc = document.getElementById('score-card');
+  sc.style.display = 'block';
+  document.getElementById('sc-score').textContent = `${totalCorrect}/${totalQuestions}`;
+  document.getElementById('sc-pct').textContent = `${pct}%`;
+  document.getElementById('sc-msg').textContent = pct >= 80 ? (lang==='ko'?'훌륭합니다! 🎉':'Excellent! 🎉') : pct >= 60 ? (lang==='ko'?'잘 했어요! 👍':'Good job! 👍') : (lang==='ko'?'더 연습이 필요해요 💪':'Keep practicing! 💪');
+  sc.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function initTutorSection(data) {
+  document.getElementById('tutor-section').style.display = 'block';
+  const msgs = document.getElementById('tutor-messages');
+  msgs.innerHTML = '';
+  addTutorMsg('ai', lang==='ko'?'안녕하세요! 이번 듣기 문제에 대해 궁금한 점이 있으면 질문해 주세요 🎧':'Hi! Ask me anything about this listening content. 🎧');
+  const qs = lang==='ko' ? ['이 문제 해설해줘','발음 팁 알려줘','어휘 설명해줘'] : ['Explain this question','Give pronunciation tips','Explain vocabulary'];
+  const qw = document.getElementById('quick-questions');
+  qw.innerHTML = qs.map(q => `<button class="quick-btn" onclick="askQuick('${q}')">${q}</button>`).join('');
+}
+function addTutorMsg(role, text) {
+  const msgs = document.getElementById('tutor-messages');
+  const div = document.createElement('div');
+  div.className = `msg ${role}`;
+  div.innerHTML = `<div class="msg-av ${role}">${role==='ai'?'🤖':'👤'}</div><div class="msg-bub">${text}</div>`;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+function askQuick(q) { document.getElementById('user-input').value = q; sendMessage(); }
+async function sendMessage() {
+  const inp = document.getElementById('user-input');
+  const text = inp.value.trim();
+  if (!text || isLoading) return;
+  inp.value = '';
+  addTutorMsg('user', text);
+  messages.push({ role: 'user', content: text });
+  document.getElementById('send-btn').disabled = true;
+  const typing = document.createElement('div');
+  typing.className = 'msg ai'; typing.id = 'typing-indicator';
+  typing.innerHTML = '<div class="msg-av ai">🤖</div><div class="typing"><span></span><span></span><span></span></div>';
+  document.getElementById('tutor-messages').appendChild(typing);
+  try {
+    const context = `TOEIC Listening content: ${JSON.stringify(currentData).slice(0,1500)}`;
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
+      body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 600, messages: [
+        { role: 'user', content: `${context}\n\nStudent (${lang==='ko'?'Korean':'English'}): ${text}` }
+      ]})
+    });
+    const d = await res.json();
+    const reply = d.content?.[0]?.text || '...';
+    document.getElementById('typing-indicator')?.remove();
+    addTutorMsg('ai', reply);
+    messages.push({ role: 'assistant', content: reply });
+  } catch(e) {
+    document.getElementById('typing-indicator')?.remove();
+    addTutorMsg('ai', lang==='ko'?'죄송합니다. 다시 시도해주세요.':'Sorry, please try again.');
+  }
+  document.getElementById('send-btn').disabled = false;
 }
 </script>
 </body>
