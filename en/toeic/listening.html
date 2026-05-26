@@ -877,37 +877,38 @@ function speak(text, onWord, onEnd, speed) {
 }
 
 // Part 1 오디오 재생
+function revealP1Choices(itemId) {
+  const choicesEl = document.getElementById(`choices-${itemId}`);
+  const hintEl    = document.getElementById(`hint-${itemId}`);
+  if (choicesEl) {
+    choicesEl.style.opacity       = '1';
+    choicesEl.style.pointerEvents = 'auto';
+    choicesEl.style.filter        = 'none';
+    choicesEl.querySelectorAll('.choice-text').forEach(el => el.style.visibility = 'visible');
+  }
+  if (hintEl) hintEl.style.display = 'none';
+}
+
 function playP1Audio(itemId) {
   const item = currentData?.items.find(i => i.id === itemId);
   if (!item) return;
-  const btn = document.getElementById(`play-${itemId}`);
+  const btn  = document.getElementById(`play-${itemId}`);
   const fill = document.getElementById(`fill-${itemId}`);
 
   stopTTS();
   btn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
 
-  const speed = parseFloat(document.getElementById(`spd-${itemId}`)?.textContent) || currentSpeed;
-  let charIdx = 0;
+  // ── 재생 시작 즉시 선택지 공개 (Chrome onend 버그 우회) ──
+  revealP1Choices(itemId);
+
+  const speed    = parseFloat(document.getElementById(`spd-${itemId}`)?.textContent) || currentSpeed;
   const totalLen = item.audioScript.length;
 
-  const utter = speak(item.audioScript, (e) => {
-    if (e.name === 'word') {
-      charIdx = e.charIndex;
-      fill.style.width = Math.min(100, (charIdx / totalLen) * 100) + '%';
-    }
+  speak(item.audioScript, (e) => {
+    if (e.name === 'word') fill.style.width = Math.min(100, (e.charIndex / totalLen) * 100) + '%';
   }, () => {
     btn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
     fill.style.width = '100%';
-    // ── 선택지 공개: blur 해제 + 텍스트 표시 ──
-    const choicesEl = document.getElementById(`choices-${itemId}`);
-    const hintEl    = document.getElementById(`hint-${itemId}`);
-    if (choicesEl) {
-      choicesEl.style.opacity      = '1';
-      choicesEl.style.pointerEvents = 'auto';
-      choicesEl.style.filter       = 'none';
-      choicesEl.querySelectorAll('.choice-text').forEach(el => el.style.visibility = 'visible');
-    }
-    if (hintEl) hintEl.style.display = 'none';
     if (document.getElementById(`rep-${itemId}`)?.classList.contains('active')) {
       setTimeout(() => playP1Audio(itemId), 500);
     }
@@ -1059,21 +1060,42 @@ function regenImage(itemId) {
 async function generateImage(item, forceRegen) {
   const key = item.imagePrompt;
   if (!forceRegen && imageCache[key]) { showImg(item.id, imageCache[key]); return; }
+
+  // ── 1차: Stability AI ──
   try {
     const res = await fetch('/api/generate-image', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ prompt: item.imagePrompt, style: 'photographic', aspectRatio: '16:9' })
     });
     const data = await res.json();
-    if (!data.imageUrl) throw new Error('no url');
+    if (!res.ok || !data.imageUrl) throw new Error(data.error || 'no imageUrl');
     imageCache[key] = data.imageUrl;
     showImg(item.id, data.imageUrl);
+    return;
   } catch(e) {
-    const overlay = document.getElementById(`img-overlay-${item.id}`);
-    const errEl = document.getElementById(`img-error-${item.id}`);
+    console.warn('Stability AI 실패, Unsplash 폴백:', e.message);
+  }
+
+  // ── 2차 폴백: Unsplash ──
+  try {
+    const q = encodeURIComponent(item.imagePrompt.split(',')[0].trim());
+    const unsplashKey = typeof UNSPLASH_KEY !== 'undefined' ? UNSPLASH_KEY : '';
+    let unsplashUrl;
+    if (unsplashKey) {
+      const ures = await fetch(`https://api.unsplash.com/photos/random?query=${q}&orientation=landscape&client_id=${unsplashKey}`);
+      const ud = await ures.json();
+      unsplashUrl = ud?.urls?.regular;
+    }
+    // key 없으면 source.unsplash.com 사용 (무제한 무료)
+    if (!unsplashUrl) unsplashUrl = `https://source.unsplash.com/featured/1200x675/?${q}`;
+    imageCache[key] = unsplashUrl;
+    showImg(item.id, unsplashUrl);
+  } catch(e2) {
+    const overlay  = document.getElementById(`img-overlay-${item.id}`);
+    const errEl    = document.getElementById(`img-error-${item.id}`);
     const regenBtn = document.getElementById(`regen-${item.id}`);
-    if (overlay) overlay.classList.add('hidden');
-    if (errEl) errEl.style.display = 'flex';
+    if (overlay)  overlay.classList.add('hidden');
+    if (errEl)    errEl.style.display = 'flex';
     if (regenBtn) regenBtn.style.display = 'flex';
   }
 }
