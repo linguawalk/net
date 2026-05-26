@@ -898,6 +898,16 @@ function playP1Audio(itemId) {
   }, () => {
     btn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
     fill.style.width = '100%';
+    // ── 선택지 공개: blur 해제 + 텍스트 표시 ──
+    const choicesEl = document.getElementById(`choices-${itemId}`);
+    const hintEl    = document.getElementById(`hint-${itemId}`);
+    if (choicesEl) {
+      choicesEl.style.opacity      = '1';
+      choicesEl.style.pointerEvents = 'auto';
+      choicesEl.style.filter       = 'none';
+      choicesEl.querySelectorAll('.choice-text').forEach(el => el.style.visibility = 'visible');
+    }
+    if (hintEl) hintEl.style.display = 'none';
     if (document.getElementById(`rep-${itemId}`)?.classList.contains('active')) {
       setTimeout(() => playP1Audio(itemId), 500);
     }
