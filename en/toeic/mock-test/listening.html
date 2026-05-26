@@ -346,7 +346,8 @@ let isPlaying = false;
 const GEN_STEPS = [
   { icon:'📸', en:'Generating Part 1 — Photographs (6)', ko:'Part 1 생성 — 사진 묘사 (6문항)' },
   { icon:'💬', en:'Generating Part 2 — Q&A (25)', ko:'Part 2 생성 — 질의응답 (25문항)' },
-  { icon:'🗣️', en:'Generating Part 3 — Conversations (13 sets)', ko:'Part 3 생성 — 대화 (13세트)' },
+  { icon:'🗣️', en:'Generating Part 3A — Conversations (sets 1–7)', ko:'Part 3A 생성 — 대화 (1~7세트)' },
+  { icon:'🗣️', en:'Generating Part 3B — Conversations (sets 8–13)', ko:'Part 3B 생성 — 대화 (8~13세트)' },
   { icon:'📢', en:'Generating Part 4 — Talks (10 sets)', ko:'Part 4 생성 — 담화 (10세트)' },
 ];
 
@@ -388,32 +389,42 @@ async function generateMockTest() {
     // Part 1
     setStep(0, 'active');
     testData.p1 = await genPart1(diff);
-    setStep(0, 'done', '✅'); setProgress(25);
+    setStep(0, 'done', '✅'); setProgress(20);
 
     // Part 2
     setStep(1, 'active');
     testData.p2 = await genPart2(diff);
-    setStep(1, 'done', '✅'); setProgress(50);
+    setStep(1, 'done', '✅'); setProgress(40);
 
-    // Part 3
+    // Part 3A (sets 1–7)
     setStep(2, 'active');
-    testData.p3 = await genPart3(diff);
-    setStep(2, 'done', '✅'); setProgress(75);
+    const p3a = await genPart3A(diff);
+    setStep(2, 'done', '✅'); setProgress(60);
+
+    // Part 3B (sets 8–13)
+    setStep(3, 'active');
+    const p3b = await genPart3B(diff);
+    setStep(3, 'done', '✅'); setProgress(80);
+
+    // 병합: id 재정렬
+    const p3bSets = p3b.sets.map((s, i) => ({ ...s, id: 7 + i + 1 }));
+    testData.p3 = { sets: [...p3a.sets, ...p3bSets] };
 
     // Part 4
-    setStep(3, 'active');
+    setStep(4, 'active');
     testData.p4 = await genPart4(diff);
-    setStep(3, 'done', '✅'); setProgress(100);
+    setStep(4, 'done', '✅'); setProgress(100);
 
     await new Promise(r => setTimeout(r, 400));
     prog.style.display = 'none';
     renderTest();
 
   } catch(e) {
+    console.error('Generation error:', e);
     prog.style.display = 'none';
     document.getElementById('setup-card').style.display = 'block';
     document.getElementById('gen-btn').disabled = false;
-    alert(lang==='ko' ? '생성 실패. 다시 시도해주세요.' : 'Generation failed. Please try again.');
+    alert(lang==='ko' ? '생성 실패: ' + e.message : 'Generation failed: ' + e.message);
   }
   isGenerating = false;
 }
@@ -437,7 +448,7 @@ async function callAPI(prompt) {
   const res = await fetch('/api/claude', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'anthropic-version': '2023-06-01' },
-    body: JSON.stringify({ model: 'claude-sonnet-4-5', max_tokens: 3000, messages: [{ role: 'user', content: prompt }] })
+    body: JSON.stringify({ model: 'claude-sonnet-4-5', max_tokens: 4000, messages: [{ role: 'user', content: prompt }] })
   });
   const d = await res.json();
   const raw = d.content?.[0]?.text || '';
@@ -445,20 +456,40 @@ async function callAPI(prompt) {
 }
 
 async function genPart1(diff) {
-  return callAPI(`Generate 6 TOEIC Part 1 questions, difficulty: ${diff}.
-Return ONLY JSON: {"items":[{"id":1,"imagePrompt":"vivid realistic photo scene for Stability AI","audioScript":"A man is sitting at a desk.","choices":["(A)...","(B)...","(C)...","(D)..."],"answer":0,"explanation":"..."}]}`);
+  return callAPI(`Generate 6 TOEIC Part 1 Photograph questions. Difficulty: ${diff}.
+Each question: a realistic photo scene + 4 answer choices + correct answer index + explanation.
+Return ONLY valid JSON, no markdown:
+{"items":[{"id":1,"imagePrompt":"realistic office photo for image generation","audioScript":"A man is sitting at a desk using a computer.","choices":["(A) The man is typing on a keyboard.","(B) The man is talking on the phone.","(C) The man is reading a newspaper.","(D) The man is standing near a window."],"answer":0,"explanation":"(A) is correct because the man is using a computer."}]}`);
 }
 async function genPart2(diff) {
-  return callAPI(`Generate 25 TOEIC Part 2 Q&A, difficulty: ${diff}.
-Return ONLY JSON: {"items":[{"id":1,"question":"Where is the conference room?","choices":["(A)...","(B)...","(C)..."],"answer":0,"explanation":"..."}]}`);
+  // Part 2: 25문항을 두 번에 나눠서 생성 후 병합
+  const [a, b] = await Promise.all([
+    callAPI(`Generate 13 TOEIC Part 2 Question-Response items (id 1–13). Difficulty: ${diff}.
+Each: a spoken question + 3 response choices (A/B/C) + correct answer index (0/1/2) + explanation.
+Return ONLY valid JSON: {"items":[{"id":1,"question":"Where is the conference room?","choices":["(A) It's on the second floor.","(B) Yes, I attended.","(C) The meeting was good."],"answer":0,"explanation":"(A) directly answers the where question."}]}`),
+    callAPI(`Generate 12 TOEIC Part 2 Question-Response items (id 14–25). Difficulty: ${diff}.
+Each: a spoken question + 3 response choices (A/B/C) + correct answer index (0/1/2) + explanation.
+Return ONLY valid JSON: {"items":[{"id":14,"question":"When does the store close?","choices":["(A) At 9 PM.","(B) Yes, it's open.","(C) The store is large."],"answer":0,"explanation":"(A) directly answers when."}]}`)
+  ]);
+  return { items: [...a.items, ...b.items] };
 }
-async function genPart3(diff) {
-  return callAPI(`Generate 13 TOEIC Part 3 conversation sets, difficulty: ${diff}. Each has dialogue (3–5 lines) + 3 questions.
-Return ONLY JSON: {"sets":[{"id":1,"context":"Two colleagues...","dialogue":[{"speaker":"Man","line":"..."},{"speaker":"Woman","line":"..."}],"questions":[{"id":1,"text":"...","choices":["(A)...","(B)...","(C)...","(D)..."],"answer":0,"explanation":"..."}]}]}`);
+async function genPart3A(diff) {
+  return callAPI(`Generate 7 TOEIC Part 3 Conversation sets (id 1–7). Difficulty: ${diff}.
+Each set: a short dialogue (3–5 lines between Man/Woman) + exactly 3 questions with 4 choices each.
+Return ONLY valid JSON:
+{"sets":[{"id":1,"context":"Office conversation","dialogue":[{"speaker":"Man","line":"Did you book the conference room?"},{"speaker":"Woman","line":"Yes, it's reserved from 2 to 4 PM."},{"speaker":"Man","line":"Great, I'll send the invite."}],"questions":[{"id":1,"text":"What are the speakers discussing?","choices":["(A) A room booking","(B) A lunch plan","(C) A project deadline","(D) A business trip"],"answer":0,"explanation":"They discuss booking the conference room."}]}]}`);
+}
+async function genPart3B(diff) {
+  return callAPI(`Generate 6 TOEIC Part 3 Conversation sets (id 8–13). Difficulty: ${diff}.
+Each set: a short dialogue (3–5 lines between Man/Woman) + exactly 3 questions with 4 choices each.
+Return ONLY valid JSON:
+{"sets":[{"id":8,"context":"Store conversation","dialogue":[{"speaker":"Woman","line":"Excuse me, do you have this in size medium?"},{"speaker":"Man","line":"Let me check in the back for you."},{"speaker":"Woman","line":"Thank you, I'll wait here."}],"questions":[{"id":1,"text":"Where does this conversation take place?","choices":["(A) In a clothing store","(B) In a restaurant","(C) In an office","(D) At a pharmacy"],"answer":0,"explanation":"They discuss clothing sizes."}]}]}`);
 }
 async function genPart4(diff) {
-  return callAPI(`Generate 10 TOEIC Part 4 talk sets, difficulty: ${diff}. Each has a monologue (3–6 sentences) + 3 questions.
-Return ONLY JSON: {"sets":[{"id":1,"talkType":"Announcement","script":"Attention all...","questions":[{"id":1,"text":"...","choices":["(A)...","(B)...","(C)...","(D)..."],"answer":0,"explanation":"..."}]}]}`);
+  return callAPI(`Generate 10 TOEIC Part 4 Talk sets. Difficulty: ${diff}.
+Each set: a monologue (announcement/advertisement/voicemail/news, 3–5 sentences) + exactly 3 questions with 4 choices each.
+Return ONLY valid JSON:
+{"sets":[{"id":1,"talkType":"Announcement","script":"Attention passengers. The 3:45 train to Central is delayed 20 minutes due to track maintenance. We apologize for the inconvenience.","questions":[{"id":1,"text":"What is the announcement about?","choices":["(A) A train delay","(B) A flight cancellation","(C) A bus schedule","(D) A road closure"],"answer":0,"explanation":"The announcement is about a delayed train."}]}]}`);
 }
 
 // ── Render Test ───────────────────────────────────────────────────────────
@@ -542,11 +573,17 @@ function renderP1Q(item, qNum) {
       <button class="ar-speed" id="as-${qNum}" onclick="cycleAudioSpeed(${qNum})">${currentSpeed}x</button>
     </div>
     <div class="q-num">Q${qNum}</div>
+    <div style="padding:8px 12px;background:var(--toeic-light);border-radius:7px;font-size:11px;color:var(--toeic);margin-bottom:8px;text-align:center;" id="hint-m-${qNum}">
+      🔊 ${lang==='ko'?'음성을 먼저 들은 후 선택하세요':'Listen first, then choose'}
+    </div>
+    <div id="opts-wrap-${qNum}" style="opacity:0.25;pointer-events:none;filter:blur(3px);transition:all 0.4s;">
     <div class="q-opts" id="opts-${qNum}">
       ${item.choices.map((c, i) => `
         <button class="q-opt" onclick="selectAnswer(${qNum},${i},${item.answer},this,'${escQ(item.explanation)}')">
-          <span class="q-opt-ltr">${String.fromCharCode(65+i)}</span><span>${c}</span>
+          <span class="q-opt-ltr">${String.fromCharCode(65+i)}</span>
+          <span class="ct" style="visibility:hidden">${c}</span>
         </button>`).join('')}
+    </div>
     </div>`;
   return div;
 }
@@ -568,11 +605,17 @@ function renderP2Q(item, qNum) {
       <button class="ar-speed" id="as-${qNum}" onclick="cycleAudioSpeed(${qNum})">${currentSpeed}x</button>
     </div>
     <div class="q-num">Q${qNum}</div>
+    <div style="padding:8px 12px;background:var(--toeic-light);border-radius:7px;font-size:11px;color:var(--toeic);margin-bottom:8px;text-align:center;" id="hint-m-${qNum}">
+      🔊 ${lang==='ko'?'음성을 먼저 들은 후 선택하세요':'Listen first, then choose'}
+    </div>
+    <div id="opts-wrap-${qNum}" style="opacity:0.25;pointer-events:none;filter:blur(3px);transition:all 0.4s;">
     <div class="q-opts" id="opts-${qNum}">
       ${item.choices.map((c, i) => `
         <button class="q-opt" onclick="selectAnswer(${qNum},${i},${item.answer},this,'${escQ(item.explanation)}')">
-          <span class="q-opt-ltr">${String.fromCharCode(65+i)}</span><span>${c}</span>
+          <span class="q-opt-ltr">${String.fromCharCode(65+i)}</span>
+          <span class="ct" style="visibility:hidden">${c}</span>
         </button>`).join('')}
+    </div>
     </div>`;
   return div;
 }
@@ -743,11 +786,25 @@ function playAudio(partKey, qNum) {
     if(btn) btn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
     if(fill) fill.style.width = '100%';
     isPlaying = false;
+    // 선택지 공개 (Part 1, Part 2)
+    revealChoices(qNum);
   };
   stopTTS();
   currentUtterance = utter;
   isPlaying = true;
   window.speechSynthesis.speak(utter);
+}
+
+function revealChoices(qNum) {
+  const wrap = document.getElementById(`opts-wrap-${qNum}`);
+  const hint = document.getElementById(`hint-m-${qNum}`);
+  if (wrap) {
+    wrap.style.opacity = '1';
+    wrap.style.pointerEvents = 'auto';
+    wrap.style.filter = 'none';
+    wrap.querySelectorAll('.ct').forEach(el => el.style.visibility = 'visible');
+  }
+  if (hint) hint.style.display = 'none';
 }
 
 function playSetAudio(setId, partKey) {
@@ -944,31 +1001,47 @@ function reviewAnswers() {
   document.getElementById('test-area').style.display = 'block';
 
   // Reveal all answers
-  function revealOpts(opts, userAns, correctAns, explanation) {
-    if (userAns === undefined) return;
+  function revealOpts(qNum, opts, userAns, correctAns) {
+    // blur 래퍼 해제
+    const wrap = document.getElementById(`opts-wrap-${qNum}`);
+    if (wrap) {
+      wrap.style.opacity = '1'; wrap.style.pointerEvents = 'auto'; wrap.style.filter = 'none';
+      wrap.querySelectorAll('.ct').forEach(el => el.style.visibility = 'visible');
+    }
+    const hint = document.getElementById(`hint-m-${qNum}`);
+    if (hint) hint.style.display = 'none';
+    if (userAns === undefined) {
+      // 미응답: 정답만 표시
+      if (opts[correctAns]) opts[correctAns].classList.add('correct');
+      return;
+    }
     opts.forEach(b => { b.disabled = true; b.classList.remove('selected'); });
     if (opts[correctAns]) opts[correctAns].classList.add('correct');
     if (userAns !== correctAns && opts[userAns]) opts[userAns].classList.add('wrong');
   }
 
   testData.p1.items.forEach((item, i) => {
-    const opts = document.getElementById(`opts-${i+1}`)?.querySelectorAll('.q-opt');
-    if (opts) revealOpts(Array.from(opts), userAnswers[i+1], item.answer, item.explanation);
+    const qNum = i + 1;
+    const opts = document.getElementById(`opts-${qNum}`)?.querySelectorAll('.q-opt');
+    if (opts) revealOpts(qNum, Array.from(opts), userAnswers[qNum], item.answer);
   });
   testData.p2.items.forEach((item, i) => {
-    const opts = document.getElementById(`opts-${i+7}`)?.querySelectorAll('.q-opt');
-    if (opts) revealOpts(Array.from(opts), userAnswers[i+7], item.answer, item.explanation);
+    const qNum = i + 7;
+    const opts = document.getElementById(`opts-${qNum}`)?.querySelectorAll('.q-opt');
+    if (opts) revealOpts(qNum, Array.from(opts), userAnswers[qNum], item.answer);
   });
   let p3qn=32; testData.p3.sets.forEach(set => {
     set.questions.forEach((q, i) => {
-      const opts = document.getElementById(`opts-${p3qn+i}`)?.querySelectorAll('.q-opt');
-      if (opts) revealOpts(Array.from(opts), userAnswers[p3qn+i], q.answer, q.explanation);
+      const qNum = p3qn + i;
+      const opts = document.getElementById(`opts-${qNum}`)?.querySelectorAll('.q-opt');
+      if (opts) revealOpts(qNum, Array.from(opts), userAnswers[qNum], q.answer);
     }); p3qn+=3;
   });
   let p4qn=71; testData.p4.sets.forEach(set => {
     set.questions.forEach((q, i) => {
-      const opts = document.getElementById(`opts-${p4qn+i}`)?.querySelectorAll('.q-opt');
-      if (opts) revealOpts(Array.from(opts), userAnswers[p4qn+i], q.answer, q.explanation);
+      const qNum = p4qn + i;
+      const opts = document.getElementById(`opts-${qNum}`)?.querySelectorAll('.q-opt');
+      if (opts) revealOpts(qNum, Array.from(opts), userAnswers[qNum], q.answer);
     }); p4qn+=3;
   });
   window.scrollTo({ top: 0, behavior: 'smooth' });
