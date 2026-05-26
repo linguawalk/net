@@ -194,7 +194,7 @@
 </nav>
 
 <!-- API SETUP -->
-<div class="api-setup fade-in" id="api-setup">
+<div class="api-setup fade-in" id="api-setup" style="display:none">
   <div class="api-icon">🎧</div>
   <div class="api-title" data-en="TOEIC LC Mock Test" data-ko="TOEIC 듣기 모의테스트">TOEIC LC Mock Test</div>
   <div class="api-desc" data-en="Enter your API key to generate a full TOEIC Listening mock test." data-ko="API 키를 입력하여 TOEIC 듣기 완전 모의테스트를 시작하세요.">Enter your API key.</div>
@@ -209,7 +209,7 @@
 </div>
 
 <!-- MAIN -->
-<div class="main fade-in" id="main-content">
+<div class="main fade-in" id="main-content" style="display:block">
 
   <!-- HERO -->
   <div class="hero">
@@ -352,24 +352,12 @@ const GEN_STEPS = [
 
 // ── Init ──────────────────────────────────────────────────────────────────
 (function init() {
-  try {
-    const k = sessionStorage.getItem('lw-api-key');
-    if (k) { apiKey = k; showMain(); }
-    const l = localStorage.getItem('lw-lang');
-    if (l) setLang(l);
-  } catch(e) {}
+  apiKey = 'vercel-proxy';
+  try { const l = localStorage.getItem('lw-lang'); if (l) setLang(l); } catch(e) {}
 })();
 
-function saveApiKey() {
-  const key = document.getElementById('api-key-input').value.trim();
-  if (!key.startsWith('sk-ant-')) { alert('Key must start with sk-ant-'); return; }
-  try { sessionStorage.setItem('lw-api-key', key); } catch(e) {}
-  apiKey = key; showMain();
-}
-function showMain() {
-  document.getElementById('api-setup').style.display = 'none';
-  document.getElementById('main-content').style.display = 'block';
-}
+function saveApiKey() {}
+function showMain() {}
 
 // ── Generate Full Mock Test ───────────────────────────────────────────────
 async function generateMockTest() {
@@ -446,10 +434,10 @@ function setProgress(pct) {
 
 // ── API Calls ─────────────────────────────────────────────────────────────
 async function callAPI(prompt) {
-  const res = await fetch('https://api.anthropic.com/v1/messages', {
+  const res = await fetch('/api/claude', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
-    body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 3000, messages: [{ role: 'user', content: prompt }] })
+    headers: { 'Content-Type': 'application/json', 'anthropic-version': '2023-06-01' },
+    body: JSON.stringify({ model: 'claude-sonnet-4-5', max_tokens: 3000, messages: [{ role: 'user', content: prompt }] })
   });
   const d = await res.json();
   const raw = d.content?.[0]?.text || '';
