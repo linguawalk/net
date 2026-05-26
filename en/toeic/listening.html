@@ -663,7 +663,7 @@ function renderP1Item(item) {
         <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
       </button>
       <div class="ap-info">
-        <div class="ap-label">${item.audioScript}</div>
+        <div class="ap-label">${lang==='ko'?'▶ 재생 버튼을 눌러 음성을 들으세요':'▶ Press play to listen'}</div>
         <div class="ap-track"><div class="ap-fill" id="fill-${item.id}"></div></div>
         <div class="ap-time"><span id="cur-${item.id}">0:00</span><span id="dur-${item.id}">—</span></div>
       </div>
@@ -679,12 +679,15 @@ function renderP1Item(item) {
       <div class="qs-title">✏️ ${lang==='ko'?'선택지':'Choices'}</div>
       <div class="qs-note">${lang==='ko'?'들은 후 선택하세요':'Choose after listening'}</div>
     </div>
-    <div id="choices-${item.id}">
+    <div class="reveal-hint" id="hint-${item.id}" style="padding:10px 14px;background:var(--toeic-light);border-radius:8px;font-size:12px;color:var(--toeic);margin-bottom:10px;text-align:center;">
+      🔊 ${lang==='ko'?'음성을 먼저 들은 후 선택하세요':'Listen to the audio first, then choose'}
+    </div>
+    <div id="choices-${item.id}" style="opacity:0.3;pointer-events:none;filter:blur(3px);transition:all 0.4s;">
       ${item.choices.map((c, i) => `
         <div class="q-item" style="margin-bottom:8px;padding:10px 14px;background:var(--bg);border-radius:10px;">
           <button class="q-opt" onclick="selectP1(${item.id}, ${i}, this)" data-idx="${i}">
             <span class="q-opt-ltr">${String.fromCharCode(65+i)}</span>
-            <span>${c}</span>
+            <span class="choice-text" style="visibility:hidden">${c}</span>
           </button>
         </div>`).join('')}
     </div>
@@ -735,12 +738,14 @@ function renderP2Block(items) {
         </div>
         <button class="ap-speed-btn" id="spd2-${item.id}" onclick="cycleSpeed2(${item.id})">${currentSpeed}x</button>
       </div>
+      <div id="opts2-wrap-${item.id}" style="opacity:0.3;pointer-events:none;filter:blur(3px);transition:all 0.4s;">
       <div class="q-opts" id="opts2-${item.id}">
         ${item.choices.map((c, i) => `
           <button class="q-opt" onclick="selectP2(${item.id}, ${i}, this)">
             <span class="q-opt-ltr">${String.fromCharCode(65+i)}</span>
-            <span>${c}</span>
+            <span class="choice-text" style="visibility:hidden">${c}</span>
           </button>`).join('')}
+      </div>
       </div>
       <div class="q-feedback" id="fb2-${item.id}"></div>
     </div>`).join('');
@@ -941,6 +946,14 @@ function playP2Audio(itemId) {
   }, () => {
     btn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
     fill.style.width = '100%';
+    // 선택지 공개
+    const wrapEl = document.getElementById(`opts2-wrap-${itemId}`);
+    if (wrapEl) {
+      wrapEl.style.opacity = '1';
+      wrapEl.style.pointerEvents = 'auto';
+      wrapEl.style.filter = 'none';
+      wrapEl.querySelectorAll('.choice-text').forEach(el => el.style.visibility = 'visible');
+    }
   }, speed);
 }
 
