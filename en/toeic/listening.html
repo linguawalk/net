@@ -462,41 +462,81 @@ function resetContent() {
 }
 
 // ── Generate Content ──────────────────────────────────────────────────────
+async function callClaude(prompt, maxTokens) {
+  const res = await fetch('/api/claude', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'anthropic-version': '2023-06-01' },
+    body: JSON.stringify({ model: 'claude-sonnet-4-5', max_tokens: maxTokens || 1200, messages: [{ role: 'user', content: prompt }] })
+  });
+  const data = await res.json();
+  const raw = data.content?.[0]?.text || '';
+  return JSON.parse(raw.replace(/```json|```/g, '').trim());
+}
+
 async function generateContent() {
   if (isLoading) return;
   resetContent();
   isLoading = true;
   const genBtn = document.getElementById('gen-btn');
   genBtn.disabled = true;
-  const diff = document.getElementById('diff-select').value;
+  const diff   = document.getElementById('diff-select').value;
   const qCount = parseInt(document.getElementById('q-count').value);
   currentSpeed = parseFloat(document.getElementById('speed-select').value);
 
-  document.getElementById('loading-overlay').style.display = 'block';
   const loadingText = document.getElementById('loading-text');
-  loadingText.textContent = lang === 'ko' ? '🤖 AI가 듣기 문제를 생성하고 있습니다...' : '🤖 AI is generating listening content...';
-
-  const prompt = buildPrompt(currentPart, diff, qCount);
+  document.getElementById('loading-overlay').style.display = 'block';
 
   try {
-    const res = await fetch('/api/claude', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'anthropic-version': '2023-06-01' },
-      body: JSON.stringify({ model: 'claude-sonnet-4-5', max_tokens: 3000, messages: [{ role: 'user', content: prompt }] })
-    });
-    const data = await res.json();
-    const raw = data.content?.[0]?.text || '';
-    const clean = raw.replace(/```json|```/g, '').trim();
-    currentData = JSON.parse(clean);
-    totalQuestions = countTotalQuestions(currentData);
-    document.getElementById('loading-overlay').style.display = 'none';
-    await renderContent(currentData);
+    if (currentPart === 'p1') {
+      // ── Part 1: 1문제씩 순차 생성 후 즉시 표시 ──
+      const area = document.getElementById('content-area');
+      area.innerHTML = '';
+      currentData = { part: 'Part 1', items: [] };
+
+      for (let i = 1; i <= qCount; i++) {
+        loadingText.textContent = lang === 'ko'
+          ? `🤖 문제 ${i} / ${qCount} 생성 중…`
+          : `🤖 Generating question ${i} of ${qCount}…`;
+
+        const item = await callClaude(buildP1SinglePrompt(i, diff), 600);
+        item.id = i;
+        currentData.items.push(item);
+        totalQuestions = i;
+
+        // 즉시 화면에 표시
+        if (i === 1) document.getElementById('loading-overlay').style.display = 'none';
+        area.appendChild(renderP1Item(item));
+        loadUnsplashImage(item); // 이미지는 비동기로 독립 로드
+      }
+      initTutorSection(currentData);
+      document.getElementById('action-btns').style.display = 'flex';
+
+    } else {
+      // ── Part 2/3/4: 기존 방식 (한 번에 생성) ──
+      loadingText.textContent = lang === 'ko' ? '🤖 AI가 듣기 문제를 생성하고 있습니다...' : '🤖 Generating listening content...';
+      const prompt = buildPrompt(currentPart, diff, qCount);
+      currentData = await callClaude(prompt, 3000);
+      totalQuestions = countTotalQuestions(currentData);
+      document.getElementById('loading-overlay').style.display = 'none';
+      await renderContent(currentData);
+    }
   } catch(e) {
     document.getElementById('loading-overlay').style.display = 'none';
     document.getElementById('content-area').innerHTML = `<div style="padding:24px;text-align:center;color:var(--text-muted)">⚠️ ${lang==='ko'?'콘텐츠 생성 실패. 다시 시도해주세요.':'Failed to generate. Please try again.'}</div>`;
+    console.error(e);
   }
   isLoading = false;
   genBtn.disabled = false;
+}
+
+function buildP1SinglePrompt(id, diff) {
+  const diffs = { Easy: 'simple everyday scene', Medium: 'moderate complexity', Hard: 'detailed workplace or public scene' };
+  const d = diffs[diff] || diffs.Medium;
+  const L = lang === 'ko';
+  return `Generate 1 TOEIC Part 1 photograph question. Difficulty: ${d}.
+Return ONLY valid JSON (no markdown), single object:
+{"id":${id},"imagePrompt":"vivid realistic TOEIC photo scene (e.g. office, street, restaurant)","audioScript":"One sentence describing the photo (e.g. A woman is writing on a whiteboard.)","choices":["(A) ...","(B) ...","(C) ...","(D) ..."],"answer":0,"explanation":"${L?'왜 정답인지 한국어로':'Why the answer is correct'}"}
+Rules: audioScript = what narrator reads aloud. answer = 0-based index of correct choice. All 4 choices must be plausible but only 1 correct.`;
 }
 
 function buildPrompt(part, diff, count) {
@@ -611,7 +651,7 @@ async function renderContent(data) {
     for (const item of data.items) {
       area.appendChild(renderP1Item(item));
       // AI 이미지 생성
-      generateImage(item);
+      loadUnsplashImage(item);
     }
   } else if (data.part === 'Part 2') {
     area.appendChild(renderP2Block(data.items));
@@ -1057,47 +1097,28 @@ function regenImage(itemId) {
   if (item) generateImage(item, true);
 }
 
+function regenImage(itemId) {
+  const item = currentData?.items?.find(i => i.id === itemId);
+  if (item) loadUnsplashImage(item, true);
+}
+
 async function generateImage(item, forceRegen) {
+  loadUnsplashImage(item, forceRegen);
+}
+
+// Unsplash 직접 사용 (Stability AI 불필요 — 비용 없이 즉시 동작)
+async function loadUnsplashImage(item, forceRegen) {
   const key = item.imagePrompt;
   if (!forceRegen && imageCache[key]) { showImg(item.id, imageCache[key]); return; }
 
-  // ── 1차: Stability AI ──
-  try {
-    const res = await fetch('/api/generate-image', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ prompt: item.imagePrompt, style: 'photographic', aspectRatio: '16:9' })
-    });
-    const data = await res.json();
-    if (!res.ok || !data.imageUrl) throw new Error(data.error || 'no imageUrl');
-    imageCache[key] = data.imageUrl;
-    showImg(item.id, data.imageUrl);
-    return;
-  } catch(e) {
-    console.warn('Stability AI 실패, Unsplash 폴백:', e.message);
-  }
+  // imagePrompt에서 핵심 키워드만 추출 (첫 번째 쉼표 이전)
+  const keyword = item.imagePrompt.split(',')[0].trim();
+  // 랜덤 시드로 매번 다른 이미지
+  const seed = Math.floor(Math.random() * 1000);
+  const url = `https://images.unsplash.com/random/1200x675/?${encodeURIComponent(keyword)}&sig=${seed}`;
 
-  // ── 2차 폴백: Unsplash ──
-  try {
-    const q = encodeURIComponent(item.imagePrompt.split(',')[0].trim());
-    const unsplashKey = typeof UNSPLASH_KEY !== 'undefined' ? UNSPLASH_KEY : '';
-    let unsplashUrl;
-    if (unsplashKey) {
-      const ures = await fetch(`https://api.unsplash.com/photos/random?query=${q}&orientation=landscape&client_id=${unsplashKey}`);
-      const ud = await ures.json();
-      unsplashUrl = ud?.urls?.regular;
-    }
-    // key 없으면 source.unsplash.com 사용 (무제한 무료)
-    if (!unsplashUrl) unsplashUrl = `https://source.unsplash.com/featured/1200x675/?${q}`;
-    imageCache[key] = unsplashUrl;
-    showImg(item.id, unsplashUrl);
-  } catch(e2) {
-    const overlay  = document.getElementById(`img-overlay-${item.id}`);
-    const errEl    = document.getElementById(`img-error-${item.id}`);
-    const regenBtn = document.getElementById(`regen-${item.id}`);
-    if (overlay)  overlay.classList.add('hidden');
-    if (errEl)    errEl.style.display = 'flex';
-    if (regenBtn) regenBtn.style.display = 'flex';
-  }
+  imageCache[key] = url;
+  showImg(item.id, url);
 }
 function showImg(id, url) {
   const img = document.getElementById(`img-${id}`);
