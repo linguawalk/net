@@ -644,7 +644,7 @@ function renderP1Item(item) {
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9l6 6M15 9l-6 6"/></svg>
         <span>${lang==='ko'?'이미지 생성 실패':'Image generation failed'}</span>
       </div>
-      <button class="regen-btn" id="regen-${item.id}" onclick="generateImage(${JSON.stringify(item).replace(/"/g,'&quot;')}, true)" style="display:none">
+      <button class="regen-btn" id="regen-${item.id}" onclick="regenImage(${item.id})" style="display:none">
         ↺ ${lang==='ko'?'재생성':'Retry'}
       </button>
     </div>
@@ -738,14 +738,12 @@ function renderP2Block(items) {
         </div>
         <button class="ap-speed-btn" id="spd2-${item.id}" onclick="cycleSpeed2(${item.id})">${currentSpeed}x</button>
       </div>
-      <div id="opts2-wrap-${item.id}" style="opacity:0.3;pointer-events:none;filter:blur(3px);transition:all 0.4s;">
       <div class="q-opts" id="opts2-${item.id}">
         ${item.choices.map((c, i) => `
           <button class="q-opt" onclick="selectP2(${item.id}, ${i}, this)">
             <span class="q-opt-ltr">${String.fromCharCode(65+i)}</span>
-            <span class="choice-text" style="visibility:hidden">${c}</span>
+            <span>${c}</span>
           </button>`).join('')}
-      </div>
       </div>
       <div class="q-feedback" id="fb2-${item.id}"></div>
     </div>`).join('');
@@ -824,8 +822,9 @@ function renderConvSet(set, partName) {
         <div class="sp-track"><div class="sp-fill" id="spfill-${set.id}"></div></div>
         <span class="sp-time" id="sptime-${set.id}">0:00</span>
         <button class="sp-speed" id="spspd-${set.id}" onclick="cycleSetSpeed(${set.id})">${currentSpeed}x</button>
+        <button onclick="toggleScript(${set.id})" id="script-toggle-${set.id}" style="padding:3px 10px;border-radius:6px;border:0.5px solid var(--border-md);background:transparent;font-size:11px;color:var(--text-muted);cursor:pointer;font-family:inherit;margin-left:4px;">${lang==='ko'?'스크립트 보기':'Script'}</button>
       </div>
-      <div class="script-lines">${scriptHtml}</div>
+      <div class="script-lines" id="script-lines-${set.id}" style="display:none;">${scriptHtml}</div>
     </div>
     <div class="questions-section" style="border:none;padding:18px 0 0;">${qHtml}</div>`;
   return card;
@@ -946,14 +945,7 @@ function playP2Audio(itemId) {
   }, () => {
     btn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
     fill.style.width = '100%';
-    // 선택지 공개
-    const wrapEl = document.getElementById(`opts2-wrap-${itemId}`);
-    if (wrapEl) {
-      wrapEl.style.opacity = '1';
-      wrapEl.style.pointerEvents = 'auto';
-      wrapEl.style.filter = 'none';
-      wrapEl.querySelectorAll('.choice-text').forEach(el => el.style.visibility = 'visible');
-    }
+    // Part 2 선택지는 처음부터 표시됨 — 별도 공개 불필요
   }, speed);
 }
 
@@ -1030,6 +1022,15 @@ function playLineFrom(setId, lineIdx) {
   playDialogueLines(set, lineIdx, speed, fill, btn);
 }
 
+function toggleScript(setId) {
+  const el = document.getElementById(`script-lines-${setId}`);
+  const btn = document.getElementById(`script-toggle-${setId}`);
+  if (!el) return;
+  const isHidden = el.style.display === 'none';
+  el.style.display = isHidden ? 'flex' : 'none';
+  if (btn) btn.textContent = isHidden ? (lang==='ko'?'스크립트 숨기기':'Hide Script') : (lang==='ko'?'스크립트 보기':'Script');
+}
+
 function highlightLine(setId, lineIdx) {
   const el = document.getElementById(`sline-${setId}-${lineIdx}`);
   if (el) el.classList.add('speaking');
@@ -1040,6 +1041,11 @@ function unhighlightLine(setId, lineIdx) {
 }
 
 // ── Image Generation ──────────────────────────────────────────────────────
+function regenImage(itemId) {
+  const item = currentData?.items?.find(i => i.id === itemId);
+  if (item) generateImage(item, true);
+}
+
 async function generateImage(item, forceRegen) {
   const key = item.imagePrompt;
   if (!forceRegen && imageCache[key]) { showImg(item.id, imageCache[key]); return; }
