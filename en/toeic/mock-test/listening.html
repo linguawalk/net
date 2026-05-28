@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LinguaWalk — TOEIC Mock Test — Listening (LC)</title>
+<title>LinguaWalk — TOEIC Mock Test — Listening</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
@@ -24,25 +24,13 @@
   .nav-sep { width:1px; height:18px; background:rgba(255,255,255,0.15); margin:0 12px; }
   .nav-page { font-size:13px; color:rgba(255,255,255,0.6); }
   .nav-space { flex:1; }
-  .nav-back { font-size:13px; color:rgba(255,255,255,0.6); text-decoration:none; padding:6px 10px; border-radius:7px; margin-right:6px; transition:all 0.2s; }
-  .nav-back:hover { background:rgba(255,255,255,0.08); color:#fff; }
   .lang-sw { display:flex; background:rgba(255,255,255,0.08); border-radius:7px; padding:2px; gap:2px; }
   .lbtn { padding:4px 10px; border-radius:5px; font-size:11px; font-weight:500; border:none; background:transparent; color:rgba(255,255,255,0.5); cursor:pointer; font-family:inherit; transition:all 0.2s; }
   .lbtn.act { background:var(--teal); color:#fff; }
+  .nav-back { font-size:13px; color:rgba(255,255,255,0.6); text-decoration:none; padding:6px 10px; border-radius:7px; margin-right:6px; transition:all 0.2s; }
+  .nav-back:hover { background:rgba(255,255,255,0.08); color:#fff; }
 
-  /* API SETUP */
-  .api-setup { max-width:520px; margin:60px auto; padding:32px; background:var(--white); border-radius:16px; border:0.5px solid var(--border-md); text-align:center; }
-  .api-icon { font-size:48px; margin-bottom:16px; }
-  .api-title { font-family:'DM Serif Display',serif; font-size:24px; color:var(--navy); margin-bottom:8px; }
-  .api-desc { font-size:14px; color:var(--text-muted); line-height:1.6; margin-bottom:24px; }
-  .api-input-wrap { display:flex; gap:8px; margin-bottom:12px; }
-  .api-input { flex:1; padding:10px 14px; border:0.5px solid var(--border-md); border-radius:8px; font-size:13px; font-family:monospace; color:var(--text); background:var(--bg); outline:none; }
-  .api-input:focus { border-color:var(--teal); }
-  .api-btn { padding:10px 18px; border-radius:8px; font-size:13px; font-weight:500; background:var(--teal); color:#fff; border:none; cursor:pointer; font-family:inherit; }
-  .api-note { font-size:11px; color:var(--text-light); margin-top:10px; }
-
-  /* MAIN */
-  .main { max-width:900px; margin:0 auto; padding:28px 5% 80px; display:none; }
+  .main { max-width:900px; margin:0 auto; padding:28px 5% 80px; }
 
   /* HERO */
   .hero { background:linear-gradient(135deg,var(--toeic-dark) 0%,var(--toeic) 100%); border-radius:14px; padding:28px 32px; margin-bottom:24px; position:relative; overflow:hidden; }
@@ -53,85 +41,88 @@
   .hero-stats { display:flex; gap:24px; margin-top:18px; flex-wrap:wrap; }
   .hs { text-align:center; }
   .hs-num { font-family:'DM Serif Display',serif; font-size:28px; color:#fcd34d; line-height:1; }
-  .hs-label { font-size:11px; color:rgba(255,255,255,0.55); margin-top:2px; text-transform:uppercase; letter-spacing:.5px; }
+  .hs-lbl { font-size:11px; color:rgba(255,255,255,0.55); margin-top:2px; text-transform:uppercase; letter-spacing:.5px; }
 
-  /* SETUP CARD */
+  /* SETUP */
   .setup-card { background:var(--white); border:0.5px solid var(--border); border-radius:14px; padding:22px; margin-bottom:20px; }
   .sc-title { font-size:13px; font-weight:600; margin-bottom:14px; display:flex; align-items:center; gap:8px; }
   .sc-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; margin-bottom:16px; }
   .sc-item { background:var(--bg); border:0.5px solid var(--border); border-radius:10px; padding:12px 14px; }
   .sc-label { font-size:10px; font-weight:600; letter-spacing:.5px; text-transform:uppercase; color:var(--text-light); margin-bottom:6px; }
   .sc-select { width:100%; border:none; background:transparent; font-size:13px; font-weight:500; color:var(--text); font-family:inherit; cursor:pointer; outline:none; }
-  .part-breakdown { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px; }
-  .pb-item { flex:1; min-width:100px; padding:10px 12px; border-radius:10px; border:0.5px solid var(--border); background:var(--bg); text-align:center; }
-  .pb-part { font-size:10px; font-weight:600; color:var(--text-light); text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px; }
-  .pb-count { font-family:'DM Serif Display',serif; font-size:20px; color:var(--toeic); }
-  .pb-type { font-size:11px; color:var(--text-muted); margin-top:2px; }
+  .breakdown { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px; }
+  .bk { flex:1; min-width:90px; padding:10px 12px; border-radius:10px; border:0.5px solid var(--border); background:var(--bg); text-align:center; }
+  .bk-part { font-size:10px; font-weight:600; color:var(--text-light); text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px; }
+  .bk-num { font-family:'DM Serif Display',serif; font-size:20px; color:var(--toeic); }
+  .bk-type { font-size:11px; color:var(--text-muted); margin-top:2px; }
 
   /* PROGRESS */
   .gen-progress { background:var(--white); border:0.5px solid var(--border); border-radius:14px; padding:24px; margin-bottom:20px; display:none; }
-  .gp-title { font-size:14px; font-weight:600; margin-bottom:14px; text-align:center; }
-  .gp-steps { display:flex; flex-direction:column; gap:10px; }
+  .gp-title { font-size:14px; font-weight:600; margin-bottom:16px; text-align:center; }
+  .gp-steps { display:flex; flex-direction:column; gap:8px; margin-bottom:16px; }
   .gp-step { display:flex; align-items:center; gap:12px; padding:10px 14px; border-radius:10px; background:var(--bg); border:0.5px solid var(--border); }
-  .gp-icon { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0; background:var(--border); }
-  .gp-step.done .gp-icon { background:#eaf3de; }
-  .gp-step.active .gp-icon { background:var(--toeic-light); animation:pulse 1s infinite; }
-  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.6} }
+  .gp-icon { width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0; }
+  .gp-step.wait .gp-icon  { background:var(--border); }
+  .gp-step.run  .gp-icon  { background:var(--toeic-light); animation:pulse 1s infinite; }
+  .gp-step.done .gp-icon  { background:#eaf3de; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.5} }
   .gp-text { font-size:13px; font-weight:500; }
-  .gp-sub { font-size:11px; color:var(--text-muted); margin-top:2px; }
-  .gp-bar-wrap { margin-top:16px; }
-  .gp-bar { height:8px; background:var(--bg); border-radius:8px; overflow:hidden; border:0.5px solid var(--border); }
-  .gp-fill { height:100%; background:linear-gradient(90deg,var(--toeic-dark),var(--toeic)); border-radius:8px; transition:width 0.5s ease; }
-  .gp-pct { text-align:center; font-size:13px; font-weight:600; color:var(--toeic); margin-top:8px; }
+  .gp-sub  { font-size:11px; color:var(--text-muted); margin-top:2px; }
+  .gp-bar  { height:8px; background:var(--bg); border-radius:8px; overflow:hidden; border:0.5px solid var(--border); }
+  .gp-fill { height:100%; background:linear-gradient(90deg,var(--toeic-dark),var(--toeic)); border-radius:8px; transition:width 0.5s; }
+  .gp-pct  { text-align:center; font-size:13px; font-weight:600; color:var(--toeic); margin-top:6px; }
 
-  /* TEST AREA */
-  .test-area { display:none; }
-  .test-header { background:var(--white); border:0.5px solid var(--border); border-radius:14px; padding:14px 20px; margin-bottom:16px; display:flex; align-items:center; gap:16px; flex-wrap:wrap; position:sticky; top:57px; z-index:50; }
-  .th-badge { padding:4px 12px; border-radius:20px; font-size:11px; font-weight:600; background:var(--toeic-light); color:var(--toeic); }
-  .th-timer { font-family:'DM Serif Display',serif; font-size:22px; color:var(--navy); min-width:56px; }
-  .th-timer.warning { color:#e24b4a; }
-  .th-progress { flex:1; min-width:120px; }
-  .th-prog-label { font-size:11px; color:var(--text-muted); margin-bottom:4px; display:flex; justify-content:space-between; }
-  .th-prog-bar { height:6px; background:var(--bg); border-radius:6px; overflow:hidden; }
-  .th-prog-fill { height:100%; background:linear-gradient(90deg,var(--toeic-dark),var(--toeic)); border-radius:6px; transition:width 0.3s; }
-  .th-submit { padding:8px 18px; border-radius:8px; background:var(--toeic); color:#fff; border:none; font-family:inherit; font-size:13px; font-weight:600; cursor:pointer; white-space:nowrap; }
-  .th-submit:hover { background:#9a6010; }
+  /* EXAM HEADER */
+  .exam-header { background:var(--white); border:0.5px solid var(--border); border-radius:14px; padding:14px 20px; margin-bottom:16px; display:flex; align-items:center; gap:16px; flex-wrap:wrap; position:sticky; top:57px; z-index:50; }
+  .eh-badge { padding:4px 12px; border-radius:20px; font-size:11px; font-weight:600; background:var(--toeic-light); color:var(--toeic); }
+  .eh-timer { font-family:'DM Serif Display',serif; font-size:22px; color:var(--navy); min-width:56px; }
+  .eh-timer.warn { color:#e24b4a; }
+  .eh-prog { flex:1; min-width:120px; }
+  .eh-prog-lbl { font-size:11px; color:var(--text-muted); margin-bottom:4px; display:flex; justify-content:space-between; }
+  .eh-prog-bar { height:5px; background:var(--bg); border-radius:5px; overflow:hidden; }
+  .eh-prog-fill { height:100%; background:linear-gradient(90deg,var(--toeic-dark),var(--toeic)); border-radius:5px; transition:width 0.3s; }
+  .submit-btn { padding:8px 18px; border-radius:8px; background:var(--toeic); color:#fff; border:none; font-family:inherit; font-size:13px; font-weight:600; cursor:pointer; white-space:nowrap; }
+  .submit-btn:hover { background:#9a6010; }
 
-  /* PART SECTIONS */
-  .part-section { background:var(--white); border:0.5px solid var(--border); border-radius:14px; margin-bottom:16px; overflow:hidden; }
-  .ps-header { padding:14px 18px; background:var(--toeic-light); border-bottom:0.5px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+  /* PART SECTION */
+  .part-sec { background:var(--white); border:0.5px solid var(--border); border-radius:14px; margin-bottom:16px; overflow:hidden; }
+  .ps-hdr { padding:14px 18px; background:var(--toeic-light); border-bottom:0.5px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
   .ps-title { font-size:14px; font-weight:600; color:var(--toeic); }
   .ps-range { font-size:11px; color:var(--text-muted); }
-  .ps-body { padding:18px; }
+  .ps-body  { padding:18px; }
 
-  /* AUDIO PLAYER (compact) */
-  .audio-row { display:flex; align-items:center; gap:10px; padding:10px 14px; background:var(--bg); border-radius:10px; margin-bottom:12px; border:0.5px solid var(--border); }
+  /* AUDIO ROW */
+  .ar { display:flex; align-items:center; gap:10px; padding:10px 14px; background:var(--bg); border-radius:10px; margin-bottom:12px; border:0.5px solid var(--border); }
   .ar-play { width:36px; height:36px; border-radius:50%; background:var(--toeic); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:all 0.2s; }
   .ar-play:hover { background:#9a6010; }
-  .ar-play svg { width:14px; height:14px; color:#fff; }
-  .ar-track { flex:1; }
-  .ar-label { font-size:11px; color:var(--text-muted); margin-bottom:4px; }
+  .ar-play svg { width:14px; height:14px; fill:#fff; }
+  .ar-info { flex:1; }
+  .ar-lbl { font-size:11px; color:var(--text-muted); margin-bottom:4px; }
   .ar-bar { height:4px; background:var(--border); border-radius:4px; overflow:hidden; }
-  .ar-fill { height:100%; background:var(--toeic); border-radius:4px; width:0%; transition:width 0.2s; }
-  .ar-speed { padding:3px 8px; border-radius:6px; background:transparent; border:0.5px solid var(--border-md); cursor:pointer; font-size:10px; font-weight:600; color:var(--text-muted); font-family:inherit; }
-  .ar-speed.active { background:var(--toeic-light); color:var(--toeic); border-color:var(--toeic); }
+  .ar-fill { height:100%; background:var(--toeic); border-radius:4px; width:0%; transition:width 0.1s; }
+  .ar-spd { padding:3px 8px; border-radius:6px; background:transparent; border:0.5px solid var(--border-md); cursor:pointer; font-size:10px; font-weight:600; color:var(--text-muted); font-family:inherit; }
+  .ar-spd:hover { background:var(--toeic-light); color:var(--toeic); border-color:var(--toeic); }
 
-  /* IMAGE */
-  .img-wrapper { position:relative; width:100%; aspect-ratio:16/9; background:#dde3ee; border-radius:10px; overflow:hidden; margin-bottom:14px; }
-  .img-wrapper img { width:100%; height:100%; object-fit:cover; display:block; }
-  .img-loading { position:absolute; inset:0; background:rgba(28,43,69,0.55); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; color:#fff; font-size:12px; transition:opacity 0.3s; }
-  .img-loading.hidden { opacity:0; pointer-events:none; }
-  .img-spin { width:32px; height:32px; border:2.5px solid rgba(255,255,255,0.25); border-top-color:#fff; border-radius:50%; animation:spin 0.8s linear infinite; }
+  /* PHOTO */
+  .photo-wrap { position:relative; width:100%; aspect-ratio:16/9; background:#dde3ee; border-radius:10px; overflow:hidden; margin-bottom:12px; }
+  .photo-wrap img { width:100%; height:100%; object-fit:cover; display:block; }
+  .photo-loading { position:absolute; inset:0; background:rgba(28,43,69,0.55); display:flex; align-items:center; justify-content:center; gap:8px; color:#fff; font-size:12px; }
+  .photo-loading.hidden { display:none; }
+  .ph-spin { width:28px; height:28px; border:2.5px solid rgba(255,255,255,0.25); border-top-color:#fff; border-radius:50%; animation:spin 0.8s linear infinite; flex-shrink:0; }
   @keyframes spin { to{transform:rotate(360deg)} }
 
   /* SCRIPT */
-  .script-block { background:var(--bg); border-radius:10px; padding:14px 16px; margin-bottom:12px; border:0.5px solid var(--border); max-height:180px; overflow-y:auto; }
-  .script-block.hidden-script { display:none; }
+  .script-blk { background:var(--bg); border-radius:10px; border:0.5px solid var(--border); overflow:hidden; margin-bottom:12px; }
+  .sb-ctrl { display:flex; align-items:center; gap:8px; padding:10px 14px; border-bottom:0.5px solid var(--border); background:var(--white); }
+  .sb-lines { padding:10px 14px; display:none; flex-direction:column; gap:4px; max-height:160px; overflow-y:auto; }
+  .sb-lines.open { display:flex; }
+  .sb-toggle { padding:3px 10px; border-radius:6px; border:0.5px solid var(--border-md); background:transparent; font-size:10px; font-weight:600; color:var(--text-muted); cursor:pointer; font-family:inherit; margin-left:auto; }
+  .sb-toggle:hover { background:var(--toeic-light); color:var(--toeic); border-color:var(--toeic); }
   .sb-line { display:flex; gap:8px; padding:5px 8px; border-radius:6px; cursor:pointer; transition:background 0.15s; }
   .sb-line:hover { background:rgba(186,117,23,0.08); }
-  .sb-line.speaking { background:var(--toeic-light); }
-  .sb-speaker { font-size:10px; font-weight:700; color:var(--toeic); min-width:48px; padding-top:2px; text-transform:uppercase; }
-  .sb-text { font-size:12px; color:var(--text); line-height:1.6; flex:1; }
+  .sb-line.act { background:var(--toeic-light); }
+  .sb-spk { font-size:10px; font-weight:700; color:var(--toeic); min-width:46px; padding-top:2px; text-transform:uppercase; }
+  .sb-txt { font-size:12px; color:var(--text); line-height:1.6; flex:1; }
 
   /* QUESTIONS */
   .q-item { margin-bottom:12px; padding:14px; background:var(--bg); border-radius:10px; }
@@ -141,39 +132,40 @@
   .q-opts { display:flex; flex-direction:column; gap:6px; }
   .q-opt { padding:8px 12px; border-radius:8px; border:1.5px solid var(--border-md); background:var(--white); cursor:pointer; font-size:12px; color:var(--text); transition:all 0.15s; text-align:left; font-family:inherit; display:flex; align-items:center; gap:8px; }
   .q-opt:hover:not(:disabled) { border-color:var(--toeic); background:var(--toeic-light); }
-  .q-opt.selected { border-color:var(--toeic); background:var(--toeic-light); }
+  .q-opt.sel     { border-color:var(--toeic); background:var(--toeic-light); }
   .q-opt.correct { border-color:var(--teal-mid); background:#eaf3de; color:#3b6d11; font-weight:500; }
-  .q-opt.wrong { border-color:#e24b4a; background:#fcebeb; color:#a32d2d; }
+  .q-opt.wrong   { border-color:#e24b4a; background:#fcebeb; color:#a32d2d; }
   .q-opt-ltr { width:22px; height:22px; border-radius:50%; background:var(--bg); display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:600; color:var(--text-muted); flex-shrink:0; border:0.5px solid var(--border); }
-  .q-opt.selected .q-opt-ltr { background:var(--toeic); color:#fff; border-color:var(--toeic); }
+  .q-opt.sel     .q-opt-ltr { background:var(--toeic); color:#fff; border-color:var(--toeic); }
   .q-opt.correct .q-opt-ltr { background:var(--teal-mid); color:#fff; border-color:var(--teal-mid); }
-  .q-opt.wrong .q-opt-ltr { background:#e24b4a; color:#fff; border-color:#e24b4a; }
+  .q-opt.wrong   .q-opt-ltr { background:#e24b4a; color:#fff; border-color:#e24b4a; }
+
+  /* Part 1 unlock */
+  .choices-locked { opacity:0.25; pointer-events:none; filter:blur(2px); transition:all 0.4s; }
 
   /* RESULTS */
-  .results-area { display:none; }
+  .result-area { display:none; }
   .result-hero { background:linear-gradient(135deg,var(--toeic-dark),var(--toeic)); border-radius:14px; padding:32px; text-align:center; margin-bottom:20px; color:#fff; }
-  .rh-label { font-size:13px; opacity:.7; margin-bottom:8px; }
+  .rh-lbl   { font-size:13px; opacity:.7; margin-bottom:8px; }
   .rh-score { font-family:'DM Serif Display',serif; font-size:64px; line-height:1; margin-bottom:4px; }
-  .rh-max { font-size:14px; opacity:.6; margin-bottom:16px; }
-  .rh-pct { font-size:18px; font-weight:600; color:#fcd34d; }
-  .rh-msg { font-size:13px; opacity:.8; margin-top:8px; }
-  .result-breakdown { background:var(--white); border:0.5px solid var(--border); border-radius:14px; padding:20px; margin-bottom:20px; }
+  .rh-max   { font-size:14px; opacity:.6; margin-bottom:16px; }
+  .rh-pct   { font-size:18px; font-weight:600; color:#fcd34d; }
+  .rh-msg   { font-size:13px; opacity:.8; margin-top:8px; }
+  .rb { background:var(--white); border:0.5px solid var(--border); border-radius:14px; padding:20px; margin-bottom:20px; }
   .rb-title { font-size:13px; font-weight:600; margin-bottom:14px; }
   .rb-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
   .rb-cell { background:var(--bg); border-radius:10px; padding:12px; text-align:center; }
   .rb-num { font-family:'DM Serif Display',serif; font-size:22px; color:var(--toeic); line-height:1; margin-bottom:3px; }
-  .rb-label { font-size:11px; color:var(--text-muted); }
+  .rb-lbl { font-size:11px; color:var(--text-muted); }
   .rb-sub { font-size:11px; color:var(--text-light); margin-top:2px; }
-
-  .btn-primary { padding:13px 24px; border-radius:10px; background:var(--toeic); color:#fff; border:none; font-family:inherit; font-size:14px; font-weight:600; cursor:pointer; transition:all 0.2s; width:100%; }
+  .btn-primary { padding:13px 24px; border-radius:10px; background:var(--toeic); color:#fff; border:none; font-family:inherit; font-size:14px; font-weight:600; cursor:pointer; width:100%; margin-bottom:10px; }
   .btn-primary:hover { background:#9a6010; }
-  .btn-primary:disabled { opacity:.5; cursor:not-allowed; }
-  .btn-secondary { padding:12px 20px; border-radius:10px; background:var(--white); color:var(--text); border:0.5px solid var(--border-md); font-family:inherit; font-size:13px; font-weight:500; cursor:pointer; transition:all 0.2s; }
-  .btn-secondary:hover { background:var(--bg); }
+  .btn-sec { padding:12px 20px; border-radius:10px; background:var(--white); color:var(--text); border:0.5px solid var(--border-md); font-family:inherit; font-size:13px; font-weight:500; cursor:pointer; width:100%; }
+  .btn-sec:hover { background:var(--bg); }
 
   @keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
   .fade-in { animation:fadeUp 0.4s ease forwards; }
-  @media(max-width:600px){ .rb-grid{grid-template-columns:1fr 1fr}; .hero-stats{gap:16px}; }
+  @media(max-width:600px){ .rb-grid{grid-template-columns:1fr 1fr} }
 </style>
 </head>
 <body>
@@ -193,44 +185,27 @@
   </div>
 </nav>
 
-<!-- API SETUP -->
-<div class="api-setup fade-in" id="api-setup" style="display:none">
-  <div class="api-icon">🎧</div>
-  <div class="api-title" data-en="TOEIC LC Mock Test" data-ko="TOEIC 듣기 모의테스트">TOEIC LC Mock Test</div>
-  <div class="api-desc" data-en="Enter your API key to generate a full TOEIC Listening mock test." data-ko="API 키를 입력하여 TOEIC 듣기 완전 모의테스트를 시작하세요.">Enter your API key.</div>
-  <div style="text-align:left;margin-bottom:16px;">
-    <div style="font-size:11px;font-weight:600;color:var(--text-muted);margin-bottom:4px;">🤖 Anthropic API Key</div>
-    <div class="api-input-wrap" style="margin-bottom:0;">
-      <input type="password" class="api-input" id="api-key-input" placeholder="sk-ant-api03-...">
-    </div>
-  </div>
-  <button class="api-btn" onclick="saveApiKey()" style="width:100%;padding:11px;">Connect</button>
-  <p class="api-note">🔒 Stored in browser only.</p>
-</div>
+<div class="main fade-in" id="main-content">
 
-<!-- MAIN -->
-<div class="main fade-in" id="main-content" style="display:block">
-
-  <!-- HERO -->
   <div class="hero">
     <div class="hero-tag">🎧 TOEIC LISTENING COMPREHENSION — FULL MOCK TEST</div>
     <h1 class="hero-title" data-en="Listening Full Mock Test" data-ko="듣기 완전 모의테스트">Listening Full Mock Test</h1>
-    <p class="hero-desc" data-en="AI generates all 100 LC questions across Part 1–4. Audio playback for all items — experience the real test." data-ko="AI가 Part 1~4 전체 100문항을 생성합니다. 실제 시험처럼 오디오로 진행하세요."></p>
+    <p class="hero-desc" data-en="AI generates all 100 LC questions across Part 1–4. Experience the real test with audio." data-ko="AI가 Part 1~4 전체 100문항을 생성합니다. 실제 시험처럼 오디오로 진행하세요."></p>
     <div class="hero-stats">
-      <div class="hs"><div class="hs-num">100</div><div class="hs-label" data-en="Questions" data-ko="문항">Questions</div></div>
-      <div class="hs"><div class="hs-num">45'</div><div class="hs-label" data-en="Time Limit" data-ko="제한 시간">Time Limit</div></div>
-      <div class="hs"><div class="hs-num">495</div><div class="hs-label" data-en="Max Score" data-ko="만점">Max Score</div></div>
-      <div class="hs"><div class="hs-num">4</div><div class="hs-label" data-en="Parts" data-ko="파트">Parts</div></div>
+      <div class="hs"><div class="hs-num">100</div><div class="hs-lbl" data-en="Questions" data-ko="문항">Questions</div></div>
+      <div class="hs"><div class="hs-num">45'</div><div class="hs-lbl" data-en="Time Limit" data-ko="제한 시간">Time Limit</div></div>
+      <div class="hs"><div class="hs-num">495</div><div class="hs-lbl" data-en="Max Score" data-ko="만점">Max Score</div></div>
+      <div class="hs"><div class="hs-num">4</div><div class="hs-lbl" data-en="Parts" data-ko="파트">Parts</div></div>
     </div>
   </div>
 
-  <!-- SETUP CARD -->
+  <!-- SETUP -->
   <div class="setup-card" id="setup-card">
     <div class="sc-title">⚙️ <span data-en="Test Configuration" data-ko="테스트 설정">Test Configuration</span></div>
     <div class="sc-grid">
       <div class="sc-item">
         <div class="sc-label" data-en="Difficulty" data-ko="난이도">Difficulty</div>
-        <select class="sc-select" id="diff-select">
+        <select class="sc-select" id="diff-sel">
           <option value="Easy" data-en="Easy" data-ko="쉬움">Easy</option>
           <option value="Medium" selected data-en="Medium" data-ko="보통">Medium</option>
           <option value="Hard" data-en="Hard" data-ko="어려움">Hard</option>
@@ -238,36 +213,36 @@
       </div>
       <div class="sc-item">
         <div class="sc-label" data-en="Time Limit" data-ko="제한 시간">Time Limit</div>
-        <select class="sc-select" id="time-select">
+        <select class="sc-select" id="time-sel">
           <option value="2700" data-en="45 min (Real)" data-ko="45분 (실제)">45 min</option>
-          <option value="3600" data-en="60 min (Extended)" data-ko="60분 (연장)">60 min</option>
-          <option value="0" data-en="No Limit" data-ko="제한 없음">No Limit</option>
+          <option value="3600" data-en="60 min" data-ko="60분">60 min</option>
+          <option value="0"    data-en="No Limit" data-ko="제한 없음">No Limit</option>
         </select>
       </div>
       <div class="sc-item">
         <div class="sc-label" data-en="Mode" data-ko="모드">Mode</div>
-        <select class="sc-select" id="mode-select">
-          <option value="exam" data-en="Exam Mode" data-ko="시험 모드">Exam Mode</option>
+        <select class="sc-select" id="mode-sel">
+          <option value="exam"  data-en="Exam Mode"  data-ko="시험 모드">Exam Mode</option>
           <option value="study" data-en="Study Mode" data-ko="학습 모드">Study Mode</option>
         </select>
       </div>
       <div class="sc-item">
         <div class="sc-label" data-en="Voice Speed" data-ko="음성 속도">Voice Speed</div>
-        <select class="sc-select" id="speed-select">
-          <option value="0.8" data-en="Slow (0.8x)" data-ko="느리게">Slow</option>
-          <option value="1.0" selected data-en="Normal (1.0x)" data-ko="보통">Normal</option>
-          <option value="1.2" data-en="Fast (1.2x)" data-ko="빠르게">Fast</option>
+        <select class="sc-select" id="spd-sel">
+          <option value="0.8" data-en="Slow (0.8x)"   data-ko="느리게 (0.8x)">Slow (0.8x)</option>
+          <option value="1.0" selected data-en="Normal (1.0x)" data-ko="보통 (1.0x)">Normal (1.0x)</option>
+          <option value="1.2" data-en="Fast (1.2x)"   data-ko="빠르게 (1.2x)">Fast (1.2x)</option>
         </select>
       </div>
     </div>
-    <div class="sc-title" style="margin-bottom:10px;" data-en="Question Distribution (real test format):" data-ko="문제 배분 (실제 시험 형식):">Question Distribution:</div>
-    <div class="part-breakdown">
-      <div class="pb-item"><div class="pb-part">PART 1</div><div class="pb-count">6</div><div class="pb-type" data-en="Photographs" data-ko="사진 묘사">Photographs</div></div>
-      <div class="pb-item"><div class="pb-part">PART 2</div><div class="pb-count">25</div><div class="pb-type" data-en="Q&amp;A" data-ko="질의응답">Q&A</div></div>
-      <div class="pb-item"><div class="pb-part">PART 3</div><div class="pb-count">39</div><div class="pb-type" data-en="Conversations" data-ko="대화 (13세트)">Conversations</div></div>
-      <div class="pb-item"><div class="pb-part">PART 4</div><div class="pb-count">30</div><div class="pb-type" data-en="Talks (10 sets)" data-ko="담화 (10세트)">Talks</div></div>
+    <div style="font-size:13px;font-weight:600;margin-bottom:10px;" data-en="Question Distribution:" data-ko="문제 배분 (실제 시험 형식):">Question Distribution:</div>
+    <div class="breakdown">
+      <div class="bk"><div class="bk-part">PART 1</div><div class="bk-num">6</div><div class="bk-type" data-en="Photographs" data-ko="사진 묘사">Photographs</div></div>
+      <div class="bk"><div class="bk-part">PART 2</div><div class="bk-num">25</div><div class="bk-type" data-en="Q&A" data-ko="질의응답">Q&A</div></div>
+      <div class="bk"><div class="bk-part">PART 3</div><div class="bk-num">39</div><div class="bk-type" data-en="Conversations" data-ko="대화 13세트">Conversations</div></div>
+      <div class="bk"><div class="bk-part">PART 4</div><div class="bk-num">30</div><div class="bk-type" data-en="Talks 10 sets" data-ko="담화 10세트">Talks</div></div>
     </div>
-    <button class="btn-primary" id="gen-btn" onclick="generateMockTest()">
+    <button class="btn-primary" id="gen-btn" onclick="startGeneration()">
       🎧 <span data-en="Generate Full Mock Test" data-ko="전체 모의테스트 생성">Generate Full Mock Test</span>
     </button>
   </div>
@@ -276,776 +251,567 @@
   <div class="gen-progress" id="gen-progress">
     <div class="gp-title" data-en="🤖 Generating Listening Content..." data-ko="🤖 듣기 콘텐츠 생성 중...">Generating...</div>
     <div class="gp-steps" id="gp-steps"></div>
-    <div class="gp-bar-wrap">
-      <div class="gp-bar"><div class="gp-fill" id="gp-fill" style="width:0%"></div></div>
-      <div class="gp-pct" id="gp-pct">0%</div>
-    </div>
+    <div class="gp-bar"><div class="gp-fill" id="gp-fill" style="width:0%"></div></div>
+    <div class="gp-pct" id="gp-pct">0%</div>
   </div>
 
-  <!-- TEST AREA -->
-  <div class="test-area" id="test-area">
-    <div class="test-header">
-      <span class="th-badge">🎧 LC Mock Test</span>
-      <div class="th-timer" id="th-timer">45:00</div>
-      <div class="th-progress">
-        <div class="th-prog-label">
+  <!-- EXAM AREA -->
+  <div id="exam-area" style="display:none;">
+    <div class="exam-header">
+      <span class="eh-badge">🎧 LC Mock Test</span>
+      <div class="eh-timer" id="eh-timer">45:00</div>
+      <div class="eh-prog">
+        <div class="eh-prog-lbl">
           <span data-en="Progress" data-ko="진행">Progress</span>
-          <span id="th-prog-text">0 / 100</span>
+          <span id="eh-prog-txt">0 / 100</span>
         </div>
-        <div class="th-prog-bar"><div class="th-prog-fill" id="th-prog-fill" style="width:0%"></div></div>
+        <div class="eh-prog-bar"><div class="eh-prog-fill" id="eh-prog-fill" style="width:0%"></div></div>
       </div>
-      <button class="th-submit" onclick="submitTest()" data-en="Submit Test" data-ko="시험 제출">Submit Test</button>
+      <button class="submit-btn" onclick="submitTest()" data-en="Submit Test" data-ko="시험 제출">Submit Test</button>
     </div>
-    <div id="test-content"></div>
+    <div id="exam-content"></div>
   </div>
 
   <!-- RESULTS -->
-  <div class="results-area" id="results-area">
+  <div class="result-area" id="result-area">
     <div class="result-hero">
-      <div class="rh-label" data-en="Your Score" data-ko="내 점수">Your Score</div>
+      <div class="rh-lbl" data-en="Your Score" data-ko="내 점수">Your Score</div>
       <div class="rh-score" id="rh-score">0</div>
-      <div class="rh-max" data-en="out of 100" data-ko="/ 100">out of 100</div>
+      <div class="rh-max">/100</div>
       <div class="rh-pct" id="rh-pct">0%</div>
       <div class="rh-msg" id="rh-msg"></div>
     </div>
-    <div class="result-breakdown">
+    <div class="rb">
       <div class="rb-title" data-en="📊 Part Breakdown" data-ko="📊 파트별 결과">Part Breakdown</div>
       <div class="rb-grid" id="rb-grid"></div>
     </div>
-    <div style="display:flex;gap:10px;flex-wrap:wrap;">
-      <button class="btn-primary" onclick="restartTest()" style="flex:1" data-en="🔄 New Mock Test" data-ko="🔄 새 모의테스트">New Mock Test</button>
-      <button class="btn-secondary" onclick="reviewAnswers()" style="flex:1" data-en="📝 Review Answers" data-ko="📝 답안 검토">Review Answers</button>
-    </div>
+    <button class="btn-primary" onclick="restartTest()" data-en="🔄 New Mock Test" data-ko="🔄 새 모의테스트">🔄 New Mock Test</button>
+    <button class="btn-sec" onclick="reviewTest()" data-en="📝 Review Answers" data-ko="📝 답안 검토">📝 Review Answers</button>
   </div>
 
 </div>
 
 <script>
-// ── Language ──────────────────────────────────────────────────────────────
-let lang = 'en';
-function setLang(l) {
-  lang = l;
-  document.querySelectorAll('[data-en][data-ko]').forEach(el => {
-    const t = l==='ko' ? el.getAttribute('data-ko') : el.getAttribute('data-en');
-    if (t) el.innerHTML = t;
-  });
-  document.getElementById('btn-en').classList.toggle('act', l==='en');
-  document.getElementById('btn-ko').classList.toggle('act', l==='ko');
-  try { localStorage.setItem('lw-lang', l); } catch(e) {}
-}
-
-// ── State ─────────────────────────────────────────────────────────────────
-let apiKey = '', testData = null, userAnswers = {}, isGenerating = false;
-let timerInterval = null, secondsLeft = 2700, startTime = null;
-let currentSpeed = 1.0;
-let isStudyMode = false;
-let imageCache = {};
-let isPlaying = false;
-
-// Gen steps definition
-const GEN_STEPS = [
-  { icon:'📸', en:'Generating Part 1 — Photographs (6)', ko:'Part 1 생성 — 사진 묘사 (6문항)' },
-  { icon:'💬', en:'Generating Part 2 — Q&A (25)', ko:'Part 2 생성 — 질의응답 (25문항)' },
-  { icon:'🗣️', en:'Generating Part 3A — Conversations (sets 1–7)', ko:'Part 3A 생성 — 대화 (1~7세트)' },
-  { icon:'🗣️', en:'Generating Part 3B — Conversations (sets 8–13)', ko:'Part 3B 생성 — 대화 (8~13세트)' },
-  { icon:'📢', en:'Generating Part 4 — Talks (10 sets)', ko:'Part 4 생성 — 담화 (10세트)' },
+// ── 상수 ──────────────────────────────────────────────────────────────────
+const SPEEDS=[0.7,0.8,1.0,1.2,1.5];
+const STEPS=[
+  {icon:'📸', en:'Part 1 — Photographs (6)',          ko:'Part 1 — 사진 묘사 (6문항)'},
+  {icon:'💬', en:'Part 2 — Q&A (25)',                 ko:'Part 2 — 질의응답 (25문항)'},
+  {icon:'🗣️', en:'Part 3 — Conversations (sets 1–7)', ko:'Part 3A — 대화 (1~7세트)'},
+  {icon:'🗣️', en:'Part 3 — Conversations (sets 8–13)',ko:'Part 3B — 대화 (8~13세트)'},
+  {icon:'📢', en:'Part 4 — Talks (10 sets)',           ko:'Part 4 — 담화 (10세트)'},
 ];
 
-// ── Init ──────────────────────────────────────────────────────────────────
-(function init() {
-  apiKey = 'vercel-proxy';
-  try { const l = localStorage.getItem('lw-lang'); if (l) setLang(l); } catch(e) {}
-})();
+// ── 상태 ──────────────────────────────────────────────────────────────────
+let lang='en', tData=null, uAns={}, isGen=false, ttsActive=false;
+let timerInt=null, secsLeft=2700, studyMode=false, globalSpd=1.0;
 
-function saveApiKey() {}
-function showMain() {}
+// ── 언어 ──────────────────────────────────────────────────────────────────
+function setLang(l){
+  lang=l;
+  document.querySelectorAll('[data-en][data-ko]').forEach(el=>{
+    const t=l==='ko'?el.getAttribute('data-ko'):el.getAttribute('data-en');
+    if(t) el.innerHTML=t;
+  });
+  document.getElementById('btn-en').classList.toggle('act',l==='en');
+  document.getElementById('btn-ko').classList.toggle('act',l==='ko');
+  try{localStorage.setItem('lw-lang',l);}catch(e){}
+}
 
-// ── Generate Full Mock Test ───────────────────────────────────────────────
-async function generateMockTest() {
-  if (isGenerating) return;
-  isGenerating = true;
-  const diff = document.getElementById('diff-select').value;
-  currentSpeed = parseFloat(document.getElementById('speed-select').value);
-  isStudyMode = document.getElementById('mode-select').value === 'study';
-  const timeVal = parseInt(document.getElementById('time-select').value);
-  secondsLeft = timeVal || 99999;
+// ── Claude API ─────────────────────────────────────────────────────────────
+async function callClaude(prompt, maxTok){
+  const r=await fetch('/api/claude',{method:'POST',
+    headers:{'Content-Type':'application/json','anthropic-version':'2023-06-01'},
+    body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:maxTok||2000,
+      messages:[{role:'user',content:prompt}]})});
+  const d=await r.json();
+  const raw=d.content?.[0]?.text||'';
+  return JSON.parse(raw.replace(/```json|```/g,'').trim());
+}
 
-  document.getElementById('setup-card').style.display = 'none';
-  const prog = document.getElementById('gen-progress');
-  prog.style.display = 'block';
+// ── 이미지 로드 ────────────────────────────────────────────────────────────
+async function loadImg(qNum, prompt){
+  const img=document.getElementById('mimg-'+qNum);
+  const ld=document.getElementById('mimgl-'+qNum);
+  if(!img) return;
+  // Stability AI
+  try{
+    const r=await fetch('/api/generate-image',{method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({prompt,style:'photographic',aspectRatio:'16:9'})});
+    const d=await r.json();
+    if(r.ok&&d.imageUrl){ img.src=d.imageUrl; img.onload=()=>{if(ld)ld.classList.add('hidden');}; return; }
+  }catch(e){}
+  // Unsplash fallback
+  const kw=encodeURIComponent(prompt.split(',')[0].trim());
+  img.src=`https://images.unsplash.com/random/1200x675/?${kw}&sig=${Date.now()}`;
+  img.onload=()=>{if(ld)ld.classList.add('hidden');};
+}
 
-  // Step UI 초기화
-  const stepsEl = document.getElementById('gp-steps');
-  stepsEl.innerHTML = GEN_STEPS.map((s, i) => `
-    <div class="gp-step" id="step-${i}">
-      <div class="gp-icon" id="step-icon-${i}">⏳</div>
-      <div><div class="gp-text" id="step-text-${i}">${lang==='ko'?s.ko:s.en}</div>
-      <div class="gp-sub" id="step-sub-${i}" data-en="Waiting..." data-ko="대기 중...">Waiting...</div></div>
+// ── 생성 시작 ──────────────────────────────────────────────────────────────
+async function startGeneration(){
+  if(isGen) return;
+  isGen=true;
+  const diff=document.getElementById('diff-sel').value;
+  globalSpd=parseFloat(document.getElementById('spd-sel').value);
+  studyMode=document.getElementById('mode-sel').value==='study';
+  const timeVal=parseInt(document.getElementById('time-sel').value);
+  secsLeft=timeVal||999999;
+
+  document.getElementById('setup-card').style.display='none';
+  const prog=document.getElementById('gen-progress');
+  prog.style.display='block';
+
+  // 스텝 UI 초기화
+  const stepsEl=document.getElementById('gp-steps');
+  stepsEl.innerHTML=STEPS.map((s,i)=>`
+    <div class="gp-step wait" id="gstep-${i}">
+      <div class="gp-icon" id="gicon-${i}">⏳</div>
+      <div><div class="gp-text">${lang==='ko'?s.ko:s.en}</div>
+      <div class="gp-sub" id="gsub-${i}" data-en="Waiting…" data-ko="대기 중…">Waiting…</div></div>
     </div>`).join('');
 
-  testData = { p1: null, p2: null, p3: null, p4: null };
+  tData={p1:null,p2:null,p3:null,p4:null};
 
-  try {
-    // Part 1
-    setStep(0, 'active');
-    testData.p1 = await genPart1(diff);
-    setStep(0, 'done', '✅'); setProgress(20);
+  try{
+    // Part 1: 1문제씩 순차
+    setStep(0,'run');
+    tData.p1={items:[]};
+    for(let i=1;i<=6;i++){
+      document.getElementById('gsub-0').textContent=`${lang==='ko'?'생성 중':'Generating'} ${i}/6…`;
+      const item=await callClaude(p1Prompt(i,diff),700);
+      item.id=i; tData.p1.items.push(item);
+    }
+    setStep(0,'done','✅'); setProgress(20);
 
-    // Part 2
-    setStep(1, 'active');
-    testData.p2 = await genPart2(diff);
-    setStep(1, 'done', '✅'); setProgress(40);
+    // Part 2: 13 + 12 병렬
+    setStep(1,'run');
+    const [a,b]=await Promise.all([
+      callClaude(p2Prompt(13,diff,1),2000),
+      callClaude(p2Prompt(12,diff,14),2000)
+    ]);
+    tData.p2={items:[...a.items,...b.items]};
+    setStep(1,'done','✅'); setProgress(40);
 
-    // Part 3A (sets 1–7)
-    setStep(2, 'active');
-    const p3a = await genPart3A(diff);
-    setStep(2, 'done', '✅'); setProgress(60);
+    // Part 3A
+    setStep(2,'run');
+    const p3a=await callClaude(p3Prompt(7,diff,1),3000);
+    setStep(2,'done','✅'); setProgress(60);
 
-    // Part 3B (sets 8–13)
-    setStep(3, 'active');
-    const p3b = await genPart3B(diff);
-    setStep(3, 'done', '✅'); setProgress(80);
-
-    // 병합: id 재정렬
-    const p3bSets = p3b.sets.map((s, i) => ({ ...s, id: 7 + i + 1 }));
-    testData.p3 = { sets: [...p3a.sets, ...p3bSets] };
+    // Part 3B
+    setStep(3,'run');
+    const p3b=await callClaude(p3Prompt(6,diff,8),3000);
+    tData.p3={sets:[...p3a.sets,...p3b.sets.map((s,i)=>({...s,id:8+i}))]};
+    setStep(3,'done','✅'); setProgress(80);
 
     // Part 4
-    setStep(4, 'active');
-    testData.p4 = await genPart4(diff);
-    setStep(4, 'done', '✅'); setProgress(100);
+    setStep(4,'run');
+    tData.p4=await callClaude(p4Prompt(10,diff),3000);
+    setStep(4,'done','✅'); setProgress(100);
 
-    await new Promise(r => setTimeout(r, 400));
-    prog.style.display = 'none';
-    renderTest();
+    await new Promise(r=>setTimeout(r,400));
+    prog.style.display='none';
+    renderExam();
 
-  } catch(e) {
-    console.error('Generation error:', e);
-    prog.style.display = 'none';
-    document.getElementById('setup-card').style.display = 'block';
-    document.getElementById('gen-btn').disabled = false;
-    alert(lang==='ko' ? '생성 실패: ' + e.message : 'Generation failed: ' + e.message);
+  }catch(e){
+    prog.style.display='none';
+    document.getElementById('setup-card').style.display='block';
+    document.getElementById('gen-btn').disabled=false;
+    alert((lang==='ko'?'생성 실패: ':'Generation failed: ')+(e.message||''));
+    console.error(e);
   }
-  isGenerating = false;
+  isGen=false;
 }
 
-function setStep(i, state, iconText) {
-  const step = document.getElementById(`step-${i}`);
-  const icon = document.getElementById(`step-icon-${i}`);
-  const sub = document.getElementById(`step-sub-${i}`);
-  step.className = 'gp-step ' + state;
-  if (iconText) icon.textContent = iconText;
-  else icon.textContent = GEN_STEPS[i].icon;
-  sub.textContent = state === 'active' ? (lang==='ko'?'생성 중...':'Generating...') : state === 'done' ? (lang==='ko'?'완료':'Done') : 'Waiting...';
+function setStep(i,state,icon){
+  const el=document.getElementById('gstep-'+i);
+  const ic=document.getElementById('gicon-'+i);
+  const sb=document.getElementById('gsub-'+i);
+  el.className='gp-step '+state;
+  ic.textContent=icon||STEPS[i].icon;
+  sb.textContent=state==='run'?(lang==='ko'?'생성 중…':'Generating…'):state==='done'?(lang==='ko'?'완료':'Done'):'Waiting…';
 }
-function setProgress(pct) {
-  document.getElementById('gp-fill').style.width = pct + '%';
-  document.getElementById('gp-pct').textContent = pct + '%';
-}
-
-// ── API Calls ─────────────────────────────────────────────────────────────
-async function callAPI(prompt) {
-  const res = await fetch('/api/claude', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'anthropic-version': '2023-06-01' },
-    body: JSON.stringify({ model: 'claude-sonnet-4-5', max_tokens: 4000, messages: [{ role: 'user', content: prompt }] })
-  });
-  const d = await res.json();
-  const raw = d.content?.[0]?.text || '';
-  return JSON.parse(raw.replace(/```json|```/g, '').trim());
+function setProgress(pct){
+  document.getElementById('gp-fill').style.width=pct+'%';
+  document.getElementById('gp-pct').textContent=pct+'%';
 }
 
-async function genPart1(diff) {
-  return callAPI(`Generate 6 TOEIC Part 1 Photograph questions. Difficulty: ${diff}.
-Each question: a realistic photo scene + 4 answer choices + correct answer index + explanation.
-Return ONLY valid JSON, no markdown:
-{"items":[{"id":1,"imagePrompt":"realistic office photo for image generation","audioScript":"A man is sitting at a desk using a computer.","choices":["(A) The man is typing on a keyboard.","(B) The man is talking on the phone.","(C) The man is reading a newspaper.","(D) The man is standing near a window."],"answer":0,"explanation":"(A) is correct because the man is using a computer."}]}`);
+// ── 프롬프트 ──────────────────────────────────────────────────────────────
+function p1Prompt(id,diff){
+  return `Generate exactly 1 TOEIC Part 1 question. Difficulty: ${diff}.
+Return ONLY a JSON object:
+{"id":${id},"imagePrompt":"realistic TOEIC scene keyword","audioScript":"One sentence narrator reads aloud.","choices":["(A)...","(B)...","(C)...","(D)..."],"answer":0,"explanation":"${lang==='ko'?'해설':'Why correct'}"}`;
 }
-async function genPart2(diff) {
-  // Part 2: 25문항을 두 번에 나눠서 생성 후 병합
-  const [a, b] = await Promise.all([
-    callAPI(`Generate 13 TOEIC Part 2 Question-Response items (id 1–13). Difficulty: ${diff}.
-Each: a spoken question + 3 response choices (A/B/C) + correct answer index (0/1/2) + explanation.
-Return ONLY valid JSON: {"items":[{"id":1,"question":"Where is the conference room?","choices":["(A) It's on the second floor.","(B) Yes, I attended.","(C) The meeting was good."],"answer":0,"explanation":"(A) directly answers the where question."}]}`),
-    callAPI(`Generate 12 TOEIC Part 2 Question-Response items (id 14–25). Difficulty: ${diff}.
-Each: a spoken question + 3 response choices (A/B/C) + correct answer index (0/1/2) + explanation.
-Return ONLY valid JSON: {"items":[{"id":14,"question":"When does the store close?","choices":["(A) At 9 PM.","(B) Yes, it's open.","(C) The store is large."],"answer":0,"explanation":"(A) directly answers when."}]}`)
-  ]);
-  return { items: [...a.items, ...b.items] };
+function p2Prompt(count,diff,startId){
+  return `Generate ${count} TOEIC Part 2 Q&A items (id ${startId} to ${startId+count-1}). Difficulty: ${diff}.
+Return ONLY JSON: {"items":[{"id":${startId},"question":"spoken question","choices":["(A)...","(B)...","(C)..."],"answer":0,"explanation":"${lang==='ko'?'해설':'Why correct'}"}]}`;
 }
-async function genPart3A(diff) {
-  return callAPI(`Generate 7 TOEIC Part 3 Conversation sets (id 1–7). Difficulty: ${diff}.
-Each set: a short dialogue (3–5 lines between Man/Woman) + exactly 3 questions with 4 choices each.
-Return ONLY valid JSON:
-{"sets":[{"id":1,"context":"Office conversation","dialogue":[{"speaker":"Man","line":"Did you book the conference room?"},{"speaker":"Woman","line":"Yes, it's reserved from 2 to 4 PM."},{"speaker":"Man","line":"Great, I'll send the invite."}],"questions":[{"id":1,"text":"What are the speakers discussing?","choices":["(A) A room booking","(B) A lunch plan","(C) A project deadline","(D) A business trip"],"answer":0,"explanation":"They discuss booking the conference room."}]}]}`);
+function p3Prompt(count,diff,startId){
+  return `Generate ${count} TOEIC Part 3 Conversation sets (id ${startId}–${startId+count-1}). Difficulty: ${diff}.
+Each set: dialogue 3–5 lines + exactly 3 questions (4 choices each).
+Return ONLY JSON: {"sets":[{"id":${startId},"context":"brief context","dialogue":[{"speaker":"Man","line":"..."},{"speaker":"Woman","line":"..."}],"questions":[{"id":1,"text":"...","choices":["(A)...","(B)...","(C)...","(D)..."],"answer":0,"explanation":"${lang==='ko'?'해설':'Explanation'}"}]}]}`;
 }
-async function genPart3B(diff) {
-  return callAPI(`Generate 6 TOEIC Part 3 Conversation sets (id 8–13). Difficulty: ${diff}.
-Each set: a short dialogue (3–5 lines between Man/Woman) + exactly 3 questions with 4 choices each.
-Return ONLY valid JSON:
-{"sets":[{"id":8,"context":"Store conversation","dialogue":[{"speaker":"Woman","line":"Excuse me, do you have this in size medium?"},{"speaker":"Man","line":"Let me check in the back for you."},{"speaker":"Woman","line":"Thank you, I'll wait here."}],"questions":[{"id":1,"text":"Where does this conversation take place?","choices":["(A) In a clothing store","(B) In a restaurant","(C) In an office","(D) At a pharmacy"],"answer":0,"explanation":"They discuss clothing sizes."}]}]}`);
-}
-async function genPart4(diff) {
-  return callAPI(`Generate 10 TOEIC Part 4 Talk sets. Difficulty: ${diff}.
-Each set: a monologue (announcement/advertisement/voicemail/news, 3–5 sentences) + exactly 3 questions with 4 choices each.
-Return ONLY valid JSON:
-{"sets":[{"id":1,"talkType":"Announcement","script":"Attention passengers. The 3:45 train to Central is delayed 20 minutes due to track maintenance. We apologize for the inconvenience.","questions":[{"id":1,"text":"What is the announcement about?","choices":["(A) A train delay","(B) A flight cancellation","(C) A bus schedule","(D) A road closure"],"answer":0,"explanation":"The announcement is about a delayed train."}]}]}`);
+function p4Prompt(count,diff){
+  return `Generate ${count} TOEIC Part 4 Talk sets. Difficulty: ${diff}.
+Each set: monologue 3–5 sentences + exactly 3 questions (4 choices each).
+Return ONLY JSON: {"sets":[{"id":1,"talkType":"Announcement","script":"full text...","questions":[{"id":1,"text":"...","choices":["(A)...","(B)...","(C)...","(D)..."],"answer":0,"explanation":"${lang==='ko'?'해설':'Explanation'}"}]}]}`;
 }
 
-// ── Render Test ───────────────────────────────────────────────────────────
-function renderTest() {
-  const area = document.getElementById('test-area');
-  const content = document.getElementById('test-content');
-  content.innerHTML = '';
+// ── 시험 렌더링 ────────────────────────────────────────────────────────────
+function renderExam(){
+  const content=document.getElementById('exam-content');
+  content.innerHTML='';
 
   // Part 1
-  const p1Section = createPartSection('📸 Part 1 — Photographs', 'Q1–6');
-  testData.p1.items.forEach((item, i) => {
-    const qNum = i + 1;
-    p1Section.querySelector('.ps-body').appendChild(renderP1Q(item, qNum));
-    generateImage(item, qNum);
+  const p1sec=makeSec('📸 Part 1 — Photographs','Q1–6');
+  tData.p1.items.forEach((item,i)=>{
+    const qn=i+1;
+    p1sec.querySelector('.ps-body').appendChild(makeP1Q(item,qn));
+    loadImg(qn, item.imagePrompt);
   });
-  content.appendChild(p1Section);
+  content.appendChild(p1sec);
 
   // Part 2
-  const p2Section = createPartSection('💬 Part 2 — Question-Response', 'Q7–31');
-  testData.p2.items.forEach((item, i) => {
-    p2Section.querySelector('.ps-body').appendChild(renderP2Q(item, i + 7));
-  });
-  content.appendChild(p2Section);
+  const p2sec=makeSec('💬 Part 2 — Question-Response','Q7–31');
+  tData.p2.items.forEach((item,i)=>p2sec.querySelector('.ps-body').appendChild(makeP2Q(item,i+7)));
+  content.appendChild(p2sec);
 
   // Part 3
-  const p3Section = createPartSection('🗣️ Part 3 — Conversations', 'Q32–70');
-  let p3qNum = 32;
-  testData.p3.sets.forEach(set => {
-    p3Section.querySelector('.ps-body').appendChild(renderSetBlock(set, p3qNum, 'p3'));
-    p3qNum += 3;
-  });
-  content.appendChild(p3Section);
+  const p3sec=makeSec('🗣️ Part 3 — Conversations','Q32–70');
+  let p3n=32;
+  tData.p3.sets.forEach(set=>{ p3sec.querySelector('.ps-body').appendChild(makeConvQ(set,p3n,'p3')); p3n+=3; });
+  content.appendChild(p3sec);
 
   // Part 4
-  const p4Section = createPartSection('📢 Part 4 — Talks', 'Q71–100');
-  let p4qNum = 71;
-  testData.p4.sets.forEach(set => {
-    p4Section.querySelector('.ps-body').appendChild(renderSetBlock(set, p4qNum, 'p4'));
-    p4qNum += 3;
-  });
-  content.appendChild(p4Section);
+  const p4sec=makeSec('📢 Part 4 — Talks','Q71–100');
+  let p4n=71;
+  tData.p4.sets.forEach(set=>{ p4sec.querySelector('.ps-body').appendChild(makeConvQ(set,p4n,'p4')); p4n+=3; });
+  content.appendChild(p4sec);
 
-  area.style.display = 'block';
+  document.getElementById('exam-area').style.display='block';
   startTimer();
-  updateProgress();
+  updateProg();
 }
 
-function createPartSection(title, range) {
-  const sec = document.createElement('div');
-  sec.className = 'part-section';
-  sec.innerHTML = `
-    <div class="ps-header">
-      <div class="ps-title">${title}</div>
-      <div class="ps-range">${range}</div>
-    </div>
-    <div class="ps-body"></div>`;
-  return sec;
+function makeSec(title, range){
+  const s=document.createElement('div'); s.className='part-sec';
+  s.innerHTML=`<div class="ps-hdr"><div class="ps-title">${title}</div><div class="ps-range">${range}</div></div><div class="ps-body"></div>`;
+  return s;
 }
 
-// Part 1 Question
-function renderP1Q(item, qNum) {
-  const div = document.createElement('div');
-  div.className = 'q-item';
-  div.id = `q-${qNum}`;
-  div.innerHTML = `
-    <div class="img-wrapper" id="img-w-${qNum}">
-      <img id="img-${qNum}" src="" style="display:none" alt=""/>
-      <div class="img-loading" id="img-l-${qNum}">
-        <div class="img-spin"></div>
-        <span style="font-size:11px">${lang==='ko'?'이미지 생성 중…':'Generating image…'}</span>
-      </div>
+// Part 1 문제 블록
+function makeP1Q(item, qn){
+  const d=document.createElement('div'); d.className='q-item'; d.id='qq-'+qn;
+  d.innerHTML=`
+    <div class="photo-wrap">
+      <img id="mimg-${qn}" src="" alt="" style="opacity:0;transition:opacity 0.4s;" onload="this.style.opacity=1">
+      <div class="photo-loading" id="mimgl-${qn}"><div class="ph-spin"></div><span style="font-size:11px">${lang==='ko'?'이미지 로딩…':'Loading…'}</span></div>
     </div>
-    <div class="audio-row">
-      <button class="ar-play" id="ap-${qNum}" onclick="playAudio('p1',${qNum})">
-        <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+    <div class="ar">
+      <button class="ar-play" id="mbtn-${qn}" onclick="mPlayP1(${qn})">
+        <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
       </button>
-      <div class="ar-track">
-        <div class="ar-label">Q${qNum} · ${lang==='ko'?'음성 재생':'Play Audio'}</div>
-        <div class="ar-bar"><div class="ar-fill" id="af-${qNum}"></div></div>
+      <div class="ar-info">
+        <div class="ar-lbl">Q${qn} · ${lang==='ko'?'▶ 재생 후 선택 가능':'▶ Play to unlock choices'}</div>
+        <div class="ar-bar"><div class="ar-fill" id="mfill-${qn}"></div></div>
       </div>
-      <button class="ar-speed" id="as-${qNum}" onclick="cycleAudioSpeed(${qNum})">${currentSpeed}x</button>
+      <button class="ar-spd" id="mspd-${qn}" onclick="cycleSpd('mspd-${qn}')">${globalSpd}x</button>
     </div>
-    <div class="q-num">Q${qNum}</div>
-    <div style="padding:8px 12px;background:var(--toeic-light);border-radius:7px;font-size:11px;color:var(--toeic);margin-bottom:8px;text-align:center;" id="hint-m-${qNum}">
-      🔊 ${lang==='ko'?'음성을 먼저 들은 후 선택하세요':'Listen first, then choose'}
-    </div>
-    <div id="opts-wrap-${qNum}" style="opacity:0.25;pointer-events:none;filter:blur(3px);transition:all 0.4s;">
-    <div class="q-opts" id="opts-${qNum}">
-      ${item.choices.map((c, i) => `
-        <button class="q-opt" onclick="selectAnswer(${qNum},${i},${item.answer},this,'${escQ(item.explanation)}')">
-          <span class="q-opt-ltr">${String.fromCharCode(65+i)}</span>
-          <span class="ct" style="visibility:hidden">${c}</span>
+    <div class="q-num">Q${qn}</div>
+    <div id="mchoices-${qn}" class="q-opts choices-locked">
+      ${item.choices.map((c,i)=>`
+        <button class="q-opt" onclick="mAns(${qn},${i},this,${item.answer},'${esc(item.explanation)}')">
+          <span class="q-opt-ltr">${'ABCD'[i]}</span><span>${c}</span>
         </button>`).join('')}
-    </div>
     </div>`;
-  return div;
+  return d;
 }
 
-// Part 2 Question
-function renderP2Q(item, qNum) {
-  const div = document.createElement('div');
-  div.className = 'q-item';
-  div.id = `q-${qNum}`;
-  div.innerHTML = `
-    <div class="audio-row">
-      <button class="ar-play" id="ap-${qNum}" onclick="playAudio('p2',${qNum})">
-        <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+function mPlayP1(qn){
+  const item=tData.p1.items[qn-1]; if(!item) return;
+  const btn=document.getElementById('mbtn-'+qn);
+  const fill=document.getElementById('mfill-'+qn);
+  const spd=parseFloat(document.getElementById('mspd-'+qn)?.textContent)||globalSpd;
+  stopTTS();
+  btn.innerHTML='<svg viewBox="0 0 24 24" fill="#fff"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
+  // 즉시 선택지 unlock
+  const ch=document.getElementById('mchoices-'+qn);
+  if(ch){ ch.classList.remove('choices-locked'); }
+  const u=new SpeechSynthesisUtterance(item.audioScript); u.lang='en-US'; u.rate=spd;
+  const vs=speechSynthesis.getVoices(), ev=vs.find(v=>v.lang.startsWith('en-US'))||vs.find(v=>v.lang.startsWith('en'));
+  if(ev) u.voice=ev;
+  u.onboundary=e=>{ if(e.name==='word') fill.style.width=Math.min(100,e.charIndex/item.audioScript.length*100)+'%'; };
+  u.onend=()=>{ btn.innerHTML='<svg viewBox="0 0 24 24" fill="#fff"><polygon points="5 3 19 12 5 21 5 3"/></svg>'; fill.style.width='100%'; ttsActive=false; };
+  speechSynthesis.speak(u); ttsActive=true;
+}
+
+// Part 2 문제 블록
+function makeP2Q(item, qn){
+  const d=document.createElement('div'); d.className='q-item'; d.id='qq-'+qn;
+  d.innerHTML=`
+    <div class="ar">
+      <button class="ar-play" id="mbtn-${qn}" onclick="mPlayP2(${qn})">
+        <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
       </button>
-      <div class="ar-track">
-        <div class="ar-label">Q${qNum} · ${lang==='ko'?'질문을 들으세요':'Listen to the question'}</div>
-        <div class="ar-bar"><div class="ar-fill" id="af-${qNum}"></div></div>
+      <div class="ar-info">
+        <div class="ar-lbl">Q${qn} · ${lang==='ko'?'질문을 들으세요':'Listen to the question'}</div>
+        <div class="ar-bar"><div class="ar-fill" id="mfill-${qn}"></div></div>
       </div>
-      <button class="ar-speed" id="as-${qNum}" onclick="cycleAudioSpeed(${qNum})">${currentSpeed}x</button>
+      <button class="ar-spd" id="mspd-${qn}" onclick="cycleSpd('mspd-${qn}')">${globalSpd}x</button>
     </div>
-    <div class="q-num">Q${qNum}</div>
-    <div style="padding:8px 12px;background:var(--toeic-light);border-radius:7px;font-size:11px;color:var(--toeic);margin-bottom:8px;text-align:center;" id="hint-m-${qNum}">
-      🔊 ${lang==='ko'?'음성을 먼저 들은 후 선택하세요':'Listen first, then choose'}
-    </div>
-    <div id="opts-wrap-${qNum}" style="opacity:0.25;pointer-events:none;filter:blur(3px);transition:all 0.4s;">
-    <div class="q-opts" id="opts-${qNum}">
-      ${item.choices.map((c, i) => `
-        <button class="q-opt" onclick="selectAnswer(${qNum},${i},${item.answer},this,'${escQ(item.explanation)}')">
-          <span class="q-opt-ltr">${String.fromCharCode(65+i)}</span>
-          <span class="ct" style="visibility:hidden">${c}</span>
+    <div class="q-num">Q${qn}</div>
+    <div class="q-opts" id="mopts-${qn}">
+      ${item.choices.map((c,i)=>`
+        <button class="q-opt" onclick="mAns(${qn},${i},this,${item.answer},'${esc(item.explanation)}')">
+          <span class="q-opt-ltr">${'ABC'[i]}</span><span>${c}</span>
         </button>`).join('')}
-    </div>
     </div>`;
-  return div;
+  return d;
 }
 
-// Part 3/4 Set
-function renderSetBlock(set, startQNum, partKey) {
-  const isP3 = partKey === 'p3';
-  const div = document.createElement('div');
-  div.style.marginBottom = '16px';
+function mPlayP2(qn){
+  const idx=qn-7;
+  const item=tData.p2.items[idx]; if(!item) return;
+  const btn=document.getElementById('mbtn-'+qn), fill=document.getElementById('mfill-'+qn);
+  const spd=parseFloat(document.getElementById('mspd-'+qn)?.textContent)||globalSpd;
+  stopTTS();
+  btn.innerHTML='<svg viewBox="0 0 24 24" fill="#fff"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
+  const u=new SpeechSynthesisUtterance(item.question); u.lang='en-US'; u.rate=spd;
+  const vs=speechSynthesis.getVoices(), ev=vs.find(v=>v.lang.startsWith('en-US'))||vs.find(v=>v.lang.startsWith('en'));
+  if(ev) u.voice=ev;
+  u.onboundary=e=>{ if(e.name==='word') fill.style.width=Math.min(100,e.charIndex/item.question.length*100)+'%'; };
+  u.onend=()=>{ btn.innerHTML='<svg viewBox="0 0 24 24" fill="#fff"><polygon points="5 3 19 12 5 21 5 3"/></svg>'; fill.style.width='100%'; ttsActive=false; };
+  speechSynthesis.speak(u); ttsActive=true;
+}
 
-  const scriptHtml = isP3 && set.dialogue
-    ? set.dialogue.map((line, i) => `
-        <div class="sb-line" id="sb-${set.id}-${i}" onclick="playLineFrom('${set.id}','${partKey}',${i})">
-          <span class="sb-speaker">${line.speaker}</span>
-          <span class="sb-text">${line.line}</span>
-        </div>`).join('')
-    : `<div class="sb-line" id="sb-${set.id}-0">
-        <span class="sb-speaker">${set.talkType||'Narrator'}</span>
-        <span class="sb-text">${set.script||''}</span>
-      </div>`;
-
-  const qHtml = set.questions.map((q, i) => {
-    const qNum = startQNum + i;
-    return `
-      <div class="q-item" id="q-${qNum}">
-        <div class="q-num">Q${qNum}</div>
-        <div class="q-text">${q.text}</div>
-        <div class="q-opts" id="opts-${qNum}">
-          ${q.choices.map((c, ci) => `
-            <button class="q-opt" onclick="selectAnswer(${qNum},${ci},${q.answer},this,'${escQ(q.explanation)}')">
-              <span class="q-opt-ltr">${String.fromCharCode(65+ci)}</span><span>${c}</span>
-            </button>`).join('')}
+// Part 3/4 대화/담화 블록
+function makeConvQ(set, startQn, partKey){
+  const isP3=partKey==='p3';
+  const lines=isP3?set.dialogue:[{speaker:set.talkType||'Narrator',line:set.script}];
+  const scriptHtml=lines.map((l,i)=>`
+    <div class="sb-line" id="sbline-${set.id}-${i}" onclick="playFrom(${set.id},'${partKey}',${i})">
+      <span class="sb-spk">${l.speaker}</span><span class="sb-txt">${l.line}</span>
+    </div>`).join('');
+  const qHtml=set.questions.map((q,qi)=>{
+    const qn=startQn+qi;
+    return `<div class="q-item" id="qq-${qn}">
+      <div class="q-num">Q${qn}</div>
+      <div class="q-text">${q.text}</div>
+      <div class="q-opts" id="mopts-${qn}">
+        ${q.choices.map((c,i)=>`
+          <button class="q-opt" onclick="mAnsConv(${qn},${i},this,${q.answer},'${esc(q.explanation)}')">
+            <span class="q-opt-ltr">${'ABCD'[i]}</span><span>${c}</span>
+          </button>`).join('')}
+      </div>
+    </div>`;}).join('');
+  const d=document.createElement('div'); d.style.marginBottom='16px';
+  d.innerHTML=`
+    <div class="script-blk">
+      <div class="sb-ctrl">
+        <button class="ar-play" onclick="playSet(${set.id},'${partKey}')" style="width:34px;height:34px;flex-shrink:0;">
+          <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        </button>
+        <div class="ar-info" style="margin:0 8px;">
+          <div class="ar-lbl">${isP3?(lang==='ko'?set.context||'대화':'Conversation'):(set.talkType||'Talk')}</div>
+          <div class="ar-bar"><div class="ar-fill" id="scfill-${set.id}"></div></div>
         </div>
-      </div>`;
-  }).join('');
-
-  div.innerHTML = `
-    <div class="audio-row">
-      <button class="ar-play" id="ap-s-${set.id}" onclick="playSetAudio('${set.id}','${partKey}')">
-        <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-      </button>
-      <div class="ar-track">
-        <div class="ar-label">${isP3?'🗣️ Conversation':'📢 ' + (set.talkType||'Talk')} ${set.id}</div>
-        <div class="ar-bar"><div class="ar-fill" id="af-s-${set.id}"></div></div>
+        <button class="ar-spd" id="scspd-${set.id}" onclick="cycleSpd('scspd-${set.id}')">${globalSpd}x</button>
+        <button class="sb-toggle" onclick="toggleSb('sblines-${set.id}',this)">${lang==='ko'?'스크립트':'Script'}</button>
       </div>
-      <button class="ar-speed" id="as-s-${set.id}" onclick="cycleSetSpd('${set.id}')">${currentSpeed}x</button>
+      <div class="sb-lines" id="sblines-${set.id}">${scriptHtml}</div>
     </div>
-    <div class="script-block ${isStudyMode?'':'hidden-script'}" id="script-${set.id}">${scriptHtml}</div>
     ${qHtml}`;
-
-  // Study mode: toggle script button
-  if (!isStudyMode) {
-    const toggleBtn = document.createElement('button');
-    toggleBtn.style.cssText = 'font-size:11px;color:var(--text-muted);background:none;border:none;cursor:pointer;padding:4px 0;margin-bottom:10px;';
-    toggleBtn.textContent = lang==='ko'?'📄 스크립트 보기':'📄 Show Script';
-    toggleBtn.onclick = () => {
-      const sc = document.getElementById(`script-${set.id}`);
-      sc.classList.toggle('hidden-script');
-      toggleBtn.textContent = sc.classList.contains('hidden-script') ? (lang==='ko'?'📄 스크립트 보기':'📄 Show Script') : (lang==='ko'?'🙈 스크립트 숨기기':'🙈 Hide Script');
-    };
-    div.insertBefore(toggleBtn, div.querySelector('.script-block'));
-  }
-  return div;
+  return d;
 }
 
-function escQ(s) { return (s||'').replace(/'/g,"&#39;").replace(/"/g,'&quot;').slice(0,200); }
+function toggleSb(id,btn){
+  const el=document.getElementById(id); if(!el) return;
+  const o=el.classList.toggle('open');
+  btn.textContent=o?(lang==='ko'?'숨기기':'Hide'):(lang==='ko'?'스크립트':'Script');
+}
 
-// ── Answer Selection ──────────────────────────────────────────────────────
-function selectAnswer(qNum, idx, answer, btn, explanation) {
-  const opts = document.getElementById(`opts-${qNum}`)?.querySelectorAll('.q-opt');
-  if (!opts) return;
+function playSet(setId,partKey){
+  const sets=partKey==='p3'?tData.p3?.sets:tData.p4?.sets; if(!sets) return;
+  const set=sets.find(s=>s.id===setId||s.id==setId); if(!set) return;
+  const spd=parseFloat(document.getElementById('scspd-'+setId)?.textContent)||globalSpd;
+  stopTTS();
+  if(set.dialogue) playDlg(set,0,spd);
+  else playMono(set,spd);
+}
+function playFrom(setId,partKey,lineIdx){
+  const sets=partKey==='p3'?tData.p3?.sets:tData.p4?.sets; if(!sets) return;
+  const set=sets.find(s=>s.id===setId||s.id==setId); if(!set||!set.dialogue) return;
+  const spd=parseFloat(document.getElementById('scspd-'+setId)?.textContent)||globalSpd;
+  stopTTS(); playDlg(set,lineIdx,spd);
+}
+function playDlg(set,idx,spd){
+  if(idx>=set.dialogue.length){ ttsActive=false; hlSb(set.id,-1); return; }
+  hlSb(set.id,idx);
+  const fill=document.getElementById('scfill-'+set.id);
+  if(fill) fill.style.width=(idx/set.dialogue.length*100)+'%';
+  const line=set.dialogue[idx];
+  const u=new SpeechSynthesisUtterance(line.line); u.lang='en-US'; u.rate=spd;
+  const vs=speechSynthesis.getVoices();
+  const fv=vs.find(v=>v.lang.startsWith('en')&&(v.name.includes('Female')||v.name.includes('Samantha')||v.name.includes('Karen')));
+  const mv=vs.find(v=>v.lang.startsWith('en')&&(v.name.includes('Male')||v.name.includes('Daniel')||v.name.includes('David')));
+  const ev=vs.find(v=>v.lang.startsWith('en'));
+  if(line.speaker==='Woman'&&fv) u.voice=fv;
+  else if(line.speaker==='Man'&&mv) u.voice=mv;
+  else if(ev) u.voice=ev;
+  u.onend=()=>{ if(ttsActive) playDlg(set,idx+1,spd); };
+  speechSynthesis.speak(u); ttsActive=true;
+}
+function playMono(set,spd){
+  const fill=document.getElementById('scfill-'+set.id);
+  hlSb(set.id,0);
+  const u=new SpeechSynthesisUtterance(set.script||''); u.lang='en-US'; u.rate=spd;
+  const vs=speechSynthesis.getVoices(), ev=vs.find(v=>v.lang.startsWith('en-US'))||vs.find(v=>v.lang.startsWith('en'));
+  if(ev) u.voice=ev;
+  u.onboundary=e=>{ if(e.name==='word'&&fill) fill.style.width=Math.min(100,e.charIndex/(set.script||'').length*100)+'%'; };
+  u.onend=()=>{ ttsActive=false; hlSb(set.id,-1); if(fill) fill.style.width='100%'; };
+  speechSynthesis.speak(u); ttsActive=true;
+}
+function hlSb(setId,idx){
+  document.querySelectorAll(`[id^="sbline-${setId}-"]`).forEach(e=>e.classList.remove('act'));
+  if(idx>=0){ const e=document.getElementById(`sbline-${setId}-${idx}`); if(e) e.classList.add('act'); }
+}
 
-  // Exam mode: allow change until submitted
-  if (!isStudyMode) {
-    opts.forEach(b => b.classList.remove('selected'));
-    btn.classList.add('selected');
-    userAnswers[qNum] = idx;
-  } else {
-    // Study mode: immediate feedback
-    if (userAnswers[qNum] !== undefined) return;
-    userAnswers[qNum] = idx;
-    opts.forEach(b => { b.classList.remove('selected'); b.disabled = true; });
+// ── 답변 선택 ──────────────────────────────────────────────────────────────
+function mAns(qn,idx,btn,answer,expl){
+  if(studyMode){
+    // 학습 모드: 즉시 정오답 표시
+    if(uAns[qn]!==undefined) return;
+    uAns[qn]=idx;
+    const opts=document.getElementById('mchoices-'+qn)?.querySelectorAll('.q-opt')
+           ||document.getElementById('mopts-'+qn)?.querySelectorAll('.q-opt'); if(!opts) return;
+    opts.forEach(b=>b.disabled=true);
     opts[answer].classList.add('correct');
-    if (idx !== answer) btn.classList.add('wrong');
-    // Show explanation
-    const exp = document.createElement('div');
-    exp.style.cssText = 'margin-top:8px;font-size:11px;padding:8px 12px;border-radius:7px;line-height:1.5;';
-    exp.style.background = idx===answer ? '#eaf3de' : '#fcebeb';
-    exp.style.color = idx===answer ? '#3b6d11' : '#a32d2d';
-    exp.textContent = explanation;
-    document.getElementById(`q-${qNum}`)?.appendChild(exp);
-  }
-  updateProgress();
-}
-
-// ── Audio ─────────────────────────────────────────────────────────────────
-const SPEED_CYCLE = [0.7, 0.8, 1.0, 1.2, 1.5];
-let currentUtterance = null;
-
-function stopTTS() {
-  if (window.speechSynthesis) window.speechSynthesis.cancel();
-  isPlaying = false;
-  currentUtterance = null;
-}
-
-function speak(text, onEnd, speed, speaker) {
-  stopTTS();
-  const utter = new SpeechSynthesisUtterance(text);
-  utter.lang = 'en-US';
-  utter.rate = speed || currentSpeed;
-  const voices = window.speechSynthesis.getVoices();
-  const enVoices = voices.filter(v => v.lang.startsWith('en'));
-  if (speaker === 'female') {
-    const fv = enVoices.find(v => v.name.includes('Female') || v.name.includes('Samantha') || v.name.includes('Victoria') || v.name.includes('Karen'));
-    if (fv) utter.voice = fv;
-    else if (enVoices.length > 1) utter.voice = enVoices[1];
-  } else if (speaker === 'male') {
-    const mv = enVoices.find(v => v.name.includes('Male') || v.name.includes('Daniel') || v.name.includes('David'));
-    if (mv) utter.voice = mv;
-    else if (enVoices.length) utter.voice = enVoices[0];
-  } else if (enVoices.length) {
-    utter.voice = enVoices[0];
-  }
-  utter.onend = onEnd || null;
-  currentUtterance = utter;
-  isPlaying = true;
-  window.speechSynthesis.speak(utter);
-}
-
-function getQNum2Item(qNum) {
-  // Part 1: Q1-6
-  if (qNum <= 6) {
-    const idx = qNum - 1;
-    return { type: 'p1', item: testData.p1.items[idx] };
-  }
-  // Part 2: Q7-31
-  if (qNum <= 31) {
-    const idx = qNum - 7;
-    return { type: 'p2', item: testData.p2.items[idx] };
-  }
-  return null;
-}
-
-function playAudio(partKey, qNum) {
-  const btn = document.getElementById(`ap-${qNum}`);
-  const fill = document.getElementById(`af-${qNum}`);
-  const speed = parseFloat(document.getElementById(`as-${qNum}`)?.textContent) || currentSpeed;
-
-  let text = '';
-  if (partKey === 'p1') {
-    const item = testData.p1.items[qNum - 1];
-    text = item?.audioScript || '';
-  } else if (partKey === 'p2') {
-    const item = testData.p2.items[qNum - 7];
-    text = item?.question || '';
-  }
-  if (!text) return;
-
-  if (btn) btn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
-  const totalLen = text.length;
-  const utter = new SpeechSynthesisUtterance(text);
-  utter.lang = 'en-US'; utter.rate = speed;
-  const voices = window.speechSynthesis.getVoices();
-  const enVoice = voices.find(v => v.lang.startsWith('en-US')) || voices.find(v => v.lang.startsWith('en'));
-  if (enVoice) utter.voice = enVoice;
-  utter.onboundary = (e) => { if(e.name==='word'&&fill) fill.style.width = Math.min(100,(e.charIndex/totalLen)*100)+'%'; };
-  utter.onend = () => {
-    if(btn) btn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
-    if(fill) fill.style.width = '100%';
-    isPlaying = false;
-    // 선택지 공개 (Part 1, Part 2)
-    revealChoices(qNum);
-  };
-  stopTTS();
-  currentUtterance = utter;
-  isPlaying = true;
-  window.speechSynthesis.speak(utter);
-}
-
-function revealChoices(qNum) {
-  const wrap = document.getElementById(`opts-wrap-${qNum}`);
-  const hint = document.getElementById(`hint-m-${qNum}`);
-  if (wrap) {
-    wrap.style.opacity = '1';
-    wrap.style.pointerEvents = 'auto';
-    wrap.style.filter = 'none';
-    wrap.querySelectorAll('.ct').forEach(el => el.style.visibility = 'visible');
-  }
-  if (hint) hint.style.display = 'none';
-}
-
-function playSetAudio(setId, partKey) {
-  const set = partKey === 'p3'
-    ? testData.p3.sets.find(s => s.id == setId)
-    : testData.p4.sets.find(s => s.id == setId);
-  if (!set) return;
-  const fill = document.getElementById(`af-s-${setId}`);
-  const btn = document.getElementById(`ap-s-${setId}`);
-  const speed = parseFloat(document.getElementById(`as-s-${setId}`)?.textContent) || currentSpeed;
-  stopTTS();
-
-  if (set.dialogue) {
-    playDialogueSeq(set, 0, speed, fill, btn);
+    if(idx!==answer) btn.classList.add('wrong');
+    const fb=document.createElement('div');
+    fb.style.cssText='margin-top:8px;padding:8px 12px;border-radius:7px;font-size:12px;line-height:1.5;';
+    fb.style.background=idx===answer?'#eaf3de':'#fcebeb';
+    fb.style.color=idx===answer?'#3b6d11':'#a32d2d';
+    fb.textContent=expl;
+    document.getElementById('qq-'+qn)?.appendChild(fb);
   } else {
-    if(btn) btn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
-    highlightSb(setId, 0);
-    const utter = new SpeechSynthesisUtterance(set.script || '');
-    utter.lang = 'en-US'; utter.rate = speed;
-    const voices = window.speechSynthesis.getVoices();
-    const enVoice = voices.find(v => v.lang.startsWith('en-US')) || voices.find(v => v.lang.startsWith('en'));
-    if (enVoice) utter.voice = enVoice;
-    const totalLen = (set.script||'').length;
-    utter.onboundary = (e) => { if(e.name==='word'&&fill) fill.style.width = Math.min(100,(e.charIndex/totalLen)*100)+'%'; };
-    utter.onend = () => {
-      if(btn) btn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
-      if(fill) fill.style.width = '100%';
-      unhighlightSb(setId, 0);
-      isPlaying = false;
-    };
-    stopTTS();
-    currentUtterance = utter;
-    isPlaying = true;
-    window.speechSynthesis.speak(utter);
+    // 시험 모드: 선택만 표시
+    const opts=document.getElementById('mchoices-'+qn)?.querySelectorAll('.q-opt')
+           ||document.getElementById('mopts-'+qn)?.querySelectorAll('.q-opt'); if(!opts) return;
+    opts.forEach(b=>b.classList.remove('sel'));
+    btn.classList.add('sel');
+    uAns[qn]=idx;
   }
+  updateProg();
+}
+function mAnsConv(qn,idx,btn,answer,expl){ mAns(qn,idx,btn,answer,expl); }
+
+function updateProg(){
+  const ans=Object.keys(uAns).length;
+  document.getElementById('eh-prog-txt').textContent=`${ans} / 100`;
+  document.getElementById('eh-prog-fill').style.width=(ans/100*100)+'%';
 }
 
-function playDialogueSeq(set, lineIdx, speed, fill, btn) {
-  if (lineIdx >= set.dialogue.length) {
-    if(btn) btn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
-    if(fill) fill.style.width = '100%';
-    unhighlightSb(set.id, lineIdx - 1);
-    isPlaying = false;
-    return;
-  }
-  if (lineIdx === 0 && btn) btn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
-  unhighlightSb(set.id, lineIdx - 1);
-  highlightSb(set.id, lineIdx);
-  if(fill) fill.style.width = (lineIdx / set.dialogue.length * 100) + '%';
-
-  const line = set.dialogue[lineIdx];
-  const utter = new SpeechSynthesisUtterance(line.line);
-  utter.lang = 'en-US'; utter.rate = speed;
-  const voices = window.speechSynthesis.getVoices();
-  const enVoices = voices.filter(v => v.lang.startsWith('en'));
-  if (line.speaker === 'Woman') {
-    const fv = enVoices.find(v => v.name.includes('Female') || v.name.includes('Samantha') || v.name.includes('Karen'));
-    if (fv) utter.voice = fv;
-    else if (enVoices.length > 1) utter.voice = enVoices[1];
-  } else if (enVoices.length) {
-    utter.voice = enVoices[0];
-  }
-  utter.onend = () => {
-    if (isPlaying) playDialogueSeq(set, lineIdx + 1, speed, fill, btn);
-  };
-  currentUtterance = utter;
-  isPlaying = true;
-  window.speechSynthesis.speak(utter);
+// ── TTS 유틸 ─────────────────────────────────────────────────────────────
+function stopTTS(){ speechSynthesis.cancel(); ttsActive=false; }
+function cycleSpd(btnId){
+  const btn=document.getElementById(btnId); if(!btn) return;
+  const cur=parseFloat(btn.textContent);
+  const i=SPEEDS.indexOf(cur);
+  btn.textContent=SPEEDS[(i+1)%SPEEDS.length]+'x';
 }
 
-function playLineFrom(setId, partKey, lineIdx) {
-  const set = partKey === 'p3'
-    ? testData.p3.sets.find(s => s.id == setId)
-    : testData.p4.sets.find(s => s.id == setId);
-  if (!set || !set.dialogue) return;
-  stopTTS();
-  const fill = document.getElementById(`af-s-${setId}`);
-  const btn = document.getElementById(`ap-s-${setId}`);
-  const speed = parseFloat(document.getElementById(`as-s-${setId}`)?.textContent) || currentSpeed;
-  playDialogueSeq(set, lineIdx, speed, fill, btn);
+// ── 타이머 ────────────────────────────────────────────────────────────────
+function startTimer(){
+  if(secsLeft>=999999){ document.getElementById('eh-timer').textContent='∞'; return; }
+  updateTimer();
+  timerInt=setInterval(()=>{ secsLeft--; updateTimer(); if(secsLeft<=0){ clearInterval(timerInt); submitTest(); } },1000);
+}
+function updateTimer(){
+  const m=String(Math.floor(secsLeft/60)).padStart(2,'0');
+  const s=String(secsLeft%60).padStart(2,'0');
+  const el=document.getElementById('eh-timer');
+  el.textContent=`${m}:${s}`;
+  el.classList.toggle('warn',secsLeft<=120);
 }
 
-function highlightSb(setId, i) { document.getElementById(`sb-${setId}-${i}`)?.classList.add('speaking'); }
-function unhighlightSb(setId, i) { document.getElementById(`sb-${setId}-${i}`)?.classList.remove('speaking'); }
-
-function cycleAudioSpeed(qNum) {
-  const btn = document.getElementById(`as-${qNum}`);
-  if (!btn) return;
-  const cur = parseFloat(btn.textContent);
-  const idx = SPEED_CYCLE.indexOf(cur);
-  btn.textContent = SPEED_CYCLE[(idx + 1) % SPEED_CYCLE.length] + 'x';
-}
-function cycleSetSpd(setId) {
-  const btn = document.getElementById(`as-s-${setId}`);
-  if (!btn) return;
-  const cur = parseFloat(btn.textContent);
-  const idx = SPEED_CYCLE.indexOf(cur);
-  btn.textContent = SPEED_CYCLE[(idx + 1) % SPEED_CYCLE.length] + 'x';
-}
-
-// ── Image Generation ──────────────────────────────────────────────────────
-async function generateImage(item, qNum) {
-  const key = item.imagePrompt;
-  if (imageCache[key]) { showImg(qNum, imageCache[key]); return; }
-  try {
-    const res = await fetch('/api/generate-image', {
-      method: 'POST', headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ prompt: item.imagePrompt, style: 'photographic', aspectRatio: '16:9' })
-    });
-    const d = await res.json();
-    if (!d.imageUrl) throw new Error('no url');
-    imageCache[key] = d.imageUrl;
-    showImg(qNum, d.imageUrl);
-  } catch(e) {
-    const l = document.getElementById(`img-l-${qNum}`);
-    if (l) { l.innerHTML = '<span style="font-size:11px;color:rgba(255,255,255,0.6)">Image unavailable</span>'; }
-  }
-}
-function showImg(qNum, url) {
-  const img = document.getElementById(`img-${qNum}`);
-  const loading = document.getElementById(`img-l-${qNum}`);
-  if (!img) return;
-  img.onload = () => { img.style.display='block'; if(loading) loading.classList.add('hidden'); };
-  img.src = url;
+// ── 제출 & 결과 ───────────────────────────────────────────────────────────
+function submitTest(){
+  clearInterval(timerInt); stopTTS();
+  let p1c=0,p2c=0,p3c=0,p4c=0;
+  tData.p1.items.forEach((it,i)=>{ if(uAns[i+1]===it.answer) p1c++; });
+  tData.p2.items.forEach((it,i)=>{ if(uAns[i+7]===it.answer) p2c++; });
+  let p3n=32; tData.p3.sets.forEach(set=>{ set.questions.forEach((q,i)=>{ if(uAns[p3n+i]===q.answer) p3c++; }); p3n+=3; });
+  let p4n=71; tData.p4.sets.forEach(set=>{ set.questions.forEach((q,i)=>{ if(uAns[p4n+i]===q.answer) p4c++; }); p4n+=3; });
+  const total=p1c+p2c+p3c+p4c;
+  const pct=Math.round(total/100*100);
+  document.getElementById('exam-area').style.display='none';
+  const ra=document.getElementById('result-area'); ra.style.display='block';
+  document.getElementById('rh-score').textContent=total;
+  document.getElementById('rh-pct').textContent=pct+'%';
+  document.getElementById('rh-msg').textContent=pct>=80?(lang==='ko'?'🎉 훌륭합니다!':'🎉 Excellent!'):pct>=60?(lang==='ko'?'👍 잘 하셨습니다!':'👍 Good job!'):(lang==='ko'?'💪 다시 도전해보세요!':'💪 Keep practicing!');
+  document.getElementById('rb-grid').innerHTML=`
+    <div class="rb-cell"><div class="rb-num">${p1c}/6</div><div class="rb-lbl">Part 1</div><div class="rb-sub">${Math.round(p1c/6*100)}%</div></div>
+    <div class="rb-cell"><div class="rb-num">${p2c}/25</div><div class="rb-lbl">Part 2</div><div class="rb-sub">${Math.round(p2c/25*100)}%</div></div>
+    <div class="rb-cell"><div class="rb-num">${p3c}/39</div><div class="rb-lbl">Part 3</div><div class="rb-sub">${Math.round(p3c/39*100)}%</div></div>
+    <div class="rb-cell"><div class="rb-num">${p4c}/30</div><div class="rb-lbl">Part 4</div><div class="rb-sub">${Math.round(p4c/30*100)}%</div></div>`;
+  ra.scrollIntoView({behavior:'smooth',block:'start'});
 }
 
-// ── Timer ─────────────────────────────────────────────────────────────────
-function startTimer() {
-  if (secondsLeft >= 99999) { document.getElementById('th-timer').textContent = '∞'; return; }
-  updateTimerDisplay();
-  timerInterval = setInterval(() => {
-    secondsLeft--;
-    updateTimerDisplay();
-    if (secondsLeft <= 0) { clearInterval(timerInterval); submitTest(); }
-  }, 1000);
-}
-function updateTimerDisplay() {
-  const m = String(Math.floor(secondsLeft / 60)).padStart(2, '0');
-  const s = String(secondsLeft % 60).padStart(2, '0');
-  const el = document.getElementById('th-timer');
-  el.textContent = `${m}:${s}`;
-  el.classList.toggle('warning', secondsLeft <= 120);
+function restartTest(){
+  stopTTS(); tData=null; uAns={}; isGen=false;
+  document.getElementById('result-area').style.display='none';
+  document.getElementById('exam-area').style.display='none';
+  document.getElementById('setup-card').style.display='block';
+  document.getElementById('gen-btn').disabled=false;
 }
 
-// ── Progress ──────────────────────────────────────────────────────────────
-function updateProgress() {
-  const total = 100;
-  const answered = Object.keys(userAnswers).length;
-  document.getElementById('th-prog-text').textContent = `${answered} / ${total}`;
-  document.getElementById('th-prog-fill').style.width = (answered / total * 100) + '%';
-}
-
-// ── Submit & Results ──────────────────────────────────────────────────────
-function submitTest() {
-  clearInterval(timerInterval);
-  stopTTS();
-
-  // Calculate scores by part
-  let p1c=0, p2c=0, p3c=0, p4c=0;
-  testData.p1.items.forEach((item, i) => { const qn=i+1; if(userAnswers[qn]===item.answer) p1c++; });
-  testData.p2.items.forEach((item, i) => { const qn=i+7; if(userAnswers[qn]===item.answer) p2c++; });
-  let p3qn=32; testData.p3.sets.forEach(set => { set.questions.forEach((q,i)=>{ if(userAnswers[p3qn+i]===q.answer) p3c++; }); p3qn+=3; });
-  let p4qn=71; testData.p4.sets.forEach(set => { set.questions.forEach((q,i)=>{ if(userAnswers[p4qn+i]===q.answer) p4c++; }); p4qn+=3; });
-  const total = p1c + p2c + p3c + p4c;
-  const pct = Math.round(total / 100 * 100);
-
-  document.getElementById('test-area').style.display = 'none';
-  const results = document.getElementById('results-area');
-  results.style.display = 'block';
-  document.getElementById('rh-score').textContent = total;
-  document.getElementById('rh-pct').textContent = pct + '%';
-  document.getElementById('rh-msg').textContent = pct>=80?(lang==='ko'?'훌륭합니다! 🎉':'Excellent! 🎉'):pct>=60?(lang==='ko'?'잘 했어요! 👍':'Good job! 👍'):(lang==='ko'?'더 연습이 필요해요 💪':'Keep practicing! 💪');
-
-  document.getElementById('rb-grid').innerHTML = `
-    <div class="rb-cell"><div class="rb-num">${p1c}/6</div><div class="rb-label">Part 1</div><div class="rb-sub">${Math.round(p1c/6*100)}%</div></div>
-    <div class="rb-cell"><div class="rb-num">${p2c}/25</div><div class="rb-label">Part 2</div><div class="rb-sub">${Math.round(p2c/25*100)}%</div></div>
-    <div class="rb-cell"><div class="rb-num">${p3c}/39</div><div class="rb-label">Part 3</div><div class="rb-sub">${Math.round(p3c/39*100)}%</div></div>
-    <div class="rb-cell"><div class="rb-num">${p4c}/30</div><div class="rb-label">Part 4</div><div class="rb-sub">${Math.round(p4c/30*100)}%</div></div>`;
-  results.scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
-
-function restartTest() {
-  stopTTS();
-  testData = null; userAnswers = {}; isGenerating = false;
-  document.getElementById('results-area').style.display = 'none';
-  document.getElementById('test-area').style.display = 'none';
-  document.getElementById('setup-card').style.display = 'block';
-  document.getElementById('gen-btn').disabled = false;
-}
-
-function reviewAnswers() {
-  // Re-show test area with answers revealed
-  document.getElementById('results-area').style.display = 'none';
-  document.getElementById('test-area').style.display = 'block';
-
-  // Reveal all answers
-  function revealOpts(qNum, opts, userAns, correctAns) {
-    // blur 래퍼 해제
-    const wrap = document.getElementById(`opts-wrap-${qNum}`);
-    if (wrap) {
-      wrap.style.opacity = '1'; wrap.style.pointerEvents = 'auto'; wrap.style.filter = 'none';
-      wrap.querySelectorAll('.ct').forEach(el => el.style.visibility = 'visible');
-    }
-    const hint = document.getElementById(`hint-m-${qNum}`);
-    if (hint) hint.style.display = 'none';
-    if (userAns === undefined) {
-      // 미응답: 정답만 표시
-      if (opts[correctAns]) opts[correctAns].classList.add('correct');
-      return;
-    }
-    opts.forEach(b => { b.disabled = true; b.classList.remove('selected'); });
-    if (opts[correctAns]) opts[correctAns].classList.add('correct');
-    if (userAns !== correctAns && opts[userAns]) opts[userAns].classList.add('wrong');
-  }
-
-  testData.p1.items.forEach((item, i) => {
-    const qNum = i + 1;
-    const opts = document.getElementById(`opts-${qNum}`)?.querySelectorAll('.q-opt');
-    if (opts) revealOpts(qNum, Array.from(opts), userAnswers[qNum], item.answer);
+function reviewTest(){
+  document.getElementById('result-area').style.display='none';
+  document.getElementById('exam-area').style.display='block';
+  // Part 1
+  tData.p1.items.forEach((it,i)=>{
+    const qn=i+1;
+    const opts=document.getElementById('mchoices-'+qn)?.querySelectorAll('.q-opt'); if(!opts) return;
+    opts.forEach(b=>b.disabled=true);
+    opts[it.answer].classList.add('correct');
+    if(uAns[qn]!==undefined&&uAns[qn]!==it.answer) opts[uAns[qn]]?.classList.add('wrong');
   });
-  testData.p2.items.forEach((item, i) => {
-    const qNum = i + 7;
-    const opts = document.getElementById(`opts-${qNum}`)?.querySelectorAll('.q-opt');
-    if (opts) revealOpts(qNum, Array.from(opts), userAnswers[qNum], item.answer);
+  // Part 2
+  tData.p2.items.forEach((it,i)=>{
+    const qn=i+7;
+    const opts=document.getElementById('mopts-'+qn)?.querySelectorAll('.q-opt'); if(!opts) return;
+    opts.forEach(b=>b.disabled=true);
+    opts[it.answer].classList.add('correct');
+    if(uAns[qn]!==undefined&&uAns[qn]!==it.answer) opts[uAns[qn]]?.classList.add('wrong');
   });
-  let p3qn=32; testData.p3.sets.forEach(set => {
-    set.questions.forEach((q, i) => {
-      const qNum = p3qn + i;
-      const opts = document.getElementById(`opts-${qNum}`)?.querySelectorAll('.q-opt');
-      if (opts) revealOpts(qNum, Array.from(opts), userAnswers[qNum], q.answer);
-    }); p3qn+=3;
+  // Part 3
+  let p3n=32; tData.p3.sets.forEach(set=>{
+    set.questions.forEach((q,i)=>{
+      const qn=p3n+i;
+      const opts=document.getElementById('mopts-'+qn)?.querySelectorAll('.q-opt'); if(!opts) return;
+      opts.forEach(b=>b.disabled=true); opts[q.answer].classList.add('correct');
+      if(uAns[qn]!==undefined&&uAns[qn]!==q.answer) opts[uAns[qn]]?.classList.add('wrong');
+    }); p3n+=3;
   });
-  let p4qn=71; testData.p4.sets.forEach(set => {
-    set.questions.forEach((q, i) => {
-      const qNum = p4qn + i;
-      const opts = document.getElementById(`opts-${qNum}`)?.querySelectorAll('.q-opt');
-      if (opts) revealOpts(qNum, Array.from(opts), userAnswers[qNum], q.answer);
-    }); p4qn+=3;
+  // Part 4
+  let p4n=71; tData.p4.sets.forEach(set=>{
+    set.questions.forEach((q,i)=>{
+      const qn=p4n+i;
+      const opts=document.getElementById('mopts-'+qn)?.querySelectorAll('.q-opt'); if(!opts) return;
+      opts.forEach(b=>b.disabled=true); opts[q.answer].classList.add('correct');
+      if(uAns[qn]!==undefined&&uAns[qn]!==q.answer) opts[uAns[qn]]?.classList.add('wrong');
+    }); p4n+=3;
   });
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  window.scrollTo({top:0,behavior:'smooth'});
 }
+
+function esc(s){ return (s||'').replace(/'/g,"&#39;").replace(/"/g,'&quot;').slice(0,300); }
+
+// ── Init ──────────────────────────────────────────────────────────────────
+(function(){
+  let saved; try{saved=localStorage.getItem('lw-lang');}catch(e){}
+  setLang(saved||((navigator.language||'').startsWith('ko')?'ko':'en'));
+})();
 </script>
 </body>
 </html>
