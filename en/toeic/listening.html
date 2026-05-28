@@ -137,6 +137,20 @@
   .choices-locked.unlocked { opacity:1; pointer-events:auto; filter:none; }
   .listen-hint { padding:9px 14px; background:var(--toeic-light); border-radius:8px; font-size:12px; color:var(--toeic); text-align:center; margin-bottom:10px; }
 
+  /* Part 1 A/B/C/D 버튼 (텍스트 없음) */
+  .p1-choice-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
+  .p1-choice-btn {
+    height:56px; border-radius:12px; border:2px solid var(--border-md);
+    background:var(--white); cursor:pointer; font-family:'DM Serif Display',serif;
+    font-size:22px; font-weight:700; color:var(--text-muted);
+    transition:all 0.2s; display:flex; align-items:center; justify-content:center;
+  }
+  .p1-choice-btn:hover:not(:disabled) { border-color:var(--toeic); background:var(--toeic-light); color:var(--toeic); }
+  .p1-choice-btn.playing { border-color:var(--toeic); background:var(--toeic-light); color:var(--toeic); animation:pulse-btn 0.6s infinite alternate; }
+  .p1-choice-btn.correct { border-color:var(--teal-mid); background:#eaf3de; color:var(--teal-mid); }
+  .p1-choice-btn.wrong   { border-color:#e24b4a; background:#fcebeb; color:#e24b4a; }
+  @keyframes pulse-btn { from{transform:scale(1)} to{transform:scale(1.06)} }
+
   /* SCORE */
   .score-card { background:linear-gradient(135deg,var(--toeic-dark) 0%,var(--toeic) 100%); border-radius:14px; padding:24px; text-align:center; margin-bottom:20px; display:none; }
   .sc-label { font-size:13px; color:rgba(255,255,255,0.6); margin-bottom:6px; }
@@ -524,10 +538,10 @@ function makeP1Card(item, spd){
         <div class="qs-title">✏️ ${lang==='ko'?'선택지':'Choices'}</div>
         <div class="qs-note" id="p1hint-${item.id}">${lang==='ko'?'▶ 재생 후 선택 가능':'▶ Unlocks after playing'}</div>
       </div>
-      <div id="p1choices-${item.id}" class="choices-locked q-opts">
+      <div id="p1choices-${item.id}" class="choices-locked p1-choice-grid">
         ${item.choices.map((c,i)=>`
-          <button class="q-opt" onclick="ansP1(${item.id},${i},this,${item.answer},'${esc(item.explanation)}')">
-            <span class="q-opt-ltr">${'ABCD'[i]}</span><span>${c}</span>
+          <button class="p1-choice-btn" onclick="ansP1(${item.id},${i},this,${item.answer},'${esc(item.explanation)}')" data-text="${c}">
+            ${'ABCD'[i]}
           </button>`).join('')}
       </div>
       <div class="q-feedback" id="p1fb-${item.id}"></div>
@@ -542,31 +556,68 @@ function playP1(id){
   const spd=parseFloat(document.getElementById('pspd-'+id)?.textContent)||1.0;
   stopTTS();
   btn.innerHTML='<svg viewBox="0 0 24 24" fill="#fff"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
-  // 재생 즉시 선택지 잠금 해제
-  unlockP1(id);
-  const u=new SpeechSynthesisUtterance(item.audioScript);
-  u.lang='en-US'; u.rate=spd;
-  const vs=speechSynthesis.getVoices(), ev=vs.find(v=>v.lang.startsWith('en-US'))||vs.find(v=>v.lang.startsWith('en'));
-  if(ev) u.voice=ev;
-  u.onboundary=e=>{ if(e.name==='word') fill.style.width=Math.min(100,e.charIndex/item.audioScript.length*100)+'%'; };
-  u.onend=()=>{ btn.innerHTML='<svg viewBox="0 0 24 24" fill="#fff"><polygon points="5 3 19 12 5 21 5 3"/></svg>'; fill.style.width='100%'; ttsActive=false; };
-  speechSynthesis.speak(u); ttsActive=true;
+
+  // 재생 순서: 내레이터(사진 묘사) → A → B → C → D
+  const letters=['A','B','C','D'];
+  const queue=[
+    item.audioScript,
+    ...item.choices.map((c,i)=>letters[i]+'. '+c)
+  ];
+  let qi=0;
+
+  function playNext(){
+    if(qi>=queue.length){
+      btn.innerHTML='<svg viewBox="0 0 24 24" fill="#fff"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
+      fill.style.width='100%';
+      ttsActive=false;
+      unlockP1(id); // 모두 재생 후 선택 가능
+      return;
+    }
+    fill.style.width=(qi/queue.length*100)+'%';
+
+    // 현재 재생 중인 보기 강조 (qi=0은 내레이터, qi=1~4는 A~D)
+    const choicesEl=document.getElementById('p1choices-'+id);
+    if(choicesEl){
+      choicesEl.querySelectorAll('.p1-choice-btn').forEach((b,i)=>{
+        b.classList.toggle('playing', qi>0 && i===qi-1);
+      });
+    }
+
+    const u=new SpeechSynthesisUtterance(queue[qi]);
+    u.lang='en-US'; u.rate=spd;
+    const vs=speechSynthesis.getVoices();
+    const ev=vs.find(v=>v.lang.startsWith('en-US'))||vs.find(v=>v.lang.startsWith('en'));
+    if(ev) u.voice=ev;
+    u.onend=()=>{ qi++; if(ttsActive) playNext(); };
+    speechSynthesis.speak(u);
+    ttsActive=true;
+  }
+  playNext();
 }
 
 function unlockP1(id){
   const el=document.getElementById('p1choices-'+id);
   const hint=document.getElementById('p1hint-'+id);
-  if(el){ el.classList.remove('choices-locked'); el.classList.add('unlocked'); }
+  if(el){
+    el.classList.remove('choices-locked');
+    el.classList.add('unlocked');
+    el.querySelectorAll('.p1-choice-btn').forEach(b=>b.classList.remove('playing'));
+  }
   if(hint) hint.style.display='none';
 }
 
 function ansP1(id,idx,btn,answer,expl){
-  const opts=document.getElementById('p1choices-'+id)?.querySelectorAll('.q-opt'); if(!opts) return;
-  opts.forEach(b=>{b.disabled=true;});
+  const opts=document.getElementById('p1choices-'+id)?.querySelectorAll('.p1-choice-btn'); if(!opts) return;
+  opts.forEach(b=>{b.disabled=true; b.classList.remove('playing');});
   opts[answer].classList.add('correct');
   if(idx!==answer) btn.classList.add('wrong');
   const fb=document.getElementById('p1fb-'+id);
-  fb.textContent=expl; fb.className='q-feedback show '+(idx===answer?'correct':'wrong');
+  // 정답/오답 피드백에 실제 텍스트 표시
+  const correctText=opts[answer].getAttribute('data-text')||'';
+  fb.innerHTML=(idx===answer
+    ? `✅ 정답! <strong>${'ABCD'[answer]}.</strong> ${correctText}<br><small>${expl}</small>`
+    : `❌ 오답. 정답은 <strong>${'ABCD'[answer]}.</strong> ${correctText}<br><small>${expl}</small>`);
+  fb.className='q-feedback show '+(idx===answer?'correct':'wrong');
   answered++; if(idx===answer) correct++;
   checkDone();
 }
