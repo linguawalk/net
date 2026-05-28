@@ -659,25 +659,37 @@ function makeP2Block(items, spd){
     const d=document.createElement('div');
     d.className='q-item';
     d.style.marginBottom='14px';
-    d.innerHTML=`
-      <div class="q-num">Question ${item.id}</div>
-      <div class="player-row" style="margin-bottom:10px;">
-        <button class="play-btn" id="p2btn-${item.id}" onclick="playP2(${item.id})" style="width:36px;height:36px;">
-          <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </button>
-        <div class="player-info">
-          <div class="player-label">${lang==='ko'?'질문을 듣고 응답을 고르세요':'Listen and choose the best response'}</div>
-          <div class="player-bar"><div class="player-fill" id="p2fill-${item.id}"></div></div>
-        </div>
-        <button class="speed-btn" id="p2spd-${item.id}" onclick="cycleSpd('p2spd-${item.id}')">${spd}x</button>
-      </div>
-      <div class="q-opts" id="p2opts-${item.id}">
-        ${item.choices.map((c,i)=>`
-          <button class="q-opt" onclick="ansP2(${item.id},${i},this,${item.answer},'${esc(item.explanation)}')">
-            <span class="q-opt-ltr">${'ABC'[i]}</span><span>${c}</span>
-          </button>`).join('')}
-      </div>
-      <div class="q-feedback" id="p2fb-${item.id}"></div>`;
+
+    // 플레이어 행
+    const playerRow=document.createElement('div');
+    playerRow.className='player-row'; playerRow.style.marginBottom='10px';
+    const playBtnEl=document.createElement('button');
+    playBtnEl.className='play-btn'; playBtnEl.style.cssText='width:36px;height:36px;';
+    playBtnEl.id='p2btn-'+item.id;
+    playBtnEl.innerHTML='<svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
+    playBtnEl.addEventListener('click',()=>playP2(item.id));
+    const infoDiv=document.createElement('div'); infoDiv.className='player-info';
+    infoDiv.innerHTML=`<div class="player-label">${lang==='ko'?'질문을 듣고 응답을 고르세요':'Listen and choose the best response'}</div><div class="player-bar"><div class="player-fill" id="p2fill-${item.id}"></div></div>`;
+    const spdBtn=document.createElement('button'); spdBtn.className='speed-btn';
+    spdBtn.id='p2spd-'+item.id; spdBtn.textContent=spd+'x';
+    spdBtn.addEventListener('click',()=>cycleSpd('p2spd-'+item.id));
+    playerRow.append(playBtnEl, infoDiv, spdBtn);
+
+    // 번호
+    const qNum=document.createElement('div'); qNum.className='q-num';
+    qNum.textContent='Question '+item.id;
+
+    // 선택지 — addEventListener로 안전하게
+    const optsDiv=document.createElement('div'); optsDiv.className='q-opts'; optsDiv.id='p2opts-'+item.id;
+    item.choices.forEach((c,i)=>{
+      const btn=document.createElement('button'); btn.className='q-opt';
+      btn.innerHTML=`<span class="q-opt-ltr">${'ABC'[i]}</span><span>${c}</span>`;
+      btn.addEventListener('click',()=>ansP2(item.id,i,btn,item.answer,item.explanation));
+      optsDiv.appendChild(btn);
+    });
+
+    const fb=document.createElement('div'); fb.className='q-feedback'; fb.id='p2fb-'+item.id;
+    d.append(qNum, playerRow, optsDiv, fb);
     list.appendChild(d);
   });
   return wrap;
@@ -717,39 +729,59 @@ function makeConvCard(set, partKey, spd){
       <span class="sl-spk">${l.speaker}</span>
       <span class="sl-txt">${l.line}</span>
     </div>`).join('');
-  const qHtml=set.questions.map(q=>`
-    <div class="q-item">
-      <div class="q-num">Q${q.id}</div>
-      <div class="q-text">${q.text}</div>
-      <div class="q-opts" id="qopts-${set.id}-${q.id}">
-        ${q.choices.map((c,i)=>`
-          <button class="q-opt" onclick="ansConv('${set.id}','${q.id}',${i},this,${q.answer},'${esc(q.explanation)}')">
-            <span class="q-opt-ltr">${'ABCD'[i]}</span><span>${c}</span>
-          </button>`).join('')}
-      </div>
-      <div class="q-feedback" id="cfb-${set.id}-${q.id}"></div>
-    </div>`).join('');
+  // Part 3/4 선택지: addEventListener로 안전하게 (특수문자 onclick 깨짐 방지)
+  function buildQItems(container){
+    set.questions.forEach(q=>{
+      const qDiv=document.createElement('div'); qDiv.className='q-item';
+      const qNum=document.createElement('div'); qNum.className='q-num'; qNum.textContent='Q'+q.id;
+      const qText=document.createElement('div'); qText.className='q-text'; qText.textContent=q.text;
+      const optsDiv=document.createElement('div'); optsDiv.className='q-opts'; optsDiv.id='qopts-'+set.id+'-'+q.id;
+      q.choices.forEach((c,i)=>{
+        const btn=document.createElement('button'); btn.className='q-opt';
+        btn.innerHTML='<span class="q-opt-ltr">'+('ABCD'[i])+'</span><span>'+c+'</span>';
+        btn.addEventListener('click',()=>ansConv(set.id,q.id,i,btn,q.answer,q.explanation));
+        optsDiv.appendChild(btn);
+      });
+      const fb=document.createElement('div'); fb.className='q-feedback'; fb.id='cfb-'+set.id+'-'+q.id;
+      qDiv.append(qNum, qText, optsDiv, fb);
+      container.appendChild(qDiv);
+    });
+  }
+  const qHtml=''; // 더미 (아래 div.appendChild 후 buildQItems 호출)
 
+  // 카드 전체를 createElement로 구성 (onclick 문자열 사용 안 함)
   const div=document.createElement('div');
-  div.innerHTML=`
-    <div class="script-card">
-      <div class="script-header">
-        <div class="script-title">${isP3?'🗣️':'📢'} ${isP3?`${lang==='ko'?'대화':'Conversation'} ${set.id}`:(set.talkType||'Talk')+' '+set.id} <span class="ac-badge">${isP3?'Part 3':'Part 4'}</span></div>
-        <button class="script-toggle" onclick="toggleScript('slines-${set.id}',this)">${lang==='ko'?'스크립트 보기':'Show Script'}</button>
-      </div>
-      <div class="script-player-row">
-        <button class="play-btn" id="scbtn-${set.id}" onclick="playSet(${set.id},'${partKey}')" style="width:36px;height:36px;">
-          <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </button>
-        <div class="player-info">
-          <div class="player-label">${isP3?(lang==='ko'?set.context||'대화를 들으세요':set.context||'Listen to the conversation'):(lang==='ko'?'담화를 들으세요':'Listen to the talk')}</div>
-          <div class="player-bar"><div class="player-fill" id="scfill-${set.id}"></div></div>
-        </div>
-        <button class="speed-btn" id="scspd-${set.id}" onclick="cycleSpd('scspd-${set.id}')">${spd}x</button>
-      </div>
-      <div class="script-lines" id="slines-${set.id}">${scriptHtml}</div>
-    </div>
-    <div class="questions-section">${qHtml}</div>`;
+
+  // 스크립트 카드
+  const scriptCard=document.createElement('div'); scriptCard.className='script-card';
+  const hdr=document.createElement('div'); hdr.className='script-header';
+  const ttl=document.createElement('div'); ttl.className='script-title';
+  ttl.innerHTML=(isP3?'🗣️':'📢')+' '+(isP3?(lang==='ko'?'대화 '+set.id:'Conversation '+set.id):((set.talkType||'Talk')+' '+set.id))+' <span class="ac-badge">'+(isP3?'Part 3':'Part 4')+'</span>';
+  const togBtn=document.createElement('button'); togBtn.className='script-toggle';
+  togBtn.textContent=lang==='ko'?'스크립트 보기':'Show Script';
+  togBtn.addEventListener('click',function(){ toggleScript('slines-'+set.id,this); });
+  hdr.append(ttl, togBtn);
+
+  const playerRow=document.createElement('div'); playerRow.className='script-player-row';
+  const playBtn=document.createElement('button'); playBtn.className='play-btn'; playBtn.style.cssText='width:36px;height:36px;';
+  playBtn.id='scbtn-'+set.id;
+  playBtn.innerHTML='<svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
+  playBtn.addEventListener('click',()=>playSet(set.id,partKey));
+  const pInfo=document.createElement('div'); pInfo.className='player-info';
+  pInfo.innerHTML='<div class="player-label">'+(isP3?(lang==='ko'?set.context||'대화를 들으세요':set.context||'Listen'):(lang==='ko'?'담화를 들으세요':'Listen to the talk'))+'</div><div class="player-bar"><div class="player-fill" id="scfill-'+set.id+'"></div></div>';
+  const spdBtn=document.createElement('button'); spdBtn.className='speed-btn'; spdBtn.id='scspd-'+set.id; spdBtn.textContent=spd+'x';
+  spdBtn.addEventListener('click',()=>cycleSpd('scspd-'+set.id));
+  playerRow.append(playBtn, pInfo, spdBtn);
+
+  const linesDiv=document.createElement('div'); linesDiv.className='script-lines'; linesDiv.id='slines-'+set.id;
+  linesDiv.innerHTML=scriptHtml;
+  scriptCard.append(hdr, playerRow, linesDiv);
+
+  // 문제 섹션
+  const qSection=document.createElement('div'); qSection.className='questions-section';
+  buildQItems(qSection);
+
+  div.append(scriptCard, qSection);
   return div;
 }
 
@@ -811,12 +843,14 @@ function hlLine(setId, idx){
 }
 
 function ansConv(setId, qId, idx, btn, answer, expl){
-  const opts=document.getElementById(`qopts-${setId}-${qId}`)?.querySelectorAll('.q-opt'); if(!opts) return;
+  const key=setId+'-'+qId;
+  const opts=document.getElementById('qopts-'+key)?.querySelectorAll('.q-opt'); if(!opts) return;
+  if(opts[0]?.disabled) return; // 이미 답변됨
   opts.forEach(b=>b.disabled=true);
   opts[answer].classList.add('correct');
   if(idx!==answer) btn.classList.add('wrong');
-  const fb=document.getElementById(`cfb-${setId}-${qId}`);
-  fb.textContent=expl; fb.className='q-feedback show '+(idx===answer?'correct':'wrong');
+  const fb=document.getElementById('cfb-'+key);
+  if(fb){ fb.textContent=expl; fb.className='q-feedback show '+(idx===answer?'correct':'wrong'); }
   answered++; if(idx===answer) correct++;
   checkDone();
 }
