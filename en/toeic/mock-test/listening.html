@@ -326,7 +326,36 @@ async function callClaude(prompt, maxTok){
       messages:[{role:'user',content:prompt}]})});
   const d=await r.json();
   const raw=d.content?.[0]?.text||'';
-  return JSON.parse(raw.replace(/```json|```/g,'').trim());
+  return safeParseJSON(raw);
+}
+
+function safeParseJSON(raw){
+  // 1차: 마크다운 코드블록 제거 후 파싱
+  let clean=raw.replace(/```json\s*/gi,'').replace(/```\s*/g,'').trim();
+  try{ return JSON.parse(clean); }catch(e1){}
+
+  // 2차: 첫 { 부터 마지막 } 까지만 추출
+  const start=clean.indexOf('{');
+  const end=clean.lastIndexOf('}');
+  if(start!==-1&&end!==-1&&end>start){
+    try{ return JSON.parse(clean.slice(start,end+1)); }catch(e2){}
+  }
+
+  // 3차: 줄바꿈 → \n 이스케이프 후 재시도 (문자열 내부 줄바꿈 문제)
+  try{
+    const fixed=clean.replace(/(["'])((?:[^"'\\]|\\[\s\S])*?)\1/g,(m,q,s)=>
+      q+s.replace(/\n/g,'\\n').replace(/\r/g,'').replace(/\t/g,'\\t')+q
+    );
+    return JSON.parse(fixed);
+  }catch(e3){}
+
+  // 4차: explanation 필드만 제거 후 파싱 (explanation이 깨진 경우)
+  try{
+    const noExpl=clean.replace(/"explanation"\s*:\s*"[^"]*(?:"[^"]*)*"/g,'"explanation":"..."');
+    return JSON.parse(noExpl);
+  }catch(e4){}
+
+  throw new Error('JSON 파싱 실패: '+clean.slice(0,200));
 }
 
 // ── 이미지 로드 ────────────────────────────────────────────────────────────
@@ -438,23 +467,31 @@ function setProgress(pct){
 
 // ── 프롬프트 ──────────────────────────────────────────────────────────────
 function p1Prompt(id,diff){
-  return `Generate exactly 1 TOEIC Part 1 question. Difficulty: ${diff}.
-Return ONLY a JSON object:
-{"id":${id},"imagePrompt":"realistic TOEIC scene keyword","audioScript":"One sentence narrator reads aloud.","choices":["(A)...","(B)...","(C)...","(D)..."],"answer":0,"explanation":"${lang==='ko'?'해설':'Why correct'}"}`;
+  const ap=Math.floor(Math.random()*4);
+  return `Generate 1 TOEIC Part 1 question. Difficulty: ${diff}.
+IMPORTANT: Return ONLY a single-line JSON object. No newlines inside strings. No markdown.
+{"id":${id},"imagePrompt":"3-5 word realistic photo scene","choices":["(A) desc","(B) desc","(C) desc","(D) desc"],"answer":${ap},"explanation":"Brief English explanation only"}
+Rules: choices[${ap}] is the ONLY correct answer. imagePrompt matches choices[${ap}].`;
 }
 function p2Prompt(count,diff,startId){
-  return `Generate ${count} TOEIC Part 2 Q&A items (id ${startId} to ${startId+count-1}). Difficulty: ${diff}.
-Return ONLY JSON: {"items":[{"id":${startId},"question":"spoken question","choices":["(A)...","(B)...","(C)..."],"answer":0,"explanation":"${lang==='ko'?'해설':'Why correct'}"}]}`;
+  return `Generate ${count} TOEIC Part 2 Q&A items, id ${startId} to ${startId+count-1}. Difficulty: ${diff}.
+IMPORTANT: Return ONLY valid JSON. No newlines inside string values. No markdown.
+{"items":[{"id":${startId},"question":"spoken question text","choices":["(A) response","(B) response","(C) response"],"answer":0,"explanation":"Brief English explanation"}]}
+Rules: answer is 0-based index (0=A,1=B,2=C). All strings must be on single lines.`;
 }
 function p3Prompt(count,diff,startId){
-  return `Generate ${count} TOEIC Part 3 Conversation sets (id ${startId}–${startId+count-1}). Difficulty: ${diff}.
-Each set: dialogue 3–5 lines + exactly 3 questions (4 choices each).
-Return ONLY JSON: {"sets":[{"id":${startId},"context":"brief context","dialogue":[{"speaker":"Man","line":"..."},{"speaker":"Woman","line":"..."}],"questions":[{"id":1,"text":"...","choices":["(A)...","(B)...","(C)...","(D)..."],"answer":0,"explanation":"${lang==='ko'?'해설':'Explanation'}"}]}]}`;
+  return `Generate ${count} TOEIC Part 3 Conversation sets, id ${startId} to ${startId+count-1}. Difficulty: ${diff}.
+Each set: 3-5 dialogue lines + exactly 3 questions with 4 choices.
+IMPORTANT: Return ONLY valid JSON. No newlines inside string values. No markdown.
+{"sets":[{"id":${startId},"context":"one line context","dialogue":[{"speaker":"Man","line":"one line"},{"speaker":"Woman","line":"one line"}],"questions":[{"id":1,"text":"question","choices":["(A) option","(B) option","(C) option","(D) option"],"answer":0,"explanation":"Brief English explanation"}]}]}
+Rules: ALL string values must be single-line. answer is 0-based index.`;
 }
 function p4Prompt(count,diff){
   return `Generate ${count} TOEIC Part 4 Talk sets. Difficulty: ${diff}.
-Each set: monologue 3–5 sentences + exactly 3 questions (4 choices each).
-Return ONLY JSON: {"sets":[{"id":1,"talkType":"Announcement","script":"full text...","questions":[{"id":1,"text":"...","choices":["(A)...","(B)...","(C)...","(D)..."],"answer":0,"explanation":"${lang==='ko'?'해설':'Explanation'}"}]}]}`;
+Each set: monologue script (3-5 sentences) + exactly 3 questions with 4 choices.
+IMPORTANT: Return ONLY valid JSON. No newlines inside string values. No markdown.
+{"sets":[{"id":1,"talkType":"Announcement","script":"full monologue on one line","questions":[{"id":1,"text":"question","choices":["(A) option","(B) option","(C) option","(D) option"],"answer":0,"explanation":"Brief English explanation"}]}]}
+Rules: ALL string values must be single-line. answer is 0-based index.`;
 }
 
 // ── 시험 렌더링 ────────────────────────────────────────────────────────────
