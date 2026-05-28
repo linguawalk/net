@@ -295,11 +295,12 @@
 // ── 상수 ──────────────────────────────────────────────────────────────────
 const SPEEDS=[0.7,0.8,1.0,1.2,1.5];
 const STEPS=[
-  {icon:'📸', en:'Part 1 — Photographs (6)',          ko:'Part 1 — 사진 묘사 (6문항)'},
-  {icon:'💬', en:'Part 2 — Q&A (25)',                 ko:'Part 2 — 질의응답 (25문항)'},
-  {icon:'🗣️', en:'Part 3 — Conversations (sets 1–7)', ko:'Part 3A — 대화 (1~7세트)'},
-  {icon:'🗣️', en:'Part 3 — Conversations (sets 8–13)',ko:'Part 3B — 대화 (8~13세트)'},
-  {icon:'📢', en:'Part 4 — Talks (10 sets)',           ko:'Part 4 — 담화 (10세트)'},
+  {icon:'📸', en:'Part 1 — Photographs (6)',           ko:'Part 1 — 사진 묘사 (6문항)'},
+  {icon:'💬', en:'Part 2 — Q&A (25)',                  ko:'Part 2 — 질의응답 (25문항)'},
+  {icon:'🗣️', en:'Part 3A — Conversations (sets 1–4)', ko:'Part 3A — 대화 (1~4세트)'},
+  {icon:'🗣️', en:'Part 3B — Conversations (sets 5–9)', ko:'Part 3B — 대화 (5~9세트)'},
+  {icon:'🗣️', en:'Part 3C — Conversations (sets 10–13)',ko:'Part 3C — 대화 (10~13세트)'},
+  {icon:'📢', en:'Part 4 — Talks (10 sets)',            ko:'Part 4 — 담화 (10세트)'},
 ];
 
 // ── 상태 ──────────────────────────────────────────────────────────────────
@@ -433,21 +434,34 @@ async function startGeneration(){
     tData.p2={items:[...a.items,...b.items]};
     setStep(1,'done','✅'); setProgress(40);
 
-    // Part 3A
+    // Part 3A (세트 1~4)
     setStep(2,'run');
-    const p3a=await callClaude(p3Prompt(7,diff,1),3000);
-    setStep(2,'done','✅'); setProgress(60);
+    const p3a=await callClaude(p3Prompt(4,diff,1),2500);
+    setStep(2,'done','✅'); setProgress(55);
 
-    // Part 3B
+    // Part 3B (세트 5~9)
     setStep(3,'run');
-    const p3b=await callClaude(p3Prompt(6,diff,8),3000);
-    tData.p3={sets:[...p3a.sets,...p3b.sets.map((s,i)=>({...s,id:8+i}))]};
-    setStep(3,'done','✅'); setProgress(80);
+    const p3b=await callClaude(p3Prompt(5,diff,5),2500);
+    setStep(3,'done','✅'); setProgress(70);
 
-    // Part 4
+    // Part 3C (세트 10~13)
     setStep(4,'run');
-    tData.p4=await callClaude(p4Prompt(10,diff),3000);
-    setStep(4,'done','✅'); setProgress(100);
+    const p3c=await callClaude(p3Prompt(4,diff,10),2500);
+    tData.p3={sets:[
+      ...p3a.sets,
+      ...p3b.sets.map((s,i)=>({...s,id:5+i})),
+      ...p3c.sets.map((s,i)=>({...s,id:10+i}))
+    ]};
+    setStep(4,'done','✅'); setProgress(85);
+
+    // Part 4 (5+5 분할)
+    setStep(5,'run');
+    const [p4a,p4b]=await Promise.all([
+      callClaude(p4Prompt(5,diff,1),2000),
+      callClaude(p4Prompt(5,diff,6),2000)
+    ]);
+    tData.p4={sets:[...p4a.sets,...p4b.sets.map((s,i)=>({...s,id:6+i}))]};
+    setStep(5,'done','✅'); setProgress(100);
 
     await new Promise(r=>setTimeout(r,400));
     prog.style.display='none';
@@ -491,18 +505,17 @@ IMPORTANT: Return ONLY valid JSON. No newlines inside string values. No markdown
 Rules: answer is 0-based index (0=A,1=B,2=C). All strings must be on single lines.`;
 }
 function p3Prompt(count,diff,startId){
-  return `Generate ${count} TOEIC Part 3 Conversation sets, id ${startId} to ${startId+count-1}. Difficulty: ${diff}.
-Each set: 3-5 dialogue lines + exactly 3 questions with 4 choices.
-IMPORTANT: Return ONLY valid JSON. No newlines inside string values. No markdown.
-{"sets":[{"id":${startId},"context":"one line context","dialogue":[{"speaker":"Man","line":"one line"},{"speaker":"Woman","line":"one line"}],"questions":[{"id":1,"text":"question","choices":["(A) option","(B) option","(C) option","(D) option"],"answer":0,"explanation":"Brief English explanation"}]}]}
-Rules: ALL string values must be single-line. answer is 0-based index.`;
+  return `Generate ${count} TOEIC Part 3 sets. IDs: ${startId} to ${startId+count-1}. Difficulty: ${diff}.
+Each set has: context(1 sentence) + dialogue(EXACTLY 3 lines) + questions(EXACTLY 3, each with 4 choices).
+CRITICAL: Return ONLY raw JSON. Zero markdown. Zero newlines inside any string value. Keep all strings SHORT.
+{"sets":[{"id":${startId},"context":"short context","dialogue":[{"speaker":"Man","line":"short line under 15 words"},{"speaker":"Woman","line":"short line under 15 words"},{"speaker":"Man","line":"short line under 15 words"}],"questions":[{"id":1,"text":"short question","choices":["(A) short","(B) short","(C) short","(D) short"],"answer":1,"explanation":"one sentence"},{"id":2,"text":"short question","choices":["(A) short","(B) short","(C) short","(D) short"],"answer":2,"explanation":"one sentence"},{"id":3,"text":"short question","choices":["(A) short","(B) short","(C) short","(D) short"],"answer":0,"explanation":"one sentence"}]}]}`;
 }
-function p4Prompt(count,diff){
-  return `Generate ${count} TOEIC Part 4 Talk sets. Difficulty: ${diff}.
-Each set: monologue script (3-5 sentences) + exactly 3 questions with 4 choices.
-IMPORTANT: Return ONLY valid JSON. No newlines inside string values. No markdown.
-{"sets":[{"id":1,"talkType":"Announcement","script":"full monologue on one line","questions":[{"id":1,"text":"question","choices":["(A) option","(B) option","(C) option","(D) option"],"answer":0,"explanation":"Brief English explanation"}]}]}
-Rules: ALL string values must be single-line. answer is 0-based index.`;
+function p4Prompt(count,diff,startId=1){
+  return `Generate ${count} TOEIC Part 4 sets. Difficulty: ${diff}.
+Each set: talkType + script(EXACTLY 2 sentences, under 30 words total) + questions(EXACTLY 3, each with 4 choices).
+CRITICAL: Return ONLY raw JSON. Zero markdown. Zero newlines inside any string. Keep all strings SHORT.
+{"sets":[{"id":${startId},"talkType":"Announcement","script":"Two short sentences under 30 words total.","questions":[{"id":1,"text":"short question","choices":["(A) short","(B) short","(C) short","(D) short"],"answer":1,"explanation":"one sentence"},{"id":2,"text":"short question","choices":["(A) short","(B) short","(C) short","(D) short"],"answer":0,"explanation":"one sentence"},{"id":3,"text":"short question","choices":["(A) short","(B) short","(C) short","(D) short"],"answer":2,"explanation":"one sentence"}]}]}
+Rules: ALL string values single-line. answer is 0-based index.`;
 }
 
 // ── 시험 렌더링 ────────────────────────────────────────────────────────────
