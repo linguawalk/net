@@ -385,27 +385,37 @@ async function callClaude(prompt, maxTokens){
 // ── 이미지 생성 (Stability AI → Unsplash 폴백) ────────────────────────────
 async function loadImage(itemId, imagePrompt){
   const img=document.getElementById('img-'+itemId);
-  const loading=document.getElementById('imgl-'+itemId);
+  const ld=document.getElementById('imgl-'+itemId);
   if(!img) return;
+
+  function showImg(src){
+    img.onload=()=>{ img.style.opacity=1; if(ld) ld.classList.add('hidden'); };
+    img.onerror=()=>{ loadUnsplash(); }; // src 실패 시 Unsplash로
+    img.src=src;
+  }
+
+  function loadUnsplash(){
+    const kw=encodeURIComponent((imagePrompt||'office').split(',')[0].trim());
+    const url=`https://images.unsplash.com/random/1200x675/?${kw}&sig=${Date.now()}`;
+    img.onload=()=>{ img.style.opacity=1; if(ld) ld.classList.add('hidden'); };
+    img.onerror=()=>{ if(ld) ld.innerHTML='<span style="font-size:11px;color:rgba(255,255,255,0.6)">이미지 없음</span>'; };
+    img.src=url;
+  }
 
   // 1차: Stability AI
   try{
-    const r=await fetch('/api/generate-image',{method:'POST',
+    const ctrl=new AbortController();
+    setTimeout(()=>ctrl.abort(), 15000); // 15초 타임아웃
+    const r=await fetch('/api/generate-image',{method:'POST',signal:ctrl.signal,
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({prompt:imagePrompt,style:'photographic',aspectRatio:'16:9'})});
+      body:JSON.stringify({prompt:imagePrompt,aspectRatio:'16:9'})});
     const d=await r.json();
-    if(r.ok && d.imageUrl){
-      img.src=d.imageUrl;
-      img.onload=()=>{ if(loading) loading.classList.add('hidden'); };
-      return;
-    }
-  }catch(e){ console.warn('Stability AI failed, using Unsplash fallback'); }
+    if(r.ok && d.imageUrl){ showImg(d.imageUrl); return; }
+    console.warn('Stability AI returned error:', d.error);
+  }catch(e){ console.warn('Stability AI failed:', e.message); }
 
-  // 2차 폴백: Unsplash
-  const kw=encodeURIComponent(imagePrompt.split(',')[0].trim());
-  img.src=`https://images.unsplash.com/random/1200x675/?${kw}&sig=${Date.now()}`;
-  img.onload=()=>{ if(loading) loading.classList.add('hidden'); };
-  img.onerror=()=>{ if(loading){ loading.innerHTML='<span style="color:rgba(255,255,255,0.6);font-size:12px;">이미지 없음</span>'; } };
+  // 2차: Unsplash 폴백 (반드시 표시)
+  loadUnsplash();
 }
 
 // ── 생성 ──────────────────────────────────────────────────────────────────
