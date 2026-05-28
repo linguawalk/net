@@ -570,42 +570,52 @@ function playP1(id){
   const btn=document.getElementById('pbtn-'+id);
   const fill=document.getElementById('pfill-'+id);
   const spd=parseFloat(document.getElementById('pspd-'+id)?.textContent)||1.0;
+
+  // 전역 TTS 중지
   stopTTS();
+
   btn.innerHTML='<svg viewBox="0 0 24 24" fill="#fff"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
 
-  // 재생 순서: A → B → C → D (audioScript 제거 — 정답 노출 방지)
+  // A→B→C→D 순서로 읽기 (정답 노출 없음)
   const letters=['A','B','C','D'];
   const queue=item.choices.map((c,i)=>letters[i]+'. '+c);
-  let qi=0;
+  const vs=speechSynthesis.getVoices();
+  const ev=vs.find(v=>v.lang.startsWith('en-US'))||vs.find(v=>v.lang.startsWith('en'));
 
-  function playNext(){
-    if(qi>=queue.length){
-      btn.innerHTML='<svg viewBox="0 0 24 24" fill="#fff"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
-      fill.style.width='100%';
-      ttsActive=false;
-      unlockP1(id); // 모두 재생 후 선택 가능
-      return;
-    }
+  // 각 문제 독립 플래그 (전역 ttsActive 충돌 방지)
+  let active=true;
+  ttsActive=true;
+
+  function done(){
+    active=false; ttsActive=false;
+    btn.innerHTML='<svg viewBox="0 0 24 24" fill="#fff"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
+    fill.style.width='100%';
+    unlockP1(id);
+  }
+
+  function speak(qi){
+    if(!active || qi>=queue.length){ done(); return; }
     fill.style.width=(qi/queue.length*100)+'%';
 
-    // 현재 재생 중인 보기 강조 (qi=0→A, qi=1→B, ...)
+    // 현재 재생 중 버튼 강조
     const choicesEl=document.getElementById('p1choices-'+id);
-    if(choicesEl){
-      choicesEl.querySelectorAll('.p1-choice-btn').forEach((b,i)=>{
-        b.classList.toggle('playing', i===qi);
-      });
-    }
+    if(choicesEl) choicesEl.querySelectorAll('.p1-choice-btn').forEach((b,i)=>b.classList.toggle('playing',i===qi));
 
     const u=new SpeechSynthesisUtterance(queue[qi]);
     u.lang='en-US'; u.rate=spd;
-    const vs=speechSynthesis.getVoices();
-    const ev=vs.find(v=>v.lang.startsWith('en-US'))||vs.find(v=>v.lang.startsWith('en'));
     if(ev) u.voice=ev;
-    u.onend=()=>{ qi++; if(ttsActive) playNext(); };
+
+    // onend 대신 setTimeout 폴백 포함 (Chrome onend 버그 대비)
+    let ended=false;
+    function next(){ if(ended) return; ended=true; speak(qi+1); }
+    u.onend=next;
+    // 최대 대기 시간: 텍스트 길이 * 700ms / rate (여유 2배)
+    const maxWait=Math.ceil(queue[qi].length/5*700/spd)*2+1500;
+    setTimeout(next, maxWait);
+
     speechSynthesis.speak(u);
-    ttsActive=true;
   }
-  playNext();
+  speak(0);
 }
 
 function unlockP1(id){
