@@ -247,11 +247,10 @@
         <option value="Hard" data-en="Hard" data-ko="어려움">Hard</option>
       </select>
     </div>
-    <div class="setting-item">
+    <div class="setting-item" id="q-count-wrap" style="display:none;">
       <div class="si-label" data-en="Questions" data-ko="문제 수">Questions</div>
       <select class="si-select" id="q-count">
-        <option value="3">3</option>
-        <option value="5" selected>5</option>
+        <option value="1" selected>1</option>
       </select>
     </div>
     <div class="setting-item">
@@ -358,9 +357,17 @@ function selectPart(id, btn){
   renderPartInfo();
   resetContent();
   const qSel=document.getElementById('q-count');
-  if(id==='p1'){     qSel.innerHTML='<option value="1" selected>1</option>'; qSel.parentElement.style.display='none'; }
-  else if(id==='p2'){ qSel.innerHTML='<option value="5" selected>5</option><option value="10">10</option>'; qSel.parentElement.style.display='block'; }
-  else {             qSel.innerHTML='<option value="1" selected>1 set (3Q)</option><option value="2">2 sets (6Q)</option>'; qSel.parentElement.style.display='block'; }
+  const wrap=document.getElementById('q-count-wrap');
+  if(id==='p1'){
+    qSel.innerHTML='<option value="1" selected>1</option>';
+    if(wrap) wrap.style.display='none';
+  } else if(id==='p2'){
+    qSel.innerHTML='<option value="5" selected>5</option><option value="10">10</option>';
+    if(wrap) wrap.style.display='block';
+  } else {
+    qSel.innerHTML='<option value="1" selected>1 set (3Q)</option><option value="2">2 sets (6Q)</option>';
+    if(wrap) wrap.style.display='block';
+  }
 }
 
 function renderPartInfo(){
@@ -441,7 +448,7 @@ async function generate(){
   document.getElementById('loading-overlay').style.display='block';
   const lt=document.getElementById('loading-text');
   const diff=document.getElementById('diff-select').value;
-  const qc=parseInt(document.getElementById('q-count').value);
+  const qc=currentPart==='p1' ? 1 : parseInt(document.getElementById('q-count').value);
   const spd=parseFloat(document.getElementById('speed-select').value);
   const area=document.getElementById('content-area');
 
@@ -453,6 +460,8 @@ async function generate(){
         lt.textContent=lang==='ko'?`🤖 문제 ${i}/${qc} 생성 중…`:`🤖 Generating question ${i} of ${qc}…`;
         const item=await callClaude(promptP1One(i,diff),700);
         item.id=i;
+        // audioScript: 정답 보기 텍스트에서 자동 생성 (별도 노출 안 함)
+        if(!item.audioScript) item.audioScript=item.choices?.[item.answer]||'';
         currentData.items.push(item);
         total=i;
         if(i===1) document.getElementById('loading-overlay').style.display='none';
@@ -485,10 +494,17 @@ async function generate(){
 
 // ── 프롬프트 ──────────────────────────────────────────────────────────────
 function promptP1One(id,diff){
+  const answerPos=Math.floor(Math.random()*4); // 정답 위치 랜덤 (0~3)
   return `Generate exactly 1 TOEIC Part 1 Photograph question. Difficulty: ${diff}.
+The correct answer MUST be at index ${answerPos} (0=A, 1=B, 2=C, 3=D).
 Return ONLY a JSON object (no markdown):
-{"id":${id},"imagePrompt":"realistic TOEIC photo scene keyword for image search (e.g. office worker desk, airport luggage, restaurant kitchen)","audioScript":"One sentence read aloud by narrator (e.g. A man is carrying boxes in a warehouse.)","choices":["(A) ...","(B) ...","(C) ...","(D) ..."],"answer":0,"explanation":"${lang==='ko'?'정답 해설 (한국어)':'Why this answer is correct'}"}
-Rules: answer is 0-based index. All 4 choices must be plausible. audioScript describes only what is in the photo.`;}
+{"id":${id},"imagePrompt":"vivid realistic TOEIC photo scene for image generation (e.g. two people at office desk, chef cooking in kitchen, passengers at bus stop)","choices":["(A) description...","(B) description...","(C) description...","(D) description..."],"answer":${answerPos},"explanation":"${lang==='ko'?'정답 해설 한국어로 (왜 정답이고 나머지는 왜 오답인지)':'Explain why the correct answer is right and others are wrong'}"}
+CRITICAL RULES:
+- "answer" field MUST be exactly ${answerPos}
+- choices[${answerPos}] = the ONE correct description of the photo
+- other 3 choices = plausible but WRONG descriptions
+- NO "audioScript" field needed
+- imagePrompt must match the correct choice (choices[${answerPos}])`;}
 
 function promptP2(count,diff){
   return `Generate ${count} TOEIC Part 2 Question-Response items. Difficulty: ${diff}.
@@ -557,12 +573,9 @@ function playP1(id){
   stopTTS();
   btn.innerHTML='<svg viewBox="0 0 24 24" fill="#fff"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
 
-  // 재생 순서: 내레이터(사진 묘사) → A → B → C → D
+  // 재생 순서: A → B → C → D (audioScript 제거 — 정답 노출 방지)
   const letters=['A','B','C','D'];
-  const queue=[
-    item.audioScript,
-    ...item.choices.map((c,i)=>letters[i]+'. '+c)
-  ];
+  const queue=item.choices.map((c,i)=>letters[i]+'. '+c);
   let qi=0;
 
   function playNext(){
@@ -575,11 +588,11 @@ function playP1(id){
     }
     fill.style.width=(qi/queue.length*100)+'%';
 
-    // 현재 재생 중인 보기 강조 (qi=0은 내레이터, qi=1~4는 A~D)
+    // 현재 재생 중인 보기 강조 (qi=0→A, qi=1→B, ...)
     const choicesEl=document.getElementById('p1choices-'+id);
     if(choicesEl){
       choicesEl.querySelectorAll('.p1-choice-btn').forEach((b,i)=>{
-        b.classList.toggle('playing', qi>0 && i===qi-1);
+        b.classList.toggle('playing', i===qi);
       });
     }
 
@@ -600,7 +613,10 @@ function unlockP1(id){
   const hint=document.getElementById('p1hint-'+id);
   if(el){
     el.classList.remove('choices-locked');
-    el.classList.add('unlocked');
+    // opacity/pointer-events 직접 설정 (클래스 방식 보완)
+    el.style.opacity='1';
+    el.style.pointerEvents='auto';
+    el.style.filter='none';
     el.querySelectorAll('.p1-choice-btn').forEach(b=>b.classList.remove('playing'));
   }
   if(hint) hint.style.display='none';
