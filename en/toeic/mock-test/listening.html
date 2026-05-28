@@ -295,12 +295,10 @@
 // ── 상수 ──────────────────────────────────────────────────────────────────
 const SPEEDS=[0.7,0.8,1.0,1.2,1.5];
 const STEPS=[
-  {icon:'📸', en:'Part 1 — Photographs (6)',           ko:'Part 1 — 사진 묘사 (6문항)'},
-  {icon:'💬', en:'Part 2 — Q&A (25)',                  ko:'Part 2 — 질의응답 (25문항)'},
-  {icon:'🗣️', en:'Part 3A — Conversations (sets 1–4)', ko:'Part 3A — 대화 (1~4세트)'},
-  {icon:'🗣️', en:'Part 3B — Conversations (sets 5–9)', ko:'Part 3B — 대화 (5~9세트)'},
-  {icon:'🗣️', en:'Part 3C — Conversations (sets 10–13)',ko:'Part 3C — 대화 (10~13세트)'},
-  {icon:'📢', en:'Part 4 — Talks (10 sets)',            ko:'Part 4 — 담화 (10세트)'},
+  {icon:'📸', en:'Part 1 — Photographs (6)',      ko:'Part 1 — 사진 묘사 (6문항)'},
+  {icon:'💬', en:'Part 2 — Q&A (25)',             ko:'Part 2 — 질의응답 (25문항)'},
+  {icon:'🗣️', en:'Part 3 — Conversations (13)',   ko:'Part 3 — 대화 (13세트)'},
+  {icon:'📢', en:'Part 4 — Talks (10)',           ko:'Part 4 — 담화 (10세트)'},
 ];
 
 // ── 상태 ──────────────────────────────────────────────────────────────────
@@ -434,34 +432,29 @@ async function startGeneration(){
     tData.p2={items:[...a.items,...b.items]};
     setStep(1,'done','✅'); setProgress(40);
 
-    // Part 3A (세트 1~4)
+    // Part 3: 1세트씩 순차 생성 (토큰 잘림 완전 방지)
     setStep(2,'run');
-    const p3a=await callClaude(p3Prompt(4,diff,1),2500);
-    setStep(2,'done','✅'); setProgress(55);
+    tData.p3={sets:[]};
+    for(let i=1;i<=13;i++){
+      document.getElementById('gsub-2').textContent=(lang==='ko'?`대화 ${i}/13 생성 중…`:`Conversation ${i}/13…`);
+      const s=await callClaude(p3SinglePrompt(i,diff),800);
+      s.id=i;
+      tData.p3.sets.push(s);
+      setProgress(40+Math.round(i/13*30));
+    }
+    setStep(2,'done','✅'); setProgress(70);
 
-    // Part 3B (세트 5~9)
+    // Part 4: 1세트씩 순차 생성
     setStep(3,'run');
-    const p3b=await callClaude(p3Prompt(5,diff,5),2500);
-    setStep(3,'done','✅'); setProgress(70);
-
-    // Part 3C (세트 10~13)
-    setStep(4,'run');
-    const p3c=await callClaude(p3Prompt(4,diff,10),2500);
-    tData.p3={sets:[
-      ...p3a.sets,
-      ...p3b.sets.map((s,i)=>({...s,id:5+i})),
-      ...p3c.sets.map((s,i)=>({...s,id:10+i}))
-    ]};
-    setStep(4,'done','✅'); setProgress(85);
-
-    // Part 4 (5+5 분할)
-    setStep(5,'run');
-    const [p4a,p4b]=await Promise.all([
-      callClaude(p4Prompt(5,diff,1),2000),
-      callClaude(p4Prompt(5,diff,6),2000)
-    ]);
-    tData.p4={sets:[...p4a.sets,...p4b.sets.map((s,i)=>({...s,id:6+i}))]};
-    setStep(5,'done','✅'); setProgress(100);
+    tData.p4={sets:[]};
+    for(let i=1;i<=10;i++){
+      document.getElementById('gsub-3').textContent=(lang==='ko'?`담화 ${i}/10 생성 중…`:`Talk ${i}/10…`);
+      const s=await callClaude(p4SinglePrompt(i,diff),800);
+      s.id=i;
+      tData.p4.sets.push(s);
+      setProgress(70+Math.round(i/10*30));
+    }
+    setStep(3,'done','✅'); setProgress(100);
 
     await new Promise(r=>setTimeout(r,400));
     prog.style.display='none';
@@ -504,18 +497,23 @@ IMPORTANT: Return ONLY valid JSON. No newlines inside string values. No markdown
 {"items":[{"id":${startId},"question":"spoken question text","choices":["(A) response","(B) response","(C) response"],"answer":0,"explanation":"Brief English explanation"}]}
 Rules: answer is 0-based index (0=A,1=B,2=C). All strings must be on single lines.`;
 }
-function p3Prompt(count,diff,startId){
-  return `Generate ${count} TOEIC Part 3 sets. IDs: ${startId} to ${startId+count-1}. Difficulty: ${diff}.
-Each set has: context(1 sentence) + dialogue(EXACTLY 3 lines) + questions(EXACTLY 3, each with 4 choices).
-CRITICAL: Return ONLY raw JSON. Zero markdown. Zero newlines inside any string value. Keep all strings SHORT.
-{"sets":[{"id":${startId},"context":"short context","dialogue":[{"speaker":"Man","line":"short line under 15 words"},{"speaker":"Woman","line":"short line under 15 words"},{"speaker":"Man","line":"short line under 15 words"}],"questions":[{"id":1,"text":"short question","choices":["(A) short","(B) short","(C) short","(D) short"],"answer":1,"explanation":"one sentence"},{"id":2,"text":"short question","choices":["(A) short","(B) short","(C) short","(D) short"],"answer":2,"explanation":"one sentence"},{"id":3,"text":"short question","choices":["(A) short","(B) short","(C) short","(D) short"],"answer":0,"explanation":"one sentence"}]}]}`;
+function p3Prompt(count,diff,startId){ return p3SinglePrompt(startId,diff); }
+
+function p3SinglePrompt(id,diff){
+  return `Generate 1 TOEIC Part 3 conversation set. Difficulty: ${diff}.
+Return ONLY this JSON object, no markdown, no extra text:
+{"id":${id},"context":"one short sentence","dialogue":[{"speaker":"Man","line":"max 12 words"},{"speaker":"Woman","line":"max 12 words"},{"speaker":"Man","line":"max 12 words"}],"questions":[{"id":1,"text":"What are they discussing?","choices":["(A) option","(B) option","(C) option","(D) option"],"answer":1,"explanation":"short"},{"id":2,"text":"What will the man do?","choices":["(A) option","(B) option","(C) option","(D) option"],"answer":0,"explanation":"short"},{"id":3,"text":"Where are they?","choices":["(A) option","(B) option","(C) option","(D) option"],"answer":2,"explanation":"short"}]}
+RULES: answer varies (not always 0). All strings single-line, no apostrophes in dialogue if possible.`;
 }
-function p4Prompt(count,diff,startId=1){
-  return `Generate ${count} TOEIC Part 4 sets. Difficulty: ${diff}.
-Each set: talkType + script(EXACTLY 2 sentences, under 30 words total) + questions(EXACTLY 3, each with 4 choices).
-CRITICAL: Return ONLY raw JSON. Zero markdown. Zero newlines inside any string. Keep all strings SHORT.
-{"sets":[{"id":${startId},"talkType":"Announcement","script":"Two short sentences under 30 words total.","questions":[{"id":1,"text":"short question","choices":["(A) short","(B) short","(C) short","(D) short"],"answer":1,"explanation":"one sentence"},{"id":2,"text":"short question","choices":["(A) short","(B) short","(C) short","(D) short"],"answer":0,"explanation":"one sentence"},{"id":3,"text":"short question","choices":["(A) short","(B) short","(C) short","(D) short"],"answer":2,"explanation":"one sentence"}]}]}
-Rules: ALL string values single-line. answer is 0-based index.`;
+function p4Prompt(count,diff,startId=1){ return p4SinglePrompt(startId,diff); }
+
+function p4SinglePrompt(id,diff){
+  const types=['Announcement','Advertisement','Voicemail','News Report','Tour Guide'];
+  const t=types[(id-1)%types.length];
+  return `Generate 1 TOEIC Part 4 talk set. Type: ${t}. Difficulty: ${diff}.
+Return ONLY this JSON object, no markdown, no extra text:
+{"id":${id},"talkType":"${t}","script":"Two sentences max 25 words total.","questions":[{"id":1,"text":"What is the topic?","choices":["(A) option","(B) option","(C) option","(D) option"],"answer":1,"explanation":"short"},{"id":2,"text":"What is mentioned?","choices":["(A) option","(B) option","(C) option","(D) option"],"answer":0,"explanation":"short"},{"id":3,"text":"What should listeners do?","choices":["(A) option","(B) option","(C) option","(D) option"],"answer":2,"explanation":"short"}]}
+RULES: answer varies (not always 0). All strings single-line, script max 25 words.`;
 }
 
 // ── 시험 렌더링 ────────────────────────────────────────────────────────────
