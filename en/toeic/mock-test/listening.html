@@ -413,13 +413,25 @@ async function startGeneration(){
   tData={p1:null,p2:null,p3:null,p4:null};
 
   try{
-    // Part 1: 1문제씩 순차
+    // Part 1: 1문제씩 생성 + 즉시 화면 표시
     setStep(0,'run');
     tData.p1={items:[]};
+
+    // Part 1 섹션 미리 생성해서 화면에 표시
+    const examContent=document.getElementById('exam-content');
+    examContent.innerHTML='';
+    const p1sec=makeSec('📸 Part 1 — Photographs','Q1–6');
+    examContent.appendChild(p1sec);
+    document.getElementById('exam-area').style.display='block';
+
     for(let i=1;i<=6;i++){
-      document.getElementById('gsub-0').textContent=`${lang==='ko'?'생성 중':'Generating'} ${i}/6…`;
+      document.getElementById('gsub-0').textContent=`${lang==='ko'?`사진 ${i}/6 생성 중…`:`Photo ${i}/6…`}`;
       const item=await callClaude(p1Prompt(i,diff),700);
       item.id=i; tData.p1.items.push(item);
+      // 생성 즉시 화면에 추가
+      const qCard=makeP1Q(item,i);
+      p1sec.querySelector('.ps-body').appendChild(qCard);
+      loadImg(i, item.imagePrompt); // 이미지 비동기 독립 로드
     }
     setStep(0,'done','✅'); setProgress(20);
 
@@ -519,16 +531,7 @@ RULES: answer varies (not always 0). All strings single-line, script max 25 word
 // ── 시험 렌더링 ────────────────────────────────────────────────────────────
 function renderExam(){
   const content=document.getElementById('exam-content');
-  content.innerHTML='';
-
-  // Part 1
-  const p1sec=makeSec('📸 Part 1 — Photographs','Q1–6');
-  tData.p1.items.forEach((item,i)=>{
-    const qn=i+1;
-    p1sec.querySelector('.ps-body').appendChild(makeP1Q(item,qn));
-    loadImg(qn, item.imagePrompt);
-  });
-  content.appendChild(p1sec);
+  // Part 1은 이미 생성 중에 표시됨 — 이어서 Part 2~4 추가
 
   // Part 2
   const p2sec=makeSec('💬 Part 2 — Question-Response','Q7–31');
@@ -547,7 +550,6 @@ function renderExam(){
   tData.p4.sets.forEach(set=>{ p4sec.querySelector('.ps-body').appendChild(makeConvQ(set,p4n,'p4')); p4n+=3; });
   content.appendChild(p4sec);
 
-  document.getElementById('exam-area').style.display='block';
   startTimer();
   updateProg();
 }
@@ -558,31 +560,42 @@ function makeSec(title, range){
   return s;
 }
 
-// Part 1 문제 블록
+// Part 1 문제 블록 — createElement + addEventListener (onclick 특수문자 깨짐 방지)
 function makeP1Q(item, qn){
   const d=document.createElement('div'); d.className='q-item'; d.id='qq-'+qn;
-  d.innerHTML=`
-    <div class="photo-wrap">
-      <img id="mimg-${qn}" src="" alt="" style="opacity:0;transition:opacity 0.4s;" onload="this.style.opacity=1">
-      <div class="photo-loading" id="mimgl-${qn}"><div class="ph-spin"></div><span style="font-size:11px">${lang==='ko'?'이미지 로딩…':'Loading…'}</span></div>
-    </div>
-    <div class="ar">
-      <button class="ar-play" id="mbtn-${qn}" onclick="mPlayP1(${qn})">
-        <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-      </button>
-      <div class="ar-info">
-        <div class="ar-lbl">Q${qn} · ${lang==='ko'?'▶ 재생 후 선택 가능':'▶ Play to unlock choices'}</div>
-        <div class="ar-bar"><div class="ar-fill" id="mfill-${qn}"></div></div>
-      </div>
-      <button class="ar-spd" id="mspd-${qn}" onclick="cycleSpd('mspd-${qn}')">${globalSpd}x</button>
-    </div>
-    <div class="q-num">Q${qn}</div>
-    <div id="mchoices-${qn}" class="q-opts choices-locked">
-      ${item.choices.map((c,i)=>`
-        <button class="q-opt" onclick="mAns(${qn},${i},this,${item.answer},'${esc(item.explanation)}')">
-          <span class="q-opt-ltr">${'ABCD'[i]}</span><span>${c}</span>
-        </button>`).join('')}
-    </div>`;
+
+  // 사진 영역
+  const photoWrap=document.createElement('div'); photoWrap.className='photo-wrap';
+  const img=document.createElement('img'); img.id='mimg-'+qn; img.alt='';
+  img.style.cssText='opacity:0;transition:opacity 0.4s;'; img.onload=()=>img.style.opacity=1;
+  const photoLd=document.createElement('div'); photoLd.className='photo-loading'; photoLd.id='mimgl-'+qn;
+  photoLd.innerHTML='<div class="ph-spin"></div><span style="font-size:11px">'+(lang==='ko'?'이미지 로딩…':'Loading…')+'</span>';
+  photoWrap.append(img,photoLd);
+
+  // 오디오 행
+  const ar=document.createElement('div'); ar.className='ar';
+  const playBtn=document.createElement('button'); playBtn.className='ar-play'; playBtn.id='mbtn-'+qn;
+  playBtn.innerHTML='<svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
+  playBtn.addEventListener('click',()=>mPlayP1(qn));
+  const arInfo=document.createElement('div'); arInfo.className='ar-info';
+  arInfo.innerHTML='<div class="ar-lbl">Q'+qn+' · '+(lang==='ko'?'▶ 재생 후 선택 가능':'▶ Play to unlock choices')+'</div><div class="ar-bar"><div class="ar-fill" id="mfill-'+qn+'"></div></div>';
+  const spdBtn=document.createElement('button'); spdBtn.className='ar-spd'; spdBtn.id='mspd-'+qn; spdBtn.textContent=globalSpd+'x';
+  spdBtn.addEventListener('click',()=>cycleSpd('mspd-'+qn));
+  ar.append(playBtn,arInfo,spdBtn);
+
+  // 번호
+  const qNum=document.createElement('div'); qNum.className='q-num'; qNum.textContent='Q'+qn;
+
+  // 선택지 (A/B/C/D 텍스트 포함 — 모의고사는 텍스트 표시)
+  const choicesWrap=document.createElement('div'); choicesWrap.className='q-opts choices-locked'; choicesWrap.id='mchoices-'+qn;
+  item.choices.forEach((c,i)=>{
+    const btn=document.createElement('button'); btn.className='q-opt';
+    btn.innerHTML='<span class="q-opt-ltr">'+('ABCD'[i])+'</span><span>'+c+'</span>';
+    btn.addEventListener('click',()=>mAns(qn,i,btn,item.answer,item.explanation));
+    choicesWrap.appendChild(btn);
+  });
+
+  d.append(photoWrap,ar,qNum,choicesWrap);
   return d;
 }
 
@@ -604,27 +617,31 @@ function mPlayP1(qn){
   speechSynthesis.speak(u); ttsActive=true;
 }
 
-// Part 2 문제 블록
+// Part 2 문제 블록 — createElement + addEventListener
 function makeP2Q(item, qn){
   const d=document.createElement('div'); d.className='q-item'; d.id='qq-'+qn;
-  d.innerHTML=`
-    <div class="ar">
-      <button class="ar-play" id="mbtn-${qn}" onclick="mPlayP2(${qn})">
-        <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-      </button>
-      <div class="ar-info">
-        <div class="ar-lbl">Q${qn} · ${lang==='ko'?'질문을 들으세요':'Listen to the question'}</div>
-        <div class="ar-bar"><div class="ar-fill" id="mfill-${qn}"></div></div>
-      </div>
-      <button class="ar-spd" id="mspd-${qn}" onclick="cycleSpd('mspd-${qn}')">${globalSpd}x</button>
-    </div>
-    <div class="q-num">Q${qn}</div>
-    <div class="q-opts" id="mopts-${qn}">
-      ${item.choices.map((c,i)=>`
-        <button class="q-opt" onclick="mAns(${qn},${i},this,${item.answer},'${esc(item.explanation)}')">
-          <span class="q-opt-ltr">${'ABC'[i]}</span><span>${c}</span>
-        </button>`).join('')}
-    </div>`;
+
+  const ar=document.createElement('div'); ar.className='ar';
+  const playBtn=document.createElement('button'); playBtn.className='ar-play'; playBtn.id='mbtn-'+qn;
+  playBtn.innerHTML='<svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
+  playBtn.addEventListener('click',()=>mPlayP2(qn));
+  const arInfo=document.createElement('div'); arInfo.className='ar-info';
+  arInfo.innerHTML='<div class="ar-lbl">Q'+qn+' · '+(lang==='ko'?'질문을 들으세요':'Listen to the question')+'</div><div class="ar-bar"><div class="ar-fill" id="mfill-'+qn+'"></div></div>';
+  const spdBtn=document.createElement('button'); spdBtn.className='ar-spd'; spdBtn.id='mspd-'+qn; spdBtn.textContent=globalSpd+'x';
+  spdBtn.addEventListener('click',()=>cycleSpd('mspd-'+qn));
+  ar.append(playBtn,arInfo,spdBtn);
+
+  const qNum=document.createElement('div'); qNum.className='q-num'; qNum.textContent='Q'+qn;
+
+  const optsWrap=document.createElement('div'); optsWrap.className='q-opts'; optsWrap.id='mopts-'+qn;
+  item.choices.forEach((c,i)=>{
+    const btn=document.createElement('button'); btn.className='q-opt';
+    btn.innerHTML='<span class="q-opt-ltr">'+('ABC'[i])+'</span><span>'+c+'</span>';
+    btn.addEventListener('click',()=>mAns(qn,i,btn,item.answer,item.explanation));
+    optsWrap.appendChild(btn);
+  });
+
+  d.append(ar,qNum,optsWrap);
   return d;
 }
 
@@ -643,43 +660,63 @@ function mPlayP2(qn){
   speechSynthesis.speak(u); ttsActive=true;
 }
 
-// Part 3/4 대화/담화 블록
+// Part 3/4 대화/담화 블록 — createElement + addEventListener
 function makeConvQ(set, startQn, partKey){
   const isP3=partKey==='p3';
-  const lines=isP3?set.dialogue:[{speaker:set.talkType||'Narrator',line:set.script}];
-  const scriptHtml=lines.map((l,i)=>`
-    <div class="sb-line" id="sbline-${set.id}-${i}" onclick="playFrom(${set.id},'${partKey}',${i})">
-      <span class="sb-spk">${l.speaker}</span><span class="sb-txt">${l.line}</span>
-    </div>`).join('');
-  const qHtml=set.questions.map((q,qi)=>{
-    const qn=startQn+qi;
-    return `<div class="q-item" id="qq-${qn}">
-      <div class="q-num">Q${qn}</div>
-      <div class="q-text">${q.text}</div>
-      <div class="q-opts" id="mopts-${qn}">
-        ${q.choices.map((c,i)=>`
-          <button class="q-opt" onclick="mAnsConv(${qn},${i},this,${q.answer},'${esc(q.explanation)}')">
-            <span class="q-opt-ltr">${'ABCD'[i]}</span><span>${c}</span>
-          </button>`).join('')}
-      </div>
-    </div>`;}).join('');
+  const lines=isP3?(set.dialogue||[]):[{speaker:set.talkType||'Narrator',line:set.script||''}];
+
   const d=document.createElement('div'); d.style.marginBottom='16px';
-  d.innerHTML=`
-    <div class="script-blk">
-      <div class="sb-ctrl">
-        <button class="ar-play" onclick="playSet(${set.id},'${partKey}')" style="width:34px;height:34px;flex-shrink:0;">
-          <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </button>
-        <div class="ar-info" style="margin:0 8px;">
-          <div class="ar-lbl">${isP3?(lang==='ko'?set.context||'대화':'Conversation'):(set.talkType||'Talk')}</div>
-          <div class="ar-bar"><div class="ar-fill" id="scfill-${set.id}"></div></div>
-        </div>
-        <button class="ar-spd" id="scspd-${set.id}" onclick="cycleSpd('scspd-${set.id}')">${globalSpd}x</button>
-        <button class="sb-toggle" onclick="toggleSb('sblines-${set.id}',this)">${lang==='ko'?'스크립트':'Script'}</button>
-      </div>
-      <div class="sb-lines" id="sblines-${set.id}">${scriptHtml}</div>
-    </div>
-    ${qHtml}`;
+
+  // 스크립트 블록
+  const blk=document.createElement('div'); blk.className='script-blk';
+  const ctrl=document.createElement('div'); ctrl.className='sb-ctrl';
+
+  const playBtn=document.createElement('button'); playBtn.className='ar-play';
+  playBtn.style.cssText='width:34px;height:34px;flex-shrink:0;';
+  playBtn.innerHTML='<svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
+  playBtn.addEventListener('click',()=>playSet(set.id,partKey));
+
+  const arInfo=document.createElement('div'); arInfo.className='ar-info'; arInfo.style='margin:0 8px;';
+  arInfo.innerHTML='<div class="ar-lbl">'+(isP3?(lang==='ko'?set.context||'대화':'Conversation'):(set.talkType||'Talk'))+'</div><div class="ar-bar"><div class="ar-fill" id="scfill-'+set.id+'"></div></div>';
+
+  const spdBtn=document.createElement('button'); spdBtn.className='ar-spd'; spdBtn.id='scspd-'+set.id; spdBtn.textContent=globalSpd+'x';
+  spdBtn.addEventListener('click',()=>cycleSpd('scspd-'+set.id));
+
+  const togBtn=document.createElement('button'); togBtn.className='sb-toggle';
+  togBtn.textContent=lang==='ko'?'스크립트':'Script';
+  togBtn.addEventListener('click',function(){ toggleSb('sblines-'+set.id,this); });
+
+  ctrl.append(playBtn,arInfo,spdBtn,togBtn);
+
+  const linesDiv=document.createElement('div'); linesDiv.className='sb-lines'; linesDiv.id='sblines-'+set.id;
+  lines.forEach((l,i)=>{
+    const row=document.createElement('div'); row.className='sb-line'; row.id='sbline-'+set.id+'-'+i;
+    row.innerHTML='<span class="sb-spk">'+l.speaker+'</span><span class="sb-txt">'+l.line+'</span>';
+    row.addEventListener('click',()=>playFrom(set.id,partKey,i));
+    linesDiv.appendChild(row);
+  });
+
+  blk.append(ctrl,linesDiv);
+
+  // 문제 섹션 — addEventListener로 선택지 이벤트 연결
+  const qSec=document.createElement('div');
+  set.questions.forEach((q,qi)=>{
+    const qn=startQn+qi;
+    const qDiv=document.createElement('div'); qDiv.className='q-item'; qDiv.id='qq-'+qn;
+    const qNum=document.createElement('div'); qNum.className='q-num'; qNum.textContent='Q'+qn;
+    const qTxt=document.createElement('div'); qTxt.className='q-text'; qTxt.textContent=q.text;
+    const optsWrap=document.createElement('div'); optsWrap.className='q-opts'; optsWrap.id='mopts-'+qn;
+    q.choices.forEach((c,i)=>{
+      const btn=document.createElement('button'); btn.className='q-opt';
+      btn.innerHTML='<span class="q-opt-ltr">'+('ABCD'[i])+'</span><span>'+c+'</span>';
+      btn.addEventListener('click',()=>mAns(qn,i,btn,q.answer,q.explanation));
+      optsWrap.appendChild(btn);
+    });
+    qDiv.append(qNum,qTxt,optsWrap);
+    qSec.appendChild(qDiv);
+  });
+
+  d.append(blk,qSec);
   return d;
 }
 
