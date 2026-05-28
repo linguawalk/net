@@ -358,9 +358,9 @@ function selectPart(id, btn){
   renderPartInfo();
   resetContent();
   const qSel=document.getElementById('q-count');
-  if(id==='p1')      qSel.innerHTML='<option value="3">3</option><option value="5" selected>5</option>';
-  else if(id==='p2') qSel.innerHTML='<option value="5" selected>5</option><option value="10">10</option>';
-  else               qSel.innerHTML='<option value="1" selected>1 set (3Q)</option><option value="2">2 sets (6Q)</option>';
+  if(id==='p1'){     qSel.innerHTML='<option value="1" selected>1</option>'; qSel.parentElement.style.display='none'; }
+  else if(id==='p2'){ qSel.innerHTML='<option value="5" selected>5</option><option value="10">10</option>'; qSel.parentElement.style.display='block'; }
+  else {             qSel.innerHTML='<option value="1" selected>1 set (3Q)</option><option value="2">2 sets (6Q)</option>'; qSel.parentElement.style.display='block'; }
 }
 
 function renderPartInfo(){
@@ -527,7 +527,7 @@ function makeP1Card(item, spd){
           <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
         </button>
         <div class="player-info">
-          <div class="player-label">${item.audioScript}</div>
+          <div class="player-label">${lang==='ko'?'▶ 버튼을 눌러 음성을 들으세요':'▶ Press play to listen'}</div>
           <div class="player-bar"><div class="player-fill" id="pfill-${item.id}"></div></div>
         </div>
         <button class="speed-btn" id="pspd-${item.id}" onclick="cycleSpd('pspd-${item.id}')">${spd}x</button>
