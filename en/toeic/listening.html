@@ -30,21 +30,10 @@
   .nav-back { font-size:13px; color:rgba(255,255,255,0.6); text-decoration:none; padding:6px 10px; border-radius:7px; margin-right:6px; transition:all 0.2s; }
   .nav-back:hover { background:rgba(255,255,255,0.08); color:#fff; }
 
-  /* API SETUP */
-  .api-setup { max-width:520px; margin:60px auto; padding:32px; background:var(--white); border-radius:16px; border:0.5px solid var(--border-md); text-align:center; }
-  .api-icon { font-size:48px; margin-bottom:16px; }
-  .api-title { font-family:'DM Serif Display',serif; font-size:24px; color:var(--navy); margin-bottom:8px; }
-  .api-desc { font-size:14px; color:var(--text-muted); line-height:1.6; margin-bottom:24px; }
-  .api-input-wrap { display:flex; gap:8px; margin-bottom:12px; }
-  .api-input { flex:1; padding:10px 14px; border:0.5px solid var(--border-md); border-radius:8px; font-size:13px; font-family:monospace; color:var(--text); background:var(--bg); outline:none; }
-  .api-input:focus { border-color:var(--teal); }
-  .api-btn { padding:10px 18px; border-radius:8px; font-size:13px; font-weight:500; background:var(--teal); color:#fff; border:none; cursor:pointer; font-family:inherit; }
-  .api-note { font-size:11px; color:var(--text-light); }
-
-  .main { max-width:820px; margin:0 auto; padding:28px 5% 80px; display:none; }
+  .main { max-width:820px; margin:0 auto; padding:28px 5% 80px; }
 
   /* HERO */
-  .hero { background:linear-gradient(135deg,#3d1f00 0%,#ba7517 100%); border-radius:14px; padding:24px 28px; margin-bottom:20px; position:relative; overflow:hidden; }
+  .hero { background:linear-gradient(135deg,var(--toeic-dark) 0%,var(--toeic) 100%); border-radius:14px; padding:24px 28px; margin-bottom:20px; position:relative; overflow:hidden; }
   .hero::before { content:''; position:absolute; right:-20px; top:-20px; width:160px; height:160px; border-radius:50%; background:rgba(255,255,255,0.07); pointer-events:none; }
   .hero-tag { font-size:11px; font-weight:600; letter-spacing:1px; text-transform:uppercase; color:#fcd34d; margin-bottom:6px; }
   .hero-title { font-family:'DM Serif Display',serif; font-size:clamp(22px,4vw,32px); color:#fff; margin-bottom:6px; }
@@ -53,7 +42,7 @@
   .hero-badge { font-size:11px; padding:3px 12px; border-radius:20px; background:rgba(255,255,255,0.15); color:rgba(255,255,255,0.85); border:0.5px solid rgba(255,255,255,0.2); }
 
   /* PART TABS */
-  .part-tabs { display:flex; gap:0; background:var(--white); border:0.5px solid var(--border); border-radius:14px; padding:4px; margin-bottom:16px; overflow-x:auto; }
+  .part-tabs { display:flex; background:var(--white); border:0.5px solid var(--border); border-radius:14px; padding:4px; margin-bottom:16px; overflow-x:auto; gap:0; }
   .part-tab { flex:1; padding:10px 14px; border-radius:10px; font-size:13px; font-weight:500; cursor:pointer; border:none; background:transparent; color:var(--text-muted); font-family:inherit; transition:all 0.2s; white-space:nowrap; text-align:center; }
   .part-tab:hover { color:var(--toeic); }
   .part-tab.act { background:var(--toeic); color:#fff; }
@@ -74,74 +63,55 @@
   .si-label { font-size:10px; font-weight:600; letter-spacing:.5px; text-transform:uppercase; color:var(--text-light); margin-bottom:6px; }
   .si-select { width:100%; border:none; background:transparent; font-size:13px; font-weight:500; color:var(--text); font-family:inherit; cursor:pointer; outline:none; }
 
-  /* GENERATE BUTTON */
-  .gen-btn { width:100%; padding:14px; border-radius:10px; background:var(--toeic); color:#fff; border:none; font-family:inherit; font-size:15px; font-weight:600; cursor:pointer; transition:all 0.2s; margin-bottom:20px; display:flex; align-items:center; justify-content:center; gap:8px; }
-  .gen-btn:hover { background:#9a6010; }
-  .gen-btn:disabled { opacity:.5; cursor:not-allowed; }
-
   /* LOADING */
-  .loading-overlay { padding:48px; text-align:center; background:var(--white); border:0.5px solid var(--border); border-radius:14px; margin-bottom:20px; }
+  .loading-overlay { padding:48px; text-align:center; background:var(--white); border:0.5px solid var(--border); border-radius:14px; margin-bottom:20px; display:none; }
   .loading-spinner { width:44px; height:44px; border:3px solid var(--border); border-top-color:var(--toeic); border-radius:50%; animation:spin 0.8s linear infinite; margin:0 auto 16px; }
   @keyframes spin { to{transform:rotate(360deg)} }
   .loading-text { font-size:14px; color:var(--text-muted); line-height:1.6; }
 
-  /* ── AUDIO PLAYER ── */
-  .audio-card { background:var(--white); border:0.5px solid var(--border); border-radius:14px; padding:18px 20px; margin-bottom:16px; }
-  .ac-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; flex-wrap:wrap; gap:10px; }
+  /* PHOTO CARD (Part 1) */
+  .photo-card { background:var(--white); border:0.5px solid var(--border); border-radius:14px; overflow:hidden; margin-bottom:14px; }
+  .photo-wrap { position:relative; width:100%; aspect-ratio:16/9; background:#dde3ee; overflow:hidden; }
+  .photo-wrap img { width:100%; height:100%; object-fit:cover; display:block; }
+  .photo-loading { position:absolute; inset:0; background:rgba(28,43,69,0.55); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; color:#fff; font-size:12px; }
+  .photo-loading.hidden { display:none; }
+  .photo-spinner { width:32px; height:32px; border:3px solid rgba(255,255,255,0.25); border-top-color:#fff; border-radius:50%; animation:spin 0.8s linear infinite; }
+  .photo-caption { padding:9px 16px; background:var(--toeic-light); font-size:12px; color:var(--toeic); display:flex; align-items:center; gap:6px; }
+
+  /* AUDIO PLAYER */
+  .audio-card { background:var(--white); border:0.5px solid var(--border); border-radius:14px; padding:16px 18px; margin-bottom:14px; }
+  .ac-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; flex-wrap:wrap; gap:6px; }
   .ac-title { font-size:13px; font-weight:600; color:var(--text); display:flex; align-items:center; gap:8px; }
   .ac-badge { font-size:10px; padding:2px 8px; border-radius:10px; background:var(--toeic-light); color:var(--toeic); font-weight:600; }
   .ac-note { font-size:11px; color:var(--text-muted); }
+  .player-row { display:flex; align-items:center; gap:10px; padding:10px 14px; background:var(--bg); border-radius:10px; border:0.5px solid var(--border); }
+  .play-btn { width:40px; height:40px; border-radius:50%; background:var(--toeic); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:all 0.2s; }
+  .play-btn:hover { background:#9a6010; transform:scale(1.05); }
+  .play-btn svg { width:16px; height:16px; fill:#fff; }
+  .player-info { flex:1; min-width:0; }
+  .player-label { font-size:11px; color:var(--text-muted); margin-bottom:4px; }
+  .player-bar { height:5px; background:var(--border); border-radius:5px; overflow:hidden; cursor:pointer; }
+  .player-fill { height:100%; background:linear-gradient(90deg,var(--toeic-dark),var(--toeic)); border-radius:5px; width:0%; transition:width 0.1s; }
+  .speed-btn { padding:3px 9px; border-radius:7px; border:0.5px solid var(--border-md); background:transparent; font-size:11px; font-weight:600; color:var(--text-muted); cursor:pointer; font-family:inherit; transition:all 0.2s; flex-shrink:0; }
+  .speed-btn:hover, .speed-btn.act { background:var(--toeic-light); color:var(--toeic); border-color:var(--toeic); }
 
-  /* Part 1,2 단일 오디오 플레이어 */
-  .audio-player { display:flex; align-items:center; gap:12px; padding:14px 16px; background:var(--bg); border-radius:12px; border:0.5px solid var(--border); }
-  .ap-play-btn { width:44px; height:44px; border-radius:50%; background:var(--toeic); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:all 0.2s; }
-  .ap-play-btn:hover { background:#9a6010; transform:scale(1.05); }
-  .ap-play-btn svg { width:18px; height:18px; color:#fff; }
-  .ap-info { flex:1; min-width:0; }
-  .ap-label { font-size:12px; font-weight:500; color:var(--text); margin-bottom:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-  .ap-track { height:6px; background:var(--border); border-radius:6px; overflow:hidden; cursor:pointer; margin-bottom:4px; }
-  .ap-fill { height:100%; background:linear-gradient(90deg,var(--toeic-dark),var(--toeic)); border-radius:6px; transition:width 0.2s; width:0%; }
-  .ap-time { font-size:10px; color:var(--text-light); display:flex; justify-content:space-between; }
-  .ap-repeat-btn { width:34px; height:34px; border-radius:8px; background:transparent; border:0.5px solid var(--border-md); cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; color:var(--text-muted); font-size:13px; transition:all 0.2s; }
-  .ap-repeat-btn.active { background:var(--toeic-light); color:var(--toeic); border-color:var(--toeic); }
-  .ap-speed-btn { padding:4px 10px; border-radius:8px; background:transparent; border:0.5px solid var(--border-md); cursor:pointer; font-size:11px; font-weight:600; color:var(--text-muted); font-family:inherit; transition:all 0.2s; }
-  .ap-speed-btn.active { background:var(--toeic-light); color:var(--toeic); border-color:var(--toeic); }
-
-  /* Part 3,4 대화/담화 플레이어 (텍스트 하이라이트 포함) */
-  .script-player { background:var(--bg); border-radius:12px; border:0.5px solid var(--border); overflow:hidden; }
-  .sp-controls { display:flex; align-items:center; gap:10px; padding:12px 14px; background:var(--white); border-bottom:0.5px solid var(--border); }
-  .sp-play-btn { width:38px; height:38px; border-radius:50%; background:var(--toeic); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:all 0.2s; }
-  .sp-play-btn:hover { background:#9a6010; }
-  .sp-play-btn svg { width:16px; height:16px; color:#fff; }
-  .sp-track { flex:1; height:5px; background:var(--border); border-radius:5px; overflow:hidden; }
-  .sp-fill { height:100%; background:linear-gradient(90deg,var(--toeic-dark),var(--toeic)); border-radius:5px; transition:width 0.2s; width:0%; }
-  .sp-time { font-size:11px; color:var(--text-muted); min-width:64px; text-align:right; }
-  .sp-speed { padding:3px 8px; border-radius:6px; background:transparent; border:0.5px solid var(--border-md); cursor:pointer; font-size:10px; font-weight:600; color:var(--text-muted); font-family:inherit; }
-  .sp-speed.active { background:var(--toeic-light); color:var(--toeic); border-color:var(--toeic); }
-
-  .script-lines { padding:14px 16px; display:flex; flex-direction:column; gap:8px; max-height:220px; overflow-y:auto; }
-  .script-line { display:flex; gap:10px; align-items:flex-start; padding:6px 10px; border-radius:8px; transition:background 0.2s; cursor:pointer; }
-  .script-line:hover { background:rgba(186,117,23,0.06); }
-  .script-line.speaking { background:var(--toeic-light); }
-  .sl-speaker { font-size:10px; font-weight:700; color:var(--toeic); min-width:52px; padding-top:1px; text-transform:uppercase; letter-spacing:.3px; }
-  .sl-text { font-size:13px; color:var(--text); line-height:1.6; flex:1; }
-  .script-line.speaking .sl-text { color:var(--toeic-dark); font-weight:500; }
-
-  /* PART 1 IMAGE */
-  .img-card { background:var(--white); border:0.5px solid var(--border); border-radius:14px; overflow:hidden; margin-bottom:16px; }
-  .img-wrapper { position:relative; width:100%; aspect-ratio:16/9; background:#dde3ee; overflow:hidden; }
-  .img-wrapper img { width:100%; height:100%; object-fit:cover; display:block; }
-  .img-overlay { position:absolute; inset:0; background:rgba(28,43,69,0.58); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; color:#fff; font-size:13px; transition:opacity 0.3s; }
-  .img-overlay.hidden { opacity:0; pointer-events:none; }
-  .img-spinner { width:38px; height:38px; border:3px solid rgba(255,255,255,0.25); border-top-color:#fff; border-radius:50%; animation:spin 0.8s linear infinite; }
-  .img-error-state { position:absolute; inset:0; display:none; flex-direction:column; align-items:center; justify-content:center; gap:8px; color:var(--text-light); font-size:12px; }
-  .img-error-state svg { width:36px; height:36px; opacity:.3; }
-  .img-caption { padding:10px 16px; background:var(--toeic-light); border-top:0.5px solid var(--border); font-size:12px; color:var(--toeic); display:flex; align-items:center; gap:8px; }
-  .regen-btn { position:absolute; bottom:10px; right:10px; background:rgba(28,43,69,0.75); color:#fff; border:none; border-radius:8px; padding:5px 12px; font-size:11px; cursor:pointer; backdrop-filter:blur(4px); display:flex; align-items:center; gap:5px; transition:background 0.2s; }
-  .regen-btn:hover { background:var(--teal); }
+  /* SCRIPT BLOCK (Part 3/4) */
+  .script-card { background:var(--white); border:0.5px solid var(--border); border-radius:14px; margin-bottom:14px; overflow:hidden; }
+  .script-header { display:flex; align-items:center; justify-content:space-between; padding:12px 16px; background:var(--toeic-light); border-bottom:0.5px solid var(--border); flex-wrap:wrap; gap:8px; }
+  .script-title { font-size:13px; font-weight:600; color:var(--toeic); display:flex; align-items:center; gap:8px; }
+  .script-toggle { padding:4px 12px; border-radius:8px; border:0.5px solid var(--toeic); background:transparent; color:var(--toeic); font-size:11px; font-weight:600; cursor:pointer; font-family:inherit; transition:all 0.2s; }
+  .script-toggle:hover { background:var(--toeic); color:#fff; }
+  .script-player-row { padding:12px 16px; border-bottom:0.5px solid var(--border); display:flex; align-items:center; gap:10px; }
+  .script-lines { padding:12px 16px; display:none; flex-direction:column; gap:6px; max-height:200px; overflow-y:auto; }
+  .script-lines.open { display:flex; }
+  .sl { display:flex; gap:10px; padding:6px 10px; border-radius:8px; cursor:pointer; transition:background 0.15s; }
+  .sl:hover { background:rgba(186,117,23,0.07); }
+  .sl.active { background:var(--toeic-light); }
+  .sl-spk { font-size:10px; font-weight:700; color:var(--toeic); min-width:50px; padding-top:2px; text-transform:uppercase; }
+  .sl-txt { font-size:13px; color:var(--text); line-height:1.6; flex:1; }
 
   /* QUESTIONS */
-  .questions-section { background:var(--white); border:0.5px solid var(--border); border-radius:14px; padding:18px; margin-bottom:16px; }
+  .questions-section { background:var(--white); border:0.5px solid var(--border); border-radius:14px; padding:18px; margin-bottom:20px; }
   .qs-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
   .qs-title { font-size:13px; font-weight:600; color:var(--text); }
   .qs-note { font-size:11px; color:var(--text-muted); }
@@ -151,26 +121,31 @@
   .q-text { font-size:14px; font-weight:500; color:var(--text); margin-bottom:10px; line-height:1.5; }
   .q-opts { display:flex; flex-direction:column; gap:7px; }
   .q-opt { padding:9px 14px; border-radius:8px; border:1.5px solid var(--border-md); background:var(--white); cursor:pointer; font-size:13px; color:var(--text); transition:all 0.2s; text-align:left; font-family:inherit; display:flex; align-items:center; gap:10px; }
-  .q-opt:hover { border-color:var(--toeic); background:var(--toeic-light); }
+  .q-opt:hover:not(:disabled) { border-color:var(--toeic); background:var(--toeic-light); }
   .q-opt.correct { border-color:var(--teal-mid); background:#eaf3de; color:#3b6d11; font-weight:500; }
-  .q-opt.wrong { border-color:#e24b4a; background:#fcebeb; color:#a32d2d; }
+  .q-opt.wrong   { border-color:#e24b4a; background:#fcebeb; color:#a32d2d; }
   .q-opt-ltr { width:24px; height:24px; border-radius:50%; background:var(--bg); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:600; color:var(--text-muted); flex-shrink:0; }
   .q-opt.correct .q-opt-ltr { background:var(--teal-mid); color:#fff; }
-  .q-opt.wrong .q-opt-ltr { background:#e24b4a; color:#fff; }
+  .q-opt.wrong   .q-opt-ltr { background:#e24b4a; color:#fff; }
   .q-feedback { margin-top:8px; font-size:12px; padding:8px 12px; border-radius:7px; display:none; line-height:1.5; }
   .q-feedback.show { display:block; }
   .q-feedback.correct { background:#eaf3de; color:#3b6d11; }
-  .q-feedback.wrong { background:#fcebeb; color:#a32d2d; }
+  .q-feedback.wrong   { background:#fcebeb; color:#a32d2d; }
+
+  /* Part 1: 선택지 잠금 (재생 전) */
+  .choices-locked { opacity:0.3; pointer-events:none; filter:blur(2px); transition:all 0.4s; }
+  .choices-locked.unlocked { opacity:1; pointer-events:auto; filter:none; }
+  .listen-hint { padding:9px 14px; background:var(--toeic-light); border-radius:8px; font-size:12px; color:var(--toeic); text-align:center; margin-bottom:10px; }
 
   /* SCORE */
-  .score-card { background:linear-gradient(135deg,#3d1f00 0%,#ba7517 100%); border-radius:14px; padding:24px; text-align:center; margin-bottom:20px; display:none; }
+  .score-card { background:linear-gradient(135deg,var(--toeic-dark) 0%,var(--toeic) 100%); border-radius:14px; padding:24px; text-align:center; margin-bottom:20px; display:none; }
   .sc-label { font-size:13px; color:rgba(255,255,255,0.6); margin-bottom:6px; }
   .sc-score { font-family:'DM Serif Display',serif; font-size:52px; color:#fff; line-height:1; margin-bottom:6px; }
   .sc-pct { font-size:14px; color:rgba(255,255,255,0.7); margin-bottom:10px; }
   .sc-msg { font-size:13px; color:#fcd34d; font-weight:500; }
 
   /* AI TUTOR */
-  .tutor-section { background:var(--white); border:0.5px solid var(--border); border-radius:14px; margin-bottom:20px; overflow:hidden; }
+  .tutor-section { background:var(--white); border:0.5px solid var(--border); border-radius:14px; margin-bottom:20px; overflow:hidden; display:none; }
   .tutor-header { display:flex; align-items:center; gap:10px; padding:14px 18px; border-bottom:0.5px solid var(--border); background:var(--toeic-light); }
   .tutor-avatar { width:32px; height:32px; border-radius:50%; background:var(--toeic); display:flex; align-items:center; justify-content:center; font-size:15px; flex-shrink:0; }
   .tutor-name { font-size:13px; font-weight:600; color:var(--toeic); }
@@ -182,7 +157,7 @@
   .msg-av.ai { background:var(--toeic); color:#fff; }
   .msg-av.user { background:var(--navy); color:#fff; }
   .msg-bub { max-width:78%; padding:10px 14px; border-radius:12px; font-size:13px; line-height:1.6; }
-  .msg.ai .msg-bub { background:var(--bg); color:var(--text); border-radius:4px 12px 12px 12px; }
+  .msg.ai   .msg-bub { background:var(--bg); color:var(--text); border-radius:4px 12px 12px 12px; }
   .msg.user .msg-bub { background:var(--navy); color:#fff; border-radius:12px 4px 12px 12px; }
   .typing { display:flex; gap:4px; align-items:center; padding:10px 14px; background:var(--bg); border-radius:4px 12px 12px 12px; width:fit-content; }
   .typing span { width:6px; height:6px; border-radius:50%; background:var(--text-light); animation:bounce 1.2s infinite; }
@@ -198,7 +173,7 @@
   .send-btn:hover { background:#9a6010; }
   .send-btn:disabled { background:var(--border-md); cursor:not-allowed; }
 
-  .action-btns { display:flex; gap:10px; }
+  .action-btns { display:flex; gap:10px; display:none; }
   .act-btn { flex:1; padding:12px; border-radius:10px; font-size:13px; font-weight:500; cursor:pointer; font-family:inherit; border:0.5px solid var(--border-md); background:var(--white); color:var(--text); transition:all 0.2s; text-decoration:none; text-align:center; display:block; }
   .act-btn:hover { background:var(--bg); }
   .act-btn.primary { background:var(--toeic); color:#fff; border-color:var(--toeic); }
@@ -225,28 +200,12 @@
   </div>
 </nav>
 
-<!-- API SETUP -->
-<div class="api-setup fade-in" id="api-setup" style="display:none">
-  <div class="api-icon">🎧</div>
-  <div class="api-title" data-en="TOEIC Listening" data-ko="TOEIC 듣기">TOEIC Listening</div>
-  <div class="api-desc" data-en="Enter your API key to activate AI-powered TOEIC listening content." data-ko="API 키를 입력하면 AI TOEIC 듣기 콘텐츠가 활성화됩니다.">Enter your API key to start.</div>
-  <div style="text-align:left;margin-bottom:16px;">
-    <div style="font-size:11px;font-weight:600;color:var(--text-muted);margin-bottom:4px;">🤖 Anthropic API Key</div>
-    <div class="api-input-wrap" style="margin-bottom:0;">
-      <input type="password" class="api-input" id="api-key-input" placeholder="sk-ant-api03-...">
-    </div>
-  </div>
-  <button class="api-btn" onclick="saveApiKey()" style="width:100%;padding:11px;" data-en="Connect" data-ko="연결">Connect</button>
-  <p class="api-note" style="margin-top:10px;" data-en="🔒 Key stored in your browser only." data-ko="🔒 키는 브라우저에만 저장됩니다.">🔒 Stored in browser only.</p>
-</div>
-
-<!-- MAIN -->
-<div class="main fade-in" id="main-content" style="display:block">
+<div class="main fade-in" id="main-content">
 
   <div class="hero">
     <div class="hero-tag">🎧 TOEIC · LISTENING COMPREHENSION (LC)</div>
     <h1 class="hero-title" data-en="TOEIC Listening Practice" data-ko="TOEIC 듣기 연습">TOEIC Listening Practice</h1>
-    <p class="hero-desc" data-en="AI-generated Part 1–4 content with audio playback. Photographs, Q&A, conversations and talks." data-ko="AI가 생성한 Part 1~4 콘텐츠. 사진 묘사, 질의응답, 대화, 담화를 오디오로 연습하세요."></p>
+    <p class="hero-desc" data-en="AI-generated Part 1–4 content with audio. Photos, Q&A, conversations and talks." data-ko="AI가 생성한 Part 1~4 콘텐츠. 사진, 질의응답, 대화, 담화를 오디오로 연습하세요."></p>
     <div class="hero-badges">
       <span class="hero-badge">Part 1 Photographs</span>
       <span class="hero-badge">Part 2 Q&amp;A</span>
@@ -256,7 +215,6 @@
     </div>
   </div>
 
-  <!-- Part Tabs -->
   <div class="part-tabs">
     <button class="part-tab act" onclick="selectPart('p1',this)">📸 Part 1</button>
     <button class="part-tab" onclick="selectPart('p2',this)">💬 Part 2</button>
@@ -264,10 +222,8 @@
     <button class="part-tab" onclick="selectPart('p4',this)">📢 Part 4</button>
   </div>
 
-  <!-- Part Info -->
   <div class="part-info" id="part-info-box"></div>
 
-  <!-- Settings -->
   <div class="settings-row">
     <div class="setting-item">
       <div class="si-label" data-en="Difficulty" data-ko="난이도">Difficulty</div>
@@ -287,35 +243,32 @@
     <div class="setting-item">
       <div class="si-label" data-en="Voice Speed" data-ko="음성 속도">Voice Speed</div>
       <select class="si-select" id="speed-select">
-        <option value="0.8" data-en="Slow (0.8x)" data-ko="느리게 (0.8x)">Slow</option>
-        <option value="1.0" selected data-en="Normal (1.0x)" data-ko="보통 (1.0x)">Normal</option>
-        <option value="1.2" data-en="Fast (1.2x)" data-ko="빠르게 (1.2x)">Fast</option>
+        <option value="0.8" data-en="Slow (0.8x)" data-ko="느리게 (0.8x)">Slow (0.8x)</option>
+        <option value="1.0" selected data-en="Normal (1.0x)" data-ko="보통 (1.0x)">Normal (1.0x)</option>
+        <option value="1.2" data-en="Fast (1.2x)" data-ko="빠르게 (1.2x)">Fast (1.2x)</option>
       </select>
     </div>
   </div>
 
-  <button class="gen-btn" id="gen-btn" onclick="generateContent()">
-    🤖 <span data-en="Generate TOEIC Listening Content" data-ko="TOEIC 듣기 콘텐츠 생성">Generate TOEIC Listening Content</span>
+  <button class="act-btn primary" id="gen-btn" onclick="generate()" style="width:100%;padding:14px;font-size:15px;margin-bottom:20px;">
+    🎧 <span data-en="Generate TOEIC Listening Content" data-ko="TOEIC 듣기 콘텐츠 생성">Generate TOEIC Listening Content</span>
   </button>
 
-  <div class="loading-overlay" id="loading-overlay" style="display:none;">
+  <div class="loading-overlay" id="loading-overlay">
     <div class="loading-spinner"></div>
-    <div class="loading-text" id="loading-text"></div>
+    <div class="loading-text" id="loading-text">Generating...</div>
   </div>
 
-  <!-- Content Area -->
   <div id="content-area"></div>
 
-  <!-- Score -->
   <div class="score-card" id="score-card">
     <div class="sc-label" data-en="Your Score" data-ko="내 점수">Your Score</div>
     <div class="sc-score" id="sc-score"></div>
-    <div class="sc-pct" id="sc-pct"></div>
-    <div class="sc-msg" id="sc-msg"></div>
+    <div class="sc-pct"  id="sc-pct"></div>
+    <div class="sc-msg"  id="sc-msg"></div>
   </div>
 
-  <!-- AI Tutor -->
-  <div class="tutor-section" id="tutor-section" style="display:none;">
+  <div class="tutor-section" id="tutor-section">
     <div class="tutor-header">
       <div class="tutor-avatar">🤖</div>
       <div>
@@ -326,879 +279,543 @@
     <div class="tutor-messages" id="tutor-messages"></div>
     <div class="quick-wrap" id="quick-questions"></div>
     <div class="tutor-input-wrap">
-      <input type="text" class="tutor-input" id="user-input" placeholder="Ask about this question..." onkeydown="if(event.key==='Enter') sendMessage();">
-      <button class="send-btn" id="send-btn" onclick="sendMessage()">➤</button>
+      <input type="text" class="tutor-input" id="user-input" placeholder="Ask about this question..." onkeydown="if(event.key==='Enter')sendMsg()">
+      <button class="send-btn" id="send-btn" onclick="sendMsg()">➤</button>
     </div>
   </div>
 
-  <div class="action-btns" id="action-btns" style="display:none;">
-    <button class="act-btn primary" onclick="generateContent()" data-en="🔄 New Content" data-ko="🔄 새 콘텐츠">🔄 New Content</button>
+  <div class="action-btns" id="action-btns">
+    <button class="act-btn primary" onclick="generate()" data-en="🔄 New Content" data-ko="🔄 새 콘텐츠">🔄 New Content</button>
     <a href="index.html" class="act-btn" data-en="← TOEIC Home" data-ko="← TOEIC 홈">← TOEIC Home</a>
   </div>
-
 </div>
 
 <script>
-// ── Language ──────────────────────────────────────────────────────────────
-let lang = 'en';
-function setLang(l) {
-  lang = l;
-  document.querySelectorAll('[data-en][data-ko]').forEach(el => {
-    const t = l === 'ko' ? el.getAttribute('data-ko') : el.getAttribute('data-en');
-    if (t) el.innerHTML = t;
+// ── 상수 ──────────────────────────────────────────────────────────────────
+const PARTS = {
+  p1:{ en:'Part 1 — Photographs', ko:'Part 1 — 사진 묘사', total:6,  range:'Q1–6',
+       descEn:'Choose the statement that best describes the photograph.',
+       descKo:'사진을 가장 잘 묘사하는 문장을 고르세요.',
+       tipEn:'💡 Focus on subject, action, and location. Watch for subtle differences between choices.',
+       tipKo:'💡 주어, 동작, 위치에 집중하세요. 선택지의 미묘한 차이를 놓치지 마세요.' },
+  p2:{ en:'Part 2 — Question-Response', ko:'Part 2 — 질의응답', total:25, range:'Q7–31',
+       descEn:'Listen to a question and choose the best response from three options.',
+       descKo:'질문을 듣고 세 가지 응답 중 가장 적절한 것을 고르세요.',
+       tipEn:'💡 Identify the question word (Who/What/When/Where/Why/How) first.',
+       tipKo:'💡 의문사(Who/What/When/Where/Why/How)를 먼저 파악하세요.' },
+  p3:{ en:'Part 3 — Conversations', ko:'Part 3 — 짧은 대화', total:39, range:'Q32–70',
+       descEn:'Listen to a conversation and answer 3 questions per set.',
+       descKo:'대화를 듣고 세트당 3개의 문제에 답하세요.',
+       tipEn:'💡 Read the questions before listening. Focus on topic, relationship, and purpose.',
+       tipKo:'💡 듣기 전 문제를 먼저 읽으세요. 주제, 화자 관계, 목적을 파악하세요.' },
+  p4:{ en:'Part 4 — Talks', ko:'Part 4 — 짧은 담화', total:30, range:'Q71–100',
+       descEn:'Listen to a monologue (announcement, ad, voicemail) and answer 3 questions.',
+       descKo:'안내·광고·메시지 등의 담화를 듣고 세트당 3개의 문제에 답하세요.',
+       tipEn:'💡 Identify the talk type and purpose from the first sentence.',
+       tipKo:'💡 첫 문장에서 담화 유형과 목적을 파악하세요.' }
+};
+const SPEEDS = [0.7, 0.8, 1.0, 1.2, 1.5];
+
+// ── 상태 ──────────────────────────────────────────────────────────────────
+let lang='en', currentPart='p1', currentData=null;
+let isLoading=false, messages=[];
+let correct=0, answered=0, total=0;
+let ttsActive=false;
+
+// ── 언어 ──────────────────────────────────────────────────────────────────
+function setLang(l){
+  lang=l;
+  document.querySelectorAll('[data-en][data-ko]').forEach(el=>{
+    const t=l==='ko'?el.getAttribute('data-ko'):el.getAttribute('data-en');
+    if(t) el.innerHTML=t;
   });
-  document.getElementById('btn-en').classList.toggle('act', l === 'en');
-  document.getElementById('btn-ko').classList.toggle('act', l === 'ko');
+  document.getElementById('btn-en').classList.toggle('act',l==='en');
+  document.getElementById('btn-ko').classList.toggle('act',l==='ko');
   renderPartInfo();
-  try { localStorage.setItem('lw-lang', l); } catch(e) {}
+  try{localStorage.setItem('lw-lang',l);}catch(e){}
 }
 
-// ── Part Definitions ──────────────────────────────────────────────────────
-const PARTS = {
-  p1: {
-    en: 'Part 1 — Photographs', ko: 'Part 1 — 사진 묘사',
-    qRange: 'Q1–6', total: 6,
-    descEn: 'Look at a photograph and choose the statement that best describes what you see.',
-    descKo: '사진을 보고 가장 잘 묘사하는 문장을 고르세요.',
-    tipEn: '💡 Listen carefully for subject, action, and location. Watch for subtle differences.',
-    tipKo: '💡 주어, 동작, 위치에 집중하세요. 미묘한 차이를 놓치지 마세요.',
-  },
-  p2: {
-    en: 'Part 2 — Question-Response', ko: 'Part 2 — 질의응답',
-    qRange: 'Q7–31', total: 25,
-    descEn: 'Listen to a question and three responses. Choose the best response.',
-    descKo: '질문과 세 가지 응답을 듣고 가장 적절한 응답을 고르세요.',
-    tipEn: '💡 Focus on the question word (Who/What/When/Where/Why/How). Eliminate off-topic answers.',
-    tipKo: '💡 의문사(Who/What/When/Where/Why/How)에 집중하세요. 관련 없는 답변을 제거하세요.',
-  },
-  p3: {
-    en: 'Part 3 — Conversations', ko: 'Part 3 — 짧은 대화',
-    qRange: 'Q32–70', total: 39,
-    descEn: 'Listen to a conversation between two or three people and answer 3 questions.',
-    descKo: '두세 사람의 대화를 듣고 3개의 문제에 답하세요.',
-    tipEn: '💡 Read the questions before listening. Note the topic, speakers\' relationship, and purpose.',
-    tipKo: '💡 듣기 전에 문제를 먼저 읽으세요. 주제, 화자 관계, 목적을 파악하세요.',
-  },
-  p4: {
-    en: 'Part 4 — Talks', ko: 'Part 4 — 짧은 담화',
-    qRange: 'Q71–100', total: 30,
-    descEn: 'Listen to a monologue (announcement, advertisement, voicemail) and answer 3 questions.',
-    descKo: '안내문·광고·메시지 등의 담화를 듣고 3개의 문제에 답하세요.',
-    tipEn: '💡 Identify the type of talk and purpose in the first sentence. Listen for numbers and names.',
-    tipKo: '💡 첫 문장에서 담화 유형과 목적을 파악하세요. 숫자와 이름에 주의하세요.',
-  }
-};
-
-let apiKey = '';
-let currentPart = 'p1';
-let currentData = null;
-let messages = [], isLoading = false;
-let totalCorrect = 0, answeredCount = 0, totalQuestions = 0;
-let imageCache = {};
-
-// TTS 상태
-let currentUtterance = null;
-let isPlaying = false;
-let ttsQueue = [];
-let ttsQueueIdx = 0;
-let repeatMode = false;
-let currentSpeed = 1.0;
-
-// ── Init ──────────────────────────────────────────────────────────────────
-(function init() {
-  apiKey = 'vercel-proxy';
-  try { const l = localStorage.getItem('lw-lang'); if (l) setLang(l); } catch(e) {}
-  renderPartInfo();
-})();
-
-function saveApiKey() {}
-function showMain() {}
-
-// ── Part Selection ────────────────────────────────────────────────────────
-function selectPart(id, btn) {
+// ── 파트 선택 ──────────────────────────────────────────────────────────────
+function selectPart(id, btn){
   stopTTS();
-  currentPart = id;
-  document.querySelectorAll('.part-tab').forEach(t => t.classList.remove('act'));
+  currentPart=id;
+  document.querySelectorAll('.part-tab').forEach(t=>t.classList.remove('act'));
   btn.classList.add('act');
   renderPartInfo();
   resetContent();
-  const qSel = document.getElementById('q-count');
-  if (id === 'p1') {
-    qSel.innerHTML = '<option value="3">3</option><option value="5" selected>5</option>';
-    qSel.disabled = false;
-  } else if (id === 'p2') {
-    qSel.innerHTML = '<option value="5" selected>5</option><option value="10">10</option>';
-    qSel.disabled = false;
-  } else {
-    // p3, p4: 1 set = 3 questions
-    qSel.innerHTML = '<option value="1" selected>1 set (3 Q)</option><option value="2">2 sets (6 Q)</option>';
-    qSel.disabled = false;
-  }
+  const qSel=document.getElementById('q-count');
+  if(id==='p1')      qSel.innerHTML='<option value="3">3</option><option value="5" selected>5</option>';
+  else if(id==='p2') qSel.innerHTML='<option value="5" selected>5</option><option value="10">10</option>';
+  else               qSel.innerHTML='<option value="1" selected>1 set (3Q)</option><option value="2">2 sets (6Q)</option>';
 }
 
-function renderPartInfo() {
-  const p = PARTS[currentPart];
-  const box = document.getElementById('part-info-box');
-  if (!box || !p) return;
-  box.innerHTML = `
+function renderPartInfo(){
+  const p=PARTS[currentPart]; if(!p) return;
+  document.getElementById('part-info-box').innerHTML=`
     <div class="pi-row">
       <div class="pi-stat"><div class="pi-num">${p.total}</div><div class="pi-key">${lang==='ko'?'총 문항':'Total'}</div></div>
       <div class="pi-divider"></div>
-      <div class="pi-stat"><div class="pi-num">${p.qRange}</div><div class="pi-key">${lang==='ko'?'출제 범위':'Range'}</div></div>
+      <div class="pi-stat"><div class="pi-num">${p.range}</div><div class="pi-key">${lang==='ko'?'범위':'Range'}</div></div>
       <div class="pi-divider"></div>
       <div class="pi-desc">${lang==='ko'?p.descKo:p.descEn}</div>
     </div>
     <div class="pi-tip">${lang==='ko'?p.tipKo:p.tipEn}</div>`;
 }
 
-function resetContent() {
+function resetContent(){
   stopTTS();
-  document.getElementById('content-area').innerHTML = '';
-  document.getElementById('score-card').style.display = 'none';
-  document.getElementById('tutor-section').style.display = 'none';
-  document.getElementById('action-btns').style.display = 'none';
-  totalCorrect = 0; answeredCount = 0; totalQuestions = 0;
-  currentData = null; messages = [];
+  document.getElementById('content-area').innerHTML='';
+  document.getElementById('score-card').style.display='none';
+  document.getElementById('tutor-section').style.display='none';
+  document.getElementById('action-btns').style.display='none';
+  correct=0; answered=0; total=0; currentData=null; messages=[];
 }
 
-// ── Generate Content ──────────────────────────────────────────────────────
-async function callClaude(prompt, maxTokens) {
-  const res = await fetch('/api/claude', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'anthropic-version': '2023-06-01' },
-    body: JSON.stringify({ model: 'claude-sonnet-4-5', max_tokens: maxTokens || 1200, messages: [{ role: 'user', content: prompt }] })
-  });
-  const data = await res.json();
-  const raw = data.content?.[0]?.text || '';
-  return JSON.parse(raw.replace(/```json|```/g, '').trim());
+// ── Claude API 호출 ────────────────────────────────────────────────────────
+async function callClaude(prompt, maxTokens){
+  const r=await fetch('/api/claude',{method:'POST',
+    headers:{'Content-Type':'application/json','anthropic-version':'2023-06-01'},
+    body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:maxTokens||1500,
+      messages:[{role:'user',content:prompt}]})});
+  const d=await r.json();
+  const raw=d.content?.[0]?.text||'';
+  return JSON.parse(raw.replace(/```json|```/g,'').trim());
 }
 
-async function generateContent() {
-  if (isLoading) return;
-  resetContent();
-  isLoading = true;
-  const genBtn = document.getElementById('gen-btn');
-  genBtn.disabled = true;
-  const diff   = document.getElementById('diff-select').value;
-  const qCount = parseInt(document.getElementById('q-count').value);
-  currentSpeed = parseFloat(document.getElementById('speed-select').value);
+// ── 이미지 생성 (Stability AI → Unsplash 폴백) ────────────────────────────
+async function loadImage(itemId, imagePrompt){
+  const img=document.getElementById('img-'+itemId);
+  const loading=document.getElementById('imgl-'+itemId);
+  if(!img) return;
 
-  const loadingText = document.getElementById('loading-text');
-  document.getElementById('loading-overlay').style.display = 'block';
-
-  try {
-    if (currentPart === 'p1') {
-      // ── Part 1: 1문제씩 순차 생성 후 즉시 표시 ──
-      const area = document.getElementById('content-area');
-      area.innerHTML = '';
-      currentData = { part: 'Part 1', items: [] };
-
-      for (let i = 1; i <= qCount; i++) {
-        loadingText.textContent = lang === 'ko'
-          ? `🤖 문제 ${i} / ${qCount} 생성 중…`
-          : `🤖 Generating question ${i} of ${qCount}…`;
-
-        const item = await callClaude(buildP1SinglePrompt(i, diff), 600);
-        item.id = i;
-        currentData.items.push(item);
-        totalQuestions = i;
-
-        // 즉시 화면에 표시
-        if (i === 1) document.getElementById('loading-overlay').style.display = 'none';
-        area.appendChild(renderP1Item(item));
-        loadUnsplashImage(item); // 이미지는 비동기로 독립 로드
-      }
-      initTutorSection(currentData);
-      document.getElementById('action-btns').style.display = 'flex';
-
-    } else {
-      // ── Part 2/3/4: 기존 방식 (한 번에 생성) ──
-      loadingText.textContent = lang === 'ko' ? '🤖 AI가 듣기 문제를 생성하고 있습니다...' : '🤖 Generating listening content...';
-      const prompt = buildPrompt(currentPart, diff, qCount);
-      currentData = await callClaude(prompt, 3000);
-      totalQuestions = countTotalQuestions(currentData);
-      document.getElementById('loading-overlay').style.display = 'none';
-      await renderContent(currentData);
+  // 1차: Stability AI
+  try{
+    const r=await fetch('/api/generate-image',{method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({prompt:imagePrompt,style:'photographic',aspectRatio:'16:9'})});
+    const d=await r.json();
+    if(r.ok && d.imageUrl){
+      img.src=d.imageUrl;
+      img.onload=()=>{ if(loading) loading.classList.add('hidden'); };
+      return;
     }
-  } catch(e) {
-    document.getElementById('loading-overlay').style.display = 'none';
-    document.getElementById('content-area').innerHTML = `<div style="padding:24px;text-align:center;color:var(--text-muted)">⚠️ ${lang==='ko'?'콘텐츠 생성 실패. 다시 시도해주세요.':'Failed to generate. Please try again.'}</div>`;
+  }catch(e){ console.warn('Stability AI failed, using Unsplash fallback'); }
+
+  // 2차 폴백: Unsplash
+  const kw=encodeURIComponent(imagePrompt.split(',')[0].trim());
+  img.src=`https://images.unsplash.com/random/1200x675/?${kw}&sig=${Date.now()}`;
+  img.onload=()=>{ if(loading) loading.classList.add('hidden'); };
+  img.onerror=()=>{ if(loading){ loading.innerHTML='<span style="color:rgba(255,255,255,0.6);font-size:12px;">이미지 없음</span>'; } };
+}
+
+// ── 생성 ──────────────────────────────────────────────────────────────────
+async function generate(){
+  if(isLoading) return;
+  isLoading=true;
+  resetContent();
+  document.getElementById('gen-btn').disabled=true;
+  document.getElementById('loading-overlay').style.display='block';
+  const lt=document.getElementById('loading-text');
+  const diff=document.getElementById('diff-select').value;
+  const qc=parseInt(document.getElementById('q-count').value);
+  const spd=parseFloat(document.getElementById('speed-select').value);
+  const area=document.getElementById('content-area');
+
+  try{
+    if(currentPart==='p1'){
+      // Part 1: 1문제씩 순차 생성
+      currentData={part:'Part 1',items:[]};
+      for(let i=1;i<=qc;i++){
+        lt.textContent=lang==='ko'?`🤖 문제 ${i}/${qc} 생성 중…`:`🤖 Generating question ${i} of ${qc}…`;
+        const item=await callClaude(promptP1One(i,diff),700);
+        item.id=i;
+        currentData.items.push(item);
+        total=i;
+        if(i===1) document.getElementById('loading-overlay').style.display='none';
+        area.appendChild(makeP1Card(item, spd));
+        loadImage(i, item.imagePrompt); // 이미지는 비동기 독립 로드
+      }
+    } else {
+      lt.textContent=lang==='ko'?'🤖 AI가 문제를 생성하고 있습니다…':'🤖 Generating listening content…';
+      if(currentPart==='p2'){
+        currentData=await callClaude(promptP2(qc,diff),2000);
+        total=currentData.items.length;
+      } else {
+        currentData=await callClaude(currentPart==='p3'?promptP3(qc,diff):promptP4(qc,diff),2500);
+        total=currentData.sets.reduce((s,set)=>s+(set.questions?.length||0),0);
+      }
+      document.getElementById('loading-overlay').style.display='none';
+      if(currentPart==='p2') area.appendChild(makeP2Block(currentData.items, spd));
+      else currentData.sets.forEach(set=>area.appendChild(makeConvCard(set,currentPart,spd)));
+    }
+    initTutor();
+    document.getElementById('action-btns').style.display='flex';
+  }catch(e){
+    document.getElementById('loading-overlay').style.display='none';
+    area.innerHTML=`<div style="padding:32px;text-align:center;color:var(--text-muted)">⚠️ ${lang==='ko'?'생성 실패. 다시 시도해주세요.':'Generation failed. Please try again.'}<br><small>${e.message||''}</small></div>`;
     console.error(e);
   }
-  isLoading = false;
-  genBtn.disabled = false;
+  isLoading=false;
+  document.getElementById('gen-btn').disabled=false;
 }
 
-function buildP1SinglePrompt(id, diff) {
-  const diffs = { Easy: 'simple everyday scene', Medium: 'moderate complexity', Hard: 'detailed workplace or public scene' };
-  const d = diffs[diff] || diffs.Medium;
-  const L = lang === 'ko';
-  return `Generate 1 TOEIC Part 1 photograph question. Difficulty: ${d}.
-Return ONLY valid JSON (no markdown), single object:
-{"id":${id},"imagePrompt":"vivid realistic TOEIC photo scene (e.g. office, street, restaurant)","audioScript":"One sentence describing the photo (e.g. A woman is writing on a whiteboard.)","choices":["(A) ...","(B) ...","(C) ...","(D) ..."],"answer":0,"explanation":"${L?'왜 정답인지 한국어로':'Why the answer is correct'}"}
-Rules: audioScript = what narrator reads aloud. answer = 0-based index of correct choice. All 4 choices must be plausible but only 1 correct.`;
-}
+// ── 프롬프트 ──────────────────────────────────────────────────────────────
+function promptP1One(id,diff){
+  return `Generate exactly 1 TOEIC Part 1 Photograph question. Difficulty: ${diff}.
+Return ONLY a JSON object (no markdown):
+{"id":${id},"imagePrompt":"realistic TOEIC photo scene keyword for image search (e.g. office worker desk, airport luggage, restaurant kitchen)","audioScript":"One sentence read aloud by narrator (e.g. A man is carrying boxes in a warehouse.)","choices":["(A) ...","(B) ...","(C) ...","(D) ..."],"answer":0,"explanation":"${lang==='ko'?'정답 해설 (한국어)':'Why this answer is correct'}"}
+Rules: answer is 0-based index. All 4 choices must be plausible. audioScript describes only what is in the photo.`;}
 
-function buildPrompt(part, diff, count) {
-  const diffs = { Easy: 'straightforward vocabulary and simple grammar', Medium: 'moderate complexity', Hard: 'sophisticated vocabulary and complex structures' };
-  const d = diffs[diff] || diffs.Medium;
-  const L = lang === 'ko';
+function promptP2(count,diff){
+  return `Generate ${count} TOEIC Part 2 Question-Response items. Difficulty: ${diff}.
+Return ONLY JSON (no markdown):
+{"part":"Part 2","items":[{"id":1,"question":"Spoken question text","choices":["(A) ...","(B) ...","(C) ..."],"answer":0,"explanation":"${lang==='ko'?'해설 (한국어)':'Explanation'}"}]}
+Rules: 3 choices (A/B/C). answer is 0-based index.`;}
 
-  if (part === 'p1') {
-    return `Generate ${count} TOEIC Part 1 (Photograph) listening questions with ${d}.
-Return ONLY valid JSON (no markdown):
-{
-  "part": "Part 1",
-  "items": [
-    {
-      "id": 1,
-      "imagePrompt": "detailed image generation prompt in English for Stability AI — realistic photo scene",
-      "audioScript": "A man is sitting at a desk, looking at a computer screen.",
-      "choices": ["(A) The man is typing on a keyboard.", "(B) The man is talking on the phone.", "(C) The man is reading a document.", "(D) The man is standing by a window."],
-      "answer": 0,
-      "explanation": "${L?'정답 해설 (한국어)':'Explanation of why (A) is correct and others are wrong'}"
-    }
-  ]
-}
-Rules: audioScript is what the narrator reads aloud. choices are 4 options. answer is 0-based index. imagePrompt must be vivid, realistic, TOEIC-style scene.`;
-  }
+function promptP3(count,diff){
+  return `Generate ${count} TOEIC Part 3 Conversation set(s). Difficulty: ${diff}. Each set: dialogue (3–5 lines) + exactly 3 questions.
+Return ONLY JSON (no markdown):
+{"part":"Part 3","sets":[{"id":1,"context":"Brief context","dialogue":[{"speaker":"Man","line":"..."},{"speaker":"Woman","line":"..."}],"questions":[{"id":1,"text":"...","choices":["(A)...","(B)...","(C)...","(D)..."],"answer":0,"explanation":"${lang==='ko'?'해설':'Explanation'}"}]}]}`;}
 
-  if (part === 'p2') {
-    return `Generate ${count} TOEIC Part 2 (Question-Response) items with ${d}.
-Return ONLY valid JSON:
-{
-  "part": "Part 2",
-  "items": [
-    {
-      "id": 1,
-      "question": "Where is the nearest coffee shop?",
-      "choices": ["(A) It's on Main Street, next to the bank.", "(B) Yes, I'd like some coffee.", "(C) The coffee was excellent."],
-      "answer": 0,
-      "explanation": "${L?'정답 해설':'Why (A) is correct'}"
-    }
-  ]
-}
-Rules: 3 choices (A/B/C). question is spoken aloud. answer is 0-based index.`;
-  }
+function promptP4(count,diff){
+  return `Generate ${count} TOEIC Part 4 Talk set(s). Difficulty: ${diff}. Each set: monologue (3–5 sentences) + exactly 3 questions.
+Return ONLY JSON (no markdown):
+{"part":"Part 4","sets":[{"id":1,"talkType":"Announcement","script":"Full monologue text...","questions":[{"id":1,"text":"...","choices":["(A)...","(B)...","(C)...","(D)..."],"answer":0,"explanation":"${lang==='ko'?'해설':'Explanation'}"}]}]}`;}
 
-  if (part === 'p3') {
-    return `Generate ${count} TOEIC Part 3 (Conversation) set(s) with ${d}. Each set has 1 conversation + 3 questions.
-Return ONLY valid JSON:
-{
-  "part": "Part 3",
-  "sets": [
-    {
-      "id": 1,
-      "context": "A conversation between two colleagues",
-      "dialogue": [
-        {"speaker": "Man", "line": "Did you book the conference room for Friday?"},
-        {"speaker": "Woman", "line": "Yes, I reserved it from 2 to 4 PM."},
-        {"speaker": "Man", "line": "Perfect. I'll send a meeting invite to the team."}
-      ],
-      "questions": [
-        {
-          "id": 1,
-          "text": "What are the speakers discussing?",
-          "choices": ["(A) A conference room booking", "(B) A team dinner", "(C) A project deadline", "(D) A business trip"],
-          "answer": 0,
-          "explanation": "${L?'정답 해설':'Explanation'}"
-        }
-      ]
-    }
-  ]
-}
-Each set must have exactly 3 questions. dialogue must be natural office/daily conversation.`;
-  }
-
-  // p4
-  return `Generate ${count} TOEIC Part 4 (Talk) set(s) with ${d}. Each set has 1 monologue + 3 questions.
-Return ONLY valid JSON:
-{
-  "part": "Part 4",
-  "sets": [
-    {
-      "id": 1,
-      "talkType": "Announcement",
-      "script": "Attention all passengers. The 3:45 train to Central Station has been delayed by approximately 20 minutes due to track maintenance. We apologize for any inconvenience and thank you for your patience.",
-      "questions": [
-        {
-          "id": 1,
-          "text": "What is the announcement about?",
-          "choices": ["(A) A train delay", "(B) A cancelled flight", "(C) A bus schedule change", "(D) A road closure"],
-          "answer": 0,
-          "explanation": "${L?'정답 해설':'Explanation'}"
-        }
-      ]
-    }
-  ]
-}
-talkType examples: Announcement, Advertisement, News Report, Voicemail, Tour Guide, Broadcast. Each set must have exactly 3 questions.`;
-}
-
-function countTotalQuestions(data) {
-  if (!data) return 0;
-  if (data.items) return data.items.length;
-  if (data.sets) return data.sets.reduce((s, set) => s + (set.questions?.length || 0), 0);
-  return 0;
-}
-
-// ── Render Content ────────────────────────────────────────────────────────
-async function renderContent(data) {
-  const area = document.getElementById('content-area');
-  area.innerHTML = '';
-
-  if (data.part === 'Part 1') {
-    for (const item of data.items) {
-      area.appendChild(renderP1Item(item));
-      // AI 이미지 생성
-      loadUnsplashImage(item);
-    }
-  } else if (data.part === 'Part 2') {
-    area.appendChild(renderP2Block(data.items));
-  } else if (data.part === 'Part 3' || data.part === 'Part 4') {
-    for (const set of data.sets) {
-      area.appendChild(renderConvSet(set, data.part));
-    }
-  }
-
-  initTutorSection(data);
-  document.getElementById('action-btns').style.display = 'flex';
-}
-
-// ── Part 1 Render ─────────────────────────────────────────────────────────
-function renderP1Item(item) {
-  const wrap = document.createElement('div');
-  wrap.id = `p1-item-${item.id}`;
-
-  // 이미지 카드
-  const imgCard = document.createElement('div');
-  imgCard.className = 'img-card';
-  imgCard.innerHTML = `
-    <div class="img-wrapper" id="img-wrap-${item.id}">
-      <img id="img-${item.id}" src="" alt="TOEIC Part 1" style="display:none"/>
-      <div class="img-overlay" id="img-overlay-${item.id}">
-        <div class="img-spinner"></div>
-        <span>${lang==='ko'?'AI 이미지 생성 중…':'Generating AI image…'}</span>
+// ── Part 1 카드 ──────────────────────────────────────────────────────────
+function makeP1Card(item, spd){
+  const div=document.createElement('div');
+  div.innerHTML=`
+    <div class="photo-card">
+      <div class="photo-wrap">
+        <img id="img-${item.id}" src="" alt="" style="opacity:0;transition:opacity 0.4s;" onload="this.style.opacity=1">
+        <div class="photo-loading" id="imgl-${item.id}"><div class="photo-spinner"></div><span>${lang==='ko'?'이미지 로딩 중…':'Loading image…'}</span></div>
       </div>
-      <div class="img-error-state" id="img-error-${item.id}">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9l6 6M15 9l-6 6"/></svg>
-        <span>${lang==='ko'?'이미지 생성 실패':'Image generation failed'}</span>
-      </div>
-      <button class="regen-btn" id="regen-${item.id}" onclick="regenImage(${item.id})" style="display:none">
-        ↺ ${lang==='ko'?'재생성':'Retry'}
-      </button>
+      <div class="photo-caption">📸 ${lang==='ko'?'사진을 보고 올바른 묘사를 고르세요':'Look at the photo and choose the best description'}</div>
     </div>
-    <div class="img-caption">📸 ${lang==='ko'?'사진을 보고 올바른 묘사를 고르세요':'Look at the photo and choose the best description'}</div>`;
-
-  // 오디오 플레이어
-  const audioCard = document.createElement('div');
-  audioCard.className = 'audio-card';
-  audioCard.innerHTML = `
-    <div class="ac-header">
-      <div class="ac-title">🎧 <span>Question ${item.id}</span> <span class="ac-badge">Part 1</span></div>
-      <div class="ac-note">${lang==='ko'?'한 번만 들려줍니다. 집중하세요!':'Played once. Stay focused!'}</div>
-    </div>
-    <div class="audio-player">
-      <button class="ap-play-btn" id="play-${item.id}" onclick="playP1Audio(${item.id})">
-        <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-      </button>
-      <div class="ap-info">
-        <div class="ap-label">${lang==='ko'?'▶ 재생 버튼을 눌러 음성을 들으세요':'▶ Press play to listen'}</div>
-        <div class="ap-track"><div class="ap-fill" id="fill-${item.id}"></div></div>
-        <div class="ap-time"><span id="cur-${item.id}">0:00</span><span id="dur-${item.id}">—</span></div>
+    <div class="audio-card">
+      <div class="ac-header">
+        <div class="ac-title">🎧 <span>Question ${item.id}</span> <span class="ac-badge">Part 1</span></div>
+        <div class="ac-note">${lang==='ko'?'재생 버튼을 눌러 음성을 들으세요':'Press play to listen'}</div>
       </div>
-      <button class="ap-repeat-btn" id="rep-${item.id}" onclick="toggleRepeat(${item.id})" title="Repeat">↻</button>
-      <button class="ap-speed-btn" id="spd-${item.id}" onclick="cycleSpeed(${item.id})">${currentSpeed}x</button>
+      <div class="player-row">
+        <button class="play-btn" id="pbtn-${item.id}" onclick="playP1(${item.id})">
+          <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        </button>
+        <div class="player-info">
+          <div class="player-label">${item.audioScript}</div>
+          <div class="player-bar"><div class="player-fill" id="pfill-${item.id}"></div></div>
+        </div>
+        <button class="speed-btn" id="pspd-${item.id}" onclick="cycleSpd('pspd-${item.id}')">${spd}x</button>
+      </div>
+    </div>
+    <div class="questions-section">
+      <div class="qs-header">
+        <div class="qs-title">✏️ ${lang==='ko'?'선택지':'Choices'}</div>
+        <div class="qs-note" id="p1hint-${item.id}">${lang==='ko'?'▶ 재생 후 선택 가능':'▶ Unlocks after playing'}</div>
+      </div>
+      <div id="p1choices-${item.id}" class="choices-locked q-opts">
+        ${item.choices.map((c,i)=>`
+          <button class="q-opt" onclick="ansP1(${item.id},${i},this,${item.answer},'${esc(item.explanation)}')">
+            <span class="q-opt-ltr">${'ABCD'[i]}</span><span>${c}</span>
+          </button>`).join('')}
+      </div>
+      <div class="q-feedback" id="p1fb-${item.id}"></div>
     </div>`;
+  return div;
+}
 
-  // 선택지
-  const qSection = document.createElement('div');
-  qSection.className = 'questions-section';
-  qSection.innerHTML = `
-    <div class="qs-header">
-      <div class="qs-title">✏️ ${lang==='ko'?'선택지':'Choices'}</div>
-      <div class="qs-note">${lang==='ko'?'들은 후 선택하세요':'Choose after listening'}</div>
-    </div>
-    <div class="reveal-hint" id="hint-${item.id}" style="padding:10px 14px;background:var(--toeic-light);border-radius:8px;font-size:12px;color:var(--toeic);margin-bottom:10px;text-align:center;">
-      🔊 ${lang==='ko'?'음성을 먼저 들은 후 선택하세요':'Listen to the audio first, then choose'}
-    </div>
-    <div id="choices-${item.id}" style="opacity:0.3;pointer-events:none;filter:blur(3px);transition:all 0.4s;">
-      ${item.choices.map((c, i) => `
-        <div class="q-item" style="margin-bottom:8px;padding:10px 14px;background:var(--bg);border-radius:10px;">
-          <button class="q-opt" onclick="selectP1(${item.id}, ${i}, this)" data-idx="${i}">
-            <span class="q-opt-ltr">${String.fromCharCode(65+i)}</span>
-            <span class="choice-text" style="visibility:hidden">${c}</span>
-          </button>
-        </div>`).join('')}
-    </div>
-    <div class="q-feedback" id="fb-${item.id}"></div>`;
+function playP1(id){
+  const item=currentData?.items?.find(i=>i.id===id); if(!item) return;
+  const btn=document.getElementById('pbtn-'+id);
+  const fill=document.getElementById('pfill-'+id);
+  const spd=parseFloat(document.getElementById('pspd-'+id)?.textContent)||1.0;
+  stopTTS();
+  btn.innerHTML='<svg viewBox="0 0 24 24" fill="#fff"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
+  // 재생 즉시 선택지 잠금 해제
+  unlockP1(id);
+  const u=new SpeechSynthesisUtterance(item.audioScript);
+  u.lang='en-US'; u.rate=spd;
+  const vs=speechSynthesis.getVoices(), ev=vs.find(v=>v.lang.startsWith('en-US'))||vs.find(v=>v.lang.startsWith('en'));
+  if(ev) u.voice=ev;
+  u.onboundary=e=>{ if(e.name==='word') fill.style.width=Math.min(100,e.charIndex/item.audioScript.length*100)+'%'; };
+  u.onend=()=>{ btn.innerHTML='<svg viewBox="0 0 24 24" fill="#fff"><polygon points="5 3 19 12 5 21 5 3"/></svg>'; fill.style.width='100%'; ttsActive=false; };
+  speechSynthesis.speak(u); ttsActive=true;
+}
 
-  wrap.appendChild(imgCard);
-  wrap.appendChild(audioCard);
-  wrap.appendChild(qSection);
+function unlockP1(id){
+  const el=document.getElementById('p1choices-'+id);
+  const hint=document.getElementById('p1hint-'+id);
+  if(el){ el.classList.remove('choices-locked'); el.classList.add('unlocked'); }
+  if(hint) hint.style.display='none';
+}
+
+function ansP1(id,idx,btn,answer,expl){
+  const opts=document.getElementById('p1choices-'+id)?.querySelectorAll('.q-opt'); if(!opts) return;
+  opts.forEach(b=>{b.disabled=true;});
+  opts[answer].classList.add('correct');
+  if(idx!==answer) btn.classList.add('wrong');
+  const fb=document.getElementById('p1fb-'+id);
+  fb.textContent=expl; fb.className='q-feedback show '+(idx===answer?'correct':'wrong');
+  answered++; if(idx===answer) correct++;
+  checkDone();
+}
+
+// ── Part 2 카드 ──────────────────────────────────────────────────────────
+function makeP2Block(items, spd){
+  const wrap=document.createElement('div');
+  wrap.innerHTML=`<div class="audio-card" style="margin-bottom:0;">
+    <div class="ac-header"><div class="ac-title">💬 Part 2 — Question-Response <span class="ac-badge">${items.length} ${lang==='ko'?'문제':'Questions'}</span></div></div>
+    <div id="p2list"></div></div>`;
+  const list=wrap.querySelector('#p2list');
+  items.forEach(item=>{
+    const d=document.createElement('div');
+    d.className='q-item';
+    d.style.marginBottom='14px';
+    d.innerHTML=`
+      <div class="q-num">Question ${item.id}</div>
+      <div class="player-row" style="margin-bottom:10px;">
+        <button class="play-btn" id="p2btn-${item.id}" onclick="playP2(${item.id})" style="width:36px;height:36px;">
+          <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        </button>
+        <div class="player-info">
+          <div class="player-label">${lang==='ko'?'질문을 듣고 응답을 고르세요':'Listen and choose the best response'}</div>
+          <div class="player-bar"><div class="player-fill" id="p2fill-${item.id}"></div></div>
+        </div>
+        <button class="speed-btn" id="p2spd-${item.id}" onclick="cycleSpd('p2spd-${item.id}')">${spd}x</button>
+      </div>
+      <div class="q-opts" id="p2opts-${item.id}">
+        ${item.choices.map((c,i)=>`
+          <button class="q-opt" onclick="ansP2(${item.id},${i},this,${item.answer},'${esc(item.explanation)}')">
+            <span class="q-opt-ltr">${'ABC'[i]}</span><span>${c}</span>
+          </button>`).join('')}
+      </div>
+      <div class="q-feedback" id="p2fb-${item.id}"></div>`;
+    list.appendChild(d);
+  });
   return wrap;
 }
 
-function selectP1(itemId, idx, btn) {
-  const container = document.getElementById(`choices-${itemId}`);
-  const allBtns = container.querySelectorAll('.q-opt');
-  allBtns.forEach(b => { b.classList.remove('correct','wrong'); b.disabled = true; });
-
-  const item = currentData.items.find(it => it.id === itemId);
-  const correct = item.answer;
-  allBtns[correct].classList.add('correct');
-  if (idx !== correct) btn.classList.add('wrong');
-
-  const fb = document.getElementById(`fb-${itemId}`);
-  fb.textContent = item.explanation;
-  fb.className = 'q-feedback show ' + (idx === correct ? 'correct' : 'wrong');
-
-  answeredCount++;
-  if (idx === correct) totalCorrect++;
-  checkAllAnswered();
+function playP2(id){
+  const item=currentData?.items?.find(i=>i.id===id); if(!item) return;
+  const btn=document.getElementById('p2btn-'+id), fill=document.getElementById('p2fill-'+id);
+  const spd=parseFloat(document.getElementById('p2spd-'+id)?.textContent)||1.0;
+  stopTTS();
+  btn.innerHTML='<svg viewBox="0 0 24 24" fill="#fff"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
+  const u=new SpeechSynthesisUtterance(item.question); u.lang='en-US'; u.rate=spd;
+  const vs=speechSynthesis.getVoices(), ev=vs.find(v=>v.lang.startsWith('en-US'))||vs.find(v=>v.lang.startsWith('en'));
+  if(ev) u.voice=ev;
+  u.onboundary=e=>{ if(e.name==='word') fill.style.width=Math.min(100,e.charIndex/item.question.length*100)+'%'; };
+  u.onend=()=>{ btn.innerHTML='<svg viewBox="0 0 24 24" fill="#fff"><polygon points="5 3 19 12 5 21 5 3"/></svg>'; fill.style.width='100%'; ttsActive=false; };
+  speechSynthesis.speak(u); ttsActive=true;
 }
 
-// ── Part 2 Render ─────────────────────────────────────────────────────────
-function renderP2Block(items) {
-  const card = document.createElement('div');
-  card.className = 'audio-card';
-  card.style.marginBottom = '16px';
+function ansP2(id,idx,btn,answer,expl){
+  const opts=document.getElementById('p2opts-'+id)?.querySelectorAll('.q-opt'); if(!opts) return;
+  opts.forEach(b=>b.disabled=true);
+  opts[answer].classList.add('correct');
+  if(idx!==answer) btn.classList.add('wrong');
+  const fb=document.getElementById('p2fb-'+id);
+  fb.textContent=expl; fb.className='q-feedback show '+(idx===answer?'correct':'wrong');
+  answered++; if(idx===answer) correct++;
+  checkDone();
+}
 
-  const listHtml = items.map((item, gi) => `
-    <div class="q-item" id="p2-item-${item.id}" style="margin-bottom:14px;">
-      <div class="q-num">Question ${item.id}</div>
-      <div class="audio-player" style="margin-bottom:10px;">
-        <button class="ap-play-btn" id="play2-${item.id}" onclick="playP2Audio(${item.id})">
-          <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </button>
-        <div class="ap-info">
-          <div class="ap-label">${lang==='ko'?'질문을 듣고 응답을 고르세요':'Listen and choose the best response'}</div>
-          <div class="ap-track"><div class="ap-fill" id="fill2-${item.id}"></div></div>
-          <div class="ap-time"><span id="cur2-${item.id}">0:00</span><span></span></div>
-        </div>
-        <button class="ap-speed-btn" id="spd2-${item.id}" onclick="cycleSpeed2(${item.id})">${currentSpeed}x</button>
-      </div>
-      <div class="q-opts" id="opts2-${item.id}">
-        ${item.choices.map((c, i) => `
-          <button class="q-opt" onclick="selectP2(${item.id}, ${i}, this)">
-            <span class="q-opt-ltr">${String.fromCharCode(65+i)}</span>
-            <span>${c}</span>
-          </button>`).join('')}
-      </div>
-      <div class="q-feedback" id="fb2-${item.id}"></div>
+// ── Part 3 / 4 카드 ───────────────────────────────────────────────────────
+function makeConvCard(set, partKey, spd){
+  const isP3=partKey==='p3';
+  const lines=isP3 ? set.dialogue : [{speaker:set.talkType||'Narrator',line:set.script}];
+  const scriptHtml=lines.map((l,i)=>`
+    <div class="sl" id="sl-${set.id}-${i}" onclick="playFrom(${set.id},'${partKey}',${i})">
+      <span class="sl-spk">${l.speaker}</span>
+      <span class="sl-txt">${l.line}</span>
     </div>`).join('');
-
-  card.innerHTML = `
-    <div class="ac-header">
-      <div class="ac-title">💬 Part 2 — Question-Response <span class="ac-badge">${items.length} ${lang==='ko'?'문제':'Questions'}</span></div>
-    </div>
-    <div class="questions-section" style="border:none;padding:0;">${listHtml}</div>`;
-  return card;
-}
-
-function selectP2(itemId, idx, btn) {
-  const item = currentData.items.find(it => it.id === itemId);
-  const opts = document.getElementById(`opts2-${itemId}`).querySelectorAll('.q-opt');
-  opts.forEach(b => { b.classList.remove('correct','wrong'); b.disabled = true; });
-  opts[item.answer].classList.add('correct');
-  if (idx !== item.answer) btn.classList.add('wrong');
-  const fb = document.getElementById(`fb2-${itemId}`);
-  fb.textContent = item.explanation;
-  fb.className = 'q-feedback show ' + (idx === item.answer ? 'correct' : 'wrong');
-  answeredCount++;
-  if (idx === item.answer) totalCorrect++;
-  checkAllAnswered();
-}
-
-// ── Part 3 & 4 Render ─────────────────────────────────────────────────────
-function renderConvSet(set, partName) {
-  const isP3 = partName === 'Part 3';
-  const card = document.createElement('div');
-  card.className = 'audio-card';
-  card.style.marginBottom = '16px';
-
-  // 스크립트 라인 HTML
-  let scriptHtml = '';
-  if (isP3 && set.dialogue) {
-    scriptHtml = set.dialogue.map((line, i) => `
-      <div class="script-line" id="sline-${set.id}-${i}" onclick="playLineFrom(${set.id}, ${i})">
-        <span class="sl-speaker">${line.speaker}</span>
-        <span class="sl-text">${line.line}</span>
-      </div>`).join('');
-  } else {
-    scriptHtml = `<div class="script-line" id="sline-${set.id}-0" onclick="playSetAudio(${set.id})">
-      <span class="sl-speaker">${set.talkType || 'Narrator'}</span>
-      <span class="sl-text">${set.script}</span>
-    </div>`;
-  }
-
-  // 질문 HTML
-  const qHtml = set.questions.map(q => `
+  const qHtml=set.questions.map(q=>`
     <div class="q-item">
       <div class="q-num">Q${q.id}</div>
       <div class="q-text">${q.text}</div>
       <div class="q-opts" id="qopts-${set.id}-${q.id}">
-        ${q.choices.map((c, i) => `
-          <button class="q-opt" onclick="selectConv('${set.id}','${q.id}',${i},this,${q.answer})">
-            <span class="q-opt-ltr">${String.fromCharCode(65+i)}</span>
-            <span>${c}</span>
+        ${q.choices.map((c,i)=>`
+          <button class="q-opt" onclick="ansConv('${set.id}','${q.id}',${i},this,${q.answer},'${esc(q.explanation)}')">
+            <span class="q-opt-ltr">${'ABCD'[i]}</span><span>${c}</span>
           </button>`).join('')}
       </div>
-      <div class="q-feedback" id="fbconv-${set.id}-${q.id}"></div>
+      <div class="q-feedback" id="cfb-${set.id}-${q.id}"></div>
     </div>`).join('');
 
-  const setLabel = isP3 ? `${lang==='ko'?'대화':'Conversation'} ${set.id}` : `${set.talkType || 'Talk'} ${set.id}`;
-
-  card.innerHTML = `
-    <div class="ac-header">
-      <div class="ac-title">${isP3?'🗣️':'📢'} ${setLabel} <span class="ac-badge">${partName}</span></div>
-      <div class="ac-note">${lang==='ko'?'스크립트 라인을 클릭하면 해당 부분 재생':'Click a line to play from there'}</div>
-    </div>
-    <div class="script-player">
-      <div class="sp-controls">
-        <button class="sp-play-btn" id="spbtn-${set.id}" onclick="playSetAudio(${set.id})">
-          <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </button>
-        <div class="sp-track"><div class="sp-fill" id="spfill-${set.id}"></div></div>
-        <span class="sp-time" id="sptime-${set.id}">0:00</span>
-        <button class="sp-speed" id="spspd-${set.id}" onclick="cycleSetSpeed(${set.id})">${currentSpeed}x</button>
-        <button onclick="toggleScript(${set.id})" id="script-toggle-${set.id}" style="padding:3px 10px;border-radius:6px;border:0.5px solid var(--border-md);background:transparent;font-size:11px;color:var(--text-muted);cursor:pointer;font-family:inherit;margin-left:4px;">${lang==='ko'?'스크립트 보기':'Script'}</button>
+  const div=document.createElement('div');
+  div.innerHTML=`
+    <div class="script-card">
+      <div class="script-header">
+        <div class="script-title">${isP3?'🗣️':'📢'} ${isP3?`${lang==='ko'?'대화':'Conversation'} ${set.id}`:(set.talkType||'Talk')+' '+set.id} <span class="ac-badge">${isP3?'Part 3':'Part 4'}</span></div>
+        <button class="script-toggle" onclick="toggleScript('slines-${set.id}',this)">${lang==='ko'?'스크립트 보기':'Show Script'}</button>
       </div>
-      <div class="script-lines" id="script-lines-${set.id}" style="display:none;">${scriptHtml}</div>
+      <div class="script-player-row">
+        <button class="play-btn" id="scbtn-${set.id}" onclick="playSet(${set.id},'${partKey}')" style="width:36px;height:36px;">
+          <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        </button>
+        <div class="player-info">
+          <div class="player-label">${isP3?(lang==='ko'?set.context||'대화를 들으세요':set.context||'Listen to the conversation'):(lang==='ko'?'담화를 들으세요':'Listen to the talk')}</div>
+          <div class="player-bar"><div class="player-fill" id="scfill-${set.id}"></div></div>
+        </div>
+        <button class="speed-btn" id="scspd-${set.id}" onclick="cycleSpd('scspd-${set.id}')">${spd}x</button>
+      </div>
+      <div class="script-lines" id="slines-${set.id}">${scriptHtml}</div>
     </div>
-    <div class="questions-section" style="border:none;padding:18px 0 0;">${qHtml}</div>`;
-  return card;
+    <div class="questions-section">${qHtml}</div>`;
+  return div;
 }
 
-function selectConv(setId, qId, idx, btn, answer) {
-  const opts = document.getElementById(`qopts-${setId}-${qId}`).querySelectorAll('.q-opt');
-  opts.forEach(b => { b.classList.remove('correct','wrong'); b.disabled = true; });
+function toggleScript(id, btn){
+  const el=document.getElementById(id); if(!el) return;
+  const open=el.classList.toggle('open');
+  btn.textContent=open?(lang==='ko'?'스크립트 숨기기':'Hide Script'):(lang==='ko'?'스크립트 보기':'Show Script');
+}
+
+function playSet(setId, partKey){
+  const sets=currentData?.sets; if(!sets) return;
+  const set=sets.find(s=>s.id===setId||s.id==setId); if(!set) return;
+  const spd=parseFloat(document.getElementById('scspd-'+setId)?.textContent)||1.0;
+  stopTTS();
+  if(set.dialogue) playDialogue(set, 0, spd);
+  else playMonologue(set, spd);
+}
+
+function playFrom(setId, partKey, lineIdx){
+  const sets=currentData?.sets; if(!sets) return;
+  const set=sets.find(s=>s.id===setId||s.id==setId); if(!set||!set.dialogue) return;
+  const spd=parseFloat(document.getElementById('scspd-'+setId)?.textContent)||1.0;
+  stopTTS();
+  playDialogue(set, lineIdx, spd);
+}
+
+function playDialogue(set, idx, spd){
+  if(idx>=set.dialogue.length){ ttsActive=false; hlLine(set.id,-1); return; }
+  hlLine(set.id, idx);
+  const fill=document.getElementById('scfill-'+set.id);
+  if(fill) fill.style.width=(idx/set.dialogue.length*100)+'%';
+  const line=set.dialogue[idx];
+  const u=new SpeechSynthesisUtterance(line.line); u.lang='en-US'; u.rate=spd;
+  const vs=speechSynthesis.getVoices();
+  const fv=vs.find(v=>v.lang.startsWith('en')&&(v.name.includes('Female')||v.name.includes('Samantha')||v.name.includes('Karen')));
+  const mv=vs.find(v=>v.lang.startsWith('en')&&(v.name.includes('Male')||v.name.includes('Daniel')||v.name.includes('David')));
+  const ev=vs.find(v=>v.lang.startsWith('en'));
+  if(line.speaker==='Woman'&&fv) u.voice=fv;
+  else if(line.speaker==='Man'&&mv) u.voice=mv;
+  else if(ev) u.voice=ev;
+  u.onend=()=>{ if(ttsActive) playDialogue(set, idx+1, spd); };
+  speechSynthesis.speak(u); ttsActive=true;
+}
+
+function playMonologue(set, spd){
+  const fill=document.getElementById('scfill-'+set.id);
+  hlLine(set.id, 0);
+  const u=new SpeechSynthesisUtterance(set.script||''); u.lang='en-US'; u.rate=spd;
+  const vs=speechSynthesis.getVoices(), ev=vs.find(v=>v.lang.startsWith('en-US'))||vs.find(v=>v.lang.startsWith('en'));
+  if(ev) u.voice=ev;
+  u.onboundary=e=>{ if(e.name==='word'&&fill) fill.style.width=Math.min(100,e.charIndex/(set.script||'').length*100)+'%'; };
+  u.onend=()=>{ ttsActive=false; hlLine(set.id,-1); if(fill) fill.style.width='100%'; };
+  speechSynthesis.speak(u); ttsActive=true;
+}
+
+function hlLine(setId, idx){
+  document.querySelectorAll(`[id^="sl-${setId}-"]`).forEach(el=>el.classList.remove('active'));
+  if(idx>=0){ const el=document.getElementById(`sl-${setId}-${idx}`); if(el) el.classList.add('active'); }
+}
+
+function ansConv(setId, qId, idx, btn, answer, expl){
+  const opts=document.getElementById(`qopts-${setId}-${qId}`)?.querySelectorAll('.q-opt'); if(!opts) return;
+  opts.forEach(b=>b.disabled=true);
   opts[answer].classList.add('correct');
-  if (idx !== answer) btn.classList.add('wrong');
-
-  // explanation
-  const set = currentData.sets.find(s => s.id == setId);
-  const q = set?.questions.find(q => q.id == qId);
-  const fb = document.getElementById(`fbconv-${setId}-${qId}`);
-  if (fb && q) { fb.textContent = q.explanation; fb.className = 'q-feedback show ' + (idx === answer ? 'correct' : 'wrong'); }
-
-  answeredCount++;
-  if (idx === answer) totalCorrect++;
-  checkAllAnswered();
+  if(idx!==answer) btn.classList.add('wrong');
+  const fb=document.getElementById(`cfb-${setId}-${qId}`);
+  fb.textContent=expl; fb.className='q-feedback show '+(idx===answer?'correct':'wrong');
+  answered++; if(idx===answer) correct++;
+  checkDone();
 }
 
-// ── TTS Audio Functions ───────────────────────────────────────────────────
-function stopTTS() {
-  if (window.speechSynthesis) window.speechSynthesis.cancel();
-  isPlaying = false;
-  currentUtterance = null;
+// ── TTS 유틸 ─────────────────────────────────────────────────────────────
+function stopTTS(){ speechSynthesis.cancel(); ttsActive=false; }
+function cycleSpd(btnId){
+  const btn=document.getElementById(btnId); if(!btn) return;
+  const cur=parseFloat(btn.textContent);
+  const i=SPEEDS.indexOf(cur);
+  btn.textContent=SPEEDS[(i+1)%SPEEDS.length]+'x';
 }
 
-function speak(text, onWord, onEnd, speed) {
-  stopTTS();
-  const utter = new SpeechSynthesisUtterance(text);
-  utter.lang = 'en-US';
-  utter.rate = speed || currentSpeed;
-  utter.pitch = 1.0;
-
-  // 영어 목소리 선택
-  const voices = window.speechSynthesis.getVoices();
-  const enVoice = voices.find(v => v.lang.startsWith('en') && !v.name.includes('Google') && v.localService)
-    || voices.find(v => v.lang.startsWith('en-US'))
-    || voices.find(v => v.lang.startsWith('en'));
-  if (enVoice) utter.voice = enVoice;
-
-  utter.onboundary = onWord || null;
-  utter.onend = onEnd || null;
-  currentUtterance = utter;
-  isPlaying = true;
-  window.speechSynthesis.speak(utter);
-  return utter;
+// ── 점수 ─────────────────────────────────────────────────────────────────
+function checkDone(){
+  if(answered<total) return;
+  const pct=Math.round(correct/total*100);
+  const sc=document.getElementById('score-card');
+  sc.style.display='block';
+  document.getElementById('sc-score').textContent=`${correct}/${total}`;
+  document.getElementById('sc-pct').textContent=`${pct}%`;
+  document.getElementById('sc-msg').textContent=
+    pct>=80?(lang==='ko'?'🎉 훌륭합니다!':'🎉 Excellent!'):
+    pct>=60?(lang==='ko'?'👍 잘 하셨습니다!':'👍 Good job!'):
+    (lang==='ko'?'💪 다시 도전해보세요!':'💪 Keep practicing!');
+  sc.scrollIntoView({behavior:'smooth',block:'center'});
 }
 
-// Part 1 오디오 재생
-function revealP1Choices(itemId) {
-  const choicesEl = document.getElementById(`choices-${itemId}`);
-  const hintEl    = document.getElementById(`hint-${itemId}`);
-  if (choicesEl) {
-    choicesEl.style.opacity       = '1';
-    choicesEl.style.pointerEvents = 'auto';
-    choicesEl.style.filter        = 'none';
-    choicesEl.querySelectorAll('.choice-text').forEach(el => el.style.visibility = 'visible');
-  }
-  if (hintEl) hintEl.style.display = 'none';
+// ── AI 튜터 ───────────────────────────────────────────────────────────────
+function initTutor(){
+  messages=[];
+  document.getElementById('tutor-messages').innerHTML='';
+  const p=PARTS[currentPart];
+  addMsg('ai', lang==='ko'
+    ?`안녕하세요! 👋 **${p.ko}** 준비 완료!\n\n${p.tipKo}\n\n모르는 내용은 언제든 질문하세요!`
+    :`Hi! 👋 **${p.en}** is ready!\n\n${p.tipEn}\n\nAsk me anything about this content!`);
+  const qs=lang==='ko'
+    ?['이 문제 해설해줘','발음 팁 알려줘','어휘 설명해줘']
+    :['Explain this question','Pronunciation tips','Explain vocabulary'];
+  document.getElementById('quick-questions').innerHTML=qs.map(q=>`<button class="quick-btn" onclick="askQ(this)">${q}</button>`).join('');
+  document.getElementById('tutor-section').style.display='block';
 }
-
-function playP1Audio(itemId) {
-  const item = currentData?.items.find(i => i.id === itemId);
-  if (!item) return;
-  const btn  = document.getElementById(`play-${itemId}`);
-  const fill = document.getElementById(`fill-${itemId}`);
-
-  stopTTS();
-  btn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
-
-  // ── 재생 시작 즉시 선택지 공개 (Chrome onend 버그 우회) ──
-  revealP1Choices(itemId);
-
-  const speed    = parseFloat(document.getElementById(`spd-${itemId}`)?.textContent) || currentSpeed;
-  const totalLen = item.audioScript.length;
-
-  speak(item.audioScript, (e) => {
-    if (e.name === 'word') fill.style.width = Math.min(100, (e.charIndex / totalLen) * 100) + '%';
-  }, () => {
-    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
-    fill.style.width = '100%';
-    if (document.getElementById(`rep-${itemId}`)?.classList.contains('active')) {
-      setTimeout(() => playP1Audio(itemId), 500);
-    }
-  }, speed);
+function askQ(btn){ document.getElementById('user-input').value=btn.textContent; sendMsg(); }
+async function sendMsg(){
+  if(isLoading) return;
+  const inp=document.getElementById('user-input');
+  const text=inp.value.trim(); if(!text) return;
+  inp.value=''; addMsg('user',text); messages.push({role:'user',content:text});
+  document.getElementById('send-btn').disabled=true;
+  document.getElementById('tutor-status').textContent=lang==='ko'?'답변 작성 중...':'Typing...';
+  const tid=showTyping();
+  const sys=lang==='ko'
+    ?`당신은 TOEIC 듣기 전문 튜터입니다. 현재: ${PARTS[currentPart].ko}. 한국어로 간결하게 답하세요.`
+    :`You are a TOEIC Listening expert tutor. Current: ${PARTS[currentPart].en}. Be concise and helpful.`;
+  try{
+    const r=await fetch('/api/claude',{method:'POST',
+      headers:{'Content-Type':'application/json','anthropic-version':'2023-06-01'},
+      body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:500,system:sys,messages:messages.slice(-6)})});
+    const d=await r.json(); removeTyping(tid);
+    if(d.content?.[0]){ const rep=d.content[0].text; messages.push({role:'assistant',content:rep}); addMsg('ai',rep); }
+  }catch(e){ removeTyping(tid); addMsg('ai','⚠️ Error'); }
+  document.getElementById('send-btn').disabled=false;
+  document.getElementById('tutor-status').textContent=lang==='ko'?'도움 준비 완료':'Ready to help';
 }
-
-function toggleRepeat(itemId) {
-  const btn = document.getElementById(`rep-${itemId}`);
-  btn?.classList.toggle('active');
+function addMsg(role,text){
+  const wrap=document.getElementById('tutor-messages');
+  const d=document.createElement('div'); d.className=`msg ${role}`;
+  d.innerHTML=`<div class="msg-av ${role}">${role==='ai'?'🤖':'👤'}</div><div class="msg-bub">${text.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>')}</div>`;
+  wrap.appendChild(d); wrap.scrollTop=wrap.scrollHeight;
 }
-
-const SPEED_CYCLE = [0.7, 0.8, 1.0, 1.2, 1.5];
-function cycleSpeed(itemId) {
-  const btn = document.getElementById(`spd-${itemId}`);
-  const cur = parseFloat(btn.textContent);
-  const idx = SPEED_CYCLE.indexOf(cur);
-  const next = SPEED_CYCLE[(idx + 1) % SPEED_CYCLE.length];
-  btn.textContent = next + 'x';
+function showTyping(){
+  const wrap=document.getElementById('tutor-messages');
+  const id='t'+Date.now(); const d=document.createElement('div'); d.className='msg ai'; d.id=id;
+  d.innerHTML=`<div class="msg-av ai">🤖</div><div class="typing"><span></span><span></span><span></span></div>`;
+  wrap.appendChild(d); wrap.scrollTop=wrap.scrollHeight; return id;
 }
-function cycleSpeed2(itemId) {
-  const btn = document.getElementById(`spd2-${itemId}`);
-  const cur = parseFloat(btn.textContent);
-  const idx = SPEED_CYCLE.indexOf(cur);
-  btn.textContent = SPEED_CYCLE[(idx + 1) % SPEED_CYCLE.length] + 'x';
-}
-function cycleSetSpeed(setId) {
-  const btn = document.getElementById(`spspd-${setId}`);
-  const cur = parseFloat(btn.textContent);
-  const idx = SPEED_CYCLE.indexOf(cur);
-  btn.textContent = SPEED_CYCLE[(idx + 1) % SPEED_CYCLE.length] + 'x';
-}
+function removeTyping(id){ const e=document.getElementById(id); if(e) e.remove(); }
 
-// Part 2 오디오
-function playP2Audio(itemId) {
-  const item = currentData?.items.find(i => i.id === itemId);
-  if (!item) return;
-  const btn = document.getElementById(`play2-${itemId}`);
-  const fill = document.getElementById(`fill2-${itemId}`);
-  stopTTS();
-  btn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
-  const speed = parseFloat(document.getElementById(`spd2-${itemId}`)?.textContent) || currentSpeed;
-  const totalLen = item.question.length;
-  speak(item.question, (e) => {
-    if (e.name === 'word') fill.style.width = Math.min(100, (e.charIndex / totalLen) * 100) + '%';
-  }, () => {
-    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
-    fill.style.width = '100%';
-    // Part 2 선택지는 처음부터 표시됨 — 별도 공개 불필요
-  }, speed);
-}
+function esc(s){ return (s||'').replace(/'/g,"&#39;").replace(/"/g,'&quot;').slice(0,300); }
 
-// Part 3/4 오디오 — 대화 순서 재생
-function playSetAudio(setId) {
-  const set = currentData?.sets?.find(s => s.id == setId);
-  if (!set) return;
-  const btn = document.getElementById(`spbtn-${setId}`);
-  const fill = document.getElementById(`spfill-${setId}`);
-  stopTTS();
-
-  const speed = parseFloat(document.getElementById(`spspd-${setId}`)?.textContent) || currentSpeed;
-
-  if (set.dialogue) {
-    playDialogueLines(set, 0, speed, fill, btn);
-  } else {
-    // Part 4 단일 스크립트
-    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
-    highlightLine(setId, 0);
-    const totalLen = set.script.length;
-    speak(set.script, (e) => {
-      if (e.name === 'word') fill.style.width = Math.min(100, (e.charIndex / totalLen) * 100) + '%';
-    }, () => {
-      btn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
-      fill.style.width = '100%';
-      unhighlightLine(setId, 0);
-    }, speed);
-  }
-}
-
-function playDialogueLines(set, lineIdx, speed, fill, btn) {
-  if (lineIdx >= set.dialogue.length) {
-    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
-    fill.style.width = '100%';
-    unhighlightLine(set.id, lineIdx - 1);
-    return;
-  }
-  if (lineIdx === 0) btn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
-
-  unhighlightLine(set.id, lineIdx - 1);
-  highlightLine(set.id, lineIdx);
-
-  const line = set.dialogue[lineIdx];
-  const prog = lineIdx / set.dialogue.length;
-  fill.style.width = (prog * 100) + '%';
-
-  const utter = new SpeechSynthesisUtterance(line.line);
-  utter.lang = 'en-US';
-  utter.rate = speed;
-  const voices = window.speechSynthesis.getVoices();
-  // 화자별 다른 목소리
-  const maleVoices = voices.filter(v => v.lang.startsWith('en') && (v.name.includes('Male') || v.name.includes('Daniel') || v.name.includes('David')));
-  const femaleVoices = voices.filter(v => v.lang.startsWith('en') && (v.name.includes('Female') || v.name.includes('Samantha') || v.name.includes('Victoria') || v.name.includes('Karen')));
-  const enVoices = voices.filter(v => v.lang.startsWith('en'));
-  if (line.speaker === 'Man' && maleVoices.length) utter.voice = maleVoices[0];
-  else if (line.speaker === 'Woman' && femaleVoices.length) utter.voice = femaleVoices[0];
-  else if (enVoices.length) utter.voice = enVoices[lineIdx % enVoices.length];
-
-  utter.onend = () => {
-    if (isPlaying) playDialogueLines(set, lineIdx + 1, speed, fill, btn);
-  };
-  currentUtterance = utter;
-  isPlaying = true;
-  window.speechSynthesis.speak(utter);
-}
-
-function playLineFrom(setId, lineIdx) {
-  const set = currentData?.sets?.find(s => s.id == setId);
-  if (!set || !set.dialogue) return;
-  stopTTS();
-  const fill = document.getElementById(`spfill-${setId}`);
-  const btn = document.getElementById(`spbtn-${setId}`);
-  const speed = parseFloat(document.getElementById(`spspd-${setId}`)?.textContent) || currentSpeed;
-  playDialogueLines(set, lineIdx, speed, fill, btn);
-}
-
-function toggleScript(setId) {
-  const el = document.getElementById(`script-lines-${setId}`);
-  const btn = document.getElementById(`script-toggle-${setId}`);
-  if (!el) return;
-  const isHidden = el.style.display === 'none';
-  el.style.display = isHidden ? 'flex' : 'none';
-  if (btn) btn.textContent = isHidden ? (lang==='ko'?'스크립트 숨기기':'Hide Script') : (lang==='ko'?'스크립트 보기':'Script');
-}
-
-function highlightLine(setId, lineIdx) {
-  const el = document.getElementById(`sline-${setId}-${lineIdx}`);
-  if (el) el.classList.add('speaking');
-}
-function unhighlightLine(setId, lineIdx) {
-  const el = document.getElementById(`sline-${setId}-${lineIdx}`);
-  if (el) el.classList.remove('speaking');
-}
-
-// ── Image Generation ──────────────────────────────────────────────────────
-function regenImage(itemId) {
-  const item = currentData?.items?.find(i => i.id === itemId);
-  if (item) generateImage(item, true);
-}
-
-function regenImage(itemId) {
-  const item = currentData?.items?.find(i => i.id === itemId);
-  if (item) loadUnsplashImage(item, true);
-}
-
-async function generateImage(item, forceRegen) {
-  loadUnsplashImage(item, forceRegen);
-}
-
-// Unsplash 직접 사용 (Stability AI 불필요 — 비용 없이 즉시 동작)
-async function loadUnsplashImage(item, forceRegen) {
-  const key = item.imagePrompt;
-  if (!forceRegen && imageCache[key]) { showImg(item.id, imageCache[key]); return; }
-
-  // imagePrompt에서 핵심 키워드만 추출 (첫 번째 쉼표 이전)
-  const keyword = item.imagePrompt.split(',')[0].trim();
-  // 랜덤 시드로 매번 다른 이미지
-  const seed = Math.floor(Math.random() * 1000);
-  const url = `https://images.unsplash.com/random/1200x675/?${encodeURIComponent(keyword)}&sig=${seed}`;
-
-  imageCache[key] = url;
-  showImg(item.id, url);
-}
-function showImg(id, url) {
-  const img = document.getElementById(`img-${id}`);
-  const overlay = document.getElementById(`img-overlay-${id}`);
-  const errEl = document.getElementById(`img-error-${id}`);
-  const regenBtn = document.getElementById(`regen-${id}`);
-  if (!img) return;
-  img.onload = () => {
-    img.style.display = 'block';
-    if (overlay) overlay.classList.add('hidden');
-    if (errEl) errEl.style.display = 'none';
-    if (regenBtn) regenBtn.style.display = 'flex';
-  };
-  img.src = url;
-}
-
-// ── Score & Tutor ─────────────────────────────────────────────────────────
-function checkAllAnswered() {
-  if (answeredCount >= totalQuestions) showScore();
-}
-function showScore() {
-  const pct = Math.round((totalCorrect / totalQuestions) * 100);
-  const sc = document.getElementById('score-card');
-  sc.style.display = 'block';
-  document.getElementById('sc-score').textContent = `${totalCorrect}/${totalQuestions}`;
-  document.getElementById('sc-pct').textContent = `${pct}%`;
-  document.getElementById('sc-msg').textContent = pct >= 80 ? (lang==='ko'?'훌륭합니다! 🎉':'Excellent! 🎉') : pct >= 60 ? (lang==='ko'?'잘 했어요! 👍':'Good job! 👍') : (lang==='ko'?'더 연습이 필요해요 💪':'Keep practicing! 💪');
-  sc.scrollIntoView({ behavior: 'smooth', block: 'center' });
-}
-
-function initTutorSection(data) {
-  document.getElementById('tutor-section').style.display = 'block';
-  const msgs = document.getElementById('tutor-messages');
-  msgs.innerHTML = '';
-  addTutorMsg('ai', lang==='ko'?'안녕하세요! 이번 듣기 문제에 대해 궁금한 점이 있으면 질문해 주세요 🎧':'Hi! Ask me anything about this listening content. 🎧');
-  const qs = lang==='ko' ? ['이 문제 해설해줘','발음 팁 알려줘','어휘 설명해줘'] : ['Explain this question','Give pronunciation tips','Explain vocabulary'];
-  const qw = document.getElementById('quick-questions');
-  qw.innerHTML = qs.map(q => `<button class="quick-btn" onclick="askQuick('${q}')">${q}</button>`).join('');
-}
-function addTutorMsg(role, text) {
-  const msgs = document.getElementById('tutor-messages');
-  const div = document.createElement('div');
-  div.className = `msg ${role}`;
-  div.innerHTML = `<div class="msg-av ${role}">${role==='ai'?'🤖':'👤'}</div><div class="msg-bub">${text}</div>`;
-  msgs.appendChild(div);
-  msgs.scrollTop = msgs.scrollHeight;
-}
-function askQuick(q) { document.getElementById('user-input').value = q; sendMessage(); }
-async function sendMessage() {
-  const inp = document.getElementById('user-input');
-  const text = inp.value.trim();
-  if (!text || isLoading) return;
-  inp.value = '';
-  addTutorMsg('user', text);
-  messages.push({ role: 'user', content: text });
-  document.getElementById('send-btn').disabled = true;
-  const typing = document.createElement('div');
-  typing.className = 'msg ai'; typing.id = 'typing-indicator';
-  typing.innerHTML = '<div class="msg-av ai">🤖</div><div class="typing"><span></span><span></span><span></span></div>';
-  document.getElementById('tutor-messages').appendChild(typing);
-  try {
-    const context = `TOEIC Listening content: ${JSON.stringify(currentData).slice(0,1500)}`;
-    const res = await fetch('/api/claude', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'anthropic-version': '2023-06-01' },
-      body: JSON.stringify({ model: 'claude-sonnet-4-5', max_tokens: 600, messages: [
-        { role: 'user', content: `${context}\n\nStudent (${lang==='ko'?'Korean':'English'}): ${text}` }
-      ]})
-    });
-    const d = await res.json();
-    const reply = d.content?.[0]?.text || '...';
-    document.getElementById('typing-indicator')?.remove();
-    addTutorMsg('ai', reply);
-    messages.push({ role: 'assistant', content: reply });
-  } catch(e) {
-    document.getElementById('typing-indicator')?.remove();
-    addTutorMsg('ai', lang==='ko'?'죄송합니다. 다시 시도해주세요.':'Sorry, please try again.');
-  }
-  document.getElementById('send-btn').disabled = false;
-}
+// ── Init ──────────────────────────────────────────────────────────────────
+(function(){
+  let saved; try{saved=localStorage.getItem('lw-lang');}catch(e){}
+  setLang(saved||((navigator.language||'').startsWith('ko')?'ko':'en'));
+  renderPartInfo();
+})();
 </script>
 </body>
 </html>
