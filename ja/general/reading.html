@@ -164,11 +164,12 @@ rt{font-size:0.55em;color:var(--text-muted);}
     <div class="setting-item">
       <div class="si-label" data-ko="레벨" data-ja="レベル">레벨</div>
       <select class="si-select" id="sel-level">
-        <option value="N5">N5 (A1) — 입문</option>
-        <option value="N4" selected>N4 (A2) — 초급</option>
-        <option value="N3">N3 (B1) — 중급</option>
-        <option value="N2">N2 (B2) — 중상급</option>
-        <option value="N1">N1 (C1) — 고급</option>
+        <option value="A1">A1 — 입문 (N5 이하)</option>
+        <option value="A2" selected>A2 — 초급 (N5)</option>
+        <option value="B1">B1 — 중급 초반 (N4~N3)</option>
+        <option value="B2">B2 — 중급 (N3~N2)</option>
+        <option value="C1">C1 — 고급 (N2~N1)</option>
+        <option value="C2">C2 — 최고급 (N1 이상)</option>
       </select>
     </div>
     <div class="setting-item">
@@ -257,10 +258,10 @@ async function generate(){
   const level=document.getElementById('sel-level').value;
   const type=document.getElementById('sel-type').value;
   const topic=document.getElementById('sel-topic').value;
-  const charCount={N5:'100-150',N4:'150-220',N3:'220-320',N2:'320-450',N1:'450-600'}[level]||'200-300';
+  const charCount={A1:'80-120',A2:'120-180',B1:'180-260',B2:'260-360',C1:'360-480',C2:'480-600'}[level]||'200-300';
 
   const prompt=`일본어 읽기 지문을 생성해주세요.
-레벨: ${level} / 유형: ${type} / 주제: ${topic} / 글자 수: ${charCount}자
+레벨: ${level} (${({A1:'N5以下',A2:'N5',B1:'N4-N3',B2:'N3-N2',C1:'N2-N1',C2:'N1以上'})[level]||level}) / 유형: ${type} / 주제: ${topic} / 글자 수: ${charCount}자
 
 ONLY return valid JSON (no markdown):
 {
@@ -283,8 +284,10 @@ ONLY return valid JSON (no markdown):
   ]
 }
 Rules:
-- passage must be natural ${level}-level Japanese
-- N5/N4: use simple kanji with furigana in brackets like 食べ物[たべもの]
+- passage must be natural Japanese appropriate for ${level} level
+- A1/A2: use very simple kanji with furigana in brackets like 食べ物[たべもの], short sentences
+- B1/B2: moderate kanji, some furigana for difficult words
+- C1/C2: natural Japanese with minimal furigana
 - Include exactly 4 comprehension questions
 - answer is 0-based index (0=A,1=B,2=C,3=D), vary the correct answer position
 - Include 5 vocabulary items
