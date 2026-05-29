@@ -58,7 +58,6 @@ nav{background:rgba(28,43,69,0.97);height:56px;display:flex;align-items:center;p
 .q-display{background:var(--white);border:0.5px solid var(--border);border-radius:14px;padding:22px 24px;margin-bottom:14px;}
 .qd-label{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--pink);margin-bottom:10px;}
 .qd-question{font-family:'DM Serif Display',serif;font-size:22px;color:var(--text);line-height:1.5;margin-bottom:16px;}
-.qd-question-ja{font-size:14px;color:var(--text-muted);margin-top:6px;line-height:1.6;}
 .qd-tips{display:flex;flex-direction:column;gap:6px;}
 .qd-tip{font-size:12px;padding:7px 12px;background:var(--pink-light);color:var(--pink);border-radius:8px;line-height:1.5;}
 
@@ -221,9 +220,9 @@ async function generate(){
 
 ONLY return valid JSON (no markdown, no newlines inside strings):
 {
-  "question_ko": "한국어 질문 (이 질문에 일본어로 답하세요)",
+  
   "question_ja": "日本語の質問文 (${levelHint}レベル)",
-  "tips_ja": ["日本語のヒント1","日本語のヒント2","日本語のヒント3"],
+  "tips": ["日本語のヒント1","日本語のヒント2","日本語のヒント3"],
   "sample_answer": "모범 답안 일본어 (${wordTarget}단어 내외, ${levelHint} 수준)",
   "key_phrases": ["役立つ表現1","役立つ表現2","役立つ表現3","役立つ表現4"],
   "preparation_time": 15
@@ -259,8 +258,7 @@ function renderSpeaking(){
   qCard.className='q-display fade-in';
   qCard.innerHTML=`
     <div class="qd-label">💬 会話質問 — 日本語で答えてください</div>
-    <div class="qd-question">${q.question_ja}</div>
-    <div class="qd-question-ja" style="font-size:13px;color:var(--text-muted);margin-top:8px;">${q.question_ko}</div>`;
+    <div class="qd-question">${q.question_ja}</div>`;
 
   // 준비 타이머
   const prepBar=document.createElement('div');
