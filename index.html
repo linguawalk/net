@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LinguaWalk</title>
-<meta name="description" content="AI 기반 언어 학습 플랫폼">
+<title>LinguaWalk — AI 언어 학습 플랫폼</title>
+<meta name="description" content="AI 기반 언어 학습 플랫폼 — 영어, 일본어, 중국어, 프랑스어, 독일어, 스페인어">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
 <style>
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-  html,body{height:100%;}
+  html,body{min-height:100%;}
   body{
     font-family:'DM Sans',sans-serif;
     background:linear-gradient(135deg,#0b1729 0%,#1C2B45 55%,#0d2235 100%);
@@ -19,85 +19,118 @@
     display:flex;
     flex-direction:column;
     align-items:center;
-    justify-content:center;
-    padding:32px 20px;
+    padding:48px 20px 40px;
   }
 
   /* 로고 */
-  .logo{display:flex;align-items:center;gap:12px;margin-bottom:14px;text-decoration:none;}
+  .logo{display:flex;align-items:center;gap:12px;margin-bottom:10px;text-decoration:none;}
   .logo-icon{
-    width:56px;height:56px;background:#2A7F6F;border-radius:14px;
+    width:52px;height:52px;background:#2A7F6F;border-radius:14px;
     display:flex;align-items:center;justify-content:center;
-    font-size:20px;font-weight:800;color:#fff;letter-spacing:-1px;
+    font-size:18px;font-weight:800;color:#fff;letter-spacing:-1px;
   }
-  .logo-text{font-family:'DM Serif Display',serif;font-size:38px;color:#fff;}
+  .logo-text{font-family:'DM Serif Display',serif;font-size:36px;color:#fff;}
 
   .tagline{
-    font-size:15px;color:rgba(255,255,255,0.55);
-    text-align:center;line-height:1.65;margin-bottom:56px;
+    font-size:14px;color:rgba(255,255,255,0.45);
+    text-align:center;line-height:1.65;margin-bottom:44px;
   }
 
-  /* 언어 선택 카드 */
-  .lang-grid{
-    display:flex;gap:20px;flex-wrap:wrap;justify-content:center;
-    margin-bottom:48px;
+  /* 섹션 헤딩 */
+  .sec-label{
+    font-size:10px;font-weight:700;letter-spacing:1.5px;
+    text-transform:uppercase;color:rgba(255,255,255,0.3);
+    margin-bottom:16px;text-align:center;
   }
+
+  /* 언어 그리드 */
+  .lang-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:14px;
+    width:100%;
+    max-width:680px;
+    margin-bottom:20px;
+  }
+
   .lang-card{
-    width:200px;padding:32px 20px 24px;
+    padding:22px 16px 18px;
     background:rgba(255,255,255,0.07);
-    border:1.5px solid rgba(255,255,255,0.13);
-    border-radius:20px;text-decoration:none;color:#fff;
-    display:flex;flex-direction:column;align-items:center;gap:10px;
-    transition:all 0.25s;backdrop-filter:blur(10px);
+    border:1.5px solid rgba(255,255,255,0.11);
+    border-radius:18px;
+    text-decoration:none;color:#fff;
+    display:flex;flex-direction:column;align-items:center;gap:8px;
+    transition:all 0.25s;backdrop-filter:blur(8px);
+    position:relative;overflow:hidden;
+  }
+  .lang-card::before{
+    content:'';position:absolute;inset:0;border-radius:18px;
+    background:linear-gradient(135deg,rgba(255,255,255,0.04),transparent);
+    pointer-events:none;
   }
   .lang-card:hover{
     background:rgba(255,255,255,0.13);
-    border-color:#2A7F6F;
-    transform:translateY(-5px);
-    box-shadow:0 16px 40px rgba(42,127,111,0.22);
+    border-color:rgba(255,255,255,0.3);
+    transform:translateY(-4px);
+    box-shadow:0 16px 40px rgba(0,0,0,0.3);
   }
-  .lang-flag{font-size:48px;line-height:1;}
+  .lang-card.coming-soon{
+    opacity:0.45;cursor:default;pointer-events:none;
+  }
+
+  .lang-flag{font-size:36px;line-height:1;}
   .lang-name{
     font-family:'DM Serif Display',serif;
-    font-size:22px;margin-top:4px;
+    font-size:17px;text-align:center;
   }
-  .lang-sub{
-    font-size:12px;color:rgba(255,255,255,0.45);
-    text-align:center;line-height:1.5;
+  .lang-native{
+    font-size:11px;color:rgba(255,255,255,0.45);
+    text-align:center;line-height:1.4;
   }
   .lang-btn{
-    margin-top:8px;padding:8px 22px;border-radius:20px;
-    background:#2A7F6F;color:#fff;
-    font-size:12px;font-weight:600;
+    margin-top:6px;padding:6px 18px;border-radius:20px;
+    font-size:11px;font-weight:600;
     font-family:'DM Sans',sans-serif;
-    transition:background 0.2s;
+    transition:all 0.2s;
   }
-  .lang-card:hover .lang-btn{background:#1D9E75;}
-
-  /* 준비 중 배지 */
-  .coming-soon{
-    font-size:10px;font-weight:700;letter-spacing:.5px;
-    text-transform:uppercase;padding:3px 10px;
-    border-radius:10px;background:rgba(255,255,255,0.1);
-    color:rgba(255,255,255,0.4);margin-top:4px;
+  .btn-active{background:#2A7F6F;color:#fff;}
+  .lang-card:hover .btn-active{background:#1D9E75;}
+  .btn-soon{
+    background:rgba(255,255,255,0.08);
+    color:rgba(255,255,255,0.4);
+    border:0.5px solid rgba(255,255,255,0.15);
   }
 
-  .footer{font-size:12px;color:rgba(255,255,255,0.2);text-align:center;}
+  .soon-badge{
+    position:absolute;top:10px;right:10px;
+    font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;
+    padding:2px 7px;border-radius:8px;
+    background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.4);
+  }
 
-  @media(max-width:480px){
-    .lang-grid{flex-direction:column;align-items:center;}
-    .lang-card{width:100%;max-width:280px;}
+  .footer{
+    margin-top:auto;padding-top:32px;
+    font-size:11px;color:rgba(255,255,255,0.18);text-align:center;
+  }
+
+  @media(max-width:560px){
+    .lang-grid{grid-template-columns:repeat(2,1fr);max-width:380px;}
+    .logo-text{font-size:28px;}
+  }
+  @media(max-width:360px){
+    .lang-grid{grid-template-columns:1fr;max-width:260px;}
   }
 </style>
 </head>
 <body>
 
-<a href="en/index.html" class="logo">
+<a href="#" class="logo">
   <div class="logo-icon">LW</div>
   <span class="logo-text">LinguaWalk</span>
 </a>
-
 <p class="tagline">AI 기반 언어 학습 플랫폼<br>AI-powered Language Learning Platform</p>
+
+<div class="sec-label">언어를 선택하세요 · Select a Language</div>
 
 <div class="lang-grid">
 
@@ -105,19 +138,53 @@
   <a href="en/index.html" class="lang-card">
     <span class="lang-flag">🇺🇸</span>
     <span class="lang-name">English</span>
-    <span class="lang-sub">General · TOEIC · TOEFL<br>IELTS · OPIc</span>
-    <span class="lang-btn">학습 시작 →</span>
+    <span class="lang-native">영어<br>General · TOEIC · TOEFL<br>IELTS · OPIc</span>
+    <span class="lang-btn btn-active">학습 시작 →</span>
   </a>
 
-  <!-- 추후 확장용 (표시 제거하려면 이 블록 삭제) -->
-  <!--
-  <div class="lang-card" style="cursor:default;opacity:0.5;">
+  <!-- 일본어 -->
+  <a href="ja/index.html" class="lang-card">
     <span class="lang-flag">🇯🇵</span>
     <span class="lang-name">日本語</span>
-    <span class="lang-sub">준비 중</span>
-    <span class="coming-soon">Coming Soon</span>
-  </div>
-  -->
+    <span class="lang-native">일본어<br>General · JLPT<br>J-TEST · 漢検</span>
+    <span class="lang-btn btn-active">학습 시작 →</span>
+  </a>
+
+  <!-- 중국어 -->
+  <a href="zh/index.html" class="lang-card coming-soon">
+    <span class="soon-badge">준비 중</span>
+    <span class="lang-flag">🇨🇳</span>
+    <span class="lang-name">中文</span>
+    <span class="lang-native">중국어<br>General · HSK<br>BCT</span>
+    <span class="lang-btn btn-soon">Coming Soon</span>
+  </a>
+
+  <!-- 스페인어 -->
+  <a href="es/index.html" class="lang-card coming-soon">
+    <span class="soon-badge">준비 중</span>
+    <span class="lang-flag">🇪🇸</span>
+    <span class="lang-name">Español</span>
+    <span class="lang-native">스페인어<br>General · DELE<br>SIELE</span>
+    <span class="lang-btn btn-soon">Coming Soon</span>
+  </a>
+
+  <!-- 프랑스어 -->
+  <a href="fr/index.html" class="lang-card coming-soon">
+    <span class="soon-badge">준비 중</span>
+    <span class="lang-flag">🇫🇷</span>
+    <span class="lang-name">Français</span>
+    <span class="lang-native">프랑스어<br>General · DELF<br>DALF</span>
+    <span class="lang-btn btn-soon">Coming Soon</span>
+  </a>
+
+  <!-- 독일어 -->
+  <a href="de/index.html" class="lang-card coming-soon">
+    <span class="soon-badge">준비 중</span>
+    <span class="lang-flag">🇩🇪</span>
+    <span class="lang-name">Deutsch</span>
+    <span class="lang-native">독일어<br>General · Goethe<br>TestDaF</span>
+    <span class="lang-btn btn-soon">Coming Soon</span>
+  </a>
 
 </div>
 
