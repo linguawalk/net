@@ -217,8 +217,8 @@ nav{
   <a href="../login.html" class="nav-signin" style="text-decoration:none;"
     data-ko="로그인" data-ja="ログイン">ログイン</a>
   <div class="lang-sw">
-    <button class="lbtn" onclick="setLang('ja')" id="btn-ja">日本語</button>
-    <button class="lbtn act" onclick="setLang('ko')" id="btn-ko">한국어</button>
+    <button class="lbtn act" onclick="setLang('ja')" id="btn-ja">日本語</button>
+    <button class="lbtn" onclick="setLang('ko')" id="btn-ko">한국어</button>
   </div>
 </nav>
 
@@ -491,7 +491,7 @@ nav{
 </div>
 
 <script>
-let lang='ko';
+let lang='ja';
 function setLang(l){
   lang=l;
   document.querySelectorAll('[data-ja][data-ko]').forEach(el=>{
@@ -500,12 +500,13 @@ function setLang(l){
   });
   document.getElementById('btn-ja').classList.toggle('act',l==='ja');
   document.getElementById('btn-ko').classList.toggle('act',l==='ko');
-  try{localStorage.setItem('lw-lang-ja',l);}catch(e){}
+  try{localStorage.setItem('lw-ja-ui-lang',l);}catch(e){}
 }
 (function(){
-  let saved;try{saved=localStorage.getItem('lw-lang-ja');}catch(e){}
-  if(saved){ setLang(saved); }
-  else { setLang((navigator.language||'').startsWith('ko')?'ko':'ja'); }
+  let saved;try{saved=localStorage.getItem('lw-ja-ui-lang');}catch(e){}
+  // lw-ja-ui-lang 키만 읽음 (영어 사이트 lw-lang과 완전 독립)
+  if(saved === 'ko'){ setLang('ko'); }
+  else { setLang('ja'); }  // 기본값: 일본어
 })();
 </script>
 </body>
