@@ -478,14 +478,16 @@ function playP1(item, speed){
     }
     fill.style.width=(qi/queue.length*100)+'%';
     if(choicesEl) choicesEl.querySelectorAll('.p1-btn').forEach((b,i)=>b.classList.toggle('playing',i===qi));
-    const u=new SpeechSynthesisUtterance(queue[qi]);
+    const text=queue[qi];
+    const u=new SpeechSynthesisUtterance(text);
     u.lang='ja-JP'; u.rate=spd;
     if(jv) u.voice=jv;
+    qi++; // ← 여기서만 1번 증가
     let done=false;
-    function next(){ if(done)return; done=true; qi++; playNext(); }
+    function next(){ if(done)return; done=true; playNext(); }
     u.onend=next;
-    setTimeout(next, Math.ceil(queue[qi].length*600/spd)+1500);
-    speechSynthesis.speak(u); qi++;
+    setTimeout(next, Math.ceil(text.length*600/spd)+1500);
+    speechSynthesis.speak(u);
   }
   playNext();
 }
