@@ -189,11 +189,12 @@ nav{background:rgba(28,43,69,0.97);height:56px;display:flex;align-items:center;p
     <div class="setting-item">
       <div class="si-label" data-ko="레벨" data-ja="レベル">레벨</div>
       <select class="si-select" id="sel-level">
-        <option value="N5">N5 (A1)</option>
-        <option value="N4" selected>N4 (A2)</option>
-        <option value="N3">N3 (B1)</option>
-        <option value="N2">N2 (B2)</option>
-        <option value="N1">N1 (C1)</option>
+        <option value="A1">A1 — 입문 (N5 이하)</option>
+        <option value="A2" selected>A2 — 초급 (N5)</option>
+        <option value="B1">B1 — 중급 초반 (N4~N3)</option>
+        <option value="B2">B2 — 중급 (N3~N2)</option>
+        <option value="C1">C1 — 고급 (N2~N1)</option>
+        <option value="C2">C2 — 최고급 (N1 이상)</option>
       </select>
     </div>
     <div class="setting-item" id="topic-wrap">
@@ -359,14 +360,16 @@ async function generate(){
 
 // ── 프롬프트 ─────────────────────────────────────────────────────────
 function promptP1(level,topic){
-  return `Generate 1 TOEIC-style Japanese listening Part 1 question. Level: ${level}. Topic: ${topic}.
+  const levelHint={A1:'N5以下 beginner',A2:'N5 elementary',B1:'N4-N3 intermediate',B2:'N3-N2 upper-intermediate',C1:'N2-N1 advanced',C2:'N1+ mastery'}[level]||level;
+  return `Generate 1 TOEIC-style Japanese listening Part 1 question. Level: ${levelHint}. Topic: ${topic}.
 Return ONLY a JSON object (no markdown):
 {"imagePrompt":"realistic everyday Japanese scene for image search (5 words max)","audioScript":"一文で写真を描写する日本語文。${level}レベル。","choices":["(A) 日本語の文","(B) 日本語の文","(C) 日本語の文","(D) 日本語の文"],"answer":${Math.floor(Math.random()*4)},"explanation":"${lang==='ko'?'정답 해설':'なぜこれが正解か'}"}
 Rules: answer index is 0-based. choices[answer] must match the photo. audioScript = narrator reads this aloud. Keep all strings single-line.`;
 }
 
 function promptP2(level,topic){
-  return `Generate 3 Japanese listening Part 2 (即時応答) questions. Level: ${level}. Topic: ${topic}.
+  const levelHint={A1:'N5以下 beginner',A2:'N5 elementary',B1:'N4-N3 intermediate',B2:'N3-N2 upper-intermediate',C1:'N2-N1 advanced',C2:'N1+ mastery'}[level]||level;
+  return `Generate 3 Japanese listening Part 2 (即時応答) questions. Level: ${levelHint}. Topic: ${topic}.
 Return ONLY JSON (no markdown):
 {"items":[{"id":1,"question":"日本語の質問文","choices":["(A) 応答","(B) 応答","(C) 応答"],"answer":0,"explanation":"${lang==='ko'?'해설':'解説'}"}]}
 Rules: 3 choices (A/B/C), answer is 0-based index. All strings single-line.`;
@@ -375,12 +378,14 @@ Rules: 3 choices (A/B/C), answer is 0-based index. All strings single-line.`;
 function promptP3(level,topic){
   const isDialogue=Math.random()>0.4;
   if(isDialogue){
-    return `Generate 1 Japanese listening conversation set. Level: ${level}. Topic: ${topic}.
+    const levelHint={A1:'N5以下 beginner',A2:'N5 elementary',B1:'N4-N3 intermediate',B2:'N3-N2 upper-intermediate',C1:'N2-N1 advanced',C2:'N1+ mastery'}[level]||level;
+    return `Generate 1 Japanese listening conversation set. Level: ${levelHint}. Topic: ${topic}.
 Return ONLY JSON (no markdown):
 {"type":"dialogue","context":"${lang==='ko'?'상황 설명 (한국어)':'状況説明'}","dialogue":[{"speaker":"A","line":"日本語の台詞"},{"speaker":"B","line":"日本語の台詞"},{"speaker":"A","line":"日本語の台詞"}],"questions":[{"id":1,"text":"質問文","choices":["(A)...","(B)...","(C)...","(D)..."],"answer":0,"explanation":"${lang==='ko'?'해설':'解説'}"},{"id":2,"text":"質問文","choices":["(A)...","(B)...","(C)...","(D)..."],"answer":1,"explanation":"${lang==='ko'?'해설':'解説'}"},{"id":3,"text":"質問文","choices":["(A)...","(B)...","(C)...","(D)..."],"answer":2,"explanation":"${lang==='ko'?'해설':'解説'}"}]}
 Rules: exactly 3 questions, answer is 0-based, all strings single-line.`;
   } else {
-    return `Generate 1 Japanese listening monologue set. Level: ${level}. Topic: ${topic}.
+    const levelHint2={A1:'N5以下 beginner',A2:'N5 elementary',B1:'N4-N3 intermediate',B2:'N3-N2 upper-intermediate',C1:'N2-N1 advanced',C2:'N1+ mastery'}[level]||level;
+    return `Generate 1 Japanese listening monologue set. Level: ${levelHint2}. Topic: ${topic}.
 Return ONLY JSON (no markdown):
 {"type":"monologue","talkType":"アナウンス","script":"日本語の담화テキスト (2-3文)","questions":[{"id":1,"text":"質問文","choices":["(A)...","(B)...","(C)...","(D)..."],"answer":0,"explanation":"${lang==='ko'?'해설':'解説'}"},{"id":2,"text":"質問文","choices":["(A)...","(B)...","(C)...","(D)..."],"answer":1,"explanation":"${lang==='ko'?'해설':'解説'}"},{"id":3,"text":"質問文","choices":["(A)...","(B)...","(C)...","(D)..."],"answer":2,"explanation":"${lang==='ko'?'해설':'解説'}"}]}
 Rules: exactly 3 questions, answer is 0-based, all strings single-line.`;
