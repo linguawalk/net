@@ -209,7 +209,7 @@ async function generate(){
   const time=parseInt(document.getElementById('sel-time').value);
   const btn=document.getElementById('gen-btn');
   btn.disabled=true;
-  btn.innerHTML='⏳ <span>'+(lang==='ko'?'생성 중...':'生成中...')+'</span>';
+  btn.innerHTML='⏳ <span>'+('生成中...')+'</span>';
   document.getElementById('content-area').innerHTML='';
   clearInterval(timerInterval); clearInterval(prepInterval);
 
@@ -223,7 +223,7 @@ ONLY return valid JSON (no markdown, no newlines inside strings):
 {
   "question_ko": "한국어 질문 (이 질문에 일본어로 답하세요)",
   "question_ja": "日本語の質問文 (${levelHint}レベル)",
-  "tips": ["한국어 팁 1","한국어 팁 2","한국어 팁 3"],
+  "tips_ja": ["日本語のヒント1","日本語のヒント2","日本語のヒント3"],
   "sample_answer": "모범 답안 일본어 (${wordTarget}단어 내외, ${levelHint} 수준)",
   "key_phrases": ["役立つ表現1","役立つ表現2","役立つ表現3","役立つ表現4"],
   "preparation_time": 15
@@ -245,7 +245,7 @@ Rules: all strings single-line, sample_answer must be natural ${levelHint}-level
     console.error(e);
   }
   btn.disabled=false;
-  btn.innerHTML='🔄 <span>'+(lang==='ko'?'새 질문':'新しい質問')+'</span>';
+  btn.innerHTML='🔄 <span>'+('新しい質問')+'</span>';
 }
 
 // ── 렌더링 ────────────────────────────────────────────────────────────
@@ -258,19 +258,16 @@ function renderSpeaking(){
   const qCard=document.createElement('div');
   qCard.className='q-display fade-in';
   qCard.innerHTML=`
-    <div class="qd-label">${lang==='ko'?'💬 말하기 질문 (일본어로 답변하세요)':'💬 会話質問 (日本語で答えてください)'}</div>
-    <div class="qd-question">${lang==='ko'?q.question_ko:q.question_ja}</div>
-    <div class="qd-question-ja" id="q-sub">${lang==='ko'?q.question_ja:q.question_ko}</div>
-    <div class="qd-tips" style="margin-top:14px;">
-      ${(q.tips||[]).map(t=>`<div class="qd-tip">💡 ${t}</div>`).join('')}
-    </div>`;
+    <div class="qd-label">💬 会話質問 — 日本語で答えてください</div>
+    <div class="qd-question">${q.question_ja}</div>
+    <div class="qd-question-ja" style="font-size:13px;color:var(--text-muted);margin-top:8px;">${q.question_ko}</div>`;
 
   // 준비 타이머
   const prepBar=document.createElement('div');
   prepBar.className='prep-bar fade-in'; prepBar.id='prep-bar';
   prepBar.innerHTML=`
     <div class="prep-icon">⏱️</div>
-    <div class="prep-text">${lang==='ko'?'준비 시간 — 생각을 정리하세요':'準備時間 — 考えをまとめてください'}</div>
+    <div class="prep-text">${'準備時間 — 考えをまとめてください'}</div>
     <div class="prep-num" id="prep-num">${q.preparation_time||15}</div>`;
 
   // 답변 타이머
@@ -279,7 +276,7 @@ function renderSpeaking(){
   timerBar.innerHTML=`
     <div class="timer-num" id="timer-num">${timeLeft}</div>
     <div style="flex:1;">
-      <div class="timer-label">${lang==='ko'?'답변 시간 남은 시간':'残り回答時間'}</div>
+      <div class="timer-label">${'残り回答時間'}</div>
       <div class="timer-prog"><div class="timer-fill" id="timer-fill" style="width:100%"></div></div>
     </div>`;
 
@@ -291,13 +288,13 @@ function renderSpeaking(){
   recBtn.addEventListener('click',toggleRecord);
   const recStatus=document.createElement('div');
   recStatus.className='rec-status'; recStatus.id='rec-status';
-  recStatus.textContent=lang==='ko'?'🎙 버튼을 눌러 녹음을 시작하세요':'🎙 ボタンを押して録音を開始してください';
+  recStatus.textContent='🎙 ボタンを押して録音を開始してください';
   const recTranscript=document.createElement('div');
   recTranscript.className='rec-transcript'; recTranscript.id='rec-transcript';
-  recTranscript.textContent=lang==='ko'?'(음성이 여기에 표시됩니다)':'(音声がここに表示されます)';
+  recTranscript.textContent='(音声がここに表示されます)';
   const submitBtn=document.createElement('button');
   submitBtn.className='submit-btn';
-  submitBtn.textContent=lang==='ko'?'✓ 제출하고 AI 피드백 받기':'✓ 送信してAIフィードバックを受け取る';
+  submitBtn.textContent='✓ 送信してAIフィードバックを受け取る';
   submitBtn.addEventListener('click',submitSpeech);
   recArea.append(recBtn, recStatus, recTranscript, submitBtn);
 
@@ -306,21 +303,21 @@ function renderSpeaking(){
   phCard.className='card fade-in';
   const phHead=document.createElement('div'); phHead.className='card-head';
   const phTitle=document.createElement('div'); phTitle.className='card-title';
-  phTitle.textContent=lang==='ko'?'참고 표현':'役立つ表現';
+  phTitle.textContent='役立つ表現';
   const sampleBtn=document.createElement('button'); sampleBtn.className='show-sample-btn';
-  sampleBtn.textContent=lang==='ko'?'모범 답안 보기':'模範回答を見る';
+  sampleBtn.textContent='模範回答を見る';
   sampleBtn.addEventListener('click',()=>{
     const sb=document.getElementById('sample-box');
     const isOpen=sb.style.display!=='none';
     sb.style.display=isOpen?'none':'block';
-    sampleBtn.textContent=isOpen?(lang==='ko'?'모범 답안 보기':'模範回答を見る'):(lang==='ko'?'숨기기':'隠す');
+    sampleBtn.textContent=isOpen?('模範回答を見る'):('隠す');
   });
   phHead.append(phTitle, sampleBtn);
   const phBody=document.createElement('div'); phBody.className='card-body';
   phBody.innerHTML=`
     <div style="margin-bottom:12px;">${(q.key_phrases||[]).map(p=>`<span class="phrase-tag">${p}</span>`).join('')}</div>
     <div class="sample-box" id="sample-box">
-      <div class="sb-title">${lang==='ko'?'📝 모범 답안':'📝 模範回答'}</div>
+      <div class="sb-title">${'📝 模範回答'}</div>
       <div class="sb-text">${q.sample_answer}</div>
     </div>`;
   phCard.append(phHead, phBody);
@@ -361,7 +358,7 @@ async function startRecord(){
     const btn=document.getElementById('rec-btn');
     const status=document.getElementById('rec-status');
     btn.className='rec-btn recording'; btn.textContent='⏹';
-    status.textContent=lang==='ko'?'🔴 녹음 중… (다시 클릭하여 정지)':'🔴 録音中… (もう一度クリックして停止)';
+    status.textContent='🔴 録音中… (もう一度クリックして停止)';
 
     // 음성 인식 (일본어)
     const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
@@ -410,19 +407,19 @@ function stopRecord(){
   const btn=document.getElementById('rec-btn');
   const status=document.getElementById('rec-status');
   if(btn){btn.className='rec-btn idle';btn.textContent='🔄';}
-  if(status) status.textContent=lang==='ko'?'✅ 녹음 완료. 제출하거나 다시 녹음하세요.':'✅ 録音完了。送信するか録音し直してください。';
+  if(status) status.textContent='✅ 録音完了。送信するか録音し直してください。';
 }
 
 // ── 제출 & AI 피드백 ──────────────────────────────────────────────────
 async function submitSpeech(){
   const t=transcript||document.getElementById('rec-transcript')?.textContent||'';
   if(!t||t.length<3||t.includes('음성이 여기')||t.includes('音声が')){
-    alert(lang==='ko'?'먼저 일본어로 답변을 녹음해 주세요.':'まず日本語で回答を録音してください。');
+    alert('まず日本語で回答を録音してください。');
     return;
   }
   const fc=document.getElementById('feedback-card');
   fc.style.display='block';
-  fc.innerHTML=`<div style="text-align:center;padding:28px;"><div style="font-size:28px;margin-bottom:10px;">⏳</div><div style="font-size:14px;color:var(--text-muted);">${lang==='ko'?'AI 피드백 생성 중…':'AIフィードバックを生成中…'}</div></div>`;
+  fc.innerHTML=`<div style="text-align:center;padding:28px;"><div style="font-size:28px;margin-bottom:10px;">⏳</div><div style="font-size:14px;color:var(--text-muted);">${'AIフィードバックを生成中…'}</div></div>`;
 
   const level=document.getElementById('sel-level').value;
   const prompt=`일본어 말하기 평가를 해주세요.
@@ -439,12 +436,15 @@ ONLY return valid JSON (no markdown, no newlines in strings):
   "fluency_score": 7,
   "grammar_score": 7,
   "vocabulary_score": 7,
-  "strengths_ko": "잘한 점 (한국어)",
-  "improvements_ko": "개선할 점 (한국어)",
-  "corrected_ja": "개선된 일본어 답변",
-  "overall_ko": "전반적인 피드백 (한국어 2-3문장)"
+  "strengths_ja": "良かった点 (日本語)",
+  "improvements_ja": "改善点 (日本語)",
+  "corrected_ja": "改善された日本語の回答",
+  "overall_ja": "全体的なフィードバック (日本語2-3文)",
+  "strengths_ja": "良かった点 (日本語)",
+  "improvements_ja": "改善点 (日本語)",
+  "corrected_ja": "改善された日本語の回答"
 }
-점수는 10점 만점. 격려하는 톤으로.`;
+10点満点で評価。励ます口調で。`;
 
   try{
     const res=await fetch('/api/claude',{method:'POST',
@@ -457,30 +457,30 @@ ONLY return valid JSON (no markdown, no newlines in strings):
 
     fc.innerHTML=`
       <div class="fc-score">
-        <div class="fc-score-item"><div class="fc-score-num">${fb.overall_score}</div><div class="fc-score-label">${lang==='ko'?'종합':'総合'}</div></div>
-        <div class="fc-score-item"><div class="fc-score-num">${fb.pronunciation_score}</div><div class="fc-score-label">${lang==='ko'?'발음':'発音'}</div></div>
-        <div class="fc-score-item"><div class="fc-score-num">${fb.fluency_score}</div><div class="fc-score-label">${lang==='ko'?'유창성':'流暢さ'}</div></div>
-        <div class="fc-score-item"><div class="fc-score-num">${fb.grammar_score}</div><div class="fc-score-label">${lang==='ko'?'문법':'文法'}</div></div>
-        <div class="fc-score-item"><div class="fc-score-num">${fb.vocabulary_score}</div><div class="fc-score-label">${lang==='ko'?'어휘':'語彙'}</div></div>
+        <div class="fc-score-item"><div class="fc-score-num">${fb.overall_score}</div><div class="fc-score-label">${'総合'}</div></div>
+        <div class="fc-score-item"><div class="fc-score-num">${fb.pronunciation_score}</div><div class="fc-score-label">${'発音'}</div></div>
+        <div class="fc-score-item"><div class="fc-score-num">${fb.fluency_score}</div><div class="fc-score-label">${'流暢さ'}</div></div>
+        <div class="fc-score-item"><div class="fc-score-num">${fb.grammar_score}</div><div class="fc-score-label">${'文法'}</div></div>
+        <div class="fc-score-item"><div class="fc-score-num">${fb.vocabulary_score}</div><div class="fc-score-label">${'語彙'}</div></div>
       </div>
       <div class="fc-section">
-        <div class="fc-section-title">🇰🇷 ${lang==='ko'?'전반적 피드백':'全体フィードバック'}</div>
-        <div class="fc-text">${fb.overall_ko}</div>
+        <div class="fc-section-title">💬 全体フィードバック</div>
+        <div class="fc-text">${fb.overall_ja}</div>
       </div>
       <div class="fc-section">
-        <div class="fc-section-title">✅ ${lang==='ko'?'잘한 점':'良かった点'}</div>
-        <div class="fc-text">${fb.strengths_ko}</div>
+        <div class="fc-section-title">✅ 良かった点</div>
+        <div class="fc-text">${fb.strengths_ja}</div>
       </div>
       <div class="fc-section">
-        <div class="fc-section-title">📈 ${lang==='ko'?'개선할 점':'改善点'}</div>
-        <div class="fc-text">${fb.improvements_ko}</div>
+        <div class="fc-section-title">📈 改善点</div>
+        <div class="fc-text">${fb.improvements_ja}</div>
       </div>
       <div class="fc-section">
-        <div class="fc-section-title">📝 ${lang==='ko'?'개선된 일본어 답변':'改善された日本語回答'}</div>
+        <div class="fc-section-title">📝 改善された回答</div>
         <div class="fc-improved">${fb.corrected_ja}</div>
       </div>`;
   }catch(e){
-    fc.innerHTML=`<div style="padding:16px;color:var(--red)">⚠️ ${lang==='ko'?'피드백 생성 실패':'フィードバック生成失敗'}</div>`;
+    fc.innerHTML=`<div style="padding:16px;color:var(--red)">⚠️ ${'フィードバック生成失敗'}</div>`;
     console.error(e);
   }
 }
