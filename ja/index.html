@@ -504,7 +504,8 @@ function setLang(l){
 }
 (function(){
   let saved;try{saved=localStorage.getItem('lw-lang-ja');}catch(e){}
-  setLang(saved||(navigator.language||'').startsWith('ja')?'ja':'ko');
+  if(saved){ setLang(saved); }
+  else { setLang((navigator.language||'').startsWith('ko')?'ko':'ja'); }
 })();
 </script>
 </body>
