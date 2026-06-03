@@ -255,6 +255,26 @@ nav{background:rgba(28,43,69,0.97);height:56px;display:flex;align-items:center;p
       </div>
     </div>
 
+    <!-- 写作 -->
+    <div class="sec-card">
+      <div class="sc-top">
+        <div class="sc-icon">✍️</div>
+        <div class="sc-info">
+          <div class="sc-name" data-ko="写作 — 쓰기 (HSK 3~6급)" data-zh="写作 (HSK 3-6级)">写作 — 쓰기 (3~6급)</div>
+          <div class="sc-desc" data-ko="어순 배열·작문 문제. HSK 3급부터 쓰기 영역 포함. 拼音 피드백 제공." data-zh="语序排列・写作题。HSK 3级起含写作。提供拼音反馈。">어순 배열 + 작문 + AI 채점</div>
+        </div>
+      </div>
+      <div class="sc-parts">
+        <span class="sc-part" data-ko="第1部分 — 어순 배열" data-zh="第1部分 — 语序排列">第1部分 — 语序排列</span>
+        <span class="sc-part" data-ko="第2部分 — 작문" data-zh="第2部分 — 写作">第2部分 — 写作</span>
+        <span class="sc-part" data-ko="HSK 3~6급" data-zh="HSK 3-6级">HSK 3~6급</span>
+      </div>
+      <div class="sc-footer">
+        <a href="writing.html" class="sc-link" id="write-link" data-ko="写作 연습 시작 →" data-zh="开始写作练习 →">写作 연습 시작 →</a>
+        <span class="sc-time" data-ko="급수별 25~40분" data-zh="各级别25~40分钟">급수별 25~40분</span>
+      </div>
+    </div>
+
   </div>
 
   <!-- 합격 기준표 -->
@@ -332,6 +352,7 @@ function selectLevel(lv, btn){
   document.getElementById('start-btn').href='listening.html?level='+lv;
   document.getElementById('listen-link').href='listening.html?level='+lv;
   document.getElementById('read-link').href='reading.html?level='+lv;
+  const wl=document.getElementById('write-link'); if(wl) wl.href='writing.html?level='+lv;
   // 시작 버튼 텍스트
   const label=document.getElementById('start-label');
   if(label) label.textContent=lang==='ko'?`HSK ${lv}급 준비 시작 →`:`开始HSK ${lv}级备考 →`;
