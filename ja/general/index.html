@@ -94,8 +94,8 @@
   <div class="nav-space"></div>
   <a href="../index.html" class="nav-back" data-ja="← 日本語ホーム" data-ko="← 일본어 홈">← 日本語ホーム</a>
   <div class="lang-sw">
-    <button class="lbtn act" onclick="setLang('ja')" id="btn-ja">日本語</button>
-    <button class="lbtn" onclick="setLang('ko')" id="btn-ko">한국어</button>
+    <button class="lbtn" onclick="setLang('ja')" id="btn-ja">日本語</button>
+    <button class="lbtn act" onclick="setLang('ko')" id="btn-ko">한국어</button>
   </div>
 </nav>
 
@@ -260,7 +260,7 @@
 </div>
 
 <script>
-let lang='ja', currentLevel='A1';
+let lang='ko', currentLevel='A1';
 
 const LEVEL_INFO={
   A1:{
@@ -306,7 +306,6 @@ function selectLevel(lv,el){
   document.querySelectorAll('.lv-tab').forEach(t=>t.classList.remove('act'));
   el.classList.add('act');
   updateLevelInfo();
-  try{localStorage.setItem('lw-ja-level',lv);}catch(e){}
 }
 
 function updateLevelInfo(){
@@ -318,8 +317,7 @@ function updateLevelInfo(){
   mapEl.innerHTML=`<span class="cefr-badge">JLPT: ${info.jlpt}</span>`;
 }
 
-function showProMsg(lv){ /* 모두 무료 */ } 레벨은 Pro 플랜에서 이용 가능합니다. 곧 오픈 예정입니다!`
-    :`${lv}レベルは近日公開予定です！`);
+function showProMsg(lv){ /* 모두 무료 */ }レベルは近日公開予定です！`);
 }
 
 function setLang(l){
@@ -331,20 +329,11 @@ function setLang(l){
   document.getElementById('btn-ja').classList.toggle('act',l==='ja');
   document.getElementById('btn-ko').classList.toggle('act',l==='ko');
   updateLevelInfo();
-  try{localStorage.setItem('lw-ja-ui-lang',l);}catch(e){}
 }
 
 (function(){
-  let savedLang; try{savedLang=localStorage.getItem('lw-ja-ui-lang');}catch(e){}
-  if(savedLang==='ko'){ setLang('ko'); } else { setLang('ja'); }
-  let savedLv; try{savedLv=localStorage.getItem('lw-ja-level');}catch(e){}
-  if(savedLv && LEVEL_INFO[savedLv] && LEVEL_INFO[savedLv].free){
-    document.querySelectorAll('.lv-tab').forEach(t=>{
-      if(t.textContent.trim()===savedLv){ t.classList.add('act'); selectLevel(savedLv,t); }
-    });
-  } else {
-    updateLevelInfo();
-  }
+  setLang('ko');
+  updateLevelInfo();
 })();
 </script>
 </body>
