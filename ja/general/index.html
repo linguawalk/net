@@ -111,7 +111,7 @@
     </p>
     <div class="hero-badges">
       <span class="h-badge" data-ja="A1 & A2 — 無料" data-ko="A1 & A2 — 무료">A1 & A2 — 無料</span>
-      <span class="h-badge gold" data-ja="B1〜C2 — Pro" data-ko="B1~C2 — 유료">B1〜C2 — Pro</span>
+      <span class="h-badge gold" data-ja="B1~C2 — Free" data-ko="B1~C2 — Free">B1~C2 — Free</span>
       <span class="h-badge" data-ja="6スキル" data-ko="6개 영역">6スキル</span>
       <span class="h-badge">🤖 AI チューター</span>
     </div>
@@ -129,10 +129,10 @@
     <div class="level-tabs">
       <button class="lv-tab act" onclick="selectLevel('A1',this)">A1</button>
       <button class="lv-tab" onclick="selectLevel('A2',this)">A2</button>
-      <button class="lv-tab locked" onclick="showProMsg('B1')">B1<span class="lv-lock">🔒</span></button>
-      <button class="lv-tab locked" onclick="showProMsg('B2')">B2<span class="lv-lock">🔒</span></button>
-      <button class="lv-tab locked" onclick="showProMsg('C1')">C1<span class="lv-lock">🔒</span></button>
-      <button class="lv-tab locked" onclick="showProMsg('C2')">C2<span class="lv-lock">🔒</span></button>
+      <button class="lv-tab" onclick="selectLevel('B1',this)">B1</button>
+      <button class="lv-tab" onclick="selectLevel('B2',this)">B2</button>
+      <button class="lv-tab" onclick="selectLevel('C1',this)">C1</button>
+      <button class="lv-tab" onclick="selectLevel('C2',this)">C2</button>
     </div>
     <div class="level-info" id="level-info"></div>
     <div class="cefr-map" id="cefr-map"></div>
@@ -276,27 +276,27 @@ const LEVEL_INFO={
     jlpt:'N5相当 / N5 수준'
   },
   B1:{
-    free:false,
-    ja:'🔒 B1 — 中級前半。よく使われる話題の会話が理解できます。Proプラン必要。JLPT N4~N3相当。',
-    ko:'🔒 B1 — 중급 초반. 자주 사용되는 주제의 대화를 이해할 수 있습니다. Pro 플랜 필요. JLPT N4~N3 수준.',
+    free:true,
+    ja:'B1 — 中級前半。よく使われる話題の会話が理解できます。JLPT N4~N3相当。',
+    ko:'B1 — 중급 초반. 자주 사용되는 주제의 대화를 이해할 수 있습니다. JLPT N4~N3 수준.',
     jlpt:'N4〜N3相当 / N4~N3 수준'
   },
   B2:{
-    free:false,
-    ja:'🔒 B2 — 中級。幅広いテーマで流暢なやり取りができます。Proプラン必要。JLPT N3~N2相当。',
-    ko:'🔒 B2 — 중급. 다양한 주제로 유창한 대화가 가능합니다. Pro 플랜 필요. JLPT N3~N2 수준.',
+    free:true,
+    ja:'B2 — 中級。幅広いテーマで流暢なやり取りができます。JLPT N3~N2相当。',
+    ko:'B2 — 중급. 다양한 주제로 유창한 대화가 가능합니다. JLPT N3~N2 수준.',
     jlpt:'N3〜N2相当 / N3~N2 수준'
   },
   C1:{
-    free:false,
-    ja:'🔒 C1 — 上級。複雑な内容も流暢に表現できます。Proプラン必要。JLPT N2~N1相当。',
-    ko:'🔒 C1 — 고급. 복잡한 내용도 유창하게 표현할 수 있습니다. Pro 플랜 필요. JLPT N2~N1 수준.',
+    free:true,
+    ja:'C1 — 上級。複雑な内容も流暢に表現できます。JLPT N2~N1相当。',
+    ko:'C1 — 고급. 복잡한 내용도 유창하게 표현할 수 있습니다. JLPT N2~N1 수준.',
     jlpt:'N2〜N1相当 / N2~N1 수준'
   },
   C2:{
-    free:false,
-    ja:'🔒 C2 — 習得。ほぼすべての日本語を理解し使いこなせます。Proプラン必要。JLPT N1以上相当。',
-    ko:'🔒 C2 — 숙달. 거의 모든 일본어를 이해하고 구사할 수 있습니다. Pro 플랜 필요. JLPT N1 이상 수준.',
+    free:true,
+    ja:'C2 — 習得。ほぼすべての日本語を理解し使いこなせます。JLPT N1以上相当。',
+    ko:'C2 — 숙달. 거의 모든 일본어를 이해하고 구사할 수 있습니다. JLPT N1 이상 수준.',
     jlpt:'N1以上相当 / N1 이상 수준'
   },
 };
@@ -318,10 +318,8 @@ function updateLevelInfo(){
   mapEl.innerHTML=`<span class="cefr-badge">JLPT: ${info.jlpt}</span>`;
 }
 
-function showProMsg(lv){
-  alert(lang==='ko'
-    ?`${lv} 레벨은 Pro 플랜에서 이용 가능합니다. 곧 오픈 예정입니다!`
-    :`${lv}レベルはProプランで利用できます。近日公開予定です！`);
+function showProMsg(lv){ /* 모두 무료 */ } 레벨은 Pro 플랜에서 이용 가능합니다. 곧 오픈 예정입니다!`
+    :`${lv}レベルは近日公開予定です！`);
 }
 
 function setLang(l){
@@ -333,12 +331,12 @@ function setLang(l){
   document.getElementById('btn-ja').classList.toggle('act',l==='ja');
   document.getElementById('btn-ko').classList.toggle('act',l==='ko');
   updateLevelInfo();
-  try{localStorage.setItem('lw-lang-ja',l);}catch(e){}
+  try{localStorage.setItem('lw-ja-ui-lang',l);}catch(e){}
 }
 
 (function(){
-  let savedLang; try{savedLang=localStorage.getItem('lw-lang-ja');}catch(e){}
-  setLang(savedLang||(navigator.language||'').startsWith('ko')?'ko':'ja');
+  let savedLang; try{savedLang=localStorage.getItem('lw-ja-ui-lang');}catch(e){}
+  if(savedLang==='ko'){ setLang('ko'); } else { setLang('ja'); }
   let savedLv; try{savedLv=localStorage.getItem('lw-ja-level');}catch(e){}
   if(savedLv && LEVEL_INFO[savedLv] && LEVEL_INFO[savedLv].free){
     document.querySelectorAll('.lv-tab').forEach(t=>{
