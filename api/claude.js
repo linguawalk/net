@@ -40,15 +40,24 @@ function sanitizeJSON(raw) {
   // 1. 마크다운 코드블록 제거
   let s = raw.replace(/```json\s*/gi, '').replace(/```\s*/g, '').trim();
 
-  // 2. { } 범위만 추출
-  const start = s.indexOf('{');
-  const end   = s.lastIndexOf('}');
-  if (start !== -1 && end !== -1 && end > start) {
-    s = s.slice(start, end + 1);
+  // 2. 배열([]) 또는 객체({}) 범위 추출 — 배열 우선
+  const arrStart = s.indexOf('[');
+  const arrEnd   = s.lastIndexOf(']');
+  const objStart = s.indexOf('{');
+  const objEnd   = s.lastIndexOf('}');
+
+  if (arrStart !== -1 && arrEnd !== -1 && arrEnd > arrStart) {
+    // 배열이 있고, 객체보다 앞에 있거나 객체가 없으면 배열 추출
+    if (objStart === -1 || arrStart <= objStart) {
+      s = s.slice(arrStart, arrEnd + 1);
+    } else {
+      s = s.slice(objStart, objEnd + 1);
+    }
+  } else if (objStart !== -1 && objEnd !== -1 && objEnd > objStart) {
+    s = s.slice(objStart, objEnd + 1);
   }
 
-  // 3. JSON 문자열 내부의 제어문자·줄바꿈 정리
-  // JSON 파서가 읽을 수 있도록 문자열 값 내부의 raw 줄바꿈을 \\n으로 치환
+  // 3. 문자열 내부 제어문자·줄바꿈 정리
   s = fixStringNewlines(s);
 
   return s;
