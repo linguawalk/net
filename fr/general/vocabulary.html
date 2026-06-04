@@ -280,20 +280,19 @@ let lastGenFn=null;
 
 
 function safeParseJSON(raw){
-  // Stage 1: 기본 정리
-  let s=raw.replace(/```json|```/g,'').trim();
-  // Stage 2: 배열 추출
-  const arrMatch=s.match(/\[[\s\S]*\]/);
-  if(arrMatch) s=arrMatch[0];
-  try{ return JSON.parse(s); }catch(e1){}
-  // Stage 3: 제어문자 제거
-  s=s.replace(/[ -]/g,' ');
-  try{ return JSON.parse(s); }catch(e2){}
-  // Stage 4: 문자열 내 따옴표 이스케이프
-  s=s.replace(/"([^"]*)":/g,(m,k)=>'"'+k+'":')
-     .replace(/:\s*"([^"]*)"/g,(m,v)=>': "'+v.replace(/"/g,'\"').replace(/
-/g,' ')+'"');
-  try{ return JSON.parse(s); }catch(e3){ throw new Error('JSON parse failed: '+e3.message); }
+  var s = raw.replace(/```json|```/g, '').trim();
+  var first = s.indexOf('[');
+  var last = s.lastIndexOf(']');
+  if(first !== -1 && last !== -1) s = s.slice(first, last + 1);
+  try { return JSON.parse(s); } catch(e1) {}
+  var clean = '';
+  for(var i = 0; i < s.length; i++){
+    var c = s.charCodeAt(i);
+    if(c === 10 || c === 13 || c === 9) clean += ' ';
+    else if(c >= 32) clean += s[i];
+  }
+  try { return JSON.parse(clean); } catch(e2) {}
+  throw new Error('JSON parse failed');
 }
 
 function setLang(l){
