@@ -278,6 +278,24 @@ let words=[], grammars=[];
 let currentIdx=0, score=0, answered=0;
 let lastGenFn=null;
 
+
+function safeParseJSON(raw){
+  // Stage 1: 기본 정리
+  let s=raw.replace(/```json|```/g,'').trim();
+  // Stage 2: 배열 추출
+  const arrMatch=s.match(/\[[\s\S]*\]/);
+  if(arrMatch) s=arrMatch[0];
+  try{ return JSON.parse(s); }catch(e1){}
+  // Stage 3: 제어문자 제거
+  s=s.replace(/[ -]/g,' ');
+  try{ return JSON.parse(s); }catch(e2){}
+  // Stage 4: 문자열 내 따옴표 이스케이프
+  s=s.replace(/"([^"]*)":/g,(m,k)=>'"'+k+'":')
+     .replace(/:\s*"([^"]*)"/g,(m,v)=>': "'+v.replace(/"/g,'\"').replace(/
+/g,' ')+'"');
+  try{ return JSON.parse(s); }catch(e3){ throw new Error('JSON parse failed: '+e3.message); }
+}
+
 function setLang(l){
   lang=l;
   document.querySelectorAll('[data-ko][data-fr]').forEach(el=>{
@@ -318,10 +336,11 @@ async function generateVocab(){
   words=[]; currentIdx=0; score=0; answered=0;
 
   const delf={A1:'DELF A1',A2:'DELF A2',B1:'DELF B1',B2:'DELF B2',C1:'DALF C1',C2:'DALF C2'}[level]||level;
-  const prompt=`Génère ${count} mots de vocabulaire français pour le niveau ${delf}. Thème: ${topic}.
-Return ONLY valid JSON array (no markdown, single-line strings):
-[{"word":"mot","pos":"n.m.","definition_fr":"définition en français","meaning_ko":"한국어 뜻","example_fr":"Exemple de phrase en français.","example_ko":"예문 한국어 번역","synonyms":["synonyme1","synonyme2"]}]
-Rules: all French content in French, meaning_ko/example_ko in Korean. Single-line strings.`;
+  const prompt=`Generate ${count} French vocabulary words for level ${delf}. Topic: ${topic}.
+CRITICAL: Return ONLY a valid JSON array. No markdown. No backticks. No extra text.
+Use ONLY straight double quotes for JSON. Replace ALL apostrophes in French text with [apostrophe] placeholder — NO, instead avoid apostrophes by rewriting: use "ne ... pas" not "n'...", "il y a" not contractions.
+[{"word":"bonjour","pos":"interj.","definition_fr":"Formule de salutation","meaning_ko":"안녕하세요","example_fr":"Il dit bonjour a ses amis.","example_ko":"그는 친구들에게 인사한다.","synonyms":["salut","bonsoir"]}]
+Rules: avoid apostrophes in all strings. All French text in French. meaning_ko and example_ko in Korean. Single-line strings only. Return ONLY the JSON array.`;
 
   try{
     const res=await fetch('/api/claude',{method:'POST',
@@ -330,7 +349,7 @@ Rules: all French content in French, meaning_ko/example_ko in Korean. Single-lin
         messages:[{role:'user',content:prompt}]})});
     const data=await res.json();
     const raw=data.content?.[0]?.text||'';
-    words=JSON.parse(raw.replace(/```json|```/g,'').trim());
+    words=safeParseJSON(raw);
     if(mode==='flashcard') renderFlashcards();
     else if(mode==='quiz') renderVocabQuiz();
     else renderWordList();
@@ -478,10 +497,11 @@ async function generateGrammar(){
   grammars=[]; currentIdx=0; score=0; answered=0;
 
   const delf={A1:'DELF A1',A2:'DELF A2',B1:'DELF B1',B2:'DELF B2',C1:'DALF C1',C2:'DALF C2'}[level]||level;
-  const prompt=`Génère 3 structures grammaticales françaises pour le niveau ${delf}. Catégorie: ${cat}.
-Return ONLY valid JSON array (no markdown, single-line strings):
-[{"pattern":"Structure grammaticale","name":"Nom de la structure","meaning_fr":"Explication en français","meaning_ko":"한국어 설명","examples":[{"fr":"Exemple 1 en français.","ko":"예문 1 번역"},{"fr":"Exemple 2.","ko":"예문 2 번역"},{"fr":"Exemple 3.","ko":"예문 3 번역"}],"quiz_sentence":"Phrase avec ___ à compléter.","quiz_answer":"réponse","quiz_options":["réponse","mauvaise option 1","mauvaise option 2","mauvaise option 3"]}]
-Rules: all French content in French, meaning_ko/examples.ko in Korean. Single-line strings.`;
+  const prompt=`Generate 3 French grammar structures for level ${delf}. Category: ${cat}.
+CRITICAL: Return ONLY a valid JSON array. No markdown. No backticks. No extra text.
+Avoid ALL apostrophes in strings — rewrite French to avoid contractions (use full forms: "de le" not "du" if needed, avoid "l\'" "j\'" "n\'" etc.).
+[{"pattern":"ne ... pas","name":"Negation simple","meaning_fr":"Forme negative en francais","meaning_ko":"한국어 설명","examples":[{"fr":"Il ne mange pas.","ko":"그는 먹지 않는다."},{"fr":"Elle ne parle pas.","ko":"그녀는 말하지 않는다."},{"fr":"Nous ne sortons pas.","ko":"우리는 나가지 않는다."}],"quiz_sentence":"Il ___ mange pas.","quiz_answer":"ne","quiz_options":["ne","pas","non","ni"]}]
+Rules: avoid apostrophes in ALL strings. French content in French. meaning_ko and examples.ko in Korean. Single-line strings. Return ONLY JSON array.`;
 
   try{
     const res=await fetch('/api/claude',{method:'POST',
@@ -490,7 +510,7 @@ Rules: all French content in French, meaning_ko/examples.ko in Korean. Single-li
         messages:[{role:'user',content:prompt}]})});
     const data=await res.json();
     const raw=data.content?.[0]?.text||'';
-    grammars=JSON.parse(raw.replace(/```json|```/g,'').trim());
+    grammars=safeParseJSON(raw);
     if(mode==='learn') renderGrammarLearn();
     else renderGrammarQuiz(0);
   }catch(e){
