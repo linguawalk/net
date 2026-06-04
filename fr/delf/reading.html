@@ -285,25 +285,29 @@ async function generate(){
 }
 
 function buildPrompt(ex, level, exam){
-  const docTypes={
-    ex1:{type:'practical document (advertisement, notice, schedule, menu, or flyer)',words:'80-150',qtype:'specific information questions (4지선다)'},
-    ex2:{type:'press article or magazine feature',words:'150-280',qtype:'comprehension and opinion questions (4지선다)'},
-    ex3:{type:'argumentative essay or opinion piece',words:'250-450',qtype:'analysis and argument questions (4지선다 + vrai/faux)'}
+  var docTypes={
+    ex1:{type:'practical document (advertisement, notice, schedule or flyer)',words:'80-150'},
+    ex2:{type:'press article or magazine feature',words:'150-280'},
+    ex3:{type:'argumentative essay or opinion piece',words:'250-450'}
   };
-  const d=docTypes[ex];
-  const hasVF=ex==='ex3';
-  return `Generate a ${exam} French reading comprehension exercise.
-Document type: ${d.type} at ${exam} level
-Word count: ${d.words} words
-
-Return ONLY valid JSON object (no markdown, no backticks, single-line strings):
-{"exam":"${exam}","doc_type":"${d.type}","title":"Document title in French","word_count":150,"passage":"Full text in French (single line, no line breaks in JSON)","questions":[{"id":1,"text":"Question en francais?","choices":["A. Option","B. Option","C. Option","D. Option"],"answer":0,"explanation_ko":"Korean explanation"}]${hasVF?',"vrai_faux":[{"id":1,"statement":"Affirmation en francais.","answer":true,"explanation_ko":"Korean explanation"}]':'}}
-Rules:
-- passage: natural French at ${exam} level, keep as single-line string
-- questions: 3-4 questions, answers 0-based, vary positions
-- Avoid apostrophes where possible${hasVF?'\n- vrai_faux: 2 true/false statements':''}
-- ALL strings single-line
-- Return only the JSON object`;
+  var d=docTypes[ex];
+  var hasVF=(ex==='ex3');
+  var vfPart=hasVF?',"vrai_faux":[{"id":1,"statement":"Affirmation en francais.","answer":true,"explanation_ko":"Korean explanation"},{"id":2,"statement":"Autre affirmation.","answer":false,"explanation_ko":"Korean explanation"}]}':'}}';
+  var prompt='Generate a '+exam+' French reading comprehension exercise.\n'
+    +'Document type: '+d.type+' at '+exam+' level\n'
+    +'Word count: '+d.words+' words\n\n'
+    +'Return ONLY valid JSON object (no markdown, no backticks, single-line strings):\n'
+    +'{"exam":"'+exam+'","doc_type":"'+d.type+'","title":"Document title in French","word_count":150,'
+    +'"passage":"Full French text single line",'
+    +'"questions":[{"id":1,"text":"Question en francais?","choices":["A. Option","B. Option","C. Option","D. Option"],"answer":0,"explanation_ko":"Korean explanation"}]'
+    +vfPart+'\n'
+    +'Rules:\n'
+    +'- passage: natural French at '+exam+' level, keep as single-line string\n'
+    +'- questions: 3-4 questions, answers 0-based, vary positions\n'
+    +'- Avoid apostrophes where possible\n'
+    +'- ALL strings single-line\n'
+    +'- Return only the JSON object';
+  return prompt;
 }
 
 function renderReading(data, exam){
