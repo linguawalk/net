@@ -50,6 +50,7 @@ nav{
   font-family:inherit;margin-right:10px;transition:all 0.2s;
 }
 .nav-signin:hover{background:var(--teal);}
+.nav-signed-in{background:var(--teal-mid) !important;color:#fff !important;}
 .lang-sw{display:flex;background:rgba(255,255,255,0.1);border-radius:20px;padding:2px;gap:1px;}
 .lbtn{padding:4px 11px;border-radius:16px;font-size:11px;font-weight:600;border:none;background:transparent;color:rgba(255,255,255,0.5);cursor:pointer;font-family:inherit;transition:all 0.2s;}
 .lbtn.act{background:var(--teal-mid);color:#fff;}
@@ -300,7 +301,7 @@ nav{
     <a href="opic/index.html" class="nav-link" data-en="OPIc" data-ko="OPIc">OPIc</a>
     <a href="test.html" class="nav-link" data-en="Level Test" data-ko="레벨 테스트">Level Test</a>
   </div>
-  <a href="../login.html" class="nav-signin" style="text-decoration:none;" data-en="Sign in" data-ko="로그인">Sign in</a>
+  <a href="/login.html" class="nav-signin" style="text-decoration:none;" data-en="Sign in" data-ko="로그인">Sign in</a>
   <div class="lang-sw">
     <button class="lbtn act" onclick="setLang('en')" id="btn-en">EN</button>
     <button class="lbtn" onclick="setLang('ko')" id="btn-ko">한국어</button>
@@ -604,16 +605,22 @@ function setLang(l){
 </script>
 
 <script>
-// nav 로그인 상태 반영
+// auth handled by shared snippet
+  }
+})();
+</script>
+<script>
 (function(){
+  var btn=document.querySelector('.nav-signin');
+  if(!btn) return;
   var user;
-  try{ user = JSON.parse(localStorage.getItem('lw-user')); }catch(e){}
-  if(user){
-    var btn = document.querySelector('.nav-signin');
-    if(btn){
-      btn.textContent = user.name || '마이페이지';
-      btn.href = user.role==='admin' ? '../admin.html' : '../mypage.html';
-    }
+  try{ user=JSON.parse(localStorage.getItem('lw-user')); }catch(e){}
+  if(user && user.uid){
+    btn.textContent=(user.name||user.email||'').substring(0,6)||'내정보';
+    btn.href='/mypage.html';
+    btn.classList.add('nav-signed-in');
+  } else {
+    btn.href='/login.html';
   }
 })();
 </script>
