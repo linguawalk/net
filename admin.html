@@ -358,7 +358,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
         <div class="card-body" style="padding:0;">
           <table class="data-table">
             <thead><tr>
-              <th>이름</th><th>이메일</th><th>가입일</th><th>플랜</th><th>상태</th>
+              <th>이름</th><th>이메일</th><th>가입일</th><th>플랜 / 등급</th><th>상태</th>
             </tr></thead>
             <tbody>
               <tr><td class="td-name">이지현</td><td class="td-email">jihyun@naver.com</td><td>2026.05.20</td><td><div class="plan-tags"><span class="plan-tag pt-toeic">TOEIC</span></div></td><td><span class="status-badge st-trial">체험</span></td></tr>
@@ -403,7 +403,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
         <div class="card-body" style="padding:0;">
           <table class="data-table">
             <thead><tr>
-              <th>이름</th><th>이메일</th><th>가입일</th><th>플랜</th><th>상태</th><th>마지막 학습</th><th>관리</th>
+              <th>이름</th><th>이메일</th><th>가입일</th><th>플랜 / 등급</th><th>상태</th><th>마지막 학습</th><th>관리</th>
             </tr></thead>
             <tbody>
               <tr>
@@ -483,7 +483,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
         <div class="card-body" style="padding:0;">
           <table class="data-table">
             <thead><tr>
-              <th>결제일</th><th>회원</th><th>플랜</th><th>금액</th><th>결제수단</th><th>상태</th><th>관리</th>
+              <th>결제일</th><th>회원</th><th>플랜 / 등급</th><th>금액</th><th>결제수단</th><th>상태</th><th>관리</th>
             </tr></thead>
             <tbody>
               <tr><td>2026.05.20</td><td class="td-name">이지현</td><td><span class="plan-tag pt-toeic">TOEIC</span></td><td>₩12,900</td><td>카카오페이</td><td><span class="status-badge st-active">완료</span></td><td><button class="pay-refund-btn">환불</button></td></tr>
@@ -663,56 +663,89 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
     </div>
 
     <!-- ─── PRICING ─── -->
-    <div class="page-section fade-in" id="page-pricing">
+        <div class="page-section fade-in" id="page-pricing">
       <div class="page-title">가격 관리</div>
-      <div class="page-sub">시험별 구독 가격을 설정합니다.</div>
+      <div class="page-sub">언어별 Pro 플랜 월정액 가격을 설정합니다. Free 플랜은 항상 무료입니다.</div>
 
-      <div class="card">
-        <div class="card-head"><span class="card-title">시험별 월정액 가격</span></div>
+      <div class="card" style="margin-bottom:16px;">
+        <div class="card-head"><span class="card-title">언어별 Pro 플랜 월정액</span></div>
         <div class="card-body">
-          <div style="display:flex;flex-direction:column;gap:14px;">
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-              <div style="background:var(--bg);border-radius:var(--r-lg);padding:16px;">
-                <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
-                  <span style="font-size:20px;">🏆</span>
-                  <span style="font-weight:600;">TOEIC</span>
-                </div>
-                <input type="text" class="form-input" value="12900" style="font-size:16px;font-weight:600;">
-                <div style="font-size:11px;color:var(--text-light);margin-top:4px;">현재 구독자: 94명</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
+
+            <!-- 영어 -->
+            <div style="background:var(--bg);border-radius:var(--r-lg);padding:16px;">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+                <span style="font-size:22px;">🇺🇸</span>
+                <span style="font-weight:700;font-size:14px;">English</span>
               </div>
-              <div style="background:var(--bg);border-radius:var(--r-lg);padding:16px;">
-                <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
-                  <span style="font-size:20px;">🎓</span>
-                  <span style="font-weight:600;">TOEFL</span>
-                </div>
-                <input type="text" class="form-input" value="12900" style="font-size:16px;font-weight:600;">
-                <div style="font-size:11px;color:var(--text-light);margin-top:4px;">현재 구독자: 41명</div>
-              </div>
-              <div style="background:var(--bg);border-radius:var(--r-lg);padding:16px;">
-                <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
-                  <span style="font-size:20px;">🌍</span>
-                  <span style="font-weight:600;">IELTS</span>
-                </div>
-                <input type="text" class="form-input" value="12900" style="font-size:16px;font-weight:600;">
-                <div style="font-size:11px;color:var(--text-light);margin-top:4px;">현재 구독자: 35명</div>
-              </div>
-              <div style="background:var(--bg);border-radius:var(--r-lg);padding:16px;">
-                <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
-                  <span style="font-size:20px;">🎤</span>
-                  <span style="font-weight:600;">OPIc</span>
-                </div>
-                <input type="text" class="form-input" value="12900" style="font-size:16px;font-weight:600;">
-                <div style="font-size:11px;color:var(--text-light);margin-top:4px;">현재 구독자: 13명</div>
-              </div>
+              <input type="number" class="form-input" id="price-en" value="12900" style="margin-bottom:6px;">
+              <div style="font-size:11px;color:var(--text-light);" id="sub-en">현재 구독자: —</div>
             </div>
-            <button class="btn btn-primary" style="align-self:flex-start;">가격 저장</button>
+
+            <!-- 일본어 -->
+            <div style="background:var(--bg);border-radius:var(--r-lg);padding:16px;">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+                <span style="font-size:22px;">🇯🇵</span>
+                <span style="font-weight:700;font-size:14px;">日本語</span>
+              </div>
+              <input type="number" class="form-input" id="price-ja" value="12900" style="margin-bottom:6px;">
+              <div style="font-size:11px;color:var(--text-light);" id="sub-ja">현재 구독자: —</div>
+            </div>
+
+            <!-- 중국어 -->
+            <div style="background:var(--bg);border-radius:var(--r-lg);padding:16px;">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+                <span style="font-size:22px;">🇨🇳</span>
+                <span style="font-weight:700;font-size:14px;">中文</span>
+              </div>
+              <input type="number" class="form-input" id="price-zh" value="9900" style="margin-bottom:6px;">
+              <div style="font-size:11px;color:var(--text-light);" id="sub-zh">현재 구독자: —</div>
+            </div>
+
+            <!-- 프랑스어 -->
+            <div style="background:var(--bg);border-radius:var(--r-lg);padding:16px;">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+                <span style="font-size:22px;">🇫🇷</span>
+                <span style="font-weight:700;font-size:14px;">Français</span>
+              </div>
+              <input type="number" class="form-input" id="price-fr" value="9900" style="margin-bottom:6px;">
+              <div style="font-size:11px;color:var(--text-light);" id="sub-fr">현재 구독자: —</div>
+            </div>
+
+            <!-- 독일어 -->
+            <div style="background:var(--bg);border-radius:var(--r-lg);padding:16px;">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+                <span style="font-size:22px;">🇩🇪</span>
+                <span style="font-weight:700;font-size:14px;">Deutsch</span>
+              </div>
+              <input type="number" class="form-input" id="price-de" value="9900" style="margin-bottom:6px;">
+              <div style="font-size:11px;color:var(--text-light);" id="sub-de">현재 구독자: —</div>
+            </div>
+
+            <!-- 스페인어 -->
+            <div style="background:var(--bg);border-radius:var(--r-lg);padding:16px;">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+                <span style="font-size:22px;">🇪🇸</span>
+                <span style="font-weight:700;font-size:14px;">Español</span>
+              </div>
+              <input type="number" class="form-input" id="price-es" value="9900" style="margin-bottom:6px;">
+              <div style="font-size:11px;color:var(--text-light);" id="sub-es">현재 구독자: —</div>
+            </div>
+
+          </div>
+
+          <div style="margin-top:8px;padding:10px 14px;background:#e8f5e9;border-radius:8px;font-size:12px;color:#2e7d32;">
+            💡 Free 플랜은 항상 무료입니다. 위 가격은 Pro 플랜 사용자에게 언어별로 청구됩니다.
           </div>
         </div>
       </div>
+
+      <button class="action-btn" onclick="savePricing()" style="background:var(--teal-mid);color:#fff;padding:11px 28px;border-radius:10px;border:none;cursor:pointer;font-size:14px;font-weight:600;font-family:inherit;">가격 저장</button>
+      <div id="price-save-msg" style="display:none;font-size:13px;color:var(--teal-mid);margin-top:10px;">✅ 저장되었습니다.</div>
+
     </div>
 
-    <!-- ─── SETTINGS ─── -->
-    <div class="page-section fade-in" id="page-settings">
+<div class="page-section fade-in" id="page-settings">
       <div class="page-title">시스템 설정</div>
       <div class="page-sub">서비스 전반 설정을 관리합니다.</div>
 
@@ -744,12 +777,17 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
       </div>
 
       <div class="card">
-        <div class="card-head"><span class="card-title">무료 체험 설정</span></div>
+        <div class="card-head"><span class="card-title">Pro 플랜 무료 체험 설정</span></div>
         <div class="card-body">
+          <div style="padding:10px 14px;background:#e8f5e9;border-radius:8px;font-size:12px;color:#1e6e3c;margin-bottom:16px;line-height:1.7;">
+            💡 <strong>Pro 플랜 무료 체험</strong>이란?<br>
+            신규 가입자가 Pro 플랜을 <strong>결제 없이 일정 기간 무료로 사용</strong>할 수 있는 기능입니다.<br>
+            체험 기간이 끝나면 자동으로 Free 플랜으로 전환됩니다. (자동 결제 없음)
+          </div>
           <div style="display:flex;flex-direction:column;gap:14px;">
             <div class="form-row">
               <div>
-                <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--text-light);margin-bottom:5px;">체험 기간</div>
+                <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--text-light);margin-bottom:5px;">체험 기간 (신규 가입 후)</div>
                 <select class="form-input">
                   <option>7일</option>
                   <option selected>14일</option>
@@ -757,10 +795,15 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
                 </select>
               </div>
               <div>
-                <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--text-light);margin-bottom:5px;">체험 대상 시험</div>
+                <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--text-light);margin-bottom:5px;">체험 대상 언어</div>
                 <select class="form-input">
-                  <option>TOEIC만</option>
-                  <option selected>전체 시험</option>
+                  <option selected>전체 언어</option>
+                  <option>English만</option>
+                  <option>日本語만</option>
+                  <option>中文만</option>
+                  <option>Français만</option>
+                  <option>Deutsch만</option>
+                  <option>Español만</option>
                 </select>
               </div>
             </div>
@@ -779,6 +822,7 @@ function showPage(id, navEl){
   document.querySelectorAll('.snav-item').forEach(n=>n.classList.remove('act'));
   document.getElementById('page-'+id).classList.add('act');
   if(navEl) navEl.classList.add('act');
+  if(id==='pricing') setTimeout(loadPricing, 150);
 }
 
 // Revenue chart
@@ -939,5 +983,31 @@ async function sendTestEmail(){
   }
 }
 </script>
+
+<!-- Admin 권한 모달 -->
+<div id="admin-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:1000;display:none;align-items:center;justify-content:center;">
+  <div style="background:#fff;border-radius:16px;padding:28px 32px;max-width:420px;width:90%;box-shadow:0 8px 32px rgba(0,0,0,0.15);">
+    <div style="font-size:18px;font-weight:700;color:var(--text);margin-bottom:8px;" id="admin-modal-title">Admin 권한 부여</div>
+    <div style="font-size:13px;color:var(--text-muted);margin-bottom:20px;" id="admin-modal-desc"></div>
+    <div style="margin-bottom:16px;">
+      <label style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--text-light);display:block;margin-bottom:6px;">대상 이메일</label>
+      <input type="email" id="admin-target-email" class="form-input" style="width:100%;" placeholder="user@email.com">
+    </div>
+    <div style="margin-bottom:20px;">
+      <label style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--text-light);display:block;margin-bottom:6px;">역할 변경</label>
+      <select id="admin-role-select" class="form-input" style="width:100%;">
+        <option value="user">🎓 Free (일반 사용자)</option>
+        <option value="pro">⭐ Pro (프리미엄)</option>
+        <option value="admin">🔑 Admin (관리자)</option>
+      </select>
+    </div>
+    <div style="display:flex;gap:10px;">
+      <button onclick="document.getElementById('admin-modal').style.display='none'" style="flex:1;padding:11px;border-radius:10px;border:1px solid var(--border-md);background:var(--bg);font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;">취소</button>
+      <button onclick="applyRoleChange()" id="admin-apply-btn" style="flex:1;padding:11px;border-radius:10px;border:none;background:var(--teal-mid);color:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;">적용</button>
+    </div>
+    <div id="admin-modal-msg" style="font-size:12px;margin-top:10px;text-align:center;display:none;"></div>
+  </div>
+</div>
+
 </body>
 </html>
