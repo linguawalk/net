@@ -213,7 +213,7 @@ nav{
     <a href="jlpt/index.html" class="nav-link">JLPT</a>
     <a href="kanken/index.html" class="nav-link">漢検</a>
   </div>
-  <a href="../login.html" class="nav-signin" style="text-decoration:none;"
+  <a href="/login.html" class="nav-signin" style="text-decoration:none;"
     data-ko="로그인" data-ja="ログイン">로그인</a>
   <div class="lang-sw">
     <button class="lbtn" onclick="setLang('ja')" id="btn-ja">日本語</button>
@@ -468,6 +468,21 @@ function setLang(l){
 }
 (function(){
   setLang('ko');
+})();
+</script>
+<script>
+(function(){
+  var btn=document.querySelector('.nav-signin');
+  if(!btn) return;
+  var user;
+  try{ user=JSON.parse(localStorage.getItem('lw-user')); }catch(e){}
+  if(user && user.uid){
+    btn.textContent=(user.name||user.email||'').substring(0,6)||'내정보';
+    btn.href='/mypage.html';
+    btn.classList.add('nav-signed-in');
+  } else {
+    btn.href='/login.html';
+  }
 })();
 </script>
 </body>
