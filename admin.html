@@ -183,7 +183,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
   import { getAuth, onAuthStateChanged, signOut }
     from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
-  import { getFirestore, doc, getDoc, collection, query, where, getDocs, updateDoc, setDoc }
+  import { getFirestore, doc, getDoc, collection, query, where, getDocs, updateDoc, setDoc, orderBy, limit, startAfter }
     from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
 
   const app  = initializeApp({
@@ -222,7 +222,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
     };
     // Firestore 함수 전역 노출 (역할 변경 등에 사용)
     window._db = db;
-    window._fs = { collection, query, where, getDocs, updateDoc, setDoc, doc };
+    window._fs = { collection, query, where, getDocs, updateDoc, setDoc, doc, orderBy, limit, startAfter };
+    // Firestore 연동 완료 후 회원 목록 로드
+    loadMembers();
   });
 </script>
 <script>
@@ -375,15 +377,17 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
         <div class="card-body" style="padding:0;">
           <table class="data-table">
             <thead><tr>
-              <th>이름</th><th>이메일</th><th>가입일</th><th>플랜 / 등급</th><th>상태</th>
+              <th>이름</th><th>이메일</th><th>가입일</th><th>플랜 / 등급</th><th>상태</th><th>관리</th>
             </tr></thead>
-            <tbody>
-              <tr><td class="td-name">이지현</td><td class="td-email">jihyun@naver.com</td><td>2026.05.20</td><td><div class="plan-tags"><span class="plan-tag pt-toeic">TOEIC</span></div></td><td><span class="status-badge st-trial">체험</span></td></tr>
-              <tr><td class="td-name">박준혁</td><td class="td-email">junhyuk@kakao.com</td><td>2026.05.20</td><td><div class="plan-tags"><span class="plan-tag pt-ielts">IELTS</span></div></td><td><span class="status-badge st-active">구독중</span></td></tr>
-              <tr><td class="td-name">최수민</td><td class="td-email">sumin@gmail.com</td><td>2026.05.19</td><td><div class="plan-tags"><span class="plan-tag pt-toeic">TOEIC</span><span class="plan-tag pt-toefl">TOEFL</span></div></td><td><span class="status-badge st-active">구독중</span></td></tr>
-              <tr><td class="td-name">김태양</td><td class="td-email">taeyang@gmail.com</td><td>2026.05.19</td><td><div class="plan-tags">—</div></td><td><span class="status-badge st-inactive">무료</span></td></tr>
+            <tbody id="members-tbody">
+              <tr><td colspan="6" style="text-align:center;padding:32px;color:var(--text-light);">
+                <div style="font-size:24px;margin-bottom:8px;">⏳</div>회원 목록을 불러오는 중...
+              </td></tr>
             </tbody>
           </table>
+          <div id="load-more-wrap" style="display:none;text-align:center;padding:14px 0;">
+            <button onclick="loadMoreMembers()" style="padding:9px 24px;border-radius:8px;border:0.5px solid var(--border-md);background:var(--white);font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;color:var(--text-muted);">+ 더 보기</button>
+          </div>
         </div>
       </div>
     </div>
@@ -413,7 +417,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 
       <div class="card">
         <div class="card-head">
-          <span class="card-title">회원 목록 <span style="font-weight:400;color:var(--text-light);">(247명)</span></span>
+          <span class="card-title">회원 목록 <span style="font-weight:400;color:var(--text-light);" id="member-count">(로딩 중)</span></span>
           <button class="btn btn-outline" style="font-size:12px;padding:6px 12px;">CSV 내보내기</button>
         </div>
         <div class="card-body" style="padding:0;">
@@ -1028,6 +1032,175 @@ async function sendTestEmail(){
     alert('✗ 발송 실패: ' + err.message);
   }
 }
+
+// ── 회원 목록 Firestore 실시간 로드 ──────────────────────────────────
+var _lastDoc = null;
+var _allMembers = [];
+var _PAGE_SIZE = 20;
+
+var LANG_MAP = {en:'🇺🇸 English',ja:'🇯🇵 日本語',zh:'🇨🇳 中文',fr:'🇫🇷 Français',de:'🇩🇪 Deutsch',es:'🇪🇸 Español'};
+var LANG_CLASS = {en:'pt-en',ja:'pt-ja',zh:'pt-zh',fr:'pt-fr',de:'pt-de',es:'pt-es'};
+
+async function loadMembers(reset) {
+  if (reset) { _lastDoc = null; _allMembers = []; }
+  var tbody = document.getElementById('members-tbody');
+  if (!tbody) return;
+
+  if (!window._db || !window._fs) {
+    setTimeout(function(){ loadMembers(reset); }, 500);
+    return;
+  }
+
+  if (!_lastDoc) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:32px;color:var(--text-light);">'
+      + '<div style="font-size:24px;margin-bottom:8px;">⏳</div>불러오는 중...</td></tr>';
+  }
+
+  try {
+    var fs = window._fs;
+    var db = window._db;
+
+    // 필터 값 읽기
+    var filterStatus = document.getElementById('filter-status')?.value || '';
+    var filterLang   = document.getElementById('filter-lang')?.value || '';
+    var searchVal    = document.querySelector('.search-input')?.value?.trim() || '';
+
+    // Firestore 쿼리 구성
+    var constraints = [fs.orderBy('createdAt', 'desc'), fs.limit(_PAGE_SIZE)];
+    if (filterLang && filterLang !== '') {
+      constraints.unshift(fs.where('plan', '==', filterLang)); // free/pro/admin 필터
+    }
+    if (_lastDoc) constraints.push(fs.startAfter(_lastDoc));
+
+    var q = fs.query(fs.collection(db, 'users'), ...constraints);
+    var snap = await fs.getDocs(q);
+
+    if (snap.empty && !_lastDoc) {
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:40px;color:var(--text-light);">'
+        + '<div style="font-size:32px;margin-bottom:10px;">👥</div>'
+        + '<div style="font-size:14px;">아직 가입한 회원이 없습니다.</div></td></tr>';
+      document.getElementById('member-count').textContent = '(0명)';
+      document.getElementById('load-more-wrap').style.display = 'none';
+      return;
+    }
+
+    var newDocs = [];
+    snap.forEach(function(d) { newDocs.push({ id: d.id, ...d.data() }); });
+
+    if (_lastDoc) {
+      _allMembers = _allMembers.concat(newDocs);
+    } else {
+      _allMembers = newDocs;
+      tbody.innerHTML = '';
+    }
+
+    // 검색 필터 (클라이언트 측)
+    var filtered = searchVal
+      ? _allMembers.filter(function(m) {
+          var s = searchVal.toLowerCase();
+          return (m.name||'').toLowerCase().includes(s) || (m.email||'').toLowerCase().includes(s);
+        })
+      : _allMembers;
+
+    // 행 렌더링
+    filtered.forEach(function(m) {
+      var tr = document.createElement('tr');
+
+      // 가입일 포맷
+      var createdAt = m.createdAt ? m.createdAt.substring(0,10).replace(/-/g,'.') : '—';
+
+      // 플랜/등급 배지
+      var planLabel = m.plan === 'pro' ? '⭐ Pro' : m.plan === 'admin' ? '🔑 Admin' : '🎓 Free';
+      var roleClass = m.plan === 'pro' ? 'rb-pro' : m.plan === 'admin' ? 'rb-admin' : 'rb-free';
+      var langHtml = '';
+      if (m.proLang && m.proLang !== 'all' && LANG_MAP[m.proLang]) {
+        langHtml = '<span class="plan-tag ' + (LANG_CLASS[m.proLang]||'') + '">' + LANG_MAP[m.proLang] + '</span>';
+      } else if (m.proLang === 'all') {
+        langHtml = '<span class="plan-tag pt-en">🌍 전체</span>';
+      }
+
+      // 상태
+      var stateLabel = m.plan === 'pro' ? '<span class="status-badge st-active">구독중</span>'
+        : m.plan === 'admin' ? '<span class="status-badge st-active">관리자</span>'
+        : '<span class="status-badge st-inactive">무료</span>';
+
+      tr.innerHTML = '<td class="td-name">' + (m.name || '—') + '</td>'
+        + '<td class="td-email" style="color:var(--text-muted);font-size:12px;">' + (m.email || '—') + '</td>'
+        + '<td style="color:var(--text-muted);font-size:12px;">' + createdAt + '</td>'
+        + '<td>' + (langHtml ? '<div class="plan-tags">' + langHtml + '</div>' : '')
+        + '<span class="role-badge ' + roleClass + '">' + planLabel + '</span></td>'
+        + '<td>' + stateLabel + '</td>'
+        + '<td>'
+        + '<button class="action-btn" data-uid="' + m.id + '" onclick="handleDetail(this)">상세</button> '
+        + '<button class="btn-role" data-email="' + (m.email||'') + '" data-plan="' + (m.plan||'free') + '" onclick="handleRole(this)">등급↑</button>'
+        + '</td>';
+
+      tbody.appendChild(tr);
+    });
+
+    // 카운트 업데이트
+    document.getElementById('member-count').textContent = '(' + _allMembers.length + '명' + (snap.size === _PAGE_SIZE ? '+' : '') + ')';
+
+    // 더 보기 버튼
+    _lastDoc = snap.size === _PAGE_SIZE ? snap.docs[snap.docs.length - 1] : null;
+    var lmw = document.getElementById('load-more-wrap');
+    if (lmw) lmw.style.display = _lastDoc ? 'block' : 'none';
+
+  } catch(e) {
+    console.error('회원 로드 오류:', e);
+    if (!_lastDoc) {
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:32px;color:var(--red,#e24b4a);">'
+        + '⚠️ 불러오기 실패: ' + e.message + '</td></tr>';
+    }
+  }
+}
+
+
+function closeDetailPopup(){ var p=document.getElementById("member-detail-popup"); if(p) p.remove(); }
+function handleDetail(btn) { showMemberDetail(btn.dataset.uid); }
+function handleRole(btn)   { openRoleModal(btn.dataset.email, btn.dataset.plan); }
+
+function loadMoreMembers() { loadMembers(false); }
+
+// 검색 버튼
+document.addEventListener('DOMContentLoaded', function() {
+  var filterBtn = document.querySelector('.filter-btn');
+  if (filterBtn) filterBtn.addEventListener('click', function(){ loadMembers(true); });
+  var searchInp = document.querySelector('.search-input');
+  if (searchInp) searchInp.addEventListener('keydown', function(e){ if(e.key==='Enter') loadMembers(true); });
+});
+
+// 회원 상세 팝업
+function showMemberDetail(uid) {
+  if (!window._db || !window._fs) return;
+  var fs = window._fs; var db = window._db;
+  fs.getDocs(fs.query(fs.collection(db,'users'), fs.where('__name__','==',uid))).then(function(){}).catch(function(){});
+  var m = _allMembers.find(function(u){ return u.id === uid; });
+  if (!m) return;
+  var createdAt = m.createdAt ? m.createdAt.substring(0,10) : '—';
+  var existing = document.getElementById('member-detail-popup');
+  if (existing) existing.remove();
+  var popup = document.createElement('div');
+  popup.id = 'member-detail-popup';
+  popup.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9000;display:flex;align-items:center;justify-content:center;padding:20px;';
+  popup.innerHTML = '<div style="background:#fff;border-radius:16px;padding:28px;max-width:400px;width:100%;">'
+    + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;">'
+    + '<span style="font-size:16px;font-weight:700;">👤 회원 상세</span>'
+    + '<button onclick="closeDetailPopup()" style="background:none;border:none;font-size:18px;cursor:pointer;color:var(--text-light);">✕</button>'
+    + '</div>'
+    + '<div style="display:flex;flex-direction:column;gap:10px;font-size:13px;">'
+    + '<div style="display:flex;justify-content:space-between;padding:8px 12px;background:var(--bg);border-radius:8px;"><span style="color:var(--text-muted);">이름</span><span style="font-weight:600;">' + (m.name||'—') + '</span></div>'
+    + '<div style="display:flex;justify-content:space-between;padding:8px 12px;background:var(--bg);border-radius:8px;"><span style="color:var(--text-muted);">이메일</span><span>' + (m.email||'—') + '</span></div>'
+    + '<div style="display:flex;justify-content:space-between;padding:8px 12px;background:var(--bg);border-radius:8px;"><span style="color:var(--text-muted);">플랜</span><span style="font-weight:600;">' + (m.plan||'free') + '</span></div>'
+    + '<div style="display:flex;justify-content:space-between;padding:8px 12px;background:var(--bg);border-radius:8px;"><span style="color:var(--text-muted);">가입일</span><span>' + createdAt + '</span></div>'
+    + '<div style="display:flex;justify-content:space-between;padding:8px 12px;background:var(--bg);border-radius:8px;"><span style="color:var(--text-muted);">UID</span><span style="font-size:11px;color:var(--text-light);">' + (m.id||'—') + '</span></div>'
+    + '</div>'
+    + '<button data-email="' + (m.email||'') + '" data-plan="' + (m.plan||'free') + '" onclick="handleRole(this)" style="margin-top:16px;width:100%;padding:11px;border-radius:10px;background:var(--teal-mid);color:#fff;border:none;cursor:pointer;font-size:14px;font-weight:700;font-family:inherit;">등급 변경</button>'
+    + '</div>';
+  popup.addEventListener('click', function(e){ if(e.target===popup) popup.remove(); });
+  document.body.appendChild(popup);
+}
+
 </script>
 
 <!-- Admin 권한 모달 -->
