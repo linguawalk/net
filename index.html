@@ -120,11 +120,24 @@
   @media(max-width:360px){
     .lang-grid{grid-template-columns:1fr;max-width:260px;}
   }
+
+  .top-nav{position:absolute;top:20px;right:24px;display:flex;gap:8px;align-items:center;z-index:10;}
+  .tn-login{padding:7px 16px;border-radius:20px;border:1.5px solid rgba(255,255,255,0.3);background:transparent;color:rgba(255,255,255,0.85);font-size:13px;font-weight:500;text-decoration:none;font-family:'DM Sans',sans-serif;transition:all 0.2s;}
+  .tn-login:hover{background:rgba(255,255,255,0.1);}
+  .tn-signup{padding:7px 16px;border-radius:20px;background:#1D9E75;color:#fff;font-size:13px;font-weight:600;text-decoration:none;font-family:'DM Sans',sans-serif;transition:all 0.2s;}
+  .tn-signup:hover{background:#2A7F6F;}
+  .tn-user{padding:7px 16px;border-radius:20px;background:#1D9E75;color:#fff;font-size:13px;font-weight:600;text-decoration:none;font-family:'DM Sans',sans-serif;display:none;}
+
 </style>
 </head>
 <body>
 
-<a href="#" class="logo">
+<div class="top-nav" id="top-nav">
+  <a href="/login.html" class="tn-login" id="tn-login">로그인</a>
+  <a href="/login.html?mode=signup" class="tn-signup" id="tn-signup">회원가입</a>
+  <a href="/mypage.html" class="tn-user" id="tn-user"></a>
+</div>
+<a href="/" class="logo">
   <div class="logo-icon">LW</div>
   <span class="logo-text">LinguaWalk</span>
 </a>
@@ -186,5 +199,23 @@
 
 <p class="footer">© 2025 LinguaWalk · Powered by Claude AI</p>
 
+<script>
+// 루트 index 로그인 상태 반영
+(function(){
+  var user;
+  try{ user=JSON.parse(localStorage.getItem('lw-user')); }catch(e){}
+  if(user && user.uid){
+    var login=document.getElementById('tn-login');
+    var signup=document.getElementById('tn-signup');
+    var userBtn=document.getElementById('tn-user');
+    if(login) login.style.display='none';
+    if(signup) signup.style.display='none';
+    if(userBtn){
+      userBtn.style.display='inline-block';
+      userBtn.textContent=(user.name||user.email||'').substring(0,6)||'내정보';
+    }
+  }
+})();
+</script>
 </body>
 </html>
