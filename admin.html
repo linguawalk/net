@@ -163,13 +163,27 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 
 @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 .fade-in{animation:fadeUp 0.3s ease forwards;}
+
+.pt-en{background:#e8f0fe;color:#1a56db;}
+.pt-ja{background:#fef3e8;color:#b45309;}
+.pt-zh{background:#fce7f3;color:#9d174d;}
+.pt-fr{background:#ede9fe;color:#5b21b6;}
+.pt-de{background:#fef9e7;color:#92400e;}
+.pt-es{background:#fee2e2;color:#991b1b;}
+.role-badge{font-size:10px;padding:2px 8px;border-radius:8px;font-weight:700;display:inline-block;margin-left:4px;}
+.rb-free{background:#e8f5e9;color:#2e7d32;}
+.rb-pro{background:#fef9e7;color:#b45309;}
+.rb-admin{background:#fce7f3;color:#9d174d;}
+.btn-role{font-size:11px;padding:3px 8px;border-radius:6px;border:1px solid #f59e0b;background:#fef9e7;color:#b45309;cursor:pointer;font-family:inherit;font-weight:600;margin-left:2px;}
+.btn-role:hover{background:#f59e0b;color:#fff;}
+
 </style>
 <!-- Firebase Auth Guard (Admin) -->
 <script type="module">
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
   import { getAuth, onAuthStateChanged, signOut }
     from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
-  import { getFirestore, doc, getDoc }
+  import { getFirestore, doc, getDoc, collection, query, where, getDocs, updateDoc, setDoc }
     from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
 
   const app  = initializeApp({
@@ -204,8 +218,11 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
     window._signOut = async () => {
       await signOut(auth);
       localStorage.removeItem('lw-user');
-      location.href='login.html';
+      location.href='/';
     };
+    // Firestore 함수 전역 노출 (역할 변경 등에 사용)
+    window._db = db;
+    window._fs = { collection, query, where, getDocs, updateDoc, setDoc, doc };
   });
 </script>
 <script>
@@ -385,12 +402,11 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
           <option>무료</option>
           <option>해지</option>
         </select>
-        <select class="filter-select">
-          <option>전체 플랜</option>
-          <option>TOEIC</option>
-          <option>TOEFL</option>
-          <option>IELTS</option>
-          <option>OPIc</option>
+        <select class="filter-select" id="filter-lang">
+          <option value="">전체 언어</option>
+          <option value="free">🎓 Free (무료)</option>
+          <option value="pro">⭐ Pro (프리미엄)</option>
+          <option value="admin">🔑 Admin (관리자)</option>
         </select>
         <button class="filter-btn">검색</button>
       </div>
@@ -410,34 +426,64 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
                 <td class="td-name">김민준</td>
                 <td class="td-email">minjun@email.com</td>
                 <td>2026.03.10</td>
-                <td><div class="plan-tags"><span class="plan-tag pt-toeic">TOEIC</span><span class="plan-tag pt-ielts">IELTS</span></div></td>
+                <td>
+                  <div class="plan-tags">
+                    <span class="plan-tag pt-en">🇺🇸 English</span>
+                    <span class="plan-tag pt-ja">🇯🇵 日本語</span>
+                  </div>
+                  <span class="role-badge rb-pro">⭐ Pro</span>
+                </td>
                 <td><span class="status-badge st-active">구독중</span></td>
                 <td>오늘</td>
-                <td><button class="action-btn">상세</button><button class="action-btn danger">정지</button></td>
+                <td>
+                  <button class="action-btn">상세</button>
+                  <button class="action-btn danger">정지</button>
+                  <button class="btn-role" onclick="openRoleModal('minjun@email.com','pro')">등급↑</button>
+                </td>
               </tr>
               <tr>
                 <td class="td-name">이지현</td>
                 <td class="td-email">jihyun@naver.com</td>
                 <td>2026.05.20</td>
-                <td><div class="plan-tags"><span class="plan-tag pt-toeic">TOEIC</span></div></td>
+                <td>
+                  <div class="plan-tags"><span class="plan-tag pt-en">🇺🇸 English</span></div>
+                  <span class="role-badge rb-free">🎓 Free</span>
+                </td>
                 <td><span class="status-badge st-trial">체험</span></td>
                 <td>오늘</td>
-                <td><button class="action-btn">상세</button><button class="action-btn danger">정지</button></td>
+                <td>
+                  <button class="action-btn">상세</button>
+                  <button class="action-btn danger">정지</button>
+                  <button class="btn-role" onclick="openRoleModal('jihyun@naver.com','free')">등급↑</button>
+                </td>
               </tr>
               <tr>
                 <td class="td-name">박준혁</td>
                 <td class="td-email">junhyuk@kakao.com</td>
                 <td>2026.05.20</td>
-                <td><div class="plan-tags"><span class="plan-tag pt-ielts">IELTS</span></div></td>
+                <td>
+                  <div class="plan-tags"><span class="plan-tag pt-fr">🇫🇷 Français</span></div>
+                  <span class="role-badge rb-pro">⭐ Pro</span>
+                </td>
                 <td><span class="status-badge st-active">구독중</span></td>
                 <td>어제</td>
-                <td><button class="action-btn">상세</button><button class="action-btn danger">정지</button></td>
+                <td>
+                  <button class="action-btn">상세</button>
+                  <button class="action-btn danger">정지</button>
+                  <button class="btn-role" onclick="openRoleModal('junhyuk@kakao.com','pro')">등급↑</button>
+                </td>
               </tr>
               <tr>
                 <td class="td-name">최수민</td>
                 <td class="td-email">sumin@gmail.com</td>
                 <td>2026.05.19</td>
-                <td><div class="plan-tags"><span class="plan-tag pt-toeic">TOEIC</span><span class="plan-tag pt-toefl">TOEFL</span></div></td>
+                <td>
+                  <div class="plan-tags">
+                    <span class="plan-tag pt-en">🇺🇸 English</span>
+                    <span class="plan-tag pt-de">🇩🇪 Deutsch</span>
+                  </div>
+                  <span class="role-badge rb-pro">⭐ Pro</span>
+                </td>
                 <td><span class="status-badge st-active">구독중</span></td>
                 <td>2일 전</td>
                 <td><button class="action-btn">상세</button><button class="action-btn danger">정지</button></td>
@@ -1006,6 +1052,60 @@ async function sendTestEmail(){
       <button onclick="applyRoleChange()" id="admin-apply-btn" style="flex:1;padding:11px;border-radius:10px;border:none;background:var(--teal-mid);color:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;">적용</button>
     </div>
     <div id="admin-modal-msg" style="font-size:12px;margin-top:10px;text-align:center;display:none;"></div>
+  </div>
+</div>
+
+
+<!-- 역할(등급) 변경 모달 -->
+<div id="role-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9000;align-items:center;justify-content:center;">
+  <div style="background:#fff;border-radius:18px;padding:32px;max-width:440px;width:92%;box-shadow:0 12px 40px rgba(0,0,0,0.18);position:relative;">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+      <span style="font-size:22px;">🔑</span>
+      <span style="font-size:18px;font-weight:700;color:#1C2B45;">회원 등급 변경</span>
+    </div>
+    <div style="font-size:13px;color:#5a6a82;margin-bottom:22px;">해당 회원의 역할을 변경합니다. Admin은 관리자 패널에 접근할 수 있습니다.</div>
+
+    <div style="margin-bottom:14px;">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:#94a3b8;margin-bottom:6px;">대상 이메일</div>
+      <input type="email" id="rm-email" style="width:100%;padding:10px 13px;border:1.5px solid rgba(28,43,69,0.2);border-radius:10px;font-size:14px;font-family:'DM Sans',sans-serif;outline:none;background:#F8F7F4;" placeholder="user@email.com">
+    </div>
+
+    <div style="margin-bottom:22px;">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:#94a3b8;margin-bottom:8px;">등급 선택</div>
+      <div style="display:flex;gap:8px;">
+        <button class="rm-plan-btn" id="rm-free" onclick="selectRmPlan('free')"
+          style="flex:1;padding:14px 8px;border-radius:12px;border:2px solid rgba(28,43,69,0.15);background:#F8F7F4;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;text-align:center;">
+          <div style="font-size:20px;margin-bottom:4px;">🎓</div>
+          <div style="font-size:13px;font-weight:700;color:#1C2B45;">Free</div>
+          <div style="font-size:10px;color:#94a3b8;margin-top:2px;">무료 사용자</div>
+        </button>
+        <button class="rm-plan-btn" id="rm-pro" onclick="selectRmPlan('pro')"
+          style="flex:1;padding:14px 8px;border-radius:12px;border:2px solid rgba(28,43,69,0.15);background:#F8F7F4;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;text-align:center;">
+          <div style="font-size:20px;margin-bottom:4px;">⭐</div>
+          <div style="font-size:13px;font-weight:700;color:#1C2B45;">Pro</div>
+          <div style="font-size:10px;color:#94a3b8;margin-top:2px;">프리미엄</div>
+        </button>
+        <button class="rm-plan-btn" id="rm-admin" onclick="selectRmPlan('admin')"
+          style="flex:1;padding:14px 8px;border-radius:12px;border:2px solid rgba(28,43,69,0.15);background:#F8F7F4;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;text-align:center;">
+          <div style="font-size:20px;margin-bottom:4px;">🔑</div>
+          <div style="font-size:13px;font-weight:700;color:#1C2B45;">Admin</div>
+          <div style="font-size:10px;color:#94a3b8;margin-top:2px;">관리자 권한</div>
+        </button>
+      </div>
+    </div>
+
+    <div id="rm-msg" style="font-size:13px;text-align:center;margin-bottom:12px;min-height:18px;"></div>
+
+    <div style="display:flex;gap:10px;">
+      <button onclick="closeRoleModal()"
+        style="flex:1;padding:12px;border-radius:10px;border:1.5px solid rgba(28,43,69,0.2);background:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;color:#1C2B45;">
+        취소
+      </button>
+      <button id="rm-apply-btn" onclick="applyRoleChange()"
+        style="flex:2;padding:12px;border-radius:10px;border:none;background:#1D9E75;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;">
+        변경 적용
+      </button>
+    </div>
   </div>
 </div>
 
