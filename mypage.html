@@ -329,6 +329,9 @@ nav{background:var(--navy2);height:56px;display:flex;align-items:center;padding:
       badgeEl.textContent = planMap[u.plan] || '🎓 Free';
       badgeEl.className='profile-plan plan-badge-'+(u.plan||'free');
     }
+    // Pro 업그레이드 배너 표시/숨김
+    var banner=document.getElementById('upgrade-banner');
+    if(banner) banner.style.display=(u.plan==='free'||!u.plan)?'flex':'none';
   }
 </script>
 <script>
