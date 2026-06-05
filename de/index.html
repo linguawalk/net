@@ -126,7 +126,7 @@ nav{background:rgba(28,43,69,0.97);height:56px;display:flex;align-items:center;p
     <span class="nav-brand-text">LinguaWalk</span>
   </a>
   <span class="nav-crumb">🇩🇪 Deutsch</span>
-  <a href="../login.html" class="nav-signin" data-ko="로그인" data-de="Anmelden">로그인</a>
+  <a href="/login.html" class="nav-signin" data-ko="로그인" data-de="Anmelden">로그인</a>
   <div class="lang-sw">
     <button class="lbtn act" onclick="setLang('ko')" id="btn-ko">한국어</button>
     <button class="lbtn" onclick="setLang('de')" id="btn-de">Deutsch</button>
@@ -272,6 +272,21 @@ function setLang(l){
   document.getElementById('btn-de').classList.toggle('act',l==='de');
 }
 (function(){ setLang('ko'); })();
+</script>
+<script>
+(function(){
+  var btn=document.querySelector('.nav-signin');
+  if(!btn) return;
+  var user;
+  try{ user=JSON.parse(localStorage.getItem('lw-user')); }catch(e){}
+  if(user && user.uid){
+    btn.textContent=(user.name||user.email||'').substring(0,6)||'내정보';
+    btn.href='/mypage.html';
+    btn.classList.add('nav-signed-in');
+  } else {
+    btn.href='/login.html';
+  }
+})();
 </script>
 </body>
 </html>
