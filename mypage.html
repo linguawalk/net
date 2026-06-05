@@ -72,6 +72,11 @@ nav{background:var(--navy2);height:56px;display:flex;align-items:center;padding:
 }
 .profile-name{font-size:14px;font-weight:600;color:var(--text);margin-bottom:3px;}
 .profile-email{font-size:11px;color:var(--text-light);margin-bottom:10px;word-break:break-all;}
+
+.plan-badge-free{background:#e8f5e9;color:#2e7d32;border:1px solid #a5d6a7;}
+.plan-badge-pro{background:#fef9e7;color:#b45309;border:1px solid #f59e0b;}
+.plan-badge-admin{background:#fce7f3;color:#9d174d;border:1px solid #f9a8d4;}
+
 .profile-plan{
   display:inline-flex;align-items:center;gap:4px;
   font-size:10px;font-weight:700;padding:3px 9px;border-radius:12px;
@@ -290,14 +295,14 @@ nav{background:var(--navy2);height:56px;display:flex;align-items:center;padding:
     if(!user){
       // Firebase 미로그인 → localStorage 확인 (임시 호환)
       const local = JSON.parse(localStorage.getItem('lw-user') || 'null');
-      if(!local){ location.href='login.html'; return; }
+      if(!local){ location.href='/login.html'; return; }
       applyUserInfo(local);
       return;
     }
     // Firebase 로그인 상태
     const snap = await getDoc(doc(db, 'users', user.uid));
     const data = snap.exists() ? snap.data() : { role:'user', plan:'free', name: user.email };
-    if(data.role === 'admin'){ location.href='admin.html'; return; }
+    if(data.role === 'admin'){ location.href='/admin.html'; return; }
 
     // localStorage 동기화
     const userData = { uid:user.uid, email:user.email, name:data.name||user.displayName||user.email,
@@ -309,7 +314,7 @@ nav{background:var(--navy2);height:56px;display:flex;align-items:center;padding:
     window._signOut = async () => {
       await signOut(auth);
       localStorage.removeItem('lw-user');
-      location.href='login.html';
+      location.href='/';
     };
   });
 
@@ -319,7 +324,11 @@ nav{background:var(--navy2);height:56px;display:flex;align-items:center;padding:
     const badgeEl = document.getElementById('plan-badge');
     if(nameEl)  nameEl.textContent  = u.name  || '';
     if(emailEl) emailEl.textContent = u.email || '';
-    if(badgeEl) badgeEl.textContent = u.plan  || 'Free';
+    if(badgeEl){
+      var planMap={'free':'🎓 Free','pro':'⭐ Pro','admin':'🔑 Admin'};
+      badgeEl.textContent = planMap[u.plan] || '🎓 Free';
+      badgeEl.className='profile-plan plan-badge-'+(u.plan||'free');
+    }
   }
 </script>
 <script>
@@ -337,7 +346,7 @@ nav{background:var(--navy2);height:56px;display:flex;align-items:center;padding:
   </a>
   <div class="nav-right">
     <span class="nav-badge" id="plan-badge">TOEIC + IELTS</span>
-    <button class="nav-signout" onclick="window._signOut ? window._signOut() : (localStorage.removeItem('lw-user'), location.href='login.html')" data-en="Sign out" data-ko="로그아웃">Sign out</button>
+    <button class="nav-signout" onclick="window._signOut ? window._signOut() : (localStorage.removeItem('lw-user'), location.href='/')" data-en="Sign out" data-ko="로그아웃">Sign out</button>
     <div class="lang-sw">
       <button class="lbtn act" onclick="setLang('en')" id="btn-en">EN</button>
       <button class="lbtn" onclick="setLang('ko')" id="btn-ko">한국어</button>
